@@ -32,6 +32,8 @@ namespace OpenChess.Domain
 
         public Coordinate(int col, int row)
         {
+            if (!IsValidRow(row)) { throw new CoordinateException("The row number is invalid!"); };
+            if (!IsValidColumn(col)) { throw new CoordinateException("The column number is invalid!"); };
             Column = _columnMapping[col];
             Row = _rowMapping[row];
         }
@@ -39,6 +41,26 @@ namespace OpenChess.Domain
         public override string ToString()
         {
             return $"{Column}{Row}";
+        }
+
+        public bool IsValidRow(int value)
+        {
+            return _rowMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
+        }
+
+        public bool IsValidColumn(int value)
+        {
+            return _columnMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
+        }
+
+        public bool IsValidRow(char value)
+        {
+            return _rowMapping.Where(kv => kv.Value.Equals(value)).ToList().Any();
+        }
+
+        public bool IsValidColumn(char value)
+        {
+            return _columnMapping.Where(kv => kv.Value.Equals(value)).ToList().Any();
         }
     }
 }
