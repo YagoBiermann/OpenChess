@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Server\Server.csproj" />
+    <ProjectReference Include="..\src\OpenChess.csproj" />
   </ItemGroup>
 
 </Project>
