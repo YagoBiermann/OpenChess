@@ -15,4 +15,29 @@ public class CoordinateTests
         Assert.AreEqual("F3", coordinate2.ToString());
         Assert.AreEqual("H8", coordinate3.ToString());
     }
+
+    [TestMethod]
+    public void NewInstance_ColNumberLessThanZero_ShouldThrowException()
+    {
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate(-1, 0));
+    }
+
+    [TestMethod]
+    public void NewInstance_RowNumberLessThanZero_ShouldThrowException()
+    {
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate(0, -1));
+    }
+
+    [TestMethod]
+    public void NewInstance_ColNumberGreaterThanSeven_ShouldThrowException()
+    {
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate(8, 0));
+    }
+
+    [TestMethod]
+    public void NewInstance_RowNumberGreaterThanSeven_ShouldThrowException()
+    {
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate(0, 8));
+    }
+
 }
