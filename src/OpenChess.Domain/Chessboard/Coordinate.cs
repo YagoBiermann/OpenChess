@@ -38,6 +38,12 @@ namespace OpenChess.Domain
             Row = _rowMapping[row];
         }
 
+        public Coordinate(string notation)
+        {
+            Column = notation[0];
+            Row = notation[1];
+        }
+
         public override string ToString()
         {
             return $"{Column}{Row}";
