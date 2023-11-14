@@ -40,4 +40,16 @@ public class CoordinateTests
         Assert.ThrowsException<CoordinateException>(() => new Coordinate(0, 8));
     }
 
+    [TestMethod]
+    public void NewInstance_GivenAlgebraicNotation_ShouldInstantiateNewCoordinate()
+    {
+        Coordinate coordinate = new("A1");
+        Coordinate coordinate2 = new("C4");
+        Coordinate coordinate3 = new("H8");
+
+        Assert.AreEqual("A1", coordinate.ToString());
+        Assert.AreEqual("C4", coordinate2.ToString());
+        Assert.AreEqual("H8", coordinate3.ToString());
+    }
+
 }
