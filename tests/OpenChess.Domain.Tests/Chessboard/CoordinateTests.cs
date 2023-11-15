@@ -34,7 +34,6 @@ public class CoordinateTests
         Coordinate coordinate2 = Coordinate.GetInstance(5, 2);
         Coordinate coordinate3 = Coordinate.GetInstance(7, 7);
 
-
         Assert.AreEqual("A1", coordinate.ToString());
         Assert.AreEqual("F3", coordinate2.ToString());
         Assert.AreEqual("H8", coordinate3.ToString());
@@ -91,7 +90,6 @@ public class CoordinateTests
 
         Coordinate coordinate3 = Coordinate.GetInstance(0, 2);
         Coordinate coordinate4 = Coordinate.GetInstance(0, 2);
-
 
         Assert.IsTrue(ReferenceEquals(coordinate1, coordinate2));
         Assert.IsTrue(ReferenceEquals(coordinate3, coordinate4));
