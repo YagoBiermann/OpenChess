@@ -51,7 +51,6 @@ public class CoordinateTests
         Assert.AreEqual("H8", coordinate3.ToString());
     }
 
-
     [TestMethod]
     public void NewInstance_GivenInvalidAlgebraicNotation_ShouldThrowException()
     {
@@ -194,7 +193,6 @@ public class CoordinateTests
         Assert.IsFalse(Coordinate.IsValidColumn(10));
         Assert.IsFalse(Coordinate.IsValidColumn(100));
     }
-
 
     [TestMethod]
     public void IsValidRow_GivenInvalidInt_ShouldReturnFalse()
