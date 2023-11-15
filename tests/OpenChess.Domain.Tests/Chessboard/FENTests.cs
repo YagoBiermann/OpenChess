@@ -76,5 +76,21 @@ namespace OpenChess.Tests
             Assert.IsFalse(FEN.IsValid(position3));
             Assert.IsFalse(FEN.IsValid(position4));
         }
+
+        [TestMethod]
+        public void IsValid_InvalidRow_ShouldReturnFalse()
+        {
+            string position = "rnbqkbnr/ppppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            string position2 = "rnbqkbnr/pppppppp/9/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            string position3 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQ2BNR w KQkq - 0 1";
+            string position4 = "rnbqkbnr/pppppppp/8/8/8/8/P/RNBQKBNR w KQkq - 0 1";
+            string position5 = "rnbqkbnr/pppppppp/8/8/8/8/P8/RNBQKBNR w KQkq - 0 1";
+
+            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FEN.IsValid(position2));
+            Assert.IsFalse(FEN.IsValid(position3));
+            Assert.IsFalse(FEN.IsValid(position4));
+            Assert.IsFalse(FEN.IsValid(position5));
+        }
     }
 }
