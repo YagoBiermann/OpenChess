@@ -46,6 +46,16 @@ namespace OpenChess.Domain
             Row = notation[1];
         }
 
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (!(obj is Coordinate)) return false;
+            Coordinate c = (Coordinate)obj;
+            return Row == c.Row && Column == c.Column;
+        }
+
+        public override int GetHashCode() => (Column, Row).GetHashCode();
+
         public override string ToString()
         {
             return $"{Column}{Row}";
