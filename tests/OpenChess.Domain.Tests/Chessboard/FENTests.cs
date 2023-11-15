@@ -140,5 +140,19 @@ namespace OpenChess.Tests
             Assert.IsFalse(FEN.IsValid(position3));
             Assert.IsFalse(FEN.IsValid(position4));
         }
+
+        [TestMethod]
+        public void IsValidString_InvalidHalfMove_ShouldReturnFalse()
+        {
+            string position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQ-q - 0 1";
+            string position2 = "8/6b1/4k1P1/1q6/q7/K7/8/8 b - - TEST 63";
+            string position3 = "8/6b1/4k1P1/1q6/q7/K7/8/8 b - - 101 63";
+            string position4 = "8/6b1/4k1P1/1q6/q7/K7/8/8 b - - -1 63";
+
+            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FEN.IsValid(position2));
+            Assert.IsFalse(FEN.IsValid(position3));
+            Assert.IsFalse(FEN.IsValid(position4));
+        }
     }
 }
