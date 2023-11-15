@@ -28,5 +28,17 @@ namespace OpenChess.Tests
             Assert.IsFalse(FEN.IsValid(position2));
             Assert.IsFalse(FEN.IsValid(position3));
         }
+
+        [TestMethod]
+        public void IsValid_LessThanSixFields_ShouldReturnFalse()
+        {
+            string position = "w KQkq - 0 1";
+            string position2 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1";
+            string position3 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR KQkq - 0 1";
+
+            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FEN.IsValid(position2));
+            Assert.IsFalse(FEN.IsValid(position3));
+        }
     }
 }
