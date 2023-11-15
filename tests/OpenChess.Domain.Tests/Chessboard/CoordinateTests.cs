@@ -52,4 +52,16 @@ public class CoordinateTests
         Assert.AreEqual("H8", coordinate3.ToString());
     }
 
+
+    [TestMethod]
+    public void NewInstance_GivenInvalidAlgebraicNotation_ShouldThrowException()
+    {
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate("K1"));
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate("V2"));
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate("11"));
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate(".2"));
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate("A0"));
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate("A9"));
+        Assert.ThrowsException<CoordinateException>(() => new Coordinate("A10"));
+    }
 }
