@@ -5,6 +5,8 @@ namespace OpenChess.Domain
 {
     internal class Coordinate
     {
+        public char Row;
+        public char Column;
         private Dictionary<int, char> _columnMapping { get; } = new Dictionary<int, char>()
         {
             {0, 'A'},
@@ -27,8 +29,6 @@ namespace OpenChess.Domain
             {6, '7'},
             {7, '8'}
         };
-        public char Row;
-        public char Column;
 
         public Coordinate(int col, int row)
         {
