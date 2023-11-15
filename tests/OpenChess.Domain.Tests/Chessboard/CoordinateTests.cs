@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace OpenChess.Domain.Tests;
 
 [TestClass]
@@ -63,5 +65,23 @@ public class CoordinateTests
         Assert.ThrowsException<CoordinateException>(() => new Coordinate("A0"));
         Assert.ThrowsException<CoordinateException>(() => new Coordinate("A9"));
         Assert.ThrowsException<CoordinateException>(() => new Coordinate("A10"));
+    }
+
+    [TestMethod]
+    public void Equals_ObjectsWithSameAlgebraicNotation_ShouldReturnTrue()
+    {
+        Coordinate coordinate1 = new("A1");
+        Coordinate coordinate2 = new("A1");
+
+        Assert.IsTrue(coordinate1.Equals(coordinate2));
+    }
+
+    [TestMethod]
+    public void Equals_ObjectsWithDifferentAlgebraicNotation_ShouldReturnFalse()
+    {
+        Coordinate coordinate1 = new("A1");
+        Coordinate coordinate2 = new("A2");
+
+        Assert.IsFalse(coordinate1.Equals(coordinate2));
     }
 }
