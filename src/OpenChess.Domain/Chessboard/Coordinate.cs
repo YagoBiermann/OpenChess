@@ -8,7 +8,7 @@ namespace OpenChess.Domain
         static private HashSet<Coordinate> _cache = new();
         public char Row;
         public char Column;
-        private Dictionary<int, char> _columnMapping { get; } = new Dictionary<int, char>()
+        private static Dictionary<int, char> s_columnMapping = new()
         {
             {0, 'A'},
             {1, 'B'},
@@ -19,7 +19,7 @@ namespace OpenChess.Domain
             {6, 'G'},
             {7, 'H'}
         };
-        private Dictionary<int, char> _rowMapping { get; } = new Dictionary<int, char>()
+        private static Dictionary<int, char> s_rowMapping = new()
         {
             {0, '1'},
             {1, '2'},
@@ -35,8 +35,8 @@ namespace OpenChess.Domain
         {
             if (!IsValidRow(row)) { throw new CoordinateException("The row number is invalid!"); };
             if (!IsValidColumn(col)) { throw new CoordinateException("The column number is invalid!"); };
-            Column = _columnMapping[col];
-            Row = _rowMapping[row];
+            Column = s_columnMapping[col];
+            Row = s_rowMapping[row];
         }
 
         private Coordinate(string notation)
@@ -84,24 +84,24 @@ namespace OpenChess.Domain
             return $"{Column}{Row}";
         }
 
-        public bool IsValidRow(int value)
+        public static bool IsValidRow(int value)
         {
-            return _rowMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
+            return s_rowMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
         }
 
-        public bool IsValidColumn(int value)
+        public static bool IsValidColumn(int value)
         {
-            return _columnMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
+            return s_columnMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
         }
 
-        public bool IsValidRow(char value)
+        public static bool IsValidRow(char value)
         {
-            return _rowMapping.Where(kv => kv.Value.Equals(value)).ToList().Any();
+            return s_rowMapping.Where(kv => kv.Value.Equals(value)).ToList().Any();
         }
 
-        public bool IsValidColumn(char value)
+        public static bool IsValidColumn(char value)
         {
-            return _columnMapping.Where(kv => kv.Value.Equals(value)).ToList().Any();
+            return s_columnMapping.Where(kv => kv.Value.Equals(value)).ToList().Any();
         }
 
         private bool Equals(int col, int row)
@@ -109,7 +109,7 @@ namespace OpenChess.Domain
             if (!IsValidRow(row)) { throw new CoordinateException("The row number is invalid!"); };
             if (!IsValidColumn(col)) { throw new CoordinateException("The column number is invalid!"); };
 
-            return _columnMapping[col] == Column && _rowMapping[row] == Row;
+            return s_columnMapping[col] == Column && s_rowMapping[row] == Row;
         }
     }
 }
