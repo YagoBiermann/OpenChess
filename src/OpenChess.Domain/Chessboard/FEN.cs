@@ -10,8 +10,9 @@ namespace OpenChess.Domain
         {
             bool hasSixFields = HasSixFields(position);
             bool hasEightColumns = HasEightColumns(position);
+            bool hasDuplicatedSlashes = HasDuplicatedSlashes(position);
 
-            return hasSixFields && hasEightColumns;
+            return hasSixFields && hasEightColumns && !hasDuplicatedSlashes;
         }
 
         private static bool HasSixFields(string value)
@@ -28,5 +29,10 @@ namespace OpenChess.Domain
             return result;
         }
 
+        private static bool HasDuplicatedSlashes(string value)
+        {
+            bool hasDuplicatedSlashes = Regex.IsMatch(value, "//+");
+            return hasDuplicatedSlashes;
+        }
     }
 }
