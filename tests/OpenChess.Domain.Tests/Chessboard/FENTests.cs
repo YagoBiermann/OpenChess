@@ -154,5 +154,21 @@ namespace OpenChess.Tests
             Assert.IsFalse(FEN.IsValid(position3));
             Assert.IsFalse(FEN.IsValid(position4));
         }
+
+        [TestMethod]
+        public void IsValidString_InvalidFullMove_ShouldReturnFalse()
+        {
+            string position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 -1";
+            string position2 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1999";
+            string position3 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1201";
+            string position4 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 00";
+            string position5 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 FF";
+
+            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FEN.IsValid(position2));
+            Assert.IsFalse(FEN.IsValid(position3));
+            Assert.IsFalse(FEN.IsValid(position4));
+            Assert.IsFalse(FEN.IsValid(position5));
+        }
     }
 }
