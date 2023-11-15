@@ -8,9 +8,9 @@ public class CoordinateTests
     [TestMethod]
     public void NewInstance_GivenTwoNumbers_ShouldConvertToAlgebraicNotation()
     {
-        Coordinate coordinate = new(0, 0);
-        Coordinate coordinate2 = new(5, 2);
-        Coordinate coordinate3 = new(7, 7);
+        Coordinate coordinate = Coordinate.GetInstance(0, 0);
+        Coordinate coordinate2 = Coordinate.GetInstance(5, 2);
+        Coordinate coordinate3 = Coordinate.GetInstance(7, 7);
 
 
         Assert.AreEqual("A1", coordinate.ToString());
@@ -21,33 +21,33 @@ public class CoordinateTests
     [TestMethod]
     public void NewInstance_ColNumberLessThanZero_ShouldThrowException()
     {
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate(-1, 0));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance(-1, 0));
     }
 
     [TestMethod]
     public void NewInstance_RowNumberLessThanZero_ShouldThrowException()
     {
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate(0, -1));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance(0, -1));
     }
 
     [TestMethod]
     public void NewInstance_ColNumberGreaterThanSeven_ShouldThrowException()
     {
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate(8, 0));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance(8, 0));
     }
 
     [TestMethod]
     public void NewInstance_RowNumberGreaterThanSeven_ShouldThrowException()
     {
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate(0, 8));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance(0, 8));
     }
 
     [TestMethod]
     public void NewInstance_GivenAlgebraicNotation_ShouldInstantiateNewCoordinate()
     {
-        Coordinate coordinate = new("A1");
-        Coordinate coordinate2 = new("C4");
-        Coordinate coordinate3 = new("H8");
+        Coordinate coordinate = Coordinate.GetInstance("A1");
+        Coordinate coordinate2 = Coordinate.GetInstance("C4");
+        Coordinate coordinate3 = Coordinate.GetInstance("H8");
 
         Assert.AreEqual("A1", coordinate.ToString());
         Assert.AreEqual("C4", coordinate2.ToString());
@@ -58,20 +58,20 @@ public class CoordinateTests
     [TestMethod]
     public void NewInstance_GivenInvalidAlgebraicNotation_ShouldThrowException()
     {
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate("K1"));
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate("V2"));
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate("11"));
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate(".2"));
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate("A0"));
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate("A9"));
-        Assert.ThrowsException<CoordinateException>(() => new Coordinate("A10"));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance("K1"));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance("V2"));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance("11"));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance(".2"));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance("A0"));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance("A9"));
+        Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance("A10"));
     }
 
     [TestMethod]
     public void Equals_ObjectsWithSameAlgebraicNotation_ShouldReturnTrue()
     {
-        Coordinate coordinate1 = new("A1");
-        Coordinate coordinate2 = new("A1");
+        Coordinate coordinate1 = Coordinate.GetInstance("A1");
+        Coordinate coordinate2 = Coordinate.GetInstance("A1");
 
         Assert.IsTrue(coordinate1.Equals(coordinate2));
     }
@@ -79,8 +79,8 @@ public class CoordinateTests
     [TestMethod]
     public void Equals_ObjectsWithDifferentAlgebraicNotation_ShouldReturnFalse()
     {
-        Coordinate coordinate1 = new("A1");
-        Coordinate coordinate2 = new("A2");
+        Coordinate coordinate1 = Coordinate.GetInstance("A1");
+        Coordinate coordinate2 = Coordinate.GetInstance("A2");
 
         Assert.IsFalse(coordinate1.Equals(coordinate2));
     }
