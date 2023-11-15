@@ -47,6 +47,17 @@ namespace OpenChess.Domain
             Row = notation[1];
         }
 
+        public static Coordinate GetInstance(int col, int row)
+        {
+            Coordinate? coordinate = _cache.FirstOrDefault(c => c.Equals(col, row));
+            if (coordinate is null)
+            {
+                coordinate = new(col, row);
+                _cache.Add(coordinate);
+            }
+            return coordinate;
+        }
+
         public static Coordinate GetInstance(string notation)
         {
             Coordinate? coordinate = _cache.FirstOrDefault(c => c.ToString() == notation);
@@ -57,7 +68,7 @@ namespace OpenChess.Domain
             }
             return coordinate;
         }
-        
+
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
@@ -91,6 +102,14 @@ namespace OpenChess.Domain
         public bool IsValidColumn(char value)
         {
             return _columnMapping.Where(kv => kv.Value.Equals(value)).ToList().Any();
+        }
+
+        private bool Equals(int col, int row)
+        {
+            if (!IsValidRow(row)) { throw new CoordinateException("The row number is invalid!"); };
+            if (!IsValidColumn(col)) { throw new CoordinateException("The column number is invalid!"); };
+
+            return _columnMapping[col] == Column && _rowMapping[row] == Row;
         }
     }
 }
