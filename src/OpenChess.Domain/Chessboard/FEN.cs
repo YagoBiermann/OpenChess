@@ -16,8 +16,11 @@ namespace OpenChess.Domain
             List<string> fields = position.Split(" ").ToList();
             List<string> rows = fields[0].Split("/").ToList();
             bool hasValidRows = !rows.SkipWhile(IsValidRow).Any();
+            if (!hasValidRows) return false;
 
-            return hasValidRows;
+            bool isValidActiveColor = IsValidActiveColor(fields[1]);
+
+            return isValidActiveColor;
         }
 
         private static bool HasSixFields(string value)
@@ -57,6 +60,12 @@ namespace OpenChess.Domain
         private static bool HasValidPieces(string value)
         {
             Regex rx = new Regex(@"^[rnbqkbnrp]+$", RegexOptions.IgnoreCase);
+            return rx.IsMatch(value);
+        }
+
+        private static bool IsValidActiveColor(string value)
+        {
+            Regex rx = new(@"^(w|b)$", RegexOptions.None);
             return rx.IsMatch(value);
         }
     }
