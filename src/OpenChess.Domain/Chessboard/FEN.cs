@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 [assembly: InternalsVisibleTo("OpenChess.Test")]
 namespace OpenChess.Domain
@@ -8,7 +9,9 @@ namespace OpenChess.Domain
         public static bool IsValid(string position)
         {
             bool hasSixFields = HasSixFields(position);
-            return hasSixFields;
+            bool hasEightColumns = HasEightColumns(position);
+
+            return hasSixFields && hasEightColumns;
         }
 
         private static bool HasSixFields(string value)
@@ -16,6 +19,13 @@ namespace OpenChess.Domain
             int fields = value.Split(" ").Count();
             bool hasValidFields = fields == 6;
             return hasValidFields;
+        }
+
+        private static bool HasEightColumns(string value)
+        {
+            int columns = value.Split("/").Length;
+            bool result = columns == 8;
+            return result;
         }
 
     }
