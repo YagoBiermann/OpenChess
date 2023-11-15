@@ -7,9 +7,16 @@ namespace OpenChess.Domain
     {
         public static bool IsValid(string position)
         {
-            return true;
+            bool hasSixFields = HasSixFields(position);
+            return hasSixFields;
         }
 
+        private static bool HasSixFields(string value)
+        {
+            int fields = value.Split(" ").Count();
+            bool hasValidFields = fields == 6;
+            return hasValidFields;
+        }
 
     }
 }
