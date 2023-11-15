@@ -47,6 +47,17 @@ namespace OpenChess.Domain
             Row = notation[1];
         }
 
+        public static Coordinate GetInstance(string notation)
+        {
+            Coordinate? coordinate = _cache.FirstOrDefault(c => c.ToString() == notation);
+            if (coordinate is null)
+            {
+                coordinate = new(notation);
+                _cache.Add(coordinate);
+            }
+            return coordinate;
+        }
+        
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
