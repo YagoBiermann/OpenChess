@@ -84,4 +84,14 @@ public class CoordinateTests
 
         Assert.IsFalse(coordinate1.Equals(coordinate2));
     }
+
+    [TestMethod]
+    public void NewInstance_ObjectThatAlreadyExists_ShouldReturnFromCache()
+    {
+        Coordinate coordinate1 = Coordinate.GetInstance("A1");
+        Coordinate coordinate2 = Coordinate.GetInstance("A1");
+
+
+        Assert.IsTrue(ReferenceEquals(coordinate1, coordinate2));
+    }
 }
