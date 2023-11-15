@@ -22,8 +22,9 @@ namespace OpenChess.Domain
             bool isValidCastling = IsValidCastlingField(fields[2]);
             bool isValidEnPassant = IsValidEnPassant(fields[3]);
             bool isValidHalfMove = IsValidHalfMove(fields[4]);
+            bool isValidFullMove = IsValidFullMove(fields[5]);
 
-            return isValidActiveColor && isValidCastling && isValidEnPassant && isValidHalfMove;
+            return isValidActiveColor && isValidCastling && isValidEnPassant && isValidHalfMove && isValidFullMove;
         }
 
         private static bool HasSixFields(string value)
@@ -86,6 +87,12 @@ namespace OpenChess.Domain
         private static bool IsValidHalfMove(string value)
         {
             Regex rx = new(@"^(?:[0-9]\d?|100)$", RegexOptions.None);
+            return rx.IsMatch(value);
+        }
+
+        private static bool IsValidFullMove(string value)
+        {
+            Regex rx = new(@"^(?:[1-9]\d{0,2}|1000)$", RegexOptions.None);
             return rx.IsMatch(value);
         }
     }
