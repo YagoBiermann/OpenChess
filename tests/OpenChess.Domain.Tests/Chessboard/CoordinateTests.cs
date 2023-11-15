@@ -4,19 +4,6 @@ namespace OpenChess.Domain.Tests;
 public class CoordinateTests
 {
     [TestMethod]
-    public void NewInstance_GivenTwoNumbers_ShouldConvertToAlgebraicNotation()
-    {
-        Coordinate coordinate = Coordinate.GetInstance(0, 0);
-        Coordinate coordinate2 = Coordinate.GetInstance(5, 2);
-        Coordinate coordinate3 = Coordinate.GetInstance(7, 7);
-
-
-        Assert.AreEqual("A1", coordinate.ToString());
-        Assert.AreEqual("F3", coordinate2.ToString());
-        Assert.AreEqual("H8", coordinate3.ToString());
-    }
-
-    [TestMethod]
     public void NewInstance_ColNumberLessThanZero_ShouldThrowException()
     {
         Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance(-1, 0));
@@ -38,6 +25,19 @@ public class CoordinateTests
     public void NewInstance_RowNumberGreaterThanSeven_ShouldThrowException()
     {
         Assert.ThrowsException<CoordinateException>(() => Coordinate.GetInstance(0, 8));
+    }
+
+    [TestMethod]
+    public void NewInstance_GivenTwoNumbers_ShouldConvertToAlgebraicNotation()
+    {
+        Coordinate coordinate = Coordinate.GetInstance(0, 0);
+        Coordinate coordinate2 = Coordinate.GetInstance(5, 2);
+        Coordinate coordinate3 = Coordinate.GetInstance(7, 7);
+
+
+        Assert.AreEqual("A1", coordinate.ToString());
+        Assert.AreEqual("F3", coordinate2.ToString());
+        Assert.AreEqual("H8", coordinate3.ToString());
     }
 
     [TestMethod]
