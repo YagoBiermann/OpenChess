@@ -190,6 +190,19 @@ public class CoordinateTests
     public void IsValidColumn_GivenInvalidInt_ShouldReturnFalse()
     {
         Assert.IsFalse(Coordinate.IsValidColumn(9));
+        Assert.IsFalse(Coordinate.IsValidColumn(8));
+        Assert.IsFalse(Coordinate.IsValidColumn(-1));
+        Assert.IsFalse(Coordinate.IsValidColumn(-10));
+        Assert.IsFalse(Coordinate.IsValidColumn(10));
+        Assert.IsFalse(Coordinate.IsValidColumn(100));
+    }
+
+
+    [TestMethod]
+    public void IsValidRow_GivenInvalidInt_ShouldReturnFalse()
+    {
+        Assert.IsFalse(Coordinate.IsValidColumn(9));
+        Assert.IsFalse(Coordinate.IsValidColumn(8));
         Assert.IsFalse(Coordinate.IsValidColumn(-1));
         Assert.IsFalse(Coordinate.IsValidColumn(-10));
         Assert.IsFalse(Coordinate.IsValidColumn(10));
