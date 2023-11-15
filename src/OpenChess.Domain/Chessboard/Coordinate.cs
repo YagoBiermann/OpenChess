@@ -31,7 +31,7 @@ namespace OpenChess.Domain
             {7, '8'}
         };
 
-        public Coordinate(int col, int row)
+        private Coordinate(int col, int row)
         {
             if (!IsValidRow(row)) { throw new CoordinateException("The row number is invalid!"); };
             if (!IsValidColumn(col)) { throw new CoordinateException("The column number is invalid!"); };
@@ -39,7 +39,7 @@ namespace OpenChess.Domain
             Row = _rowMapping[row];
         }
 
-        public Coordinate(string notation)
+        private Coordinate(string notation)
         {
             if (notation.Length > 2) throw new CoordinateException("Invalid Algebraic notation!");
             if (!IsValidColumn(notation[0]) || !IsValidRow(notation[1])) { throw new CoordinateException("Invalid Algebraic notation!"); };
