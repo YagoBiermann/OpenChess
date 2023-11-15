@@ -40,6 +40,8 @@ namespace OpenChess.Domain
 
         public Coordinate(string notation)
         {
+            if (notation.Length > 2) throw new CoordinateException("Invalid Algebraic notation!");
+            if (!IsValidColumn(notation[0]) || !IsValidRow(notation[1])) { throw new CoordinateException("Invalid Algebraic notation!"); };
             Column = notation[0];
             Row = notation[1];
         }
