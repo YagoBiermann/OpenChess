@@ -11,8 +11,13 @@ namespace OpenChess.Domain
             bool hasSixFields = HasSixFields(position);
             bool hasEightColumns = HasEightColumns(position);
             bool hasDuplicatedSlashes = HasDuplicatedSlashes(position);
+            if (!hasSixFields || !hasEightColumns || hasDuplicatedSlashes) return false;
 
-            return hasSixFields && hasEightColumns && !hasDuplicatedSlashes;
+            List<string> fields = position.Split(" ").ToList();
+            List<string> rows = fields[0].Split("/").ToList();
+            bool hasValidRows = !rows.SkipWhile(IsValidRow).Any();
+
+            return hasValidRows;
         }
 
         private static bool HasSixFields(string value)
@@ -33,6 +38,26 @@ namespace OpenChess.Domain
         {
             bool hasDuplicatedSlashes = Regex.IsMatch(value, "//+");
             return hasDuplicatedSlashes;
+        }
+
+        private static bool IsValidRow(string value)
+        {
+            string pieces = Regex.Replace(value, @"\d", "");
+            int emptySquareSum = value.Where(char.IsDigit).Select(v => int.Parse(v.ToString())).Sum();
+
+            if (!HasValidPieces(pieces) && emptySquareSum < 8) { return false; }
+
+            int piecesCount = pieces.Count();
+            int totalSum = emptySquareSum + piecesCount;
+            bool isValidRow = totalSum == 8;
+
+            return isValidRow;
+        }
+
+        private static bool HasValidPieces(string value)
+        {
+            Regex rx = new Regex(@"^[rnbqkbnrp]+$", RegexOptions.IgnoreCase);
+            return rx.IsMatch(value);
         }
     }
 }
