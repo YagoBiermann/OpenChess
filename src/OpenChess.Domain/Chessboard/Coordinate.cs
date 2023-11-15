@@ -5,6 +5,7 @@ namespace OpenChess.Domain
 {
     internal class Coordinate
     {
+        static private HashSet<Coordinate> _cache = new();
         public char Row;
         public char Column;
         private Dictionary<int, char> _columnMapping { get; } = new Dictionary<int, char>()
