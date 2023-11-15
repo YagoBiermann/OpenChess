@@ -92,5 +92,19 @@ namespace OpenChess.Tests
             Assert.IsFalse(FEN.IsValid(position4));
             Assert.IsFalse(FEN.IsValid(position5));
         }
+
+        [TestMethod]
+        public void IsValid_InvalidActiveColor_ShouldReturnFalse()
+        {
+            string position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1";
+            string position2 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR 0 KQkq - 0 1";
+            string position3 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR B KQkq - 0 1";
+            string position4 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR W KQkq - 0 1";
+
+            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FEN.IsValid(position2));
+            Assert.IsFalse(FEN.IsValid(position3));
+            Assert.IsFalse(FEN.IsValid(position4));
+        }
     }
 }
