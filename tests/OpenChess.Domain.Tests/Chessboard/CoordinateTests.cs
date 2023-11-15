@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace OpenChess.Domain.Tests;
 
 [TestClass]
@@ -110,5 +108,18 @@ public class CoordinateTests
 
         Assert.IsFalse(ReferenceEquals(coordinate, coordinate2));
         Assert.IsFalse(ReferenceEquals(coordinate3, coordinate4));
+    }
+
+    [TestMethod]
+    public void IsValidColumn_GivenValidChar_ShouldReturnTrue()
+    {
+        Assert.IsTrue(Coordinate.IsValidColumn('A'));
+        Assert.IsTrue(Coordinate.IsValidColumn('B'));
+        Assert.IsTrue(Coordinate.IsValidColumn('C'));
+        Assert.IsTrue(Coordinate.IsValidColumn('D'));
+        Assert.IsTrue(Coordinate.IsValidColumn('E'));
+        Assert.IsTrue(Coordinate.IsValidColumn('F'));
+        Assert.IsTrue(Coordinate.IsValidColumn('G'));
+        Assert.IsTrue(Coordinate.IsValidColumn('H'));
     }
 }
