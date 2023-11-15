@@ -19,8 +19,9 @@ namespace OpenChess.Domain
             if (!hasValidRows) return false;
 
             bool isValidActiveColor = IsValidActiveColor(fields[1]);
+            bool isValidEnPassant = IsValidEnPassant(fields[3]);
 
-            return isValidActiveColor;
+            return isValidActiveColor && isValidEnPassant;
         }
 
         private static bool HasSixFields(string value)
@@ -66,6 +67,12 @@ namespace OpenChess.Domain
         private static bool IsValidActiveColor(string value)
         {
             Regex rx = new(@"^(w|b)$", RegexOptions.None);
+            return rx.IsMatch(value);
+        }
+
+        private static bool IsValidEnPassant(string value)
+        {
+            Regex rx = new(@"^([A-H](3|6))|(-)$", RegexOptions.None);
             return rx.IsMatch(value);
         }
     }
