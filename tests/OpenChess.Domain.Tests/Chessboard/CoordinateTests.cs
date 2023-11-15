@@ -135,4 +135,17 @@ public class CoordinateTests
         Assert.IsTrue(Coordinate.IsValidRow('7'));
         Assert.IsTrue(Coordinate.IsValidRow('8'));
     }
+
+    [TestMethod]
+    public void IsValidColumn_GivenValidInt_ShouldReturnTrue()
+    {
+        Assert.IsTrue(Coordinate.IsValidColumn(0));
+        Assert.IsTrue(Coordinate.IsValidColumn(1));
+        Assert.IsTrue(Coordinate.IsValidColumn(2));
+        Assert.IsTrue(Coordinate.IsValidColumn(3));
+        Assert.IsTrue(Coordinate.IsValidColumn(4));
+        Assert.IsTrue(Coordinate.IsValidColumn(5));
+        Assert.IsTrue(Coordinate.IsValidColumn(6));
+        Assert.IsTrue(Coordinate.IsValidColumn(7));
+    }
 }
