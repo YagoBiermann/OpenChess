@@ -62,5 +62,19 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(FEN.IsValid(position));
         }
+
+        [TestMethod]
+        public void IsValid_DuplicatedSlashes_ShouldReturnFalse()
+        {
+            string position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR// w KQkq - 0 1";
+            string position2 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP//RNBQKBNR w KQkq - 0 1";
+            string position3 = "rnbqkbnr/pppppppp/8/8/8//8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            string position4 = "//rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FEN.IsValid(position2));
+            Assert.IsFalse(FEN.IsValid(position3));
+            Assert.IsFalse(FEN.IsValid(position4));
+        }
     }
 }
