@@ -161,4 +161,15 @@ public class CoordinateTests
         Assert.IsTrue(Coordinate.IsValidRow(6));
         Assert.IsTrue(Coordinate.IsValidRow(7));
     }
+
+    [TestMethod]
+    public void IsValidColumn_GivenInvalidChar_ShouldReturnFalse()
+    {
+        Assert.IsFalse(Coordinate.IsValidColumn('N'));
+        Assert.IsFalse(Coordinate.IsValidColumn('X'));
+        Assert.IsFalse(Coordinate.IsValidColumn('.'));
+        Assert.IsFalse(Coordinate.IsValidColumn('1'));
+        Assert.IsFalse(Coordinate.IsValidColumn('6'));
+        Assert.IsFalse(Coordinate.IsValidColumn('z'));
+    }
 }
