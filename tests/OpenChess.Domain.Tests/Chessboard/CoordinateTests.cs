@@ -94,4 +94,13 @@ public class CoordinateTests
 
         Assert.IsTrue(ReferenceEquals(coordinate1, coordinate2));
     }
+
+    [TestMethod]
+    public void NewInstance_DifferentObjects_ShouldNotReferenceSameInstance()
+    {
+        Coordinate coordinate = Coordinate.GetInstance("A1");
+        Coordinate coordinate2 = Coordinate.GetInstance("A2");
+
+        Assert.IsFalse(ReferenceEquals(coordinate, coordinate2));
+    }
 }
