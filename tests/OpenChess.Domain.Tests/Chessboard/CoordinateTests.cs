@@ -86,7 +86,7 @@ public class CoordinateTests
     }
 
     [TestMethod]
-    public void NewInstance_ObjectThatAlreadyExists_ShouldReturnFromCache()
+    public void GetInstance_ObjectThatAlreadyExists_ShouldReturnFromCache()
     {
         Coordinate coordinate1 = Coordinate.GetInstance("A1");
         Coordinate coordinate2 = Coordinate.GetInstance("A1");
@@ -96,7 +96,7 @@ public class CoordinateTests
     }
 
     [TestMethod]
-    public void NewInstance_DifferentObjects_ShouldNotReferenceSameInstance()
+    public void GetInstance_DifferentObjects_ShouldNotReferenceSameInstance()
     {
         Coordinate coordinate = Coordinate.GetInstance("A1");
         Coordinate coordinate2 = Coordinate.GetInstance("A2");
