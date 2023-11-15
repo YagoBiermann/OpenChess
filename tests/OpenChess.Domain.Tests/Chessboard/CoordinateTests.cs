@@ -91,8 +91,12 @@ public class CoordinateTests
         Coordinate coordinate1 = Coordinate.GetInstance("A1");
         Coordinate coordinate2 = Coordinate.GetInstance("A1");
 
+        Coordinate coordinate3 = Coordinate.GetInstance(0, 2);
+        Coordinate coordinate4 = Coordinate.GetInstance(0, 2);
+
 
         Assert.IsTrue(ReferenceEquals(coordinate1, coordinate2));
+        Assert.IsTrue(ReferenceEquals(coordinate3, coordinate4));
     }
 
     [TestMethod]
@@ -101,6 +105,10 @@ public class CoordinateTests
         Coordinate coordinate = Coordinate.GetInstance("A1");
         Coordinate coordinate2 = Coordinate.GetInstance("A2");
 
+        Coordinate coordinate3 = Coordinate.GetInstance(0, 2);
+        Coordinate coordinate4 = Coordinate.GetInstance(0, 3);
+
         Assert.IsFalse(ReferenceEquals(coordinate, coordinate2));
+        Assert.IsFalse(ReferenceEquals(coordinate3, coordinate4));
     }
 }
