@@ -40,5 +40,19 @@ namespace OpenChess.Tests
             Assert.IsFalse(FEN.IsValid(position2));
             Assert.IsFalse(FEN.IsValid(position3));
         }
+
+        [TestMethod]
+        public void IsValid_LessThanEightColumns_ShouldReturnFalse()
+        {
+            string position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP w KQkq - 0 1";
+            string position2 = "rnbqkbnr/pppppppp/8/8/8/PPPPPPPP w KQkq - 0 1";
+            string position3 = "rnbqkbnr";
+            string position4 = "";
+
+            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FEN.IsValid(position2));
+            Assert.IsFalse(FEN.IsValid(position3));
+            Assert.IsFalse(FEN.IsValid(position4));
+        }
     }
 }
