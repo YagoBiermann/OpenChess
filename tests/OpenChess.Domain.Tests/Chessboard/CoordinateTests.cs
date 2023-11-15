@@ -172,4 +172,17 @@ public class CoordinateTests
         Assert.IsFalse(Coordinate.IsValidColumn('6'));
         Assert.IsFalse(Coordinate.IsValidColumn('z'));
     }
+
+    [TestMethod]
+    public void IsValidRow_GivenInvalidChar_ShouldReturnFalse()
+    {
+        Assert.IsFalse(Coordinate.IsValidRow('0'));
+        Assert.IsFalse(Coordinate.IsValidRow('9'));
+        Assert.IsFalse(Coordinate.IsValidRow('.'));
+        Assert.IsFalse(Coordinate.IsValidRow('f'));
+        Assert.IsFalse(Coordinate.IsValidRow(';'));
+        Assert.IsFalse(Coordinate.IsValidRow('A'));
+        Assert.IsFalse(Coordinate.IsValidRow('F'));
+        Assert.IsFalse(Coordinate.IsValidRow('G'));
+    }
 }
