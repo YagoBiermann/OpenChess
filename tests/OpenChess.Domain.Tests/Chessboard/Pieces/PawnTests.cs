@@ -28,5 +28,21 @@ namespace OpenChess.Tests
             Assert.IsFalse(pawn.Directions.Contains(new Left()));
             Assert.IsFalse(pawn.Directions.Contains(new Right()));
         }
+
+        [TestMethod]
+        public void NewInstance_WhiteDirections_ShouldBeUpwards()
+        {
+            Pawn pawn = new(Color.White, Coordinate.GetInstance("A2"));
+
+            Assert.IsTrue(pawn.Directions.Contains(new UpperRight()));
+            Assert.IsTrue(pawn.Directions.Contains(new UpperLeft()));
+            Assert.IsTrue(pawn.Directions.Contains(new Up()));
+
+            Assert.IsFalse(pawn.Directions.Contains(new Down()));
+            Assert.IsFalse(pawn.Directions.Contains(new LowerLeft()));
+            Assert.IsFalse(pawn.Directions.Contains(new LowerRight()));
+            Assert.IsFalse(pawn.Directions.Contains(new Left()));
+            Assert.IsFalse(pawn.Directions.Contains(new Right()));
+        }
     }
 }
