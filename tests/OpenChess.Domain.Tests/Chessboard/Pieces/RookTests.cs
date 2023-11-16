@@ -20,5 +20,15 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(rook.Name, 'R');
         }
+
+        [TestMethod]
+        public void IsLongRange_ShouldBeTrue()
+        {
+            Rook rook = new(Color.White, Coordinate.GetInstance("A1"));
+            Rook rook2 = new(Color.Black, Coordinate.GetInstance("A1"));
+
+            Assert.IsTrue(rook.IsLongRange);
+            Assert.IsTrue(rook2.IsLongRange);
+        }
     }
 }
