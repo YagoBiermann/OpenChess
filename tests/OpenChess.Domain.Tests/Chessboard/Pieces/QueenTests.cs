@@ -21,5 +21,14 @@ namespace OpenChess.Tests
             Assert.AreEqual(queen.Name, 'Q');
         }
 
+        [TestMethod]
+        public void IsLongeRangeProperty_ShouldBeTrue()
+        {
+            Queen queen = new(Color.White, Coordinate.GetInstance("D1"));
+            Queen queen2 = new(Color.Black, Coordinate.GetInstance("D1"));
+
+            Assert.IsTrue(queen.IsLongRange);
+            Assert.IsTrue(queen2.IsLongRange);
+        }
     }
 }
