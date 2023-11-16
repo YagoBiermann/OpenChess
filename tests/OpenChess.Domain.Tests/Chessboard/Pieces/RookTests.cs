@@ -30,5 +30,23 @@ namespace OpenChess.Tests
             Assert.IsTrue(rook.IsLongRange);
             Assert.IsTrue(rook2.IsLongRange);
         }
+
+        [TestMethod]
+        public void DirectionsProperty_ShouldReturnUpDownLeftRight()
+        {
+            Rook rook = new(Color.White, Coordinate.GetInstance("A1"));
+            Rook rook2 = new(Color.Black, Coordinate.GetInstance("A1"));
+
+            List<Direction> directions = new()
+            {
+                new Up(),
+                new Down(),
+                new Left(),
+                new Right(),
+            };
+
+            CollectionAssert.AreEquivalent(directions, rook.Directions);
+            CollectionAssert.AreEquivalent(directions, rook2.Directions);
+        }
     }
 }
