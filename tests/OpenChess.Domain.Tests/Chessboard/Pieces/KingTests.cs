@@ -29,5 +29,27 @@ namespace OpenChess.Tests
             Assert.IsFalse(king.IsLongRange);
             Assert.IsFalse(king2.IsLongRange);
         }
+
+        [TestMethod]
+        public void DirectionsProperty_ShouldReturnAllDirections()
+        {
+            King king = new(Color.White, Coordinate.GetInstance("E1"));
+            King king2 = new(Color.Black, Coordinate.GetInstance("E8"));
+
+            List<Direction> directions = new()
+            {
+                new Up(),
+                new Down(),
+                new Left(),
+                new Right(),
+                new UpperLeft(),
+                new UpperRight(),
+                new LowerLeft(),
+                new LowerRight()
+            };
+
+            CollectionAssert.AreEquivalent(directions, king.Directions);
+            CollectionAssert.AreEquivalent(directions, king2.Directions);
+        }
     }
 }
