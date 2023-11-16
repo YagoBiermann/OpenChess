@@ -86,5 +86,19 @@ namespace OpenChess.Tests
             UpperRight upperRight = new();
             Assert.AreEqual(upperRight.Y, 1);
         }
+
+        [TestMethod]
+        public void LowerLeft_X_Returns_negative1()
+        {
+            LowerLeft lowerLeft = new();
+            Assert.AreEqual(lowerLeft.X, -1);
+        }
+        [TestMethod]
+        public void LowerLeft_Y_Returns_negative1()
+        {
+            LowerLeft lowerLeft = new();
+            Assert.AreEqual(lowerLeft.Y, -1);
+        }
+
     }
 }
