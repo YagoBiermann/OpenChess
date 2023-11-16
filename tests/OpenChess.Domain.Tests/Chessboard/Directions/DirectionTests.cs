@@ -33,5 +33,20 @@ namespace OpenChess.Tests
             Down down = new();
             Assert.AreEqual(down.Y, -1);
         }
+
+        [TestMethod]
+        public void Left_X_Returns_negative1()
+        {
+            Left left = new();
+            Assert.AreEqual(left.X, -1);
+
+        }
+        [TestMethod]
+        public void Left_Y_Returns_0()
+        {
+            Left left = new();
+            Assert.AreEqual(left.Y, 0);
+        }
+
     }
 }
