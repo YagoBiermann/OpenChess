@@ -6,11 +6,11 @@ namespace OpenChess.Tests
     public class PawnTests
     {
         [TestMethod]
-        public void NewInstance_MoveAmount_ShouldBe1()
+        public void NewInstance_IsLongRange_ShouldBeFalse()
         {
             Pawn pawn = new(Color.Black, Coordinate.GetInstance("A2"));
 
-            Assert.AreEqual(pawn.MoveAmount, 1);
+            Assert.IsFalse(pawn.IsLongRange);
         }
 
         [TestMethod]
