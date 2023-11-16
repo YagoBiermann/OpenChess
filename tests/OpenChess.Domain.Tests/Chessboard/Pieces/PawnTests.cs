@@ -6,7 +6,7 @@ namespace OpenChess.Tests
     public class PawnTests
     {
         [TestMethod]
-        public void NewInstance_IsLongRange_ShouldBeFalse()
+        public void IsLongRangeProperty_ShouldBeFalse()
         {
             Pawn pawn = new(Color.Black, Coordinate.GetInstance("A2"));
 
