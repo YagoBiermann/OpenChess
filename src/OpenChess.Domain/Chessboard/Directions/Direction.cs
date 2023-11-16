@@ -23,5 +23,19 @@ namespace OpenChess.Domain
         {
             get => _y;
         }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (obj is not Direction) return false;
+            Direction other = (Direction)obj;
+
+            return X.Equals(other.X) && Y.Equals(other.Y);
+        }
     }
 }
