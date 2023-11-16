@@ -19,5 +19,15 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(knight.Name, 'N');
         }
+
+        [TestMethod]
+        public void IsLongRangeProperty_ShouldBeFalse()
+        {
+            Knight knight = new(Color.White, Coordinate.GetInstance("B1"));
+            Knight knight2 = new(Color.Black, Coordinate.GetInstance("B8"));
+
+            Assert.IsFalse(knight.IsLongRange);
+            Assert.IsFalse(knight2.IsLongRange);
+        }
     }
 }
