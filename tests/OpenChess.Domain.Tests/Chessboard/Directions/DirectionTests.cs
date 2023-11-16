@@ -3,7 +3,7 @@ using OpenChess.Domain;
 namespace OpenChess.Tests
 {
     [TestClass]
-    class DirectionTests
+    public class DirectionTests
     {
         [TestMethod]
         public void Up_X_Returns_0()
@@ -98,6 +98,19 @@ namespace OpenChess.Tests
         {
             LowerLeft lowerLeft = new();
             Assert.AreEqual(lowerLeft.Y, -1);
+        }
+
+        [TestMethod]
+        public void LowerRight_X_Returns_1()
+        {
+            LowerRight lowerRight = new();
+            Assert.AreEqual(lowerRight.X, 1);
+        }
+        [TestMethod]
+        public void LowerRight_Y_Returns_negative1()
+        {
+            LowerRight lowerRight = new();
+            Assert.AreEqual(lowerRight.Y, -1);
         }
 
     }
