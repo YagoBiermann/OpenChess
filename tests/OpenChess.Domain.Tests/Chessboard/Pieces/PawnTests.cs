@@ -44,5 +44,21 @@ namespace OpenChess.Tests
             Assert.IsFalse(pawn.Directions.Contains(new Left()));
             Assert.IsFalse(pawn.Directions.Contains(new Right()));
         }
+
+        [TestMethod]
+        public void NameProperty_WhitePawn_ShoulBeUppercaseP()
+        {
+            Pawn pawn = new(Color.White, Coordinate.GetInstance("A2"));
+
+            Assert.AreEqual(pawn.Name, 'P');
+        }
+
+        [TestMethod]
+        public void NameProperty_BlackPawn_ShoulBeLowecaseP()
+        {
+            Pawn pawn = new(Color.Black, Coordinate.GetInstance("A2"));
+
+            Assert.AreEqual(pawn.Name, 'p');
+        }
     }
 }
