@@ -6,7 +6,7 @@ namespace OpenChess.Domain
         public Color Color { get; }
         public abstract char Name { get; }
         public abstract List<Direction> Directions { get; }
-        public abstract int MoveAmount { get; }
+        public abstract bool IsLongRange { get; }
 
         public Piece(Color color, Coordinate origin)
         {

@@ -19,7 +19,7 @@ namespace OpenChess.Domain
 
         public override List<Direction> Directions => Color == Color.Black ? BlackDirections() : WhiteDirections();
 
-        public override int MoveAmount => 1;
+        public override bool IsLongRange => false;
 
         private List<Direction> BlackDirections()
         {
