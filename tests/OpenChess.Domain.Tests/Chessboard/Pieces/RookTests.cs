@@ -22,7 +22,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void IsLongRange_ShouldBeTrue()
+        public void IsLongRangeProperty_ShouldBeTrue()
         {
             Rook rook = new(Color.White, Coordinate.GetInstance("A1"));
             Rook rook2 = new(Color.Black, Coordinate.GetInstance("A1"));

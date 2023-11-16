@@ -32,7 +32,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void Directions_ShouldReturnAllDirections()
+        public void DirectionsProperty_ShouldReturnAllDirections()
         {
             Queen queen = new(Color.White, Coordinate.GetInstance("D1"));
             Queen queen2 = new(Color.Black, Coordinate.GetInstance("D1"));
