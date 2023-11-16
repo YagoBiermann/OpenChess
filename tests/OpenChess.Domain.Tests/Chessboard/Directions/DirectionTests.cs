@@ -12,7 +12,6 @@ namespace OpenChess.Tests
             Assert.AreEqual(up.X, 0);
 
         }
-
         [TestMethod]
         public void Up_Y_Returns_1()
         {
@@ -46,6 +45,20 @@ namespace OpenChess.Tests
         {
             Left left = new();
             Assert.AreEqual(left.Y, 0);
+        }
+
+        [TestMethod]
+        public void Right_X_Returns_1()
+        {
+            Right right = new();
+            Assert.AreEqual(right.X, 1);
+
+        }
+        [TestMethod]
+        public void Right_Y_Returns_0()
+        {
+            Right right = new();
+            Assert.AreEqual(right.Y, 0);
         }
 
     }
