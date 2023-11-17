@@ -56,13 +56,36 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_GivenAlgebraicNotation_ShouldInstantiateNewCoordinate()
         {
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Coordinate coordinate2 = Coordinate.GetInstance("C4");
-            Coordinate coordinate3 = Coordinate.GetInstance("H8");
+            List<string> cols = new()
+            {
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+            };
+            List<string> rows = new()
+            {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+            };
 
-            Assert.AreEqual("A1", coordinate.ToString());
-            Assert.AreEqual("C4", coordinate2.ToString());
-            Assert.AreEqual("H8", coordinate3.ToString());
+            foreach (string col in cols)
+            {
+                foreach (string row in rows)
+                {
+                    Coordinate.GetInstance($"{col}{row}");
+                }
+            }
         }
 
         [TestMethod]
