@@ -92,6 +92,14 @@ namespace OpenChess.Domain
             }
         }
 
+        public int ColumnToInt
+        {
+            get
+            {
+                return s_columnMapping.FirstOrDefault(k => k.Value == Column).Key;
+            }
+        }
+
         public static bool IsValidRow(int value)
         {
             return s_rowMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
