@@ -228,5 +228,27 @@ namespace OpenChess.Tests
             Assert.AreEqual(6, coordinate6.RowToInt);
             Assert.AreEqual(7, coordinate7.RowToInt);
         }
+
+        [TestMethod]
+        public void ColumnToIndex_ShouldReturnColumnAsInt()
+        {
+            Coordinate coordinate0 = Coordinate.GetInstance("A1");
+            Coordinate coordinate1 = Coordinate.GetInstance("B2");
+            Coordinate coordinate2 = Coordinate.GetInstance("C3");
+            Coordinate coordinate3 = Coordinate.GetInstance("D4");
+            Coordinate coordinate4 = Coordinate.GetInstance("E5");
+            Coordinate coordinate5 = Coordinate.GetInstance("F6");
+            Coordinate coordinate6 = Coordinate.GetInstance("G7");
+            Coordinate coordinate7 = Coordinate.GetInstance("H8");
+
+            Assert.AreEqual(0, coordinate0.ColumnToInt);
+            Assert.AreEqual(1, coordinate1.ColumnToInt);
+            Assert.AreEqual(2, coordinate2.ColumnToInt);
+            Assert.AreEqual(3, coordinate3.ColumnToInt);
+            Assert.AreEqual(4, coordinate4.ColumnToInt);
+            Assert.AreEqual(5, coordinate5.ColumnToInt);
+            Assert.AreEqual(6, coordinate6.ColumnToInt);
+            Assert.AreEqual(7, coordinate7.ColumnToInt);
+        }
     }
 };
