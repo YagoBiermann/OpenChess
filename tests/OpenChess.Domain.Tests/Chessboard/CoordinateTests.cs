@@ -206,5 +206,27 @@ namespace OpenChess.Tests
             Assert.IsFalse(Coordinate.IsValidColumn(10));
             Assert.IsFalse(Coordinate.IsValidColumn(100));
         }
+
+        [TestMethod]
+        public void RowToIndex_ShouldReturnRowAsInt()
+        {
+            Coordinate coordinate0 = Coordinate.GetInstance("A1");
+            Coordinate coordinate1 = Coordinate.GetInstance("A2");
+            Coordinate coordinate2 = Coordinate.GetInstance("B3");
+            Coordinate coordinate3 = Coordinate.GetInstance("C4");
+            Coordinate coordinate4 = Coordinate.GetInstance("D5");
+            Coordinate coordinate5 = Coordinate.GetInstance("D6");
+            Coordinate coordinate6 = Coordinate.GetInstance("D7");
+            Coordinate coordinate7 = Coordinate.GetInstance("D8");
+
+            Assert.AreEqual(0, coordinate0.RowToInt);
+            Assert.AreEqual(1, coordinate1.RowToInt);
+            Assert.AreEqual(2, coordinate2.RowToInt);
+            Assert.AreEqual(3, coordinate3.RowToInt);
+            Assert.AreEqual(4, coordinate4.RowToInt);
+            Assert.AreEqual(5, coordinate5.RowToInt);
+            Assert.AreEqual(6, coordinate6.RowToInt);
+            Assert.AreEqual(7, coordinate7.RowToInt);
+        }
     }
 };
