@@ -36,5 +36,19 @@ namespace OpenChess.Tests
 
             Assert.IsNull(square.Piece);
         }
+
+        [TestMethod]
+        public void Setter_SettingPiece_ShouldReplaceTheCurrentPiece()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+            Coordinate coordinate2 = Coordinate.GetInstance("A4");
+            Pawn pawn = new(Color.Black, coordinate);
+            Rook rook = new(Color.Black, coordinate2);
+            Square square = new(coordinate, pawn);
+
+            square.Piece = rook;
+
+            Assert.AreEqual(square.Piece, rook);
+        }
     }
 }
