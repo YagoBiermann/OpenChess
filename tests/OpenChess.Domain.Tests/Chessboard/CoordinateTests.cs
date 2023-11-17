@@ -42,6 +42,18 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
+        public void NewInstance_GivenTwoNumbers_ShouldInstantiate()
+        {
+            for (int col = 0; col <= 7; col++)
+            {
+                for (int row = 0; row <= 7; row++)
+                {
+                    Coordinate.GetInstance(col, row);
+                }
+            }
+        }
+
+        [TestMethod]
         public void NewInstance_GivenAlgebraicNotation_ShouldInstantiateNewCoordinate()
         {
             Coordinate coordinate = Coordinate.GetInstance("A1");
