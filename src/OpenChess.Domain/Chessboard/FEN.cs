@@ -6,6 +6,7 @@ namespace OpenChess.Domain
 {
     internal static class FEN
     {
+        public static string InitialPosition { get => "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; }
         public static bool IsValid(string position)
         {
             bool hasSixFields = HasSixFields(position);
