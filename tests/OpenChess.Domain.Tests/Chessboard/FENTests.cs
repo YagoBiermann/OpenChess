@@ -22,6 +22,12 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
+        public void InitialPosition_ShouldBeCorrect()
+        {
+            Assert.AreEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", FEN.InitialPosition);
+        }
+
+        [TestMethod]
         public void IsValid_MoreThanSixFields_ShouldReturnFalse()
         {
             string position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 InvalidField";
