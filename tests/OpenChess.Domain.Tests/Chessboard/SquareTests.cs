@@ -74,5 +74,15 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(square.Piece.Origin, coordinate2);
         }
+
+        [TestMethod]
+        public void HasPiece_SquareWithPiece_ShouldReturnTrue()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+            Pawn pawn = new(Color.Black, coordinate);
+            Square square = new(coordinate, pawn);
+
+            Assert.IsTrue(square.HasPiece);
+        }
     }
 }
