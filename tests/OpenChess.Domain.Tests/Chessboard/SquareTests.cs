@@ -24,5 +24,17 @@ namespace OpenChess.Tests
 
             Assert.IsNull(square.Piece);
         }
+
+        [TestMethod]
+        public void Setter_SettingPieceAsNull_ShouldRemoveThePiece()
+        {
+            Coordinate origin = Coordinate.GetInstance("A1");
+            Pawn pawn = new(Color.Black, origin);
+            Square square = new(origin, pawn);
+
+            square.Piece = null;
+
+            Assert.IsNull(square.Piece);
+        }
     }
 }
