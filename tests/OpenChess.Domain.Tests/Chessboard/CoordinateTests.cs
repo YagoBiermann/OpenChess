@@ -44,9 +44,22 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_GivenTwoNumbers_ShouldInstantiate()
         {
-            for (int col = 0; col <= 7; col++)
+
+            List<int> indexes = new()
             {
-                for (int row = 0; row <= 7; row++)
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+            };
+
+            foreach (int col in indexes)
+            {
+                foreach (int row in indexes)
                 {
                     Coordinate.GetInstance(col, row);
                 }
