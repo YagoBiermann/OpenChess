@@ -15,5 +15,14 @@ namespace OpenChess.Tests
             Assert.IsNotNull(square.Piece);
             Assert.IsInstanceOfType(pawn, typeof(Pawn));
         }
+
+        [TestMethod]
+        public void Getter_PieceNull_ReturnsNull()
+        {
+            Coordinate origin = Coordinate.GetInstance("A1");
+            Square square = new(origin, null);
+
+            Assert.IsNull(square.Piece);
+        }
     }
 }
