@@ -13,5 +13,21 @@ namespace OpenChess.Domain
             Color = color;
             Origin = origin;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Piece otherPiece = (Piece)obj;
+            return Origin.Equals(otherPiece.Origin) && Color.Equals(otherPiece.Color);
+        }
+
+        public override int GetHashCode()
+        {
+            return Origin.GetHashCode() ^ Color.GetHashCode();
+        }
     }
 }
