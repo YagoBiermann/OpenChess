@@ -84,5 +84,14 @@ namespace OpenChess.Tests
 
             Assert.IsTrue(square.HasPiece);
         }
+
+        [TestMethod]
+        public void HasPiece_EmptySquare_ShouldReturnFalse()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+            Square square = new(coordinate, null);
+
+            Assert.IsFalse(square.HasPiece);
+        }
     }
 }
