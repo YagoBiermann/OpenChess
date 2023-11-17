@@ -63,5 +63,16 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(square.Piece.Origin, coordinate2);
         }
+
+        [TestMethod]
+        public void NewInstance_ShouldChangeTheOriginOfThePiece()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+            Coordinate coordinate2 = Coordinate.GetInstance("A5");
+            Pawn pawn = new(Color.Black, coordinate);
+            Square square = new(coordinate2, pawn);
+
+            Assert.AreEqual(square.Piece.Origin, coordinate2);
+        }
     }
 }
