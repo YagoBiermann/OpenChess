@@ -14,7 +14,7 @@ namespace OpenChess.Domain
             Origin = origin;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType())
             {
