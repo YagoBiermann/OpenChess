@@ -42,7 +42,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void Create_UpperChar_ShouldCreateWhitePiece()
+        public void Create_UppercaseChar_ShouldCreateWhitePiece()
         {
             Coordinate coordinate = Coordinate.GetInstance("A1");
 
@@ -66,6 +66,33 @@ namespace OpenChess.Tests
             Assert.AreEqual(bishop.Color, Color.White);
             Assert.AreEqual(knight.Color, Color.White);
             Assert.AreEqual(pawn.Color, Color.White);
+        }
+
+        [TestMethod]
+        public void Create_LowercaseChar_ShouldCreateBlackPiece()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+
+            Piece king = Piece.Create('k', coordinate);
+            Piece queen = Piece.Create('q', coordinate);
+            Piece rook = Piece.Create('r', coordinate);
+            Piece bishop = Piece.Create('b', coordinate);
+            Piece knight = Piece.Create('n', coordinate);
+            Piece pawn = Piece.Create('p', coordinate);
+
+            Assert.IsInstanceOfType(king, typeof(King));
+            Assert.IsInstanceOfType(queen, typeof(Queen));
+            Assert.IsInstanceOfType(rook, typeof(Rook));
+            Assert.IsInstanceOfType(bishop, typeof(Bishop));
+            Assert.IsInstanceOfType(knight, typeof(Knight));
+            Assert.IsInstanceOfType(pawn, typeof(Pawn));
+
+            Assert.AreEqual(king.Color, Color.Black);
+            Assert.AreEqual(queen.Color, Color.Black);
+            Assert.AreEqual(rook.Color, Color.Black);
+            Assert.AreEqual(bishop.Color, Color.Black);
+            Assert.AreEqual(knight.Color, Color.Black);
+            Assert.AreEqual(pawn.Color, Color.Black);
         }
     }
 }
