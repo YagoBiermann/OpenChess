@@ -29,5 +29,21 @@ namespace OpenChess.Domain
         {
             return Origin.GetHashCode() ^ Color.GetHashCode();
         }
+
+        public static Piece Create(char type, Coordinate origin)
+        {
+            Color color = char.IsUpper(type) ? Color.White : Color.Black;
+
+            return char.ToUpper(type) switch
+            {
+                'K' => new King(color, origin),
+                'Q' => new Queen(color, origin),
+                'R' => new Rook(color, origin),
+                'B' => new Bishop(color, origin),
+                'N' => new Knight(color, origin),
+                'P' => new Pawn(color, origin),
+                _ => throw new PieceException($"{type} does not represent a piece"),
+            };
+        }
     }
 }
