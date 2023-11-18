@@ -4,9 +4,28 @@ using System.Text.RegularExpressions;
 [assembly: InternalsVisibleTo("OpenChess.Test")]
 namespace OpenChess.Domain
 {
-    internal static class FEN
+    internal record FEN
     {
+        public string Board;
+        public string Turn;
+        public string CastlingAvailability;
+        public string EnPassantAvailability;
+        public string HalfMove;
+        public string FullMove;
         public static string InitialPosition { get => "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; }
+
+        public FEN(string position)
+        {
+            if (!IsValid(position)) throw new ChessboardException("Invalid FEN string!");
+            List<string> fields = position.Split(" ").ToList();
+            Board = fields[0];
+            Turn = fields[1];
+            CastlingAvailability = fields[2];
+            EnPassantAvailability = fields[3];
+            HalfMove = fields[4];
+            FullMove = fields[5];
+        }
+
         public static bool IsValid(string position)
         {
             bool hasSixFields = HasSixFields(position);
