@@ -217,12 +217,12 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FEN.InitialPosition);
 
-            for (int row = 2; row <= 6; row++)
+            for (int row = 2; row <= 5; row++)
             {
                 for (int col = 0; col <= 7; col++)
                 {
 
-                    Square square = chessboard.GetSquare(Coordinate.GetInstance(row, col));
+                    Square square = chessboard.GetSquare(Coordinate.GetInstance(col, row));
                     Assert.IsNull(square.Piece);
                 }
             }
