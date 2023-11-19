@@ -11,6 +11,10 @@ namespace OpenChess.Domain
             Coordinate = coordinate;
             Piece = piece;
         }
+        public void RemovePiece()
+        {
+            Piece = null;
+        }
 
         public Piece? Piece
         {
