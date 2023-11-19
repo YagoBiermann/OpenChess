@@ -105,5 +105,17 @@ namespace OpenChess.Tests
 
             Assert.IsNull(square.Piece);
         }
+
+        [TestMethod]
+        public void AddPiece_ShouldAddThePiece()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+            Pawn pawn = new(Color.White, coordinate);
+            Square square = new(coordinate, null);
+
+            square.AddPiece(pawn);
+
+            Assert.IsNotNull(square.Piece);
+        }
     }
 }
