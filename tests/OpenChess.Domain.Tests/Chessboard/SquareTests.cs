@@ -93,5 +93,17 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(square.HasPiece);
         }
+
+        [TestMethod]
+        public void RemovePiece_ShouldRemoveThePiece()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+            Pawn pawn = new(Color.White, coordinate);
+            Square square = new(coordinate, pawn);
+
+            square.RemovePiece();
+
+            Assert.IsNull(square.Piece);
+        }
     }
 }
