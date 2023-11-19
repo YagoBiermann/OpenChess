@@ -16,6 +16,11 @@ namespace OpenChess.Domain
             Piece = null;
         }
 
+        public void AddPiece(Piece piece)
+        {
+            Piece = piece;
+        }
+
         public Piece? Piece
         {
             get { return _piece; }
