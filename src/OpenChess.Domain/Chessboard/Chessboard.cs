@@ -14,9 +14,9 @@ namespace OpenChess.Domain
             FEN fenPosition = new(position);
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
-            ConvertTurn(fenPosition.Turn);
+            Turn = ConvertTurn(fenPosition.Turn);
             ConvertCastling(fenPosition.CastlingAvailability);
-            ConvertEnPassant(fenPosition.EnPassantAvailability);
+            EnPassant = ConvertEnPassant(fenPosition.EnPassantAvailability);
             HalfMove = ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = ConvertMoveAmount(fenPosition.FullMove);
         }
