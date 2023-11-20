@@ -11,7 +11,9 @@ namespace OpenChess.Domain
         {
             get
             {
-                throw new NotImplementedException();
+                bool isBlackFirstMove = Color == Color.Black && Origin.Row == '7';
+                bool isWhiteFirstMove = Color == Color.White && Origin.Row == '2';
+                return isBlackFirstMove || isWhiteFirstMove;
             }
         }
 
