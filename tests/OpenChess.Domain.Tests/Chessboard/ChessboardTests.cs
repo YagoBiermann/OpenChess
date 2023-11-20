@@ -227,5 +227,43 @@ namespace OpenChess.Tests
                 }
             }
         }
+
+        [TestMethod]
+        public void MovePiece_GivenOriginAndDestination_ShouldChangePiecePosition()
+        {
+            Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
+            Coordinate origin = Coordinate.GetInstance("B7");
+            Coordinate destination = Coordinate.GetInstance("B3");
+
+            chessboard.MovePiece(origin, destination);
+
+            Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
+            Assert.IsInstanceOfType(chessboard.GetSquare(destination).Piece, typeof(Rook));
+        }
+
+        [TestMethod]
+        public void MovePiece_OriginWithEmptySquare_ShouldThrowException()
+        {
+            Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
+            Coordinate origin = Coordinate.GetInstance("A1");
+            Coordinate destination = Coordinate.GetInstance("A2");
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
+        }
+
+        [TestMethod]
+        public void MovePiece_GivenOriginAndDestinationWithEmptySquare_ShouldChangePiecPosition()
+        {
+            Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
+            Coordinate origin = Coordinate.GetInstance("B7");
+            Coordinate destination = Coordinate.GetInstance("B8");
+
+            chessboard.MovePiece(origin, destination);
+
+            Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
+            Assert.IsInstanceOfType(chessboard.GetSquare(destination).Piece, typeof(Rook));
+        }
     }
 }
