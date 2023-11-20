@@ -5,6 +5,58 @@ namespace OpenChess.Tests
     [TestClass]
     public class ChessboardTests
     {
+
+        [TestMethod]
+        public void NewInstance_ShouldConvertFenStringCorrectly()
+        {
+            Chessboard chessboard = new(FEN.InitialPosition);
+
+            HashSet<CastlingRights> CastlingAvailability = new() {
+            CastlingRights.WhiteKingSide,
+            CastlingRights.WhiteQueenSide,
+            CastlingRights.BlackKingSide,
+            CastlingRights.BlackQueenSide,
+            };
+
+            Assert.AreEqual(Color.White, chessboard.Turn);
+            Assert.IsNull(chessboard.EnPassant);
+            CollectionAssert.AreEquivalent(CastlingAvailability.ToList(), chessboard.Castling.ToList());
+            Assert.AreEqual(0, chessboard.HalfMove);
+            Assert.AreEqual(1, chessboard.FullMove);
+        }
+
+        [TestMethod]
+        public void NewInstance_ShouldConvertCastlingCorrectly()
+        {
+            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b - - 0 1");
+
+            HashSet<CastlingRights> CastlingAvailabilityNone = new() {
+                CastlingRights.None,
+            };
+
+            CollectionAssert.AreEqual(CastlingAvailabilityNone.ToList(), chessboard.Castling.ToList());
+        }
+
+        [TestMethod]
+        public void NewInstance_ShouldConvertCastlingCorrectly_case2()
+        {
+            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
+
+            HashSet<CastlingRights> CastlingAvailabilityNone = new() {
+                CastlingRights.WhiteKingSide,
+                CastlingRights.BlackKingSide,
+            };
+
+            CollectionAssert.AreEqual(CastlingAvailabilityNone.ToList(), chessboard.Castling.ToList());
+        }
+
+        [TestMethod]
+        public void NewInstance_ShouldConvertEnPassantCorrectly()
+        {
+            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk E3 0 1");
+            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant);
+        }
+
         [TestMethod]
         public void NewInstance_GivenFenString_ShouldAddWhitePiecesCorrectly()
         {
