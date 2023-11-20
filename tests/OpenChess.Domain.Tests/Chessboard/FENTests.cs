@@ -140,11 +140,13 @@ namespace OpenChess.Tests
             string position2 = "8/6b1/4k1P1/1q6/q7/K7/8/8 w PWXQ - 11 63";
             string position3 = "8/6b1/4k1P1/1q6/q7/K7/8/8 b -- - 11 63";
             string position4 = "8/6b1/4k1P1/1q6/q7/K7/8/8 b 1234 - 11 63";
+            string position5 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1";
 
             Assert.IsFalse(FEN.IsValid(position));
             Assert.IsFalse(FEN.IsValid(position2));
             Assert.IsFalse(FEN.IsValid(position3));
             Assert.IsFalse(FEN.IsValid(position4));
+            Assert.IsFalse(FEN.IsValid(position5));
         }
 
         [TestMethod]
