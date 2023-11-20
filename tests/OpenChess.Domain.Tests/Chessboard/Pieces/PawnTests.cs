@@ -84,5 +84,13 @@ namespace OpenChess.Tests
             var blackPawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("E6")).Piece!;
             Assert.IsFalse(blackPawn.IsFirstMove);
         }
+
+        [TestMethod]
+        public void IsFirstMove_WhitePawn_NotInSecondRow_ShouldReturnFalse()
+        {
+            Chessboard chessboard = new("rnbqk2r/pppp1ppp/4pn2/8/1bPPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 0 1");
+            var whitePawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
+            Assert.IsFalse(whitePawn.IsFirstMove);
+        }
     }
 }
