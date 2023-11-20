@@ -26,7 +26,7 @@ namespace OpenChess.Domain
             return _board[coordinate.ColumnToInt][coordinate.RowToInt];
         }
 
-        public void MovePiece(Coordinate origin, Coordinate destination)
+        public void ChangePiecePosition(Coordinate origin, Coordinate destination)
         {
             if (!GetSquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
 

@@ -235,7 +235,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance("B7");
             Coordinate destination = Coordinate.GetInstance("B3");
 
-            chessboard.MovePiece(origin, destination);
+            chessboard.ChangePiecePosition(origin, destination);
 
             Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
             Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
@@ -249,7 +249,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance("A1");
             Coordinate destination = Coordinate.GetInstance("A2");
 
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
+            Assert.ThrowsException<ChessboardException>(() => chessboard.ChangePiecePosition(origin, destination));
         }
 
         [TestMethod]
@@ -259,7 +259,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance("B7");
             Coordinate destination = Coordinate.GetInstance("B8");
 
-            chessboard.MovePiece(origin, destination);
+            chessboard.ChangePiecePosition(origin, destination);
 
             Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
             Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
