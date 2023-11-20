@@ -62,7 +62,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void IsFirstMove_BlackPawn_FirstMove_ShouldReturnTrue()
+        public void IsFirstMove_BlackPawn_InSeventhRow_ShouldReturnTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
             var blackPawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("E7")).Piece!;
@@ -70,7 +70,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void IsFirstMove_WhitePawn_FirstMove_ShouldReturnTrue()
+        public void IsFirstMove_WhitePawn_InSecondRow_ShouldReturnTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
             var whitePawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("E2")).Piece!;
