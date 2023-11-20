@@ -200,5 +200,49 @@ namespace OpenChess.Tests
             Assert.AreEqual(6, coordinate6.ColumnToInt);
             Assert.AreEqual(7, coordinate7.ColumnToInt);
         }
+
+        [TestMethod]
+        public void Row_ShouldBeNumber()
+        {
+            Coordinate coordinate0 = Coordinate.GetInstance("A1");
+            Coordinate coordinate1 = Coordinate.GetInstance("A2");
+            Coordinate coordinate2 = Coordinate.GetInstance("A3");
+            Coordinate coordinate3 = Coordinate.GetInstance("A4");
+            Coordinate coordinate4 = Coordinate.GetInstance("A5");
+            Coordinate coordinate5 = Coordinate.GetInstance("A6");
+            Coordinate coordinate6 = Coordinate.GetInstance("A7");
+            Coordinate coordinate7 = Coordinate.GetInstance("A8");
+
+            Assert.AreEqual('1', coordinate0.Row);
+            Assert.AreEqual('2', coordinate1.Row);
+            Assert.AreEqual('3', coordinate2.Row);
+            Assert.AreEqual('4', coordinate3.Row);
+            Assert.AreEqual('5', coordinate4.Row);
+            Assert.AreEqual('6', coordinate5.Row);
+            Assert.AreEqual('7', coordinate6.Row);
+            Assert.AreEqual('8', coordinate7.Row);
+        }
+
+        [TestMethod]
+        public void Column_ShouldBeLetter()
+        {
+            Coordinate coordinate0 = Coordinate.GetInstance("A1");
+            Coordinate coordinate1 = Coordinate.GetInstance("B1");
+            Coordinate coordinate2 = Coordinate.GetInstance("C1");
+            Coordinate coordinate3 = Coordinate.GetInstance("D1");
+            Coordinate coordinate4 = Coordinate.GetInstance("E1");
+            Coordinate coordinate5 = Coordinate.GetInstance("F1");
+            Coordinate coordinate6 = Coordinate.GetInstance("G1");
+            Coordinate coordinate7 = Coordinate.GetInstance("H1");
+
+            Assert.AreEqual('A', coordinate0.Column);
+            Assert.AreEqual('B', coordinate1.Column);
+            Assert.AreEqual('C', coordinate2.Column);
+            Assert.AreEqual('D', coordinate3.Column);
+            Assert.AreEqual('E', coordinate4.Column);
+            Assert.AreEqual('F', coordinate5.Column);
+            Assert.AreEqual('G', coordinate6.Column);
+            Assert.AreEqual('H', coordinate7.Column);
+        }
     }
 };
