@@ -101,7 +101,7 @@ namespace OpenChess.Domain
 
         private static bool IsValidCastlingField(string value)
         {
-            Regex rx = new Regex(@"^[KQkq]{1,4}$|^(-{1})$", RegexOptions.None);
+            Regex rx = new Regex(@"^-$|^K?Q?k?q?$", RegexOptions.None);
             return rx.IsMatch(value);
         }
         private static bool IsValidHalfMove(string value)
