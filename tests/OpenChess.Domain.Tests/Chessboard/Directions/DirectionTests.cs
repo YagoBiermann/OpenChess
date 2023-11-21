@@ -145,5 +145,31 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(direction.Equals(coordinate));
         }
+
+        [TestMethod]
+        public void Multiply_GivenDirectionAndAmount_ShouldReturnNewMultipliedDirection()
+        {
+            List<Direction> directions = new()
+            {
+                new Up(),
+                new Left(),
+                new Right(),
+                new Down(),
+                new UpperLeft(),
+                new UpperRight(),
+                new LowerLeft(),
+                new LowerRight()
+            };
+
+            foreach (Direction direction in directions)
+            {
+                for (int amount = 1; amount <= 8; amount++)
+                {
+                    var multipliedDirection = Direction.Multiply(direction, amount);
+                    Assert.AreEqual(direction.X * amount, multipliedDirection.X);
+                    Assert.AreEqual(direction.Y * amount, multipliedDirection.Y);
+                }
+            }
+        }
     }
 }
