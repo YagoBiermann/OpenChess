@@ -37,5 +37,11 @@ namespace OpenChess.Domain
 
             return X.Equals(other.X) && Y.Equals(other.Y);
         }
+
+        public static Direction Multiply(Direction direction, int amount)
+        {
+            if (amount < 1) throw new ChessboardException("Amount can not be less than 1!");
+            return new Direction(direction.X * amount, direction.Y * amount);
+        }
     }
 }
