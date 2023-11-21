@@ -51,5 +51,33 @@ namespace OpenChess.Tests
             CollectionAssert.AreEquivalent(directions, king.Directions);
             CollectionAssert.AreEquivalent(directions, king2.Directions);
         }
+
+        [TestMethod]
+        public void CalculateMoveRange_ShouldReturnAllMoves()
+        {
+            King king = new(Color.White, Coordinate.GetInstance("E4"));
+
+            List<Move> expectedMoves = new()
+            {
+                ExpectedMoves.GetMove(king.Origin, new Up(), king.MoveAmount),
+                ExpectedMoves.GetMove(king.Origin, new Down(), king.MoveAmount),
+                ExpectedMoves.GetMove(king.Origin, new Left(), king.MoveAmount),
+                ExpectedMoves.GetMove(king.Origin, new Right(), king.MoveAmount),
+                ExpectedMoves.GetMove(king.Origin, new UpperLeft(), king.MoveAmount),
+                ExpectedMoves.GetMove(king.Origin, new UpperRight(), king.MoveAmount),
+                ExpectedMoves.GetMove(king.Origin, new LowerLeft(), king.MoveAmount),
+                ExpectedMoves.GetMove(king.Origin, new LowerRight(), king.MoveAmount),
+            };
+
+            List<Move> moves = king.CalculateMoveRange();
+
+            Assert.AreEqual(moves.Count, expectedMoves.Count);
+            foreach (Move move in moves)
+            {
+                int index = moves.IndexOf(move);
+                CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
+                Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
+            }
+        }
     }
 }
