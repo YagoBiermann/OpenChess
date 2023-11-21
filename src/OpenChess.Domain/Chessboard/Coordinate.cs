@@ -69,6 +69,23 @@ namespace OpenChess.Domain
             return coordinate;
         }
 
+        public static List<Coordinate> CalculateSequence(Coordinate origin, Direction direction, int amount)
+        {
+            List<Coordinate> coordinates = new();
+            for (int position = 1; position <= amount; position++)
+            {
+                Direction multipliedDirection = Direction.Multiply(direction, position);
+                int column = origin.ColumnToInt + multipliedDirection.X;
+                int row = origin.RowToInt + multipliedDirection.Y;
+
+                if (!IsValidColumn(column) || !IsValidRow(row)) break;
+
+                coordinates.Add(GetInstance(column, row));
+            }
+
+            return coordinates;
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
