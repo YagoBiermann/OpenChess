@@ -19,6 +19,20 @@ namespace OpenChess.Domain
             get { return IsLongRange ? 8 : 1; }
         }
 
+        public virtual List<Move> CalculateMoveRange()
+        {
+            List<Move> moveRange = new();
+
+            foreach (Direction direction in Directions)
+            {
+                List<Coordinate> coordinates = Coordinate.CalculateSequence(Origin, direction, MoveAmount);
+                Move move = new(direction, coordinates);
+                moveRange.Add(move);
+            }
+
+            return moveRange;
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType())
