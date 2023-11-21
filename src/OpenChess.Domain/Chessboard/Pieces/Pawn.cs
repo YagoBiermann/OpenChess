@@ -17,6 +17,14 @@ namespace OpenChess.Domain
             }
         }
 
+        public int ForwardMoveAmount
+        {
+            get
+            {
+                return IsFirstMove ? 2 : 1;
+            }
+        }
+
         public override char Name => Color == Color.Black ? 'p' : 'P';
 
         public override List<Direction> Directions => Color == Color.Black ? BlackDirections() : WhiteDirections();
