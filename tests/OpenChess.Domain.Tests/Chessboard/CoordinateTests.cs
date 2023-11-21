@@ -244,5 +244,160 @@ namespace OpenChess.Tests
             Assert.AreEqual('G', coordinate6.Column);
             Assert.AreEqual('H', coordinate7.Column);
         }
+
+        [TestMethod]
+        public void CalculateSequence_OriginE4_DirectionUp_Amount8_ShouldReturnCoordinatesFromE5toE8()
+        {
+            List<Coordinate> coordinates = new();
+            List<Coordinate> expectedCoordinates = new()
+            {
+                Coordinate.GetInstance("E5"),
+                Coordinate.GetInstance("E6"),
+                Coordinate.GetInstance("E7"),
+                Coordinate.GetInstance("E8")
+            };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            Up up = new();
+            int amount = 5;
+
+            coordinates.AddRange(Coordinate.CalculateSequence(origin, up, amount));
+
+            CollectionAssert.AreEqual(expectedCoordinates, coordinates);
+        }
+
+        [TestMethod]
+        public void CalculateSequence_OriginE4_DirectionLeft_Amount8_ShouldReturnCoordinatesFromE4toA4()
+        {
+            List<Coordinate> coordinates = new();
+            List<Coordinate> expectedCoordinates = new()
+            {
+                Coordinate.GetInstance("D4"),
+                Coordinate.GetInstance("C4"),
+                Coordinate.GetInstance("B4"),
+                Coordinate.GetInstance("A4")
+            };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            Left left = new();
+            int amount = 8;
+
+            coordinates.AddRange(Coordinate.CalculateSequence(origin, left, amount));
+
+            CollectionAssert.AreEqual(expectedCoordinates, coordinates);
+        }
+
+        [TestMethod]
+        public void CalculateSequence_OriginE4_DirectionRight_Amount8_ShouldReturnCoordinatesFromE4toH4()
+        {
+            List<Coordinate> coordinates = new();
+            List<Coordinate> expectedCoordinates = new()
+            {
+                Coordinate.GetInstance("F4"),
+                Coordinate.GetInstance("G4"),
+                Coordinate.GetInstance("H4"),
+            };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            Right right = new();
+            int amount = 8;
+
+            coordinates.AddRange(Coordinate.CalculateSequence(origin, right, amount));
+
+            CollectionAssert.AreEqual(expectedCoordinates, coordinates);
+        }
+
+        [TestMethod]
+        public void CalculateSequence_OriginE4_DirectionDown_Amount8_ShouldReturnCoordinatesFromE4toE1()
+        {
+            List<Coordinate> coordinates = new();
+            List<Coordinate> expectedCoordinates = new()
+            {
+                Coordinate.GetInstance("E3"),
+                Coordinate.GetInstance("E2"),
+                Coordinate.GetInstance("E1"),
+            };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            Down down = new();
+            int amount = 8;
+
+            coordinates.AddRange(Coordinate.CalculateSequence(origin, down, amount));
+
+            CollectionAssert.AreEqual(expectedCoordinates, coordinates);
+        }
+
+        [TestMethod]
+        public void CalculateSequence_OriginE4_DirectionUpperLeft_Amount8_ShouldReturnCoordinatesFromE4toA8()
+        {
+            List<Coordinate> coordinates = new();
+            List<Coordinate> expectedCoordinates = new()
+            {
+                Coordinate.GetInstance("D5"),
+                Coordinate.GetInstance("C6"),
+                Coordinate.GetInstance("B7"),
+                Coordinate.GetInstance("A8"),
+            };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            UpperLeft upperLeft = new();
+            int amount = 8;
+
+            coordinates.AddRange(Coordinate.CalculateSequence(origin, upperLeft, amount));
+
+            CollectionAssert.AreEqual(expectedCoordinates, coordinates);
+        }
+
+        [TestMethod]
+        public void CalculateSequence_OriginE4_DirectionUpperRight_Amount8_ShouldReturnCoordinatesFromE4toH7()
+        {
+            List<Coordinate> coordinates = new();
+            List<Coordinate> expectedCoordinates = new()
+            {
+                Coordinate.GetInstance("F5"),
+                Coordinate.GetInstance("G6"),
+                Coordinate.GetInstance("H7"),
+            };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            UpperRight upperRight = new();
+            int amount = 8;
+
+            coordinates.AddRange(Coordinate.CalculateSequence(origin, upperRight, amount));
+
+            CollectionAssert.AreEqual(expectedCoordinates, coordinates);
+        }
+
+        [TestMethod]
+        public void CalculateSequence_OriginE4_DirectionLowerLeft_Amount8_ShouldReturnCoordinatesFromE4toA1()
+        {
+            List<Coordinate> coordinates = new();
+            List<Coordinate> expectedCoordinates = new()
+            {
+                Coordinate.GetInstance("D3"),
+                Coordinate.GetInstance("C2"),
+                Coordinate.GetInstance("B1"),
+            };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            LowerLeft lowerLeft = new();
+            int amount = 8;
+
+            coordinates.AddRange(Coordinate.CalculateSequence(origin, lowerLeft, amount));
+
+            CollectionAssert.AreEqual(expectedCoordinates, coordinates);
+        }
+
+        [TestMethod]
+        public void CalculateSequence_OriginE4_DirectionLowerRight_Amount8_ShouldReturnCoordinatesFromE4toH1()
+        {
+            List<Coordinate> coordinates = new();
+            List<Coordinate> expectedCoordinates = new()
+            {
+                Coordinate.GetInstance("F3"),
+                Coordinate.GetInstance("G2"),
+                Coordinate.GetInstance("H1"),
+            };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            LowerRight lowerRight = new();
+            int amount = 8;
+
+            coordinates.AddRange(Coordinate.CalculateSequence(origin, lowerRight, amount));
+
+            CollectionAssert.AreEqual(expectedCoordinates, coordinates);
+        }
     }
 };
