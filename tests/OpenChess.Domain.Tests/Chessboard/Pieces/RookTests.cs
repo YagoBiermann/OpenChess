@@ -54,40 +54,14 @@ namespace OpenChess.Tests
         {
             Rook rook = new(Color.White, Coordinate.GetInstance("E4"));
 
-            List<Coordinate> up = new()
-            {
-                Coordinate.GetInstance("E5"),
-                Coordinate.GetInstance("E6"),
-                Coordinate.GetInstance("E7"),
-                Coordinate.GetInstance("E8")
-            };
-            List<Coordinate> down = new()
-            {
-                Coordinate.GetInstance("E3"),
-                Coordinate.GetInstance("E2"),
-                Coordinate.GetInstance("E1")
-            };
-            List<Coordinate> left = new()
-            {
-                Coordinate.GetInstance("D4"),
-                Coordinate.GetInstance("C4"),
-                Coordinate.GetInstance("B4"),
-                Coordinate.GetInstance("A4")
-            };
-            List<Coordinate> right = new()
-            {
-                Coordinate.GetInstance("F4"),
-                Coordinate.GetInstance("G4"),
-                Coordinate.GetInstance("H4")
-            };
-
             List<Move> expectedMoves = new()
             {
-                new(new Up(), up),
-                new(new Down(), down),
-                new(new Left(), left),
-                new(new Right(), right),
+                ExpectedMoves.GetMove(rook.Origin, new Up(), rook.MoveAmount),
+                ExpectedMoves.GetMove(rook.Origin, new Down(), rook.MoveAmount),
+                ExpectedMoves.GetMove(rook.Origin, new Left(), rook.MoveAmount),
+                ExpectedMoves.GetMove(rook.Origin, new Right(), rook.MoveAmount)
             };
+
             List<Move> moves = rook.CalculateMoveRange();
 
             foreach (Move move in moves)
