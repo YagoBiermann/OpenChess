@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using OpenChess.Domain;
 
 namespace OpenChess.Tests
@@ -51,6 +52,34 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEquivalent(directions, queen.Directions);
             CollectionAssert.AreEquivalent(directions, queen2.Directions);
+        }
+
+        [TestMethod]
+        public void CalculateMoveRange_ShouldReturnAllMoves()
+        {
+            Queen queen = new(Color.White, Coordinate.GetInstance("E4"));
+
+            List<Move> expectedMoves = new()
+            {
+                ExpectedMoves.GetMove(queen.Origin, new Up(), queen.MoveAmount),
+                ExpectedMoves.GetMove(queen.Origin, new Down(), queen.MoveAmount),
+                ExpectedMoves.GetMove(queen.Origin, new Left(), queen.MoveAmount),
+                ExpectedMoves.GetMove(queen.Origin, new Right(), queen.MoveAmount),
+                ExpectedMoves.GetMove(queen.Origin, new UpperLeft(), queen.MoveAmount),
+                ExpectedMoves.GetMove(queen.Origin, new UpperRight(), queen.MoveAmount),
+                ExpectedMoves.GetMove(queen.Origin, new LowerLeft(), queen.MoveAmount),
+                ExpectedMoves.GetMove(queen.Origin, new LowerRight(), queen.MoveAmount),
+            };
+
+            List<Move> moves = queen.CalculateMoveRange();
+
+            Assert.AreEqual(moves.Count, expectedMoves.Count);
+            foreach (Move move in moves)
+            {
+                int index = moves.IndexOf(move);
+                CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
+                Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
+            }
         }
     }
 }
