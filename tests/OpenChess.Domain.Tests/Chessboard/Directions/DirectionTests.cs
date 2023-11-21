@@ -171,5 +171,16 @@ namespace OpenChess.Tests
                 }
             }
         }
+
+        [TestMethod]
+        public void Multiply_AmountLessThanOne_ShouldThrowException()
+        {
+            Direction direction = new(1, 1);
+
+            Assert.ThrowsException<ChessboardException>(() => Direction.Multiply(direction, 0));
+            Assert.ThrowsException<ChessboardException>(() => Direction.Multiply(direction, -1));
+            Assert.ThrowsException<ChessboardException>(() => Direction.Multiply(direction, -2));
+            Assert.ThrowsException<ChessboardException>(() => Direction.Multiply(direction, -10));
+        }
     }
 }
