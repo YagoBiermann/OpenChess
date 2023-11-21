@@ -14,6 +14,11 @@ namespace OpenChess.Domain
             Origin = origin;
         }
 
+        public int MoveAmount
+        {
+            get { return IsLongRange ? 8 : 1; }
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType())
