@@ -100,12 +100,12 @@ namespace OpenChess.Domain
             }
         }
 
-        private bool IsValidRow(int value)
+        private static bool IsValidRow(int value)
         {
             return s_rowMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
         }
 
-        private bool IsValidColumn(int value)
+        private static bool IsValidColumn(int value)
         {
             return s_columnMapping.Where(kv => kv.Key.Equals(value)).ToList().Any();
         }
