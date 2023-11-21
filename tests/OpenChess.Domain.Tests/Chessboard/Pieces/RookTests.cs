@@ -63,7 +63,8 @@ namespace OpenChess.Tests
             };
 
             List<Move> moves = rook.CalculateMoveRange();
-
+           
+            Assert.AreEqual(moves.Count, expectedMoves.Count);
             foreach (Move move in moves)
             {
                 int index = moves.IndexOf(move);
