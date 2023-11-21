@@ -31,6 +31,26 @@ namespace OpenChess.Domain
 
         public override bool IsLongRange => false;
 
+        public override List<Move> CalculateMoveRange()
+        {
+            List<Move> moves = new();
+
+            foreach (Direction direction in Directions)
+            {
+                if (direction is Up || direction is Down)
+                {
+                    List<Coordinate> forward = Coordinate.CalculateSequence(Origin, direction, ForwardMoveAmount);
+                    moves.Add(new(direction, forward));
+                    continue;
+                }
+
+                List<Coordinate> coordinates = Coordinate.CalculateSequence(Origin, direction, MoveAmount);
+                moves.Add(new(direction, coordinates));
+            }
+
+            return moves;
+        }
+
         private List<Direction> BlackDirections()
         {
             List<Direction> directions = new()
