@@ -92,5 +92,56 @@ namespace OpenChess.Tests
             var whitePawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
             Assert.IsFalse(whitePawn.IsFirstMove);
         }
+
+        [DataRow("E2")]
+        [DataRow("E4")]
+        [TestMethod]
+        public void CalculateMoveRange_WhitePawn_ShouldReturnAllMoves(string origin)
+        {
+            Pawn pawn = new(Color.White, Coordinate.GetInstance(origin));
+
+            List<Move> expectedMoves = new()
+            {
+                ExpectedMoves.GetMove(pawn.Origin, new Up(), pawn.ForwardMoveAmount),
+                ExpectedMoves.GetMove(pawn.Origin, new UpperLeft(), pawn.MoveAmount),
+                ExpectedMoves.GetMove(pawn.Origin, new UpperRight(), pawn.MoveAmount)
+            };
+
+            List<Move> moves = pawn.CalculateMoveRange();
+
+            Assert.AreEqual(moves.Count, expectedMoves.Count);
+            foreach (Move move in moves)
+            {
+                int index = moves.IndexOf(move);
+                CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
+                Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
+            }
+        }
+
+
+        [DataRow("E7")]
+        [DataRow("E5")]
+        [TestMethod]
+        public void CalculateMoveRange_BlackPawn_ShouldReturnAllMoves(string origin)
+        {
+            Pawn pawn = new(Color.Black, Coordinate.GetInstance(origin));
+
+            List<Move> expectedMoves = new()
+            {
+                ExpectedMoves.GetMove(pawn.Origin, new Down(), pawn.ForwardMoveAmount),
+                ExpectedMoves.GetMove(pawn.Origin, new LowerLeft(), pawn.MoveAmount),
+                ExpectedMoves.GetMove(pawn.Origin, new LowerRight(), pawn.MoveAmount)
+            };
+
+            List<Move> moves = pawn.CalculateMoveRange();
+
+            Assert.AreEqual(moves.Count, expectedMoves.Count);
+            foreach (Move move in moves)
+            {
+                int index = moves.IndexOf(move);
+                CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
+                Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
+            }
+        }
     }
 }
