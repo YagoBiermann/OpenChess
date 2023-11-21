@@ -47,5 +47,29 @@ namespace OpenChess.Tests
             CollectionAssert.AreEquivalent(directions, bishop.Directions);
             CollectionAssert.AreEquivalent(directions, bishop2.Directions);
         }
+
+        [TestMethod]
+        public void CalculateMoveRange_ShouldReturnAllMoves()
+        {
+            Bishop bishop = new(Color.White, Coordinate.GetInstance("E4"));
+
+            List<Move> expectedMoves = new()
+            {
+                ExpectedMoves.GetMove(bishop.Origin, new UpperLeft(), bishop.MoveAmount),
+                ExpectedMoves.GetMove(bishop.Origin, new UpperRight(), bishop.MoveAmount),
+                ExpectedMoves.GetMove(bishop.Origin, new LowerLeft(), bishop.MoveAmount),
+                ExpectedMoves.GetMove(bishop.Origin, new LowerRight(), bishop.MoveAmount),
+            };
+
+            List<Move> moves = bishop.CalculateMoveRange();
+
+            Assert.AreEqual(moves.Count, expectedMoves.Count);
+            foreach (Move move in moves)
+            {
+                int index = moves.IndexOf(move);
+                CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
+                Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
+            }
+        }
     }
 }
