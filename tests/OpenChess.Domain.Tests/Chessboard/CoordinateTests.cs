@@ -399,5 +399,29 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedCoordinates, coordinates);
         }
+
+        [DataRow("E4", "B7", 3)]
+        [DataRow("E4", "A8", 4)]
+        [DataRow("B5", "F1", 4)]
+        [DataRow("B1", "H7", 6)]
+        [DataRow("A1", "H8", 7)]
+        [DataRow("A1", "A8", 7)]
+        [DataRow("B3", "B6", 3)]
+        [DataRow("F5", "F2", 3)]
+        [DataRow("D4", "D8", 4)]
+        [DataRow("A1", "A8", 7)]
+        [DataRow("B3", "B6", 3)]
+        [DataRow("F5", "F2", 3)]
+        [DataRow("D4", "D8", 4)]
+        [DataRow("A4", "H4", 7)]
+        [DataRow("D6", "A6", 3)]
+        [TestMethod]
+        public void CalculateDistance_ShouldCalculateCorrectDistance(string origin, string destination, int expectedDistance)
+        {
+            Coordinate c1 = Coordinate.GetInstance(origin);
+            Coordinate c2 = Coordinate.GetInstance(destination);
+
+            Assert.AreEqual(Coordinate.CalculateDistance(c1, c2), expectedDistance);
+        }
     }
 };
