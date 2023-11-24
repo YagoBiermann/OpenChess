@@ -86,6 +86,13 @@ namespace OpenChess.Domain
             return coordinates;
         }
 
+        public static int CalculateDistance(Coordinate origin, Coordinate destination)
+        {
+            int rowDifference = Math.Abs(origin.RowToInt - destination.RowToInt);
+            int colDifference = Math.Abs(origin.ColumnToInt - destination.ColumnToInt);
+            return Math.Max(rowDifference, colDifference);
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
