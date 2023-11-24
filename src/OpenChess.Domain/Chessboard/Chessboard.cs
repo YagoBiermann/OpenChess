@@ -39,15 +39,24 @@ namespace OpenChess.Domain
 
         private List<List<Square>> CreateBoard()
         {
-            List<List<Square>> board = new();
-            for (int col = 0; col <= 7; col++)
+            List<List<Square>> board = new()
             {
-                List<Square> rows = new();
-                for (int row = 0; row <= 7; row++)
+                new(),
+                new(),
+                new(),
+                new(),
+                new(),
+                new(),
+                new(),
+                new(),
+            };
+
+            for (int row = 0; row <= 7; row++)
+            {
+                for (int col = 0; col <= 7; col++)
                 {
-                    rows.Add(new(Coordinate.GetInstance(col, row), null));
+                    board[row].Add(new(Coordinate.GetInstance(col, row), null));
                 }
-                board.Add(rows);
             }
 
             return board;
