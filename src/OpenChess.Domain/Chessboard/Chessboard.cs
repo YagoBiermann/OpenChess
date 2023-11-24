@@ -58,22 +58,22 @@ namespace OpenChess.Domain
             List<string> rows = field.Split("/").Reverse().ToList();
             foreach (string row in rows)
             {
-                int currentCol = rows.IndexOf(row);
-                int emptySquareSum = 0;
+                int currentRow = rows.IndexOf(row);
+                int currentCol = 0;
                 foreach (char col in row)
                 {
 
                     if (!char.IsDigit(col))
                     {
-                        Coordinate origin = Coordinate.GetInstance(emptySquareSum, currentCol);
+                        Coordinate origin = Coordinate.GetInstance(currentCol, currentRow);
                         Piece piece = Piece.Create(col, origin);
                         GetSquare(origin).Piece = piece;
 
-                        emptySquareSum++;
+                        currentCol++;
                         continue;
                     }
 
-                    emptySquareSum += int.Parse(col.ToString());
+                    currentCol += int.Parse(col.ToString());
                 }
             }
 
