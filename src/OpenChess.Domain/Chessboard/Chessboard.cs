@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         private readonly List<List<Square>> _board;
         public Color Turn { get; set; }
-        public HashSet<CastlingRights> Castling { get; } = new();
+        public CastlingAvailability CastlingAvailability { get; set; }
         public Coordinate? EnPassant { get; set; }
         public int HalfMove { get; set; }
         public int FullMove { get; set; }
