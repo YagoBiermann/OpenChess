@@ -23,7 +23,7 @@ namespace OpenChess.Domain
 
         public Square GetSquare(Coordinate coordinate)
         {
-            return _board[coordinate.ColumnToInt][coordinate.RowToInt];
+            return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
         public void ChangePiecePosition(Coordinate origin, Coordinate destination)
