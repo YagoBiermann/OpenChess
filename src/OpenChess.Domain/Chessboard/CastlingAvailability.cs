@@ -31,5 +31,17 @@ namespace OpenChess.Domain
             BlackKingSide = blackKingSide;
             BlackQueenSide = blackQueenSide;
         }
+
+        public override string ToString()
+        {
+            string castlingAvailability = "";
+            if (WhiteKingSide) castlingAvailability += "K";
+            if (WhiteQueenSide) castlingAvailability += "Q";
+            if (BlackKingSide) castlingAvailability += "k";
+            if (BlackQueenSide) castlingAvailability += "q";
+            if (!WhiteKingSide && !WhiteQueenSide && !BlackKingSide && !BlackQueenSide) castlingAvailability += "-";
+
+            return castlingAvailability;
+        }
     }
 }
