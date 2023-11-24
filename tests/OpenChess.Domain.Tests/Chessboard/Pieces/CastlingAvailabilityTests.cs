@@ -31,6 +31,35 @@ namespace OpenChess.Tests
             Assert.IsTrue(castlingAvailability2.BlackKingSide);
             Assert.IsTrue(castlingAvailability2.BlackQueenSide);
         }
+
+        [TestMethod]
+        public void ToString_AllPropertiesFalse_ShouldConvertToHyphen()
+        {
+            CastlingAvailability castlingAvailability = new(false);
+
+            Assert.AreEqual("-", castlingAvailability.ToString());
+        }
+
+        [TestMethod]
+        public void ToString_AllPropertiesTrue_ShouldConvertToDefaultCastling()
+        {
+            CastlingAvailability castlingAvailability = new(true);
+
+            Assert.AreEqual("KQkq", castlingAvailability.ToString());
+        }
+
+        [TestMethod]
+        public void ToString_ShouldConvertCorrectly()
+        {
+            CastlingAvailability castlingAvailability = new(false, true, true, false);
+            CastlingAvailability castlingAvailability2 = new(false, true, false, false);
+            CastlingAvailability castlingAvailability3 = new(false, true, false, true);
+            CastlingAvailability castlingAvailability4 = new(true, false, true, false);
+
+            Assert.AreEqual("Qk", castlingAvailability.ToString());
+            Assert.AreEqual("Q", castlingAvailability2.ToString());
+            Assert.AreEqual("Qq", castlingAvailability3.ToString());
+            Assert.AreEqual("Kk", castlingAvailability4.ToString());
         }
     }
 }
