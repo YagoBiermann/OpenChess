@@ -64,25 +64,25 @@ namespace OpenChess.Domain
 
         private void SetPiecesOnBoard(string field)
         {
-            List<string> rows = field.Split("/").Reverse().ToList();
-            foreach (string row in rows)
-            {
-                int currentRow = rows.IndexOf(row);
-                int currentCol = 0;
-                foreach (char col in row)
-                {
+            List<string> fenBoard = field.Split("/").Reverse().ToList();
 
-                    if (!char.IsDigit(col))
+            for (int row = 0; row <= 7; row++)
+            {
+                int nextPiecePosition = 0;
+                for (int col = 0; col <= fenBoard[row].Length - 1; col++)
+                {
+                    char currentChar = fenBoard[row][col];
+                    if (!char.IsDigit(currentChar))
                     {
-                        Coordinate origin = Coordinate.GetInstance(currentCol, currentRow);
-                        Piece piece = Piece.Create(col, origin);
+                        Coordinate origin = Coordinate.GetInstance(nextPiecePosition, row);
+                        Piece piece = Piece.Create(currentChar, origin);
                         GetSquare(origin).Piece = piece;
 
-                        currentCol++;
+                        nextPiecePosition++;
                         continue;
                     }
 
-                    currentCol += int.Parse(col.ToString());
+                    nextPiecePosition += int.Parse(currentChar.ToString());
                 }
             }
 
