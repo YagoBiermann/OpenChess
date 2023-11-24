@@ -15,7 +15,7 @@ namespace OpenChess.Domain
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
             Turn = ConvertTurn(fenPosition.Turn);
-            ConvertCastling(fenPosition.CastlingAvailability);
+            CastlingAvailability = ConvertCastling(fenPosition.CastlingAvailability);
             EnPassant = ConvertEnPassant(fenPosition.EnPassantAvailability);
             HalfMove = ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = ConvertMoveAmount(fenPosition.FullMove);
@@ -83,24 +83,25 @@ namespace OpenChess.Domain
             return char.Parse(field) == 'w' ? Color.White : Color.Black;
         }
 
-        private void ConvertCastling(string field)
+        private CastlingAvailability ConvertCastling(string field)
         {
-
-            Dictionary<char, CastlingRights> pairs = new()
+            Dictionary<char, bool> pairs = new()
             {
-                {'Q', CastlingRights.WhiteQueenSide},
-                {'K', CastlingRights.WhiteKingSide},
-                {'q', CastlingRights.BlackQueenSide},
-                {'k', CastlingRights.BlackKingSide},
-                {'-', CastlingRights.None}
+                {'K', false},
+                {'Q', false},
+                {'k', false},
+                {'q', false},
             };
 
-            if (field == "-") Castling.Add(CastlingRights.None);
             foreach (char letter in field)
             {
-                if (letter == '-') continue;
-                Castling.Add(pairs[letter]);
+                if (letter == 'K') pairs[letter] = true;
+                if (letter == 'Q') pairs[letter] = true;
+                if (letter == 'k') pairs[letter] = true;
+                if (letter == 'q') pairs[letter] = true;
             }
+
+            return new CastlingAvailability(pairs['K'], pairs['Q'], pairs['k'], pairs['q']);
         }
 
         private Coordinate? ConvertEnPassant(string field)
