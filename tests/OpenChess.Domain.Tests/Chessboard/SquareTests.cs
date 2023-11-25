@@ -117,5 +117,15 @@ namespace OpenChess.Tests
 
             Assert.IsNotNull(square.Piece);
         }
+
+        [TestMethod]
+        public void HasEnemyPiece_DifferentColor_ShouldReturnTrue()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+            Pawn pawn = new(Color.Black, coordinate);
+            Square square = new(coordinate, pawn);
+
+            Assert.IsTrue(square.HasEnemyPiece(Color.White));
+        }
     }
 }
