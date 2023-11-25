@@ -118,6 +118,32 @@ namespace OpenChess.Tests
             Assert.IsNotNull(square.Piece);
         }
 
+        [DataRow("A1", 'K')]
+        [DataRow("A1", 'P')]
+        [DataRow("A1", 'N')]
+        [DataRow("A1", 'B')]
+        [DataRow("A1", 'R')]
+        [DataRow("A1", 'Q')]
+        [TestMethod]
+        public void HasTypeOfPiece_HavingTypeOfPiece_ShouldReturnTrue(string origin, char type)
+        {
+            Coordinate coordinate = Coordinate.GetInstance(origin);
+            Piece piece = Piece.Create(type, coordinate);
+            Square square = new(coordinate, piece);
+
+            Type? pieceType;
+
+            if (char.ToLower(type) == 'k') { pieceType = typeof(King); }
+            else if (char.ToLower(type) == 'p') { pieceType = typeof(Pawn); }
+            else if (char.ToLower(type) == 'n') { pieceType = typeof(Knight); }
+            else if (char.ToLower(type) == 'b') { pieceType = typeof(Bishop); }
+            else if (char.ToLower(type) == 'r') { pieceType = typeof(Rook); }
+            else if (char.ToLower(type) == 'q') { pieceType = typeof(Queen); }
+            else { pieceType = null; }
+
+            Assert.IsTrue(square.HasTypeOfPiece(pieceType));
+        }
+
         [TestMethod]
         public void HasEnemyPiece_DifferentColor_ShouldReturnTrue()
         {
