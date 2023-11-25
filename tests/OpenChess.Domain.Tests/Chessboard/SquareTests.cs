@@ -145,6 +145,20 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
+        public void HasTypeOfPiece_NotHavingTypeOfPiece_ShouldReturnFalse()
+        {
+            Coordinate coordinate = Coordinate.GetInstance("A1");
+            Piece piece = Piece.Create('k', coordinate);
+            Square square = new(coordinate, piece);
+
+            Assert.IsFalse(square.HasTypeOfPiece(typeof(Queen)));
+            Assert.IsFalse(square.HasTypeOfPiece(typeof(Pawn)));
+            Assert.IsFalse(square.HasTypeOfPiece(typeof(Rook)));
+            Assert.IsFalse(square.HasTypeOfPiece(typeof(Bishop)));
+            Assert.IsFalse(square.HasTypeOfPiece(typeof(Knight)));
+        }
+
+        [TestMethod]
         public void HasEnemyPiece_DifferentColor_ShouldReturnTrue()
         {
             Coordinate coordinate = Coordinate.GetInstance("A1");
