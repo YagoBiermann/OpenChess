@@ -305,7 +305,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void MovePiece_GivenOriginAndDestinationWithEmptySquare_ShouldChangePiecPosition()
+        public void MovePiece_GivenOriginAndDestinationWithEmptySquare_ShouldChangePiecePosition()
         {
             Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
             Coordinate origin = Coordinate.GetInstance("B7");
@@ -316,6 +316,22 @@ namespace OpenChess.Tests
             Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
             Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
             Assert.IsInstanceOfType(chessboard.GetSquare(destination).Piece, typeof(Rook));
+        }
+
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1")]
+        [DataRow("rnbqkb1r/pppppp1p/5np1/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("8/5P2/3K4/8/8/1k6/8/q7 w - - 0 1")]
+        [DataRow("3k4/1K6/2PbP3/3B4/8/8/8/8 w - - 0 1")]
+        [DataRow("r1bqk2r/p2p1ppp/1pnbpn2/2p5/2PP4/3BPN1P/PP3PP1/RNBQ1RK1 b kq - 0 1")]
+        [TestMethod]
+        public void ToString_ShouldConvertChessboardToString(string fen)
+        {
+            Chessboard chessboard = new(fen);
+            string fromChessboard = chessboard.ToString();
+
+            Assert.IsTrue(FEN.IsValid(fromChessboard));
+            Assert.AreEqual(chessboard.ToString(), fen);
         }
     }
 }
