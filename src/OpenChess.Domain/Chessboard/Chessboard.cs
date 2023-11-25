@@ -37,6 +37,66 @@ namespace OpenChess.Domain
             destinationSquare.Piece = piece;
         }
 
+        public override string ToString()
+        {
+            string chessboard = BuildChessboardString();
+            string turn = BuildTurnString();
+            string castling = BuildCastlingString();
+            string enPassant = BuildEnPassantString();
+
+            return $"{chessboard} {turn} {castling} {enPassant} {HalfMove} {FullMove}";
+        }
+
+        private string BuildEnPassantString()
+        {
+            return EnPassant is null ? "-" : EnPassant.ToString();
+        }
+        private string BuildCastlingString()
+        {
+            return CastlingAvailability.ToString();
+        }
+        private string BuildTurnString()
+        {
+            return Turn == Color.Black ? "b" : "w";
+        }
+        private string BuildChessboardString()
+        {
+            string chessboard = "";
+
+            for (int row = 7; row >= 0; row--)
+            {
+                string currentRow = "";
+                currentRow += BuildRowString(row);
+                chessboard += currentRow;
+
+                if (row == 0) { continue; }
+                chessboard += "/";
+            }
+
+            return chessboard;
+        }
+
+        private string BuildRowString(int row)
+        {
+            string builtRow = "";
+            int amount = 0;
+            for (int col = 0; col <= 7; col++)
+            {
+                Square currentSquare = GetSquare(Coordinate.GetInstance(col, row));
+                if (amount > 7) return amount.ToString();
+                if (currentSquare.HasPiece)
+                {
+                    string emptySquares = amount > 0 ? amount.ToString() : string.Empty;
+                    builtRow += $"{emptySquares}{currentSquare.Piece!.Name}";
+                    amount = 0;
+                    continue;
+                }
+                amount += 1;
+                if (col >= 7) { builtRow += amount; break; }
+            }
+            return builtRow;
+        }
+
         private List<List<Square>> CreateBoard()
         {
             List<List<Square>> board = new()
