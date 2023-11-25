@@ -33,5 +33,11 @@ namespace OpenChess.Domain
                 }
             }
         }
+
+        public bool HasEnemyPiece(Color currentPlayer)
+        {
+            if (!HasPiece) return false;
+            return Piece?.Color != currentPlayer;
+        }
     }
 }
