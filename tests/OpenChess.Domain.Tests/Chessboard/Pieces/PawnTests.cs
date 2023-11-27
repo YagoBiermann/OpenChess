@@ -224,5 +224,65 @@ namespace OpenChess.Tests
             Assert.IsFalse(whiteForwardMoves.Any());
             Assert.IsFalse(blackForwardMoves.Any());
         }
+
+        [DataRow("E4", "D5")]
+        [DataRow("H3", "G4")]
+        [TestMethod]
+        public void CalculateLegalMoves_WhitePawn_UpperLeftDiagonal_ShouldIncludeEnemyPieces(string origin, string expectedUpperLeft)
+        {
+            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
+
+            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard);
+            List<Coordinate> upperLeftMove = pawnMoves.Where(m => m.Direction.Equals(new UpperLeft())).FirstOrDefault().Coordinates;
+            List<Coordinate> expectedUpperLeftMoves = new() { Coordinate.GetInstance(expectedUpperLeft) };
+
+            CollectionAssert.AreEqual(expectedUpperLeftMoves, upperLeftMove);
+        }
+
+        [DataRow("A3", "B4")]
+        [DataRow("D4", "E5")]
+        [TestMethod]
+        public void CalculateLegalMoves_WhitePawn_UpperRightDiagonal_ShouldIncludeEnemyPieces(string origin, string expectedUpperRight)
+        {
+            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
+
+            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard);
+            List<Coordinate> upperRightMove = pawnMoves.Where(m => m.Direction.Equals(new UpperRight())).FirstOrDefault().Coordinates;
+            List<Coordinate> expectedUpperRightMoves = new() { Coordinate.GetInstance(expectedUpperRight) };
+
+            CollectionAssert.AreEqual(expectedUpperRightMoves, upperRightMove);
+        }
+
+        [DataRow("H6", "G5")]
+        [DataRow("E5", "D4")]
+        [TestMethod]
+        public void CalculateLegalMoves_BlackPawn_LowerLeftDiagonal_ShouldIncludeEnemyPieces(string origin, string expectedLowerLeft)
+        {
+            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
+
+            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard);
+            List<Coordinate> lowerLeftMove = pawnMoves.Where(m => m.Direction.Equals(new LowerLeft())).FirstOrDefault().Coordinates;
+            List<Coordinate> expectedLowerLeftMoves = new() { Coordinate.GetInstance(expectedLowerLeft) };
+
+            CollectionAssert.AreEqual(expectedLowerLeftMoves, lowerLeftMove);
+        }
+
+        [DataRow("A6", "B5")]
+        [DataRow("D5", "E4")]
+        [TestMethod]
+        public void CalculateLegalMoves_BlackPawn_LowerRightDiagonal_ShouldIncludeEnemyPieces(string origin, string expectedLowerRight)
+        {
+            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
+
+            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard);
+            List<Coordinate> lowerRightMove = pawnMoves.Where(m => m.Direction.Equals(new LowerRight())).FirstOrDefault().Coordinates;
+            List<Coordinate> expectedLowerRightMoves = new() { Coordinate.GetInstance(expectedLowerRight) };
+
+            CollectionAssert.AreEqual(expectedLowerRightMoves, lowerRightMove);
+        }
     }
 }
