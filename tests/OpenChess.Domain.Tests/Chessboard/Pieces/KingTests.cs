@@ -114,5 +114,27 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(up.Any());
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
+        {
+            Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
+            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
+
+            List<Move> moves = king.CalculateLegalMoves(chessboard);
+            List<Coordinate> up = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
+            List<Coordinate> left = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
+            List<Coordinate> right = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
+            List<Coordinate> down = moves.Find(m => m.Direction.Equals(new Down())).Coordinates;
+
+            List<Coordinate> expectedUpMove = new() { Coordinate.GetInstance("E2") };
+            List<Coordinate> expectedLeftMove = new() { Coordinate.GetInstance("D1") };
+            List<Coordinate> expectedRightMove = new() { Coordinate.GetInstance("F1") };
+
+            CollectionAssert.AreEqual(expectedUpMove, up);
+            CollectionAssert.AreEqual(expectedLeftMove, left);
+            CollectionAssert.AreEqual(expectedRightMove, right);
+            Assert.IsFalse(down.Any());
+        }
     }
 }

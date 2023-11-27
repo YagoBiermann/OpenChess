@@ -110,5 +110,17 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedUpperRightMove, upperRightMove);
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
+        {
+            Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
+            Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C5")).Piece!;
+
+            List<Coordinate> upperLeftMove = bishop.CalculateLegalMoves(chessboard).Find(m => m.Direction.Equals(new UpperLeft())).Coordinates;
+            List<Coordinate> expectedUpperLeftMoves = new() { Coordinate.GetInstance("B6"), Coordinate.GetInstance("A7") };
+
+            CollectionAssert.AreEqual(expectedUpperLeftMoves, upperLeftMove);
+        }
     }
 }

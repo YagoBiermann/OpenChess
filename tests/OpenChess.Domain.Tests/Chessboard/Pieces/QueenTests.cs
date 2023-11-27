@@ -135,5 +135,17 @@ namespace OpenChess.Tests
             CollectionAssert.AreEqual(expectedLowerLeftMoves, lowerLeftMoves);
             CollectionAssert.AreEqual(expectedUpMoves, upMoves);
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
+        {
+            Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
+            Queen queen = (Queen)chessboard.GetSquare(Coordinate.GetInstance("D4")).Piece!;
+
+            List<Coordinate> downMoves = queen.CalculateLegalMoves(chessboard).Find(m => m.Direction.Equals(new Down())).Coordinates;
+            List<Coordinate> expectedDownMoves = new() { Coordinate.GetInstance("D3"), Coordinate.GetInstance("D2"), Coordinate.GetInstance("D1"), };
+
+            CollectionAssert.AreEqual(expectedDownMoves, downMoves);
+        }
     }
 }
