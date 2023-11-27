@@ -210,5 +210,19 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedMoves, forwardMoves);
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_ForwardMoves_WithPieceInFront_ShouldBlockPawnFromMovingAhead()
+        {
+            Chessboard chessboard = new("rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b KQkq - 0 1");
+            Pawn whitePawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("D4")).Piece!;
+            Pawn blackPawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("D5")).Piece!;
+
+            List<Coordinate> whiteForwardMoves = whitePawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(whitePawn.ForwardDirection)).FirstOrDefault().Coordinates;
+            List<Coordinate> blackForwardMoves = blackPawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(blackPawn.ForwardDirection)).FirstOrDefault().Coordinates;
+
+            Assert.IsFalse(whiteForwardMoves.Any());
+            Assert.IsFalse(blackForwardMoves.Any());
+        }
     }
 }
