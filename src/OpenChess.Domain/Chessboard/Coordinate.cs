@@ -104,6 +104,17 @@ namespace OpenChess.Domain
             return distances;
         }
 
+        public static PieceDistances? CalculateNearestDistance(Coordinate origin, List<Coordinate> piecesPosition)
+        {
+            List<PieceDistances> distances = CalculateDistance(origin, piecesPosition);
+            if (!distances.Any()) return null;
+
+            int minDistance = distances.Min(d => d.DistanceFromOrigin);
+            PieceDistances nearestPiece = distances.Find(d => d.DistanceFromOrigin == minDistance);
+
+            return nearestPiece;
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
