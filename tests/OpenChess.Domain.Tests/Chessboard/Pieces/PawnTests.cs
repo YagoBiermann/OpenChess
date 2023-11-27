@@ -318,5 +318,27 @@ namespace OpenChess.Tests
                 Assert.IsFalse(move.Coordinates.Any());
             }
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_BlackPawn_EnPassantAvailable_ShouldBeIncludedInLegalMoves()
+        {
+            Chessboard chessboard = new("rnbqkb1r/ppp1pppp/5n2/6B1/2pP4/5N2/PPP1PPPP/RN1QKB1R b KQkq D3 0 1");
+
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("C4")).Piece!;
+            Move move = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
+
+            Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
+        }
+
+        [TestMethod]
+        public void CalculateLegalMoves_WhitePawn_EnPassantAvailable_ShouldBeIncludedInLegalMoves()
+        {
+            Chessboard chessboard = new("rnbqkb1r/pp2pppp/5n2/2pP2B1/8/5N2/PPP1PPPP/RN1QKB1R b KQkq C6 0 1");
+
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("D5")).Piece!;
+            Move move = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(new UpperLeft())).ToList().FirstOrDefault();
+
+            Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
+        }
     }
 }
