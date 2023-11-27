@@ -37,6 +37,11 @@ namespace OpenChess.Domain
             destinationSquare.Piece = piece;
         }
 
+        public List<Coordinate> FindPieces(List<Coordinate> range)
+        {
+            return range.FindAll(c => GetSquare(c).HasPiece).ToList();
+        }
+
         public override string ToString()
         {
             string chessboard = BuildChessboardString();
