@@ -107,5 +107,21 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedMove, rightMoves);
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_ShouldNotIncludeTheKing()
+        {
+            Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
+            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("F4")).Piece!;
+            List<Coordinate> expectedUpMove = new() { Coordinate.GetInstance("F5") };
+            List<Coordinate> expectedDownMove = new() { Coordinate.GetInstance("F3") };
+
+            List<Move> moves = rook.CalculateLegalMoves(chessboard);
+            List<Coordinate> upMoves = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
+            List<Coordinate> downMoves = moves.Find(m => m.Direction.Equals(new Down())).Coordinates;
+
+            CollectionAssert.AreEqual(expectedUpMove, upMoves);
+            CollectionAssert.AreEqual(expectedDownMove, downMoves);
+        }
     }
 }

@@ -97,5 +97,18 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedLowerLeftMovesMove, lowerLeftMove);
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_ShouldNotIncludeTheKing()
+        {
+            Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
+            Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C5")).Piece!;
+            List<Move> moves = bishop.CalculateLegalMoves(chessboard);
+
+            List<Coordinate> upperRightMove = moves.Find(m => m.Direction.Equals(new UpperRight())).Coordinates;
+            List<Coordinate> expectedUpperRightMove = new() { Coordinate.GetInstance("D6") };
+
+            CollectionAssert.AreEqual(expectedUpperRightMove, upperRightMove);
+        }
     }
 }

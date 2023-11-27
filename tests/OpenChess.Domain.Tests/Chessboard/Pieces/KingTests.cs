@@ -102,5 +102,17 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(moves.Any());
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_ShouldNotIncludeTheKing()
+        {
+            Chessboard chessboard = new("8/8/8/8/3k4/3K4/8/8 w - - 0 1");
+            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("D3")).Piece!;
+
+            List<Move> moves = king.CalculateLegalMoves(chessboard);
+            List<Coordinate> up = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
+
+            Assert.IsFalse(up.Any());
+        }
     }
 }
