@@ -25,6 +25,11 @@ namespace OpenChess.Domain
             }
         }
 
+        public Direction ForwardDirection
+        {
+            get { return Color == Color.White ? new Up() : new Down(); }
+        }
+
         public override char Name => Color == Color.Black ? 'p' : 'P';
 
         public override List<Direction> Directions => Color == Color.Black ? BlackDirections() : WhiteDirections();
