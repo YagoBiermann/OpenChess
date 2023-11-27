@@ -174,5 +174,27 @@ namespace OpenChess.Tests
             }
         }
 
+        [DataRow("E2", "E3", "E4")]
+        [DataRow("E7", "E6", "E5")]
+        [TestMethod]
+        public void CalculateLegalMoves_ForwardMoves_FirstMove_ShouldReturnTwoCoordinates(string origin, string coordinate, string coordinate2)
+        {
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
+
+            List<Coordinate> expectedMoves = new()
+            {
+                Coordinate.GetInstance(coordinate),
+                Coordinate.GetInstance(coordinate2),
+            };
+
+            List<Coordinate> forwardMoves = pawn
+            .CalculateLegalMoves(chessboard)
+            .Where(m => m.Direction.Equals(pawn.ForwardDirection))
+            .FirstOrDefault()
+            .Coordinates;
+
+            CollectionAssert.AreEqual(expectedMoves, forwardMoves);
+        }
     }
 }
