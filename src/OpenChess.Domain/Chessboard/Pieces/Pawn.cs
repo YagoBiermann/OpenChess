@@ -100,6 +100,7 @@ namespace OpenChess.Domain
             return forwardMoves;
         }
 
+        private static List<Direction> BlackDirections()
         {
             List<Direction> directions = new()
             {
@@ -111,7 +112,7 @@ namespace OpenChess.Domain
             return directions;
         }
 
-        private List<Direction> WhiteDirections()
+        private static List<Direction> WhiteDirections()
         {
             List<Direction> directions = new()
             {
