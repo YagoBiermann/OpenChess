@@ -93,6 +93,20 @@ namespace OpenChess.Tests
             Assert.IsFalse(whitePawn.IsFirstMove);
         }
 
+        [TestMethod]
+        public void ForwardDirection_ShouldReturnUpForWhite()
+        {
+            Pawn pawn = new(Color.White, Coordinate.GetInstance("E4"));
+            Assert.AreEqual(pawn.ForwardDirection, new Up());
+        }
+
+        [TestMethod]
+        public void ForwardDirection_ShouldReturnDownForBlack()
+        {
+            Pawn pawn = new(Color.Black, Coordinate.GetInstance("E4"));
+            Assert.AreEqual(pawn.ForwardDirection, new Down());
+        }
+
         [DataRow("E2")]
         [DataRow("E4")]
         [TestMethod]
