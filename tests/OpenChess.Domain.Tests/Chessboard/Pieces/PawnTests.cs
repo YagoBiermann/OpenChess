@@ -156,6 +156,18 @@ namespace OpenChess.Tests
                 Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
             }
         }
+
+        [TestMethod]
+        public void CalculateMoveRange_DiagonalsOutOfChessboard_ShouldReturnEmptyList()
+        {
+            Pawn pawn = new(Color.Black, Coordinate.GetInstance("H6"));
+
+            List<Move> moves = pawn.CalculateMoveRange();
+            Move diagonal = moves.Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
+
+            Assert.IsFalse(diagonal.Coordinates.Any());
+        }
+
         [DataRow("E4")]
         [DataRow("E5")]
         [DataRow("F2")]
