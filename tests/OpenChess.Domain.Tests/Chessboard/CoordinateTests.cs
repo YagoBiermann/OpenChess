@@ -423,5 +423,43 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(Coordinate.CalculateDistance(c1, c2), expectedDistance);
         }
+
+        [TestMethod]
+        public void CalculateDistance_ShouldCalculateDistanceInRangeOfCoordinates()
+        {
+            Coordinate c1 = Coordinate.GetInstance("E5");
+            Coordinate c2 = Coordinate.GetInstance("E6");
+            Coordinate c3 = Coordinate.GetInstance("E7");
+            List<Coordinate> coordinates = new() { c1, c2, c3 };
+            Coordinate origin = Coordinate.GetInstance("E4");
+            List<PieceDistances> expectedDistances = new() { new PieceDistances(1, c1), new PieceDistances(2, c2), new PieceDistances(3, c3), };
+
+            List<PieceDistances> distances = Coordinate.CalculateDistance(origin, coordinates);
+
+            CollectionAssert.AreEqual(expectedDistances, distances);
+        }
+
+        [TestMethod]
+        public void CalculateDistance_UnsortedRange_ShouldCalculateDistancesCorrectly()
+        {
+            Coordinate c1 = Coordinate.GetInstance("E7");
+            Coordinate c2 = Coordinate.GetInstance("E5");
+            Coordinate c3 = Coordinate.GetInstance("A8");
+            Coordinate c4 = Coordinate.GetInstance("H1");
+            List<Coordinate> coordinates = new() { c1, c2, c3, c4 };
+            Coordinate origin = Coordinate.GetInstance("E4");
+
+            List<PieceDistances> expectedDistances = new()
+            {
+                new PieceDistances(3, c1),
+                new PieceDistances(1, c2),
+                new PieceDistances(4, c3),
+                new PieceDistances(3, c4),
+            };
+
+            List<PieceDistances> distances = Coordinate.CalculateDistance(origin, coordinates);
+
+            CollectionAssert.AreEqual(expectedDistances, distances);
+        }
     }
 };
