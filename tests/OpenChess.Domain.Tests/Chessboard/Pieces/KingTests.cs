@@ -91,5 +91,16 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedMove, moves);
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_ShouldNotIncludeAllyPieces()
+        {
+            Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
+            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
+
+            List<Coordinate> moves = king.CalculateLegalMoves(chessboard).Find(m => m.Direction.Equals(new UpperLeft())).Coordinates;
+
+            Assert.IsFalse(moves.Any());
+        }
     }
 }
