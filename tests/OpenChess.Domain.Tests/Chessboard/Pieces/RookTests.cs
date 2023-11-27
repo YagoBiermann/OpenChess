@@ -63,7 +63,7 @@ namespace OpenChess.Tests
             };
 
             List<Move> moves = rook.CalculateMoveRange();
-           
+
             Assert.AreEqual(moves.Count, expectedMoves.Count);
             foreach (Move move in moves)
             {
@@ -72,6 +72,24 @@ namespace OpenChess.Tests
                 Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
             }
 
+        }
+
+        [TestMethod]
+        public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
+        {
+            Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
+            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("F4")).Piece!;
+            List<Coordinate> expectedMove = new()
+            {
+                Coordinate.GetInstance("E4"),
+                Coordinate.GetInstance("D4"),
+                Coordinate.GetInstance("C4"),
+            };
+
+            List<Move> moves = rook.CalculateLegalMoves(chessboard);
+            List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
+
+            CollectionAssert.AreEqual(expectedMove, leftMoves);
         }
     }
 }

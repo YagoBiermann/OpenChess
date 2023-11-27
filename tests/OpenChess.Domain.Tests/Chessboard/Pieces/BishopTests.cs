@@ -71,5 +71,18 @@ namespace OpenChess.Tests
                 Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
             }
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
+        {
+            Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
+            Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C5")).Piece!;
+            List<Move> moves = bishop.CalculateLegalMoves(chessboard);
+
+            List<Coordinate> lowerRightMove = moves.Find(m => m.Direction.Equals(new LowerRight())).Coordinates;
+            List<Coordinate> expectedLowerRightMove = new() { Coordinate.GetInstance("D4"), Coordinate.GetInstance("E3"), Coordinate.GetInstance("F2"), };
+
+            CollectionAssert.AreEqual(expectedLowerRightMove, lowerRightMove);
+        }
     }
 }

@@ -81,5 +81,25 @@ namespace OpenChess.Tests
                 Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
             }
         }
+
+        [TestMethod]
+        public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
+        {
+            Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
+            Queen queen = (Queen)chessboard.GetSquare(Coordinate.GetInstance("D4")).Piece!;
+            List<Move> moves = queen.CalculateLegalMoves(chessboard);
+
+            List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
+            List<Coordinate> upperLeftMoves = moves.Find(m => m.Direction.Equals(new UpperLeft())).Coordinates;
+            List<Coordinate> lowerRightMoves = moves.Find(m => m.Direction.Equals(new LowerRight())).Coordinates;
+
+            List<Coordinate> expectedRightMoves = new() { Coordinate.GetInstance("E4"), Coordinate.GetInstance("F4"), Coordinate.GetInstance("G4"), };
+            List<Coordinate> expectedUpperLeftMoves = new() { Coordinate.GetInstance("C5"), Coordinate.GetInstance("B6"), };
+            List<Coordinate> expectedLowerRightMoves = new() { Coordinate.GetInstance("E3"), };
+
+            CollectionAssert.AreEqual(expectedRightMoves, rightMoves);
+            CollectionAssert.AreEqual(expectedUpperLeftMoves, upperLeftMoves);
+            CollectionAssert.AreEqual(expectedLowerRightMoves, lowerRightMoves);
+        }
     }
 }
