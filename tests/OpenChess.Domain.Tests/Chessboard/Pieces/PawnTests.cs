@@ -132,7 +132,6 @@ namespace OpenChess.Tests
             }
         }
 
-
         [DataRow("E7")]
         [DataRow("E5")]
         [TestMethod]
@@ -157,5 +156,23 @@ namespace OpenChess.Tests
                 Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
             }
         }
+        [DataRow("E4")]
+        [DataRow("E5")]
+        [DataRow("F2")]
+        [DataRow("F7")]
+        [TestMethod]
+        public void CalculateLegalMoves_ForwardMoves_ShouldNotIncludePieces(string origin)
+        {
+            Chessboard chessboard = new("r1bqk2r/ppppbppp/2n2n2/1B2p3/3PP3/2N2N2/PPP2PPP/R1BQK2R b KQkq - 0 1");
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
+
+            List<Move> forwardMoves = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(pawn.ForwardDirection)).ToList();
+
+            foreach (Move move in forwardMoves)
+            {
+                Assert.IsFalse(move.Coordinates.Any());
+            }
+        }
+
     }
 }
