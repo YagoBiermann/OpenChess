@@ -302,5 +302,21 @@ namespace OpenChess.Tests
                 Assert.IsFalse(move.Coordinates.Any());
             }
         }
+
+        [DataRow("F2", "r1bqk1nr/pppp1ppp/2n5/2b5/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 0 1")]
+        [DataRow("F7", "r1bqk1nr/pppp1ppp/2n5/2b5/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 0 1")]
+        [TestMethod]
+        public void CalculateLegalMoves_EmptySquareInDiagonals_ShouldNotBeIncludedInLegalMoves(string origin, string fen)
+        {
+            Chessboard chessboard = new(fen);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
+
+            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard).Where(m => !m.Direction.Equals(pawn.ForwardDirection)).ToList();
+
+            foreach (Move move in pawnMoves)
+            {
+                Assert.IsFalse(move.Coordinates.Any());
+            }
+        }
     }
 }
