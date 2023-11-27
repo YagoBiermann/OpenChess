@@ -93,6 +93,17 @@ namespace OpenChess.Domain
             return Math.Max(rowDifference, colDifference);
         }
 
+        public static List<PieceDistances> CalculateDistance(Coordinate origin, List<Coordinate> piecesPosition)
+        {
+            List<PieceDistances> distances = new();
+            foreach (Coordinate position in piecesPosition)
+            {
+                int distance = CalculateDistance(origin, position);
+                distances.Add(new(distance, position));
+            }
+            return distances;
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
