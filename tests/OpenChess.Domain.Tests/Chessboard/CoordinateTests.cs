@@ -461,5 +461,22 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedDistances, distances);
         }
+
+        [TestMethod]
+        public void CalculateNearestDistance_ShouldReturnNearestPieceFromOrigin()
+        {
+            Coordinate origin = Coordinate.GetInstance("A1");
+            Coordinate c1 = Coordinate.GetInstance("A2");
+            Coordinate c2 = Coordinate.GetInstance("A3");
+            Coordinate c3 = Coordinate.GetInstance("A4");
+            Coordinate c4 = Coordinate.GetInstance("A5");
+
+            List<Coordinate> distances = new() { c1, c2, c3, c4 };
+
+            PieceDistances expectedPiece = new(1, c1);
+            PieceDistances nearestPiece = (PieceDistances)Coordinate.CalculateNearestDistance(origin, distances)!;
+
+            Assert.AreEqual(expectedPiece, nearestPiece);
+        }
     }
 };
