@@ -196,5 +196,19 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedMoves, forwardMoves);
         }
+
+        [DataRow("D4", "D5")]
+        [DataRow("C6", "C5")]
+        [TestMethod]
+        public void CalculateLegalMoves_ForwardMoves_NotFirstMove_ShouldReturnOneCoordinate(string origin, string expected)
+        {
+            Chessboard chessboard = new("rn1qkbnr/pp2pppp/2p5/5b2/3PN3/8/PPP2PPP/R1BQKBNR w KQkq - 0 1");
+            Pawn whitePawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
+
+            List<Coordinate> forwardMoves = whitePawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(whitePawn.ForwardDirection)).FirstOrDefault().Coordinates;
+            List<Coordinate> expectedMoves = new() { Coordinate.GetInstance(expected) };
+
+            CollectionAssert.AreEqual(expectedMoves, forwardMoves);
+        }
     }
 }
