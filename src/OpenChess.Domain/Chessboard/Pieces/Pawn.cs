@@ -42,7 +42,7 @@ namespace OpenChess.Domain
 
             foreach (Direction direction in Directions)
             {
-                if (direction is Up || direction is Down)
+                if (direction.Equals(ForwardDirection))
                 {
                     List<Coordinate> forward = Coordinate.CalculateSequence(Origin, direction, ForwardMoveAmount);
                     moves.Add(new(direction, forward));
@@ -56,7 +56,50 @@ namespace OpenChess.Domain
             return moves;
         }
 
-        private List<Direction> BlackDirections()
+        public override List<Move> CalculateLegalMoves(Chessboard chessboard)
+        {
+            List<Move> legalMoves = new();
+            List<Move> moveRange = CalculateMoveRange();
+
+            foreach (Move move in moveRange)
+            {
+                if (move.Direction.Equals(ForwardDirection))
+                {
+                    List<Coordinate> forwardMoves = CalculateForwardMoves(chessboard, move.Coordinates);
+                    legalMoves.Add(new(move.Direction, forwardMoves));
+                    continue;
+                };
+
+                Coordinate? attackingPosition = move.Coordinates.FirstOrDefault();
+                if (attackingPosition is null) { legalMoves.Add(new(move.Direction, new())); continue; };
+
+                Square square = chessboard.GetSquare(attackingPosition);
+                bool isEnPassant = attackingPosition.Equals(chessboard.EnPassant);
+                if (isEnPassant) { legalMoves.Add(new(move.Direction, move.Coordinates)); continue; };
+                if (!square.HasPiece) { legalMoves.Add(new(move.Direction, new())); continue; }
+                bool hasAllyPiece = !square.HasEnemyPiece(Color);
+                bool hasKing = square.HasTypeOfPiece(typeof(King));
+                if (hasAllyPiece || hasKing) { legalMoves.Add(new(move.Direction, new())); continue; }
+
+                legalMoves.Add(new(move.Direction, move.Coordinates));
+            }
+
+            return legalMoves;
+        }
+
+        private List<Coordinate> CalculateForwardMoves(Chessboard chessboard, List<Coordinate> forwardCoordinates)
+        {
+            List<Coordinate> piecesPosition = chessboard.FindPieces(forwardCoordinates);
+
+            PieceDistances? nearestPiece = Coordinate.CalculateNearestDistance(Origin, piecesPosition);
+            if (!nearestPiece.HasValue) return forwardCoordinates;
+
+            List<Coordinate> forwardMoves = Coordinate.CalculateSequence(Origin, ForwardDirection, nearestPiece.Value.DistanceFromOrigin);
+            forwardMoves.RemoveAt(forwardMoves.Count - 1);
+
+            return forwardMoves;
+        }
+
         {
             List<Direction> directions = new()
             {
