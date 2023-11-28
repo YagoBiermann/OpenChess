@@ -42,6 +42,19 @@ namespace OpenChess.Domain
             return range.FindAll(c => GetSquare(c).HasPiece).ToList();
         }
 
+        public List<Coordinate> GetAllPiecesFromPlayer(Color player)
+        {
+            List<Coordinate> piecePosition = new();
+
+            _board.ForEach(action: r =>
+            {
+                var squares = r.FindAll(c => c.Piece?.Color == player);
+                squares.ForEach(s => piecePosition.Add(s.Coordinate));
+            });
+
+            return piecePosition;
+        }
+
         public override string ToString()
         {
             string chessboard = BuildChessboardString();
