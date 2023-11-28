@@ -86,35 +86,6 @@ namespace OpenChess.Domain
             return coordinates;
         }
 
-        public static int CalculateDistance(Coordinate origin, Coordinate destination)
-        {
-            int rowDifference = Math.Abs(origin.RowToInt - destination.RowToInt);
-            int colDifference = Math.Abs(origin.ColumnToInt - destination.ColumnToInt);
-            return Math.Max(rowDifference, colDifference);
-        }
-
-        public static List<PieceDistances> CalculateDistance(Coordinate origin, List<Coordinate> piecesPosition)
-        {
-            List<PieceDistances> distances = new();
-            foreach (Coordinate position in piecesPosition)
-            {
-                int distance = CalculateDistance(origin, position);
-                distances.Add(new(distance, position));
-            }
-            return distances;
-        }
-
-        public static PieceDistances? CalculateNearestDistance(Coordinate origin, List<Coordinate> piecesPosition)
-        {
-            List<PieceDistances> distances = CalculateDistance(origin, piecesPosition);
-            if (!distances.Any()) return null;
-
-            int minDistance = distances.Min(d => d.DistanceFromOrigin);
-            PieceDistances nearestPiece = distances.Find(d => d.DistanceFromOrigin == minDistance);
-
-            return nearestPiece;
-        }
-
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
