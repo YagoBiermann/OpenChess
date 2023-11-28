@@ -94,5 +94,20 @@ namespace OpenChess.Tests
             Assert.AreEqual(knight.Color, Color.Black);
             Assert.AreEqual(pawn.Color, Color.Black);
         }
+
+        [DataRow("E5", "4k3/7R/4P3/2K1r3/8/8/8/8 b - - 0 1")]
+        [DataRow("E5", "4k3/7R/4P3/2K1q3/8/8/8/8 b - - 0 1")]
+        [DataRow("E5", "4k3/7R/3KP3/4b3/8/8/8/8 b - - 0 1")]
+        [DataRow("E5", "4k3/7R/4P3/4n3/2K5/8/8/8 b - - 0 1")]
+        [DataRow("E5", "4k3/7R/4P3/4p3/3K4/8/8/8 b - - 0 1")]
+        [TestMethod]
+        public void IsHittingTheEnemyKing_PieceHittingEnemyKing_ShouldReturnTrue(string coordinate, string fen)
+        {
+            Chessboard chessboard = new(fen);
+            Coordinate origin = Coordinate.GetInstance(coordinate);
+            Piece piece = chessboard.GetSquare(origin).Piece!;
+
+            Assert.IsTrue(piece.IsHittingTheEnemyKing(chessboard));
+        }
     }
 }
