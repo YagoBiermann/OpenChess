@@ -109,5 +109,20 @@ namespace OpenChess.Tests
 
             Assert.IsTrue(piece.IsHittingTheEnemyKing(chessboard));
         }
+
+        [DataRow("E5", "4k3/7R/4P3/4p3/4K3/8/8/8 b - - 0 1")]
+        [DataRow("E5", "4k3/7R/4P3/4b3/4K3/8/8/8 b - - 0 1")]
+        [DataRow("E5", "4k3/7R/4P3/4n3/4K3/8/8/8 b - - 0 1")]
+        [DataRow("C3", "4k3/7R/4P3/8/4K3/2q5/8/8 b - - 0 1")]
+        [DataRow("C3", "4k3/7R/4P3/8/4K3/2r5/8/8 b - - 0 1")]
+        [TestMethod]
+        public void IsHittingTheEnemyKing_PieceNotHittingEnemyKing_ShouldReturnFalse(string coordinate, string fen)
+        {
+            Chessboard chessboard = new(fen);
+            Coordinate origin = Coordinate.GetInstance(coordinate);
+            Piece piece = chessboard.GetSquare(origin).Piece!;
+
+            Assert.IsFalse(piece.IsHittingTheEnemyKing(chessboard));
+        }
     }
 }
