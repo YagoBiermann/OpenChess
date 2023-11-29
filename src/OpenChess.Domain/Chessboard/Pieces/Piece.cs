@@ -73,7 +73,7 @@ namespace OpenChess.Domain
                 List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, pieces);
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
 
-                List<Coordinate> attackingRange = Coordinate.CalculateSequence(Origin, move.Direction, nearestPiece.DistanceBetween);
+                List<Coordinate> attackingRange = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
                 Square square = chessboard.GetSquare(nearestPiece.Position);
                 bool isKing = square.HasTypeOfPiece(typeof(King));
 
