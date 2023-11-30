@@ -77,7 +77,8 @@ namespace OpenChess.Domain
                 Square square = chessboard.GetSquare(nearestPiece.Position);
                 bool isKing = square.HasTypeOfPiece(typeof(King));
 
-                if (!square.HasEnemyPiece(Color) || isKing) attackingRange.RemoveAt(attackingRange.Count - 1);
+                int lastPosition = attackingRange.Count - 1;
+                if (!square.HasEnemyPiece(Color) || isKing) attackingRange.RemoveAt(lastPosition);
 
                 legalMoves.Add(new(move.Direction, attackingRange));
             }
