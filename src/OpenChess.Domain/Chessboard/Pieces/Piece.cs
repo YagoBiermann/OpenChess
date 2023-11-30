@@ -63,24 +63,25 @@ namespace OpenChess.Domain
 
             foreach (Move move in moveRange)
             {
+                Direction currentDirection = move.Direction;
                 List<Coordinate> pieces = chessboard.FindPieces(move.Coordinates);
                 if (!pieces.Any())
                 {
-                    legalMoves.Add(new(move.Direction, move.Coordinates));
+                    legalMoves.Add(move);
                     continue;
                 }
 
                 List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, pieces);
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
 
-                List<Coordinate> attackingRange = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
+                List<Coordinate> rangeOfAttack = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
                 Square square = chessboard.GetSquare(nearestPiece.Position);
                 bool isKing = square.HasTypeOfPiece(typeof(King));
 
-                int lastPosition = attackingRange.Count - 1;
-                if (!square.HasEnemyPiece(Color) || isKing) attackingRange.RemoveAt(lastPosition);
+                int lastPosition = rangeOfAttack.Count - 1;
+                if (!square.HasEnemyPiece(Color) || isKing) rangeOfAttack.RemoveAt(lastPosition);
 
-                legalMoves.Add(new(move.Direction, attackingRange));
+                legalMoves.Add(new(currentDirection, rangeOfAttack));
             }
 
             return legalMoves;
