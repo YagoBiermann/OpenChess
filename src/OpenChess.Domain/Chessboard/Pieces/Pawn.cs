@@ -97,7 +97,8 @@ namespace OpenChess.Domain
             CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
 
             List<Coordinate> forwardMoves = Coordinate.CalculateSequence(Origin, ForwardDirection, nearestPiece.DistanceBetween);
-            forwardMoves.RemoveAt(forwardMoves.Count - 1);
+            int lastPosition = forwardMoves.Count - 1;
+            forwardMoves.RemoveAt(lastPosition);
 
             return forwardMoves;
         }
