@@ -70,11 +70,11 @@ namespace OpenChess.Domain
                     continue;
                 };
 
-                Coordinate? attackingPosition = move.Coordinates.FirstOrDefault();
-                if (attackingPosition is null) { legalMoves.Add(new(move.Direction, new())); continue; };
+                Coordinate? diagonal = move.Coordinates.FirstOrDefault();
+                if (diagonal is null) { legalMoves.Add(new(move.Direction, new())); continue; };
 
-                Square square = chessboard.GetSquare(attackingPosition);
-                bool isEnPassant = attackingPosition.Equals(chessboard.EnPassant);
+                Square square = chessboard.GetSquare(diagonal);
+                bool isEnPassant = diagonal.Equals(chessboard.EnPassant);
                 if (isEnPassant) { legalMoves.Add(new(move.Direction, move.Coordinates)); continue; };
                 if (!square.HasPiece) { legalMoves.Add(new(move.Direction, new())); continue; }
                 bool hasAllyPiece = !square.HasEnemyPiece(Color);
