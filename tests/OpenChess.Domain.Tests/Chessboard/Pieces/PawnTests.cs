@@ -114,17 +114,17 @@ namespace OpenChess.Tests
         {
             Pawn pawn = new(Color.White, Coordinate.GetInstance(origin));
 
-            List<Move> expectedMoves = new()
+            List<MovePositions> expectedMoves = new()
             {
                 ExpectedMoves.GetMove(pawn.Origin, new Up(), pawn.ForwardMoveAmount),
                 ExpectedMoves.GetMove(pawn.Origin, new UpperLeft(), pawn.MoveAmount),
                 ExpectedMoves.GetMove(pawn.Origin, new UpperRight(), pawn.MoveAmount)
             };
 
-            List<Move> moves = pawn.CalculateMoveRange();
+            List<MovePositions> moves = pawn.CalculateMoveRange();
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (Move move in moves)
+            foreach (MovePositions move in moves)
             {
                 int index = moves.IndexOf(move);
                 CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
@@ -139,17 +139,17 @@ namespace OpenChess.Tests
         {
             Pawn pawn = new(Color.Black, Coordinate.GetInstance(origin));
 
-            List<Move> expectedMoves = new()
+            List<MovePositions> expectedMoves = new()
             {
                 ExpectedMoves.GetMove(pawn.Origin, new Down(), pawn.ForwardMoveAmount),
                 ExpectedMoves.GetMove(pawn.Origin, new LowerLeft(), pawn.MoveAmount),
                 ExpectedMoves.GetMove(pawn.Origin, new LowerRight(), pawn.MoveAmount)
             };
 
-            List<Move> moves = pawn.CalculateMoveRange();
+            List<MovePositions> moves = pawn.CalculateMoveRange();
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (Move move in moves)
+            foreach (MovePositions move in moves)
             {
                 int index = moves.IndexOf(move);
                 CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
@@ -162,8 +162,8 @@ namespace OpenChess.Tests
         {
             Pawn pawn = new(Color.Black, Coordinate.GetInstance("H6"));
 
-            List<Move> moves = pawn.CalculateMoveRange();
-            Move diagonal = moves.Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
+            List<MovePositions> moves = pawn.CalculateMoveRange();
+            MovePositions diagonal = moves.Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
 
             Assert.IsFalse(diagonal.Coordinates.Any());
         }
@@ -178,9 +178,9 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("r1bqk2r/ppppbppp/2n2n2/1B2p3/3PP3/2N2N2/PPP2PPP/R1BQK2R b KQkq - 0 1");
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
-            List<Move> forwardMoves = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(pawn.ForwardDirection)).ToList();
+            List<MovePositions> forwardMoves = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(pawn.ForwardDirection)).ToList();
 
-            foreach (Move move in forwardMoves)
+            foreach (MovePositions move in forwardMoves)
             {
                 Assert.IsFalse(move.Coordinates.Any());
             }
@@ -245,7 +245,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
-            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard);
+            List<MovePositions> pawnMoves = pawn.CalculateLegalMoves(chessboard);
             List<Coordinate> upperLeftMove = pawnMoves.Where(m => m.Direction.Equals(new UpperLeft())).FirstOrDefault().Coordinates;
             List<Coordinate> expectedUpperLeftMoves = new() { Coordinate.GetInstance(expectedUpperLeft) };
 
@@ -260,7 +260,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
-            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard);
+            List<MovePositions> pawnMoves = pawn.CalculateLegalMoves(chessboard);
             List<Coordinate> upperRightMove = pawnMoves.Where(m => m.Direction.Equals(new UpperRight())).FirstOrDefault().Coordinates;
             List<Coordinate> expectedUpperRightMoves = new() { Coordinate.GetInstance(expectedUpperRight) };
 
@@ -275,7 +275,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
-            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard);
+            List<MovePositions> pawnMoves = pawn.CalculateLegalMoves(chessboard);
             List<Coordinate> lowerLeftMove = pawnMoves.Where(m => m.Direction.Equals(new LowerLeft())).FirstOrDefault().Coordinates;
             List<Coordinate> expectedLowerLeftMoves = new() { Coordinate.GetInstance(expectedLowerLeft) };
 
@@ -290,7 +290,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
-            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard);
+            List<MovePositions> pawnMoves = pawn.CalculateLegalMoves(chessboard);
             List<Coordinate> lowerRightMove = pawnMoves.Where(m => m.Direction.Equals(new LowerRight())).FirstOrDefault().Coordinates;
             List<Coordinate> expectedLowerRightMoves = new() { Coordinate.GetInstance(expectedLowerRight) };
 
@@ -307,9 +307,9 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
-            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard).Where(m => !m.Direction.Equals(pawn.ForwardDirection)).ToList();
+            List<MovePositions> pawnMoves = pawn.CalculateLegalMoves(chessboard).Where(m => !m.Direction.Equals(pawn.ForwardDirection)).ToList();
 
-            foreach (Move move in pawnMoves)
+            foreach (MovePositions move in pawnMoves)
             {
                 Assert.IsFalse(move.Coordinates.Any());
             }
@@ -323,9 +323,9 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
-            List<Move> pawnMoves = pawn.CalculateLegalMoves(chessboard).Where(m => !m.Direction.Equals(pawn.ForwardDirection)).ToList();
+            List<MovePositions> pawnMoves = pawn.CalculateLegalMoves(chessboard).Where(m => !m.Direction.Equals(pawn.ForwardDirection)).ToList();
 
-            foreach (Move move in pawnMoves)
+            foreach (MovePositions move in pawnMoves)
             {
                 Assert.IsFalse(move.Coordinates.Any());
             }
@@ -337,7 +337,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("rnbqkb1r/ppp1pppp/5n2/6B1/2pP4/5N2/PPP1PPPP/RN1QKB1R b KQkq D3 0 1");
 
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("C4")).Piece!;
-            Move move = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
+            MovePositions move = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
 
             Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
         }
@@ -348,7 +348,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("rnbqkb1r/pp2pppp/5n2/2pP2B1/8/5N2/PPP1PPPP/RN1QKB1R b KQkq C6 0 1");
 
             Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("D5")).Piece!;
-            Move move = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(new UpperLeft())).ToList().FirstOrDefault();
+            MovePositions move = pawn.CalculateLegalMoves(chessboard).Where(m => m.Direction.Equals(new UpperLeft())).ToList().FirstOrDefault();
 
             Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
         }

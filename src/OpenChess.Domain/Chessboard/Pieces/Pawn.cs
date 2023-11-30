@@ -36,9 +36,9 @@ namespace OpenChess.Domain
 
         public override bool IsLongRange => false;
 
-        public override List<Move> CalculateMoveRange()
+        public override List<MovePositions> CalculateMoveRange()
         {
-            List<Move> moves = new();
+            List<MovePositions> moves = new();
 
             foreach (Direction direction in Directions)
             {
@@ -56,12 +56,12 @@ namespace OpenChess.Domain
             return moves;
         }
 
-        public override List<Move> CalculateLegalMoves(Chessboard chessboard)
+        public override List<MovePositions> CalculateLegalMoves(Chessboard chessboard)
         {
-            List<Move> legalMoves = new();
-            List<Move> moveRange = CalculateMoveRange();
+            List<MovePositions> legalMoves = new();
+            List<MovePositions> moveRange = CalculateMoveRange();
 
-            foreach (Move move in moveRange)
+            foreach (MovePositions move in moveRange)
             {
                 Direction currentDirection = move.Direction;
                 List<Coordinate> currentCoordinates = move.Coordinates;
@@ -74,8 +74,8 @@ namespace OpenChess.Domain
                 };
 
                 List<Coordinate> emptyList = new();
-                Move emptyPosition = new(currentDirection, emptyList);
-                Move sameCurrentPosition = new(currentDirection, currentCoordinates);
+                MovePositions emptyPosition = new(currentDirection, emptyList);
+                MovePositions sameCurrentPosition = new(currentDirection, currentCoordinates);
 
                 Coordinate? diagonal = currentCoordinates.FirstOrDefault();
                 bool diagonalIsOutOfChessboard = diagonal is null;

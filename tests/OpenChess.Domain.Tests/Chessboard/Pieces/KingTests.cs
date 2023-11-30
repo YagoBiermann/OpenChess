@@ -57,7 +57,7 @@ namespace OpenChess.Tests
         {
             King king = new(Color.White, Coordinate.GetInstance("E4"));
 
-            List<Move> expectedMoves = new()
+            List<MovePositions> expectedMoves = new()
             {
                 ExpectedMoves.GetMove(king.Origin, new Up(), king.MoveAmount),
                 ExpectedMoves.GetMove(king.Origin, new Down(), king.MoveAmount),
@@ -69,10 +69,10 @@ namespace OpenChess.Tests
                 ExpectedMoves.GetMove(king.Origin, new LowerRight(), king.MoveAmount),
             };
 
-            List<Move> moves = king.CalculateMoveRange();
+            List<MovePositions> moves = king.CalculateMoveRange();
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (Move move in moves)
+            foreach (MovePositions move in moves)
             {
                 int index = moves.IndexOf(move);
                 CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
@@ -109,7 +109,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/8/8/8/3k4/3K4/8/8 w - - 0 1");
             King king = (King)chessboard.GetSquare(Coordinate.GetInstance("D3")).Piece!;
 
-            List<Move> moves = king.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = king.CalculateLegalMoves(chessboard);
             List<Coordinate> up = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
 
             Assert.IsFalse(up.Any());
@@ -121,7 +121,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
             King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
 
-            List<Move> moves = king.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = king.CalculateLegalMoves(chessboard);
             List<Coordinate> up = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
             List<Coordinate> left = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
             List<Coordinate> right = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;

@@ -53,7 +53,7 @@ namespace OpenChess.Tests
         {
             Bishop bishop = new(Color.White, Coordinate.GetInstance("E4"));
 
-            List<Move> expectedMoves = new()
+            List<MovePositions> expectedMoves = new()
             {
                 ExpectedMoves.GetMove(bishop.Origin, new UpperLeft(), bishop.MoveAmount),
                 ExpectedMoves.GetMove(bishop.Origin, new UpperRight(), bishop.MoveAmount),
@@ -61,10 +61,10 @@ namespace OpenChess.Tests
                 ExpectedMoves.GetMove(bishop.Origin, new LowerRight(), bishop.MoveAmount),
             };
 
-            List<Move> moves = bishop.CalculateMoveRange();
+            List<MovePositions> moves = bishop.CalculateMoveRange();
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (Move move in moves)
+            foreach (MovePositions move in moves)
             {
                 int index = moves.IndexOf(move);
                 CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
@@ -77,7 +77,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
             Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C5")).Piece!;
-            List<Move> moves = bishop.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = bishop.CalculateLegalMoves(chessboard);
 
             List<Coordinate> lowerRightMove = moves.Find(m => m.Direction.Equals(new LowerRight())).Coordinates;
             List<Coordinate> expectedLowerRightMove = new() { Coordinate.GetInstance("D4"), Coordinate.GetInstance("E3"), Coordinate.GetInstance("F2"), };
@@ -90,7 +90,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
             Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C5")).Piece!;
-            List<Move> moves = bishop.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = bishop.CalculateLegalMoves(chessboard);
 
             List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new LowerLeft())).Coordinates;
             List<Coordinate> expectedLowerLeftMovesMove = new() { Coordinate.GetInstance("B4") };
@@ -103,7 +103,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
             Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C5")).Piece!;
-            List<Move> moves = bishop.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = bishop.CalculateLegalMoves(chessboard);
 
             List<Coordinate> upperRightMove = moves.Find(m => m.Direction.Equals(new UpperRight())).Coordinates;
             List<Coordinate> expectedUpperRightMove = new() { Coordinate.GetInstance("D6") };
