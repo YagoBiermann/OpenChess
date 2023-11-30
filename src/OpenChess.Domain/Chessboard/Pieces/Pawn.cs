@@ -92,7 +92,8 @@ namespace OpenChess.Domain
             List<Coordinate> piecesPosition = chessboard.FindPieces(forwardCoordinates);
 
             List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, piecesPosition);
-            if (!distances.Any()) return forwardCoordinates;
+            bool noPiecesForward = !distances.Any();
+            if (noPiecesForward) return forwardCoordinates;
             CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
 
             List<Coordinate> forwardMoves = Coordinate.CalculateSequence(Origin, ForwardDirection, nearestPiece.DistanceBetween);
