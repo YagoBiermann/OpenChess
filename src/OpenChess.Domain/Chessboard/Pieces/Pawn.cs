@@ -75,6 +75,7 @@ namespace OpenChess.Domain
 
                 List<Coordinate> emptyList = new();
                 Move emptyPosition = new(currentDirection, emptyList);
+                Move sameCurrentPosition = new(currentDirection, currentCoordinates);
 
                 Coordinate? diagonal = currentCoordinates.FirstOrDefault();
                 bool diagonalIsOutOfChessboard = diagonal is null;
@@ -82,13 +83,13 @@ namespace OpenChess.Domain
 
                 Square square = chessboard.GetSquare(diagonal!);
                 bool isEnPassant = diagonal!.Equals(chessboard.EnPassant);
-                if (isEnPassant) { legalMoves.Add(new(currentDirection, currentCoordinates)); continue; };
+                if (isEnPassant) { legalMoves.Add(sameCurrentPosition); continue; };
                 if (!square.HasPiece) { legalMoves.Add(emptyPosition); continue; }
                 bool hasAllyPiece = !square.HasEnemyPiece(Color);
                 bool hasKing = square.HasTypeOfPiece(typeof(King));
                 if (hasAllyPiece || hasKing) { legalMoves.Add(emptyPosition); continue; }
 
-                legalMoves.Add(new(currentDirection, currentCoordinates));
+                legalMoves.Add(sameCurrentPosition);
             }
 
             return legalMoves;
