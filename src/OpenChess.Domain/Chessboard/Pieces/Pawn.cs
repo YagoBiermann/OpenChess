@@ -69,18 +69,18 @@ namespace OpenChess.Domain
                     legalMoves.Add(new(move.Direction, forwardMoves));
                     continue;
                 };
-
+                List<Coordinate> emptyList = new();
                 Coordinate? diagonal = move.Coordinates.FirstOrDefault();
                 bool diagonalIsOutOfChessboard = diagonal is null;
-                if (diagonalIsOutOfChessboard) { legalMoves.Add(new(move.Direction, new())); continue; };
+                if (diagonalIsOutOfChessboard) { legalMoves.Add(new(move.Direction, emptyList)); continue; };
 
                 Square square = chessboard.GetSquare(diagonal);
                 bool isEnPassant = diagonal.Equals(chessboard.EnPassant);
                 if (isEnPassant) { legalMoves.Add(new(move.Direction, move.Coordinates)); continue; };
-                if (!square.HasPiece) { legalMoves.Add(new(move.Direction, new())); continue; }
+                if (!square.HasPiece) { legalMoves.Add(new(move.Direction, emptyList)); continue; }
                 bool hasAllyPiece = !square.HasEnemyPiece(Color);
                 bool hasKing = square.HasTypeOfPiece(typeof(King));
-                if (hasAllyPiece || hasKing) { legalMoves.Add(new(move.Direction, new())); continue; }
+                if (hasAllyPiece || hasKing) { legalMoves.Add(new(move.Direction, emptyList)); continue; }
 
                 legalMoves.Add(new(move.Direction, move.Coordinates));
             }
