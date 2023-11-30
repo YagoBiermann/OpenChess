@@ -65,24 +65,28 @@ namespace OpenChess.Domain
             {
                 Direction currentDirection = move.Direction;
                 List<Coordinate> currentCoordinates = move.Coordinates;
+
                 if (currentDirection.Equals(ForwardDirection))
                 {
                     List<Coordinate> forwardMoves = CalculateForwardMoves(chessboard, currentCoordinates);
                     legalMoves.Add(new(currentDirection, forwardMoves));
                     continue;
                 };
+
                 List<Coordinate> emptyList = new();
+                Move emptyPosition = new(currentDirection, emptyList);
+
                 Coordinate? diagonal = currentCoordinates.FirstOrDefault();
                 bool diagonalIsOutOfChessboard = diagonal is null;
-                if (diagonalIsOutOfChessboard) { legalMoves.Add(new(currentDirection, emptyList)); continue; };
+                if (diagonalIsOutOfChessboard) { legalMoves.Add(emptyPosition); continue; };
 
-                Square square = chessboard.GetSquare(diagonal);
-                bool isEnPassant = diagonal.Equals(chessboard.EnPassant);
+                Square square = chessboard.GetSquare(diagonal!);
+                bool isEnPassant = diagonal!.Equals(chessboard.EnPassant);
                 if (isEnPassant) { legalMoves.Add(new(currentDirection, currentCoordinates)); continue; };
-                if (!square.HasPiece) { legalMoves.Add(new(currentDirection, emptyList)); continue; }
+                if (!square.HasPiece) { legalMoves.Add(emptyPosition); continue; }
                 bool hasAllyPiece = !square.HasEnemyPiece(Color);
                 bool hasKing = square.HasTypeOfPiece(typeof(King));
-                if (hasAllyPiece || hasKing) { legalMoves.Add(new(currentDirection, emptyList)); continue; }
+                if (hasAllyPiece || hasKing) { legalMoves.Add(emptyPosition); continue; }
 
                 legalMoves.Add(new(currentDirection, currentCoordinates));
             }
