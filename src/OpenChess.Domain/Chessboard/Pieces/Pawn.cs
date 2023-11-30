@@ -71,7 +71,8 @@ namespace OpenChess.Domain
                 };
 
                 Coordinate? diagonal = move.Coordinates.FirstOrDefault();
-                if (diagonal is null) { legalMoves.Add(new(move.Direction, new())); continue; };
+                bool diagonalIsOutOfChessboard = diagonal is null;
+                if (diagonalIsOutOfChessboard) { legalMoves.Add(new(move.Direction, new())); continue; };
 
                 Square square = chessboard.GetSquare(diagonal);
                 bool isEnPassant = diagonal.Equals(chessboard.EnPassant);
