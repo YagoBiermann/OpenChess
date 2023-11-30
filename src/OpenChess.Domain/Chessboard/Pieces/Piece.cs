@@ -45,9 +45,9 @@ namespace OpenChess.Domain
                     continue;
                 }
 
-                List<Coordinate> piecesPosition = chessboard.FindPieces(move.Coordinates);
-                if (!piecesPosition.Any()) continue;
-                List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, piecesPosition);
+                List<Coordinate> pieces = chessboard.FindPieces(move.Coordinates);
+                if (!pieces.Any()) continue;
+                List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, pieces);
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances)!;
                 Square square = chessboard.GetSquare(nearestPiece.Position);
                 if (square.HasEnemyPiece(Color) && square.HasTypeOfPiece(typeof(King))) { isHitting = true; break; }
