@@ -63,26 +63,28 @@ namespace OpenChess.Domain
 
             foreach (Move move in moveRange)
             {
-                if (move.Direction.Equals(ForwardDirection))
+                Direction currentDirection = move.Direction;
+                List<Coordinate> currentCoordinates = move.Coordinates;
+                if (currentDirection.Equals(ForwardDirection))
                 {
-                    List<Coordinate> forwardMoves = CalculateForwardMoves(chessboard, move.Coordinates);
-                    legalMoves.Add(new(move.Direction, forwardMoves));
+                    List<Coordinate> forwardMoves = CalculateForwardMoves(chessboard, currentCoordinates);
+                    legalMoves.Add(new(currentDirection, forwardMoves));
                     continue;
                 };
                 List<Coordinate> emptyList = new();
-                Coordinate? diagonal = move.Coordinates.FirstOrDefault();
+                Coordinate? diagonal = currentCoordinates.FirstOrDefault();
                 bool diagonalIsOutOfChessboard = diagonal is null;
-                if (diagonalIsOutOfChessboard) { legalMoves.Add(new(move.Direction, emptyList)); continue; };
+                if (diagonalIsOutOfChessboard) { legalMoves.Add(new(currentDirection, emptyList)); continue; };
 
                 Square square = chessboard.GetSquare(diagonal);
                 bool isEnPassant = diagonal.Equals(chessboard.EnPassant);
-                if (isEnPassant) { legalMoves.Add(new(move.Direction, move.Coordinates)); continue; };
-                if (!square.HasPiece) { legalMoves.Add(new(move.Direction, emptyList)); continue; }
+                if (isEnPassant) { legalMoves.Add(new(currentDirection, currentCoordinates)); continue; };
+                if (!square.HasPiece) { legalMoves.Add(new(currentDirection, emptyList)); continue; }
                 bool hasAllyPiece = !square.HasEnemyPiece(Color);
                 bool hasKing = square.HasTypeOfPiece(typeof(King));
-                if (hasAllyPiece || hasKing) { legalMoves.Add(new(move.Direction, emptyList)); continue; }
+                if (hasAllyPiece || hasKing) { legalMoves.Add(new(currentDirection, emptyList)); continue; }
 
-                legalMoves.Add(new(move.Direction, move.Coordinates));
+                legalMoves.Add(new(currentDirection, currentCoordinates));
             }
 
             return legalMoves;
