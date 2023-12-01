@@ -26,7 +26,7 @@ namespace OpenChess.Tests
         public void Join_MatchNotFull_ShouldAssignPlayerToMatch()
         {
             Match match = new(Time.Ten);
-            Player player = new(Color.White);
+            PlayerInfo player = new(Color.White);
 
             match.Join(player);
 
@@ -41,8 +41,8 @@ namespace OpenChess.Tests
         public void Join_WhenAllPlayersJoined_ShouldChangeStatusAndCurrentPlayer()
         {
             Match match = new(Time.Ten);
-            Player whitePlayer = new(Color.White);
-            Player blackPlayer = new(Color.Black);
+            PlayerInfo whitePlayer = new(Color.White);
+            PlayerInfo blackPlayer = new(Color.Black);
 
             match.Join(whitePlayer);
             match.Join(blackPlayer);
@@ -55,7 +55,7 @@ namespace OpenChess.Tests
         public void Join_AddingSamePlayerTwice_ShouldThrowException()
         {
             Match match = new(Time.Ten);
-            Player player = new(Color.White);
+            PlayerInfo player = new(Color.White);
 
             match.Join(player);
 
@@ -66,10 +66,10 @@ namespace OpenChess.Tests
         public void Join_FullMatch_ShouldThrowException()
         {
             Match match = new(Time.Ten);
-            Player whitePlayer = new(Color.White);
-            Player blackPlayer = new(Color.Black);
+            PlayerInfo whitePlayer = new(Color.White);
+            PlayerInfo blackPlayer = new(Color.Black);
 
-            Player otherPlayer = new(Color.White);
+            PlayerInfo otherPlayer = new(Color.White);
 
             match.Join(whitePlayer);
             match.Join(blackPlayer);
