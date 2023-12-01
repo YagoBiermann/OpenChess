@@ -61,5 +61,10 @@ namespace OpenChess.Domain
         public Guid? Winner { get { return _winner?.Id; } }
         public Stack<string> Moves { get { return new Stack<string>(_pgn); } }
         public string Chessboard { get { return _chessboard.ToString(); } }
+
+        protected static Player CreateNewPlayer(PlayerInfo info)
+        {
+            return new Player(info);
+        }
     }
 }
