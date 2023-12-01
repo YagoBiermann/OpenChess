@@ -4,6 +4,7 @@ namespace OpenChess.Domain
     {
         public Guid Id { get; }
         public Color Color { get; }
+        public Guid? CurrentMatch { get; }
 
         public PlayerInfo(int color)
         {
@@ -11,9 +12,10 @@ namespace OpenChess.Domain
             Color = TryParseColor(color);
         }
 
-        public PlayerInfo(string id, int color)
+        public PlayerInfo(string id, int color, string currentMatch)
         {
             Id = TryParseId(id);
+            CurrentMatch = TryParseId(currentMatch);
             Color = TryParseColor(color);
         }
 
@@ -23,10 +25,11 @@ namespace OpenChess.Domain
             Color = color;
         }
 
-        public PlayerInfo(Guid id, Color color)
+        public PlayerInfo(Guid id, Color color, Guid? currentMatch = null)
         {
             Id = id;
             Color = color;
+            CurrentMatch = currentMatch;
         }
 
         private Color TryParseColor(int color)
