@@ -20,5 +20,12 @@ namespace OpenChess.Domain
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
         }
+
+        public MatchStatus Status { get { return _status; } }
+        public Guid? CurrentPlayer { get { return _currentPlayer?.Id; } }
+        public Time Time { get { return (Time)_time.Minutes; } }
+        public Guid? Winner { get { return _winner?.Id; } }
+        public Stack<string> Moves { get { return new Stack<string>(_pgn); } }
+        public string Chessboard { get { return _chessboard.ToString(); } }
     }
 }
