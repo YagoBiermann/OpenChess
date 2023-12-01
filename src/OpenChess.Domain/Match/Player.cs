@@ -4,6 +4,7 @@ namespace OpenChess.Domain
     {
         public Guid Id { get; }
         public Color Color { get; }
+        public Guid? CurrentMatch { get; private set; }
 
         public Player(PlayerInfo info)
         {
