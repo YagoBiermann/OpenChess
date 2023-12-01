@@ -11,6 +11,9 @@ namespace OpenChess.Domain
             Id = info.Id;
             Color = info.Color;
         }
+        public void LeaveMatch()
+        {
+            CurrentMatch = null;
         }
     }
 }
