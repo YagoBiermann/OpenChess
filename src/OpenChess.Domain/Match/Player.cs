@@ -11,6 +11,13 @@ namespace OpenChess.Domain
             Id = info.Id;
             Color = info.Color;
         }
+
+        public void Join(Guid match)
+        {
+            if (CurrentMatch is not null) throw new MatchException("Player is already assigned to a match!");
+            CurrentMatch = match;
+        }
+
         public void LeaveMatch()
         {
             CurrentMatch = null;
