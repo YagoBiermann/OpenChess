@@ -64,6 +64,17 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
+        public void Join_AddingPlayerThatIsAlreadyInAnotherMatch_ShouldThrowException()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo player = new(Guid.NewGuid(), Color.White, match.Id);
+            match.Join(player);
+            Match match2 = new(Time.Ten);
+
+            Assert.ThrowsException<MatchException>(() => match2.Join(player));
+        }
+
+        [TestMethod]
         public void Join_FullMatch_ShouldThrowException()
         {
             Match match = new(Time.Ten);
