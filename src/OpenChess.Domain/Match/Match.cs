@@ -24,9 +24,14 @@ namespace OpenChess.Domain
         public void Join(PlayerInfo playerInfo)
         {
             if (IsFull()) throw new MatchException("Match is full!");
-            bool sameColor = GetPlayerBy(player.Color) is not null;
-            if (sameColor) throw new MatchException($"Match already contains a player of same color!");
 
+            bool sameColor = GetPlayerByColor(playerInfo.Color) is not null;
+            bool sameId = GetPlayerById(playerInfo.Id) is not null;
+            if (sameColor) throw new MatchException($"Match already contains a player of same color!");
+            if (sameId) throw new MatchException($"Player is already in the match!");
+
+            Player player = CreateNewPlayer(playerInfo);
+            player.Join(Id);
             _players.Add(player);
             if (!IsFull()) { return; };
 
