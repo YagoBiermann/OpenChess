@@ -17,6 +17,9 @@ namespace OpenChess.Tests
             Match match = new(timeEnum);
 
             Assert.IsNotNull(match.Id);
+            Assert.IsFalse(match.IsFull());
+            Assert.IsNull(match.CurrentPlayer);
+            Assert.AreEqual(time, (int)match.Time);
         }
 
         [TestMethod]
