@@ -45,12 +45,12 @@ namespace OpenChess.Domain
             return _players.Count == _players.Capacity;
         }
 
-        public Player? GetPlayerByColor(Color color)
+        private Player? GetPlayerByColor(Color color)
         {
             return _players.Where(p => p.Color == color).FirstOrDefault();
         }
 
-        public Player? GetPlayerById(Guid id)
+        private Player? GetPlayerById(Guid id)
         {
             return _players.Where(p => p.Id == id).FirstOrDefault();
         }
