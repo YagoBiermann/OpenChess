@@ -88,5 +88,29 @@ namespace OpenChess.Tests
 
             Assert.ThrowsException<MatchException>(() => match.Join(otherPlayer));
         }
+
+        [TestMethod]
+        public void IsFull_ShouldReturnTrue()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo whitePlayer = new(Color.White);
+            PlayerInfo blackPlayer = new(Color.Black);
+
+            match.Join(whitePlayer);
+            match.Join(blackPlayer);
+
+            Assert.IsTrue(match.IsFull());
+        }
+
+        [TestMethod]
+        public void IsFull_ShouldReturnFalse()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo whitePlayer = new(Color.White);
+
+            match.Join(whitePlayer);
+
+            Assert.IsFalse(match.IsFull());
+        }
     }
 }
