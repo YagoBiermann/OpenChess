@@ -10,5 +10,15 @@ namespace OpenChess.Domain
         private MatchStatus _status { get; set; }
         private Player? _winner { get; set; }
         private TimeSpan _time { get; }
+
+        public Match(Time time)
+        {
+            Id = Guid.NewGuid();
+            _chessboard = new(FEN.InitialPosition);
+            _currentPlayer = null;
+            _status = MatchStatus.NotStarted;
+            _winner = null;
+            _time = TimeSpan.FromMinutes((int)time);
+        }
     }
 }
