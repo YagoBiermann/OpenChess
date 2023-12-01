@@ -9,5 +9,6 @@ namespace OpenChess.Domain
         private Stack<string> _pgn = new();
         private MatchStatus _status { get; set; }
         private Player? _winner { get; set; }
+        private TimeSpan _time { get; }
     }
 }
