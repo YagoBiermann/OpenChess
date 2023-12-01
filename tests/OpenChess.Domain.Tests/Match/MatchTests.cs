@@ -61,5 +61,20 @@ namespace OpenChess.Tests
 
             Assert.ThrowsException<MatchException>(() => match.Join(player));
         }
+
+        [TestMethod]
+        public void Join_FullMatch_ShouldThrowException()
+        {
+            Match match = new(Time.Ten);
+            Player whitePlayer = new(Color.White);
+            Player blackPlayer = new(Color.Black);
+
+            Player otherPlayer = new(Color.White);
+
+            match.Join(whitePlayer);
+            match.Join(blackPlayer);
+
+            Assert.ThrowsException<MatchException>(() => match.Join(otherPlayer));
+        }
     }
 }
