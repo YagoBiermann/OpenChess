@@ -50,6 +50,11 @@ namespace OpenChess.Domain
             return _players.Where(p => p.Color == color).FirstOrDefault();
         }
 
+        public Player? GetPlayerById(Guid id)
+        {
+            return _players.Where(p => p.Id == id).FirstOrDefault();
+        }
+
         public MatchStatus Status { get { return _status; } }
         public Guid? CurrentPlayer { get { return _currentPlayer?.Id; } }
         public Time Time { get { return (Time)_time.Minutes; } }
