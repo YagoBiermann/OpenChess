@@ -21,6 +21,20 @@ namespace OpenChess.Domain
             _time = TimeSpan.FromMinutes((int)time);
         }
 
+        public void Join(Player player)
+        {
+            if (IsFull()) throw new MatchException("Match is full!");
+            bool sameColor = GetPlayerBy(player.Color) is not null;
+            if (sameColor) throw new MatchException($"Match already contains a player of same color!");
+
+            _players.Add(player);
+            if (!IsFull()) { return; };
+
+            Player? whitePlayer = GetPlayerBy(Color.White);
+            _currentPlayer = whitePlayer;
+            _status = MatchStatus.InProgress;
+        }
+
         public bool IsFull()
         {
             return _players.Count == _players.Capacity;
