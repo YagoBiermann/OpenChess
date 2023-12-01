@@ -25,6 +25,12 @@ namespace OpenChess.Domain
         {
             return _players.Count == _players.Capacity;
         }
+
+        public Player? GetPlayerBy(Color color)
+        {
+            return _players.Where(p => p.Color == color).FirstOrDefault();
+        }
+
         public MatchStatus Status { get { return _status; } }
         public Guid? CurrentPlayer { get { return _currentPlayer?.Id; } }
         public Time Time { get { return (Time)_time.Minutes; } }
