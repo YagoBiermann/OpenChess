@@ -30,6 +30,9 @@ namespace OpenChess.Domain
             if (sameColor) throw new MatchException($"Match already contains a player of same color!");
             if (sameId) throw new MatchException($"Player is already in the match!");
 
+            Guid? currentMatch = playerInfo.CurrentMatch;
+            if (currentMatch is not null && currentMatch != Id) { throw new MatchException("Player already assigned to another match!"); }
+
             Player player = CreateNewPlayer(playerInfo);
             player.Join(Id);
             _players.Add(player);
