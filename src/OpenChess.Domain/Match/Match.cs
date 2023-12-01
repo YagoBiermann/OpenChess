@@ -21,6 +21,10 @@ namespace OpenChess.Domain
             _time = TimeSpan.FromMinutes((int)time);
         }
 
+        public bool IsFull()
+        {
+            return _players.Count == _players.Capacity;
+        }
         public MatchStatus Status { get { return _status; } }
         public Guid? CurrentPlayer { get { return _currentPlayer?.Id; } }
         public Time Time { get { return (Time)_time.Minutes; } }
