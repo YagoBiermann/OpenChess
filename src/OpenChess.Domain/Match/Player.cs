@@ -22,5 +22,10 @@ namespace OpenChess.Domain
         {
             CurrentMatch = null;
         }
+
+        public PlayerInfo Info
+        {
+            get { return new(Id, Color, CurrentMatch); }
+        }
     }
 }
