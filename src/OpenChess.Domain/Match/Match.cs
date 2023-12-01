@@ -2,7 +2,7 @@ namespace OpenChess.Domain
 {
     internal class Match
     {
-        Guid Id { get; }
+        public Guid Id { get; }
         private List<Player> _players = new(2);
         private Chessboard _chessboard { get; }
         private Player _currentPlayer { get; set; }
