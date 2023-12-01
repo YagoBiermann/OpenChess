@@ -56,10 +56,12 @@ namespace OpenChess.Tests
         {
             Match match = new(Time.Ten);
             PlayerInfo player = new(Color.White);
+            PlayerInfo fakePlayer = new(player.Id, Color.Black);
 
             match.Join(player);
 
             Assert.ThrowsException<MatchException>(() => match.Join(player));
+            Assert.ThrowsException<MatchException>(() => match.Join(fakePlayer));
         }
 
         [TestMethod]
