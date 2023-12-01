@@ -5,5 +5,10 @@ namespace OpenChess.Domain
         public Guid Id { get; }
         public Color Color { get; }
 
+        public Player(Color color)
+        {
+            Id = Guid.NewGuid();
+            Color = color;
+        }
     }
 }
