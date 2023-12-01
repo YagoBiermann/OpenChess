@@ -48,6 +48,11 @@ namespace OpenChess.Domain
             return _players.Count == _players.Capacity;
         }
 
+        public bool HasPlayer()
+        {
+            return _players.Any();
+        }
+
         private Player? GetPlayerByColor(Color color)
         {
             return _players.Where(p => p.Color == color).FirstOrDefault();
