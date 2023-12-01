@@ -31,6 +31,7 @@ namespace OpenChess.Domain
             if (!IsFull()) { return; };
 
             Player? whitePlayer = GetPlayerBy(Color.White);
+            Player? whitePlayer = GetPlayerByColor(Color.White);
             _currentPlayer = whitePlayer;
             _status = MatchStatus.InProgress;
         }

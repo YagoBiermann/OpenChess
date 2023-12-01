@@ -30,8 +30,8 @@ namespace OpenChess.Tests
 
             match.Join(player);
 
-            Assert.IsNotNull(match.GetPlayerBy(Color.White));
-            Assert.IsNull(match.GetPlayerBy(Color.Black));
+            Assert.IsNotNull(match.GetPlayerByColor(Color.White));
+            Assert.IsNull(match.GetPlayerByColor(Color.Black));
             Assert.AreEqual(MatchStatus.NotStarted, match.Status);
             Assert.IsFalse(match.IsFull());
             Assert.IsNull(match.CurrentPlayer);
