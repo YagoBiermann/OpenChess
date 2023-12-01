@@ -35,6 +35,20 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
+        public void Join_WhenAllPlayersJoined_ShouldChangeStatusAndCurrentPlayer()
+        {
+            Match match = new(Time.Ten);
+            Player whitePlayer = new(Color.White);
+            Player blackPlayer = new(Color.Black);
+
+            match.Join(whitePlayer);
+            match.Join(blackPlayer);
+
+            Assert.AreEqual(MatchStatus.InProgress, match.Status);
+            Assert.AreEqual(whitePlayer.Id, match.CurrentPlayer);
+        }
+
+        [TestMethod]
         public void Join_AddingSamePlayerTwice_ShouldThrowException()
         {
             Match match = new(Time.Ten);
