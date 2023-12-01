@@ -30,5 +30,16 @@ namespace OpenChess.Tests
             Assert.IsNotNull(match.GetPlayerBy(Color.White));
             Assert.IsNull(match.GetPlayerBy(Color.Black));
         }
+
+        [TestMethod]
+        public void Join_AddingSamePlayerTwice_ShouldThrowException()
+        {
+            Match match = new(Time.Ten);
+            Player player = new(Color.White);
+
+            match.Join(player);
+
+            Assert.ThrowsException<MatchException>(() => match.Join(player));
+        }
     }
 }
