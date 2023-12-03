@@ -98,7 +98,7 @@ namespace OpenChess.Tests
             Coordinate coordinate = Coordinate.GetInstance("E4");
             Square square = chessboard.GetSquare(coordinate);
 
-            Assert.IsTrue(square.HasPiece);
+            Assert.IsFalse(square.HasPiece);
         }
 
         [TestMethod]
