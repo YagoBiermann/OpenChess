@@ -7,11 +7,13 @@ namespace OpenChess.Domain
         public abstract char Name { get; }
         public abstract List<Direction> Directions { get; }
         public abstract bool IsLongRange { get; }
+        private Chessboard _chessboard;
 
-        public Piece(Color color, Coordinate origin)
+        public Piece(Color color, Coordinate origin, Chessboard chessboard)
         {
             Color = color;
             Origin = origin;
+            _chessboard = chessboard;
         }
 
         public int MoveAmount
@@ -118,5 +120,7 @@ namespace OpenChess.Domain
                 _ => throw new PieceException($"{type} does not represent a piece"),
             };
         }
+
+        protected Chessboard Chessboard { get { return _chessboard; } }
     }
 }
