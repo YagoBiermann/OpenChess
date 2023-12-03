@@ -59,7 +59,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
-            Chessboard chessboard = new("r1bqk1nr/pppp2p1/5p1p/1B2P1N1/4K1Q1/8/PPP2PPP/RN5R b HAkq - 0 1");
+            Chessboard chessboard = new("r1bqk1nr/pppp2p1/5p1p/1B2P1N1/4K1Q1/8/PPP2PPP/RN5R b KQkq - 0 1");
             King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
 
             List<MovePositions> expectedMoves = new()
