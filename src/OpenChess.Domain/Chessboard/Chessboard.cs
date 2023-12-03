@@ -153,7 +153,7 @@ namespace OpenChess.Domain
                     if (!char.IsDigit(currentChar))
                     {
                         Coordinate origin = Coordinate.GetInstance(nextPiecePosition, row);
-                        Piece piece = Piece.Create(currentChar, origin);
+                        Piece piece = Piece.Create(currentChar, origin, this);
                         GetSquare(origin).Piece = piece;
 
                         nextPiecePosition++;
