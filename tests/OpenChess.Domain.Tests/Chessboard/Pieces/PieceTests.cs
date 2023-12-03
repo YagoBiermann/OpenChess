@@ -48,14 +48,15 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Create_UppercaseChar_ShouldCreateWhitePiece()
         {
+            Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance("A1");
 
-            Piece king = Piece.Create('K', coordinate);
-            Piece queen = Piece.Create('Q', coordinate);
-            Piece rook = Piece.Create('R', coordinate);
-            Piece bishop = Piece.Create('B', coordinate);
-            Piece knight = Piece.Create('N', coordinate);
-            Piece pawn = Piece.Create('P', coordinate);
+            Piece king = Piece.Create('K', coordinate, chessboard);
+            Piece queen = Piece.Create('Q', coordinate, chessboard);
+            Piece rook = Piece.Create('R', coordinate, chessboard);
+            Piece bishop = Piece.Create('B', coordinate, chessboard);
+            Piece knight = Piece.Create('N', coordinate, chessboard);
+            Piece pawn = Piece.Create('P', coordinate, chessboard);
 
             Assert.IsInstanceOfType(king, typeof(King));
             Assert.IsInstanceOfType(queen, typeof(Queen));
@@ -75,14 +76,15 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Create_LowercaseChar_ShouldCreateBlackPiece()
         {
+            Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance("A1");
 
-            Piece king = Piece.Create('k', coordinate);
-            Piece queen = Piece.Create('q', coordinate);
-            Piece rook = Piece.Create('r', coordinate);
-            Piece bishop = Piece.Create('b', coordinate);
-            Piece knight = Piece.Create('n', coordinate);
-            Piece pawn = Piece.Create('p', coordinate);
+            Piece king = Piece.Create('k', coordinate, chessboard);
+            Piece queen = Piece.Create('q', coordinate, chessboard);
+            Piece rook = Piece.Create('r', coordinate, chessboard);
+            Piece bishop = Piece.Create('b', coordinate, chessboard);
+            Piece knight = Piece.Create('n', coordinate, chessboard);
+            Piece pawn = Piece.Create('p', coordinate, chessboard);
 
             Assert.IsInstanceOfType(king, typeof(King));
             Assert.IsInstanceOfType(queen, typeof(Queen));
