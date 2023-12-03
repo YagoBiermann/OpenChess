@@ -8,7 +8,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeFalse()
         {
-            Pawn pawn = new(Color.Black, Coordinate.GetInstance("A2"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A2")).Piece!;
 
             Assert.IsFalse(pawn.IsLongRange);
         }
@@ -16,7 +17,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_BlackDirections_ShouldBeDownwards()
         {
-            Pawn pawn = new(Color.Black, Coordinate.GetInstance("A2"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A2")).Piece!;
 
             Assert.IsTrue(pawn.Directions.Contains(new Down()));
             Assert.IsTrue(pawn.Directions.Contains(new LowerLeft()));
@@ -32,7 +34,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_WhiteDirections_ShouldBeUpwards()
         {
-            Pawn pawn = new(Color.White, Coordinate.GetInstance("A2"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A2")).Piece!;
 
             Assert.IsTrue(pawn.Directions.Contains(new UpperRight()));
             Assert.IsTrue(pawn.Directions.Contains(new UpperLeft()));
@@ -48,7 +51,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NameProperty_WhitePawn_ShoulBeUppercaseP()
         {
-            Pawn pawn = new(Color.White, Coordinate.GetInstance("A2"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A2")).Piece!;
 
             Assert.AreEqual(pawn.Name, 'P');
         }
@@ -56,7 +60,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NameProperty_BlackPawn_ShoulBeLowecaseP()
         {
-            Pawn pawn = new(Color.Black, Coordinate.GetInstance("A2"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
 
             Assert.AreEqual(pawn.Name, 'p');
         }
@@ -96,23 +101,32 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ForwardDirection_ShouldReturnUpForWhite()
         {
-            Pawn pawn = new(Color.White, Coordinate.GetInstance("E4"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A2")).Piece!;
             Assert.AreEqual(pawn.ForwardDirection, new Up());
         }
 
         [TestMethod]
         public void ForwardDirection_ShouldReturnDownForBlack()
         {
-            Pawn pawn = new(Color.Black, Coordinate.GetInstance("E4"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
             Assert.AreEqual(pawn.ForwardDirection, new Down());
         }
 
+        [DataRow("A2")]
+        [DataRow("B2")]
+        [DataRow("C2")]
+        [DataRow("D2")]
         [DataRow("E2")]
-        [DataRow("E4")]
+        [DataRow("F2")]
+        [DataRow("G2")]
+        [DataRow("H2")]
         [TestMethod]
         public void CalculateMoveRange_WhitePawn_ShouldReturnAllMoves(string origin)
         {
-            Pawn pawn = new(Color.White, Coordinate.GetInstance(origin));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
             List<MovePositions> expectedMoves = new()
             {
@@ -132,12 +146,19 @@ namespace OpenChess.Tests
             }
         }
 
+        [DataRow("A7")]
+        [DataRow("B7")]
+        [DataRow("C7")]
+        [DataRow("D7")]
         [DataRow("E7")]
-        [DataRow("E5")]
+        [DataRow("F7")]
+        [DataRow("G7")]
+        [DataRow("H7")]
         [TestMethod]
         public void CalculateMoveRange_BlackPawn_ShouldReturnAllMoves(string origin)
         {
-            Pawn pawn = new(Color.Black, Coordinate.GetInstance(origin));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece!;
 
             List<MovePositions> expectedMoves = new()
             {
@@ -160,7 +181,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateMoveRange_DiagonalsOutOfChessboard_ShouldReturnEmptyList()
         {
-            Pawn pawn = new(Color.Black, Coordinate.GetInstance("H6"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("H7")).Piece!;
 
             List<MovePositions> moves = pawn.CalculateMoveRange();
             MovePositions diagonal = moves.Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
