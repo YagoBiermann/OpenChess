@@ -8,14 +8,16 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NameProperty_BlackKing_ShouldBeLowercaseK()
         {
-            King king = new(Color.Black, Coordinate.GetInstance("E8"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E8")).Piece!;
 
             Assert.AreEqual(king.Name, 'k');
         }
         [TestMethod]
         public void NameProperty_WhiteKing_ShouldBeUppercaseK()
         {
-            King king = new(Color.White, Coordinate.GetInstance("E1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
 
             Assert.AreEqual(king.Name, 'K');
         }
@@ -23,18 +25,20 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeFalse()
         {
-            King king = new(Color.White, Coordinate.GetInstance("E1"));
-            King king2 = new(Color.Black, Coordinate.GetInstance("E8"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            King whiteKing = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
+            King blackKing = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
 
-            Assert.IsFalse(king.IsLongRange);
-            Assert.IsFalse(king2.IsLongRange);
+            Assert.IsFalse(whiteKing.IsLongRange);
+            Assert.IsFalse(blackKing.IsLongRange);
         }
 
         [TestMethod]
         public void DirectionsProperty_ShouldReturnAllDirections()
         {
-            King king = new(Color.White, Coordinate.GetInstance("E1"));
-            King king2 = new(Color.Black, Coordinate.GetInstance("E8"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            King whiteKing = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
+            King blackKing = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
 
             List<Direction> directions = new()
             {
@@ -48,14 +52,15 @@ namespace OpenChess.Tests
                 new LowerRight()
             };
 
-            CollectionAssert.AreEquivalent(directions, king.Directions);
-            CollectionAssert.AreEquivalent(directions, king2.Directions);
+            CollectionAssert.AreEquivalent(directions, whiteKing.Directions);
+            CollectionAssert.AreEquivalent(directions, blackKing.Directions);
         }
 
         [TestMethod]
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
-            King king = new(Color.White, Coordinate.GetInstance("E4"));
+            Chessboard chessboard = new("r1bqk1nr/pppp2p1/5p1p/1B2P1N1/4K1Q1/8/PPP2PPP/RN5R b HAkq - 0 1");
+            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
 
             List<MovePositions> expectedMoves = new()
             {
