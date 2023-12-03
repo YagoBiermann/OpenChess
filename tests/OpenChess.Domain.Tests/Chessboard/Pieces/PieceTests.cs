@@ -111,7 +111,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance(coordinate);
             Piece piece = chessboard.GetSquare(origin).Piece!;
 
-            Assert.IsTrue(piece.IsHittingTheEnemyKing(chessboard));
+            Assert.IsTrue(piece.IsHittingTheEnemyKing());
         }
 
         [DataRow("E5", "4k3/7R/4P3/4p3/4K3/8/8/8 b - - 0 1")]
@@ -126,7 +126,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance(coordinate);
             Piece piece = chessboard.GetSquare(origin).Piece!;
 
-            Assert.IsFalse(piece.IsHittingTheEnemyKing(chessboard));
+            Assert.IsFalse(piece.IsHittingTheEnemyKing());
         }
     }
 }
