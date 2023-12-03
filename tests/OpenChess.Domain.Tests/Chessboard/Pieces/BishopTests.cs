@@ -8,14 +8,16 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NameProperty_BlackBishop_ShouldBeLowercaseB()
         {
-            Bishop bishop = new(Color.Black, Coordinate.GetInstance("C8"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C8")).Piece!;
 
             Assert.AreEqual(bishop.Name, 'b');
         }
         [TestMethod]
         public void NameProperty_WhiteBishop_ShouldBeUppercaseB()
         {
-            Bishop bishop = new(Color.White, Coordinate.GetInstance("C1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C1")).Piece!;
 
             Assert.AreEqual(bishop.Name, 'B');
         }
@@ -23,18 +25,20 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeTrue()
         {
-            Bishop bishop = new(Color.White, Coordinate.GetInstance("C1"));
-            Bishop bishop2 = new(Color.Black, Coordinate.GetInstance("C1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Bishop whiteBishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C1")).Piece!;
+            Bishop blackBishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C8")).Piece!;
 
-            Assert.IsTrue(bishop.IsLongRange);
-            Assert.IsTrue(bishop2.IsLongRange);
+            Assert.IsTrue(whiteBishop.IsLongRange);
+            Assert.IsTrue(blackBishop.IsLongRange);
         }
 
         [TestMethod]
         public void DirectionsProperty_ShouldReturnDiagonalDirections()
         {
-            Bishop bishop = new(Color.White, Coordinate.GetInstance("C1"));
-            Bishop bishop2 = new(Color.Black, Coordinate.GetInstance("C1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Bishop whiteBishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C1")).Piece!;
+            Bishop blackBishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C8")).Piece!;
 
             List<Direction> directions = new()
             {
@@ -44,14 +48,15 @@ namespace OpenChess.Tests
                 new LowerRight()
             };
 
-            CollectionAssert.AreEquivalent(directions, bishop.Directions);
-            CollectionAssert.AreEquivalent(directions, bishop2.Directions);
+            CollectionAssert.AreEquivalent(directions, whiteBishop.Directions);
+            CollectionAssert.AreEquivalent(directions, blackBishop.Directions);
         }
 
         [TestMethod]
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
-            Bishop bishop = new(Color.White, Coordinate.GetInstance("E4"));
+            Chessboard chessboard = new("r1bqk1nr/pppp2p1/5p1p/4P1N1/4B1Q1/8/PPP2PPP/RN2K2R b KQkq - 0 1");
+            Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
 
             List<MovePositions> expectedMoves = new()
             {
