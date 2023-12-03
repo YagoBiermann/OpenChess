@@ -3,7 +3,7 @@ namespace OpenChess.Domain
 {
     internal class Bishop : Piece
     {
-        public Bishop(Color color, Coordinate origin) : base(color, origin)
+        public Bishop(Color color, Coordinate origin, Chessboard chessboard) : base(color, origin, chessboard)
         {
         }
 

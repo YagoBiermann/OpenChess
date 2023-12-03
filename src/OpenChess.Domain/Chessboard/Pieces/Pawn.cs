@@ -3,7 +3,7 @@ namespace OpenChess.Domain
 {
     internal class Pawn : Piece
     {
-        public Pawn(Color color, Coordinate origin) : base(color, origin)
+        public Pawn(Color color, Coordinate origin, Chessboard chessboard) : base(color, origin, chessboard)
         {
         }
 
