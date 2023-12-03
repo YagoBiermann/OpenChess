@@ -8,8 +8,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Equals_SameObject_ShouldReturnTrue()
         {
-            Pawn pawn = new(Color.Black, Coordinate.GetInstance("A1"));
-            Pawn pawn2 = new(Color.Black, Coordinate.GetInstance("A1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
+            Pawn pawn2 = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
 
             Assert.IsTrue(pawn.Equals(pawn2));
         }
@@ -17,8 +18,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Equals_DifferentPieces_ShouldReturnFalse()
         {
-            Rook rook = new(Color.Black, Coordinate.GetInstance("B2"));
-            Queen queen = new(Color.White, Coordinate.GetInstance("F4"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A1")).Piece!;
+            Queen queen = (Queen)chessboard.GetSquare(Coordinate.GetInstance("D1")).Piece!;
 
             Assert.IsFalse(rook.Equals(queen));
         }
@@ -26,8 +28,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Equals_SamePieceDifferentColors_ShouldReturnFalse()
         {
-            King king = new(Color.White, Coordinate.GetInstance("F4"));
-            King king2 = new(Color.Black, Coordinate.GetInstance("F4"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
+            King king2 = (King)chessboard.GetSquare(Coordinate.GetInstance("E8")).Piece!;
 
             Assert.IsFalse(king.Equals(king2));
         }
@@ -35,10 +38,11 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Equals_SamePieceDifferentOrigin_ShouldReturnFalse()
         {
-            Bishop bishop = new(Color.White, Coordinate.GetInstance("A1"));
-            Bishop bishop2 = new(Color.White, Coordinate.GetInstance("A2"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
+            Pawn pawn2 = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("B7")).Piece!;
 
-            Assert.IsFalse(bishop.Equals(bishop2));
+            Assert.IsFalse(pawn.Equals(pawn2));
         }
 
         [TestMethod]
