@@ -8,14 +8,16 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NameProperty_BlackKnight_ShouldBeLowercaseN()
         {
-            Knight knight = new(Color.Black, Coordinate.GetInstance("B8"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("B8")).Piece!;
 
             Assert.AreEqual(knight.Name, 'n');
         }
         [TestMethod]
         public void NameProperty_WhiteKnight_ShouldBeUppercaseN()
         {
-            Knight knight = new(Color.White, Coordinate.GetInstance("B1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("B1")).Piece!;
 
             Assert.AreEqual(knight.Name, 'N');
         }
@@ -23,18 +25,20 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeFalse()
         {
-            Knight knight = new(Color.White, Coordinate.GetInstance("B1"));
-            Knight knight2 = new(Color.Black, Coordinate.GetInstance("B8"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Knight whiteKnight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("B1")).Piece!;
+            Knight blackKnight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("B8")).Piece!;
 
-            Assert.IsFalse(knight.IsLongRange);
-            Assert.IsFalse(knight2.IsLongRange);
+            Assert.IsFalse(whiteKnight.IsLongRange);
+            Assert.IsFalse(blackKnight.IsLongRange);
         }
 
         [TestMethod]
         public void DirectionsProperty_ShouldReturnAllDirections()
         {
-            Knight knight = new(Color.White, Coordinate.GetInstance("B1"));
-            Knight knight2 = new(Color.Black, Coordinate.GetInstance("B8"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Knight whiteKnight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("B1")).Piece!;
+            Knight blackKnight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("B8")).Piece!;
 
             List<Direction> directions = new()
                 {
@@ -49,14 +53,15 @@ namespace OpenChess.Tests
                 };
 
 
-            CollectionAssert.AreEquivalent(directions, knight.Directions);
-            CollectionAssert.AreEquivalent(directions, knight2.Directions);
+            CollectionAssert.AreEquivalent(directions, whiteKnight.Directions);
+            CollectionAssert.AreEquivalent(directions, blackKnight.Directions);
         }
 
         [TestMethod]
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
-            Knight knight = new(Color.White, Coordinate.GetInstance("E4"));
+            Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4N3/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
+            Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
 
             List<MovePositions> expectedMoves = new()
             {
