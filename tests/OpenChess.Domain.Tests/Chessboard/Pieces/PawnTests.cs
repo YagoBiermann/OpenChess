@@ -18,7 +18,7 @@ namespace OpenChess.Tests
         public void NewInstance_BlackDirections_ShouldBeDownwards()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A2")).Piece!;
+            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
 
             Assert.IsTrue(pawn.Directions.Contains(new Down()));
             Assert.IsTrue(pawn.Directions.Contains(new LowerLeft()));
