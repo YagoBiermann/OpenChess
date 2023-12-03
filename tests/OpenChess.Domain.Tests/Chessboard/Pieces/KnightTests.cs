@@ -91,7 +91,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
             Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("G4")).Piece!;
-            List<MovePositions> moves = knight.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = knight.CalculateLegalMoves();
             List<Coordinate> upperLeftMoves = moves.Find(m => m.Direction.Equals(new Direction(-1, 2))).Coordinates;
             List<Coordinate> upperLeftMoves2 = moves.Find(m => m.Direction.Equals(new Direction(-2, 1))).Coordinates;
 
@@ -107,7 +107,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
             Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("G4")).Piece!;
-            List<MovePositions> moves = knight.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = knight.CalculateLegalMoves();
             List<Coordinate> lowerRightMove = moves.Find(m => m.Direction.Equals(new Direction(1, -2))).Coordinates;
 
             Assert.IsFalse(lowerRightMove.Any());
@@ -118,7 +118,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
             Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("G4")).Piece!;
-            List<MovePositions> moves = knight.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = knight.CalculateLegalMoves();
             List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new Direction(-2, -1))).Coordinates;
             List<Coordinate> upperRightMove = moves.Find(m => m.Direction.Equals(new Direction(1, 2))).Coordinates;
 
@@ -131,7 +131,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
             Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("G4")).Piece!;
-            List<MovePositions> moves = knight.CalculateLegalMoves(chessboard);
+            List<MovePositions> moves = knight.CalculateLegalMoves();
             List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new Direction(-1, -2))).Coordinates;
             List<Coordinate> expectedLowerLeftMove = new() { Coordinate.GetInstance("F2") };
 
