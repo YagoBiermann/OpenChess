@@ -8,7 +8,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NameProperty_BlackRook_ShouldBeLowercaseR()
         {
-            Rook rook = new(Color.Black, Coordinate.GetInstance("A1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A8")).Piece!;
 
             Assert.AreEqual(rook.Name, 'r');
         }
@@ -16,7 +17,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NameProperty_WhiteRook_ShouldBeUppercaseR()
         {
-            Rook rook = new(Color.White, Coordinate.GetInstance("A1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A1")).Piece!;
 
             Assert.AreEqual(rook.Name, 'R');
         }
@@ -24,8 +26,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeTrue()
         {
-            Rook rook = new(Color.White, Coordinate.GetInstance("A1"));
-            Rook rook2 = new(Color.Black, Coordinate.GetInstance("A1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A1")).Piece!;
+            Rook rook2 = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A8")).Piece!;
 
             Assert.IsTrue(rook.IsLongRange);
             Assert.IsTrue(rook2.IsLongRange);
@@ -34,8 +37,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void DirectionsProperty_ShouldReturnUpDownLeftRight()
         {
-            Rook rook = new(Color.White, Coordinate.GetInstance("A1"));
-            Rook rook2 = new(Color.Black, Coordinate.GetInstance("A1"));
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A1")).Piece!;
+            Rook rook2 = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A8")).Piece!;
 
             List<Direction> directions = new()
             {
@@ -52,7 +56,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
-            Rook rook = new(Color.White, Coordinate.GetInstance("E4"));
+            Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4R3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
+            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
 
             List<MovePositions> expectedMoves = new()
             {
