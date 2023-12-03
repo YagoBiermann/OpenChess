@@ -5,15 +5,31 @@ namespace OpenChess.Tests
     [TestClass]
     public class SquareTests
     {
+        [DataRow("A1")]
+        [DataRow("B1")]
+        [DataRow("C1")]
+        [DataRow("D1")]
+        [DataRow("E1")]
+        [DataRow("F1")]
+        [DataRow("G1")]
+        [DataRow("H1")]
+        [DataRow("A8")]
+        [DataRow("B8")]
+        [DataRow("C8")]
+        [DataRow("D8")]
+        [DataRow("E8")]
+        [DataRow("F8")]
+        [DataRow("G8")]
+        [DataRow("H8")]
+        [DataRow("A2")]
+        [DataRow("A7")]
         [TestMethod]
-        public void Getter_PieceNotNull_ShouldReturnPiece()
+        public void Getter_PieceNotNull_ShouldReturnPiece(string origin)
         {
-            Coordinate origin = Coordinate.GetInstance("A1");
-            Pawn pawn = new(Color.Black, origin);
-            Square square = new(origin, pawn);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Square square = chessboard.GetSquare(Coordinate.GetInstance(origin));
 
             Assert.IsNotNull(square.Piece);
-            Assert.IsInstanceOfType(pawn, typeof(Pawn));
         }
 
         [TestMethod]
@@ -28,9 +44,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Setter_SettingPieceAsNull_ShouldRemoveThePiece()
         {
+            Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate origin = Coordinate.GetInstance("A1");
-            Pawn pawn = new(Color.Black, origin);
-            Square square = new(origin, pawn);
+            Square square = chessboard.GetSquare(origin);
 
             square.Piece = null;
 
@@ -40,28 +56,29 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Setter_SettingPiece_ShouldReplaceTheCurrentPiece()
         {
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Coordinate coordinate2 = Coordinate.GetInstance("A4");
-            Pawn pawn = new(Color.Black, coordinate);
-            Rook rook = new(Color.Black, coordinate2);
-            Square square = new(coordinate, pawn);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Coordinate origin = Coordinate.GetInstance("A1");
+            Coordinate coordinate2 = Coordinate.GetInstance("A7");
+            Square square = chessboard.GetSquare(origin);
+            Piece piece = chessboard.GetSquare(coordinate2).Piece!;
 
-            square.Piece = rook;
+            square.Piece = piece;
 
-            Assert.AreEqual(square.Piece, rook);
+            Assert.AreEqual(square.Piece, piece);
         }
 
         [TestMethod]
         public void Setter_SettingPiece_ShouldChangeTheOrigin()
         {
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Coordinate coordinate2 = Coordinate.GetInstance("A5");
-            Pawn pawn = new(Color.Black, coordinate);
-            Square square = new(coordinate2, null);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Coordinate origin = Coordinate.GetInstance("A1");
+            Coordinate coordinate2 = Coordinate.GetInstance("A7");
+            Square square = chessboard.GetSquare(origin);
+            Piece piece = chessboard.GetSquare(coordinate2).Piece!;
 
-            square.Piece = pawn;
+            square.Piece = piece;
 
-            Assert.AreEqual(square.Piece.Origin, coordinate2);
+            Assert.AreEqual(square.Piece.Origin, piece.Origin);
         }
 
         [TestMethod]
@@ -78,9 +95,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasPiece_SquareWithPiece_ShouldReturnTrue()
         {
+            Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance("A1");
-            Pawn pawn = new(Color.Black, coordinate);
-            Square square = new(coordinate, pawn);
+            Square square = chessboard.GetSquare(coordinate);
 
             Assert.IsTrue(square.HasPiece);
         }
@@ -88,18 +105,19 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasPiece_EmptySquare_ShouldReturnFalse()
         {
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Square square = new(coordinate, null);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Coordinate coordinate = Coordinate.GetInstance("E4");
+            Square square = chessboard.GetSquare(coordinate);
 
-            Assert.IsFalse(square.HasPiece);
+            Assert.IsTrue(square.HasPiece);
         }
 
         [TestMethod]
         public void RemovePiece_ShouldRemoveThePiece()
         {
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Pawn pawn = new(Color.White, coordinate);
-            Square square = new(coordinate, pawn);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Coordinate coordinate = Coordinate.GetInstance("E2");
+            Square square = chessboard.GetSquare(coordinate);
 
             square.RemovePiece();
 
@@ -109,11 +127,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void AddPiece_ShouldAddThePiece()
         {
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Pawn pawn = new(Color.White, coordinate);
-            Square square = new(coordinate, null);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Coordinate coordinate = Coordinate.GetInstance("E4");
+            Square square = chessboard.GetSquare(coordinate);
 
-            square.AddPiece(pawn);
+            Piece piece = chessboard.GetSquare(Coordinate.GetInstance("E2")).Piece;
+
+            square.AddPiece(piece);
 
             Assert.IsNotNull(square.Piece);
         }
@@ -161,9 +181,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasEnemyPiece_DifferentColor_ShouldReturnTrue()
         {
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Pawn pawn = new(Color.Black, coordinate);
-            Square square = new(coordinate, pawn);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Coordinate coordinate = Coordinate.GetInstance("E7");
+            Square square = chessboard.GetSquare(coordinate);
 
             Assert.IsTrue(square.HasEnemyPiece(Color.White));
         }
@@ -171,9 +191,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasEnemyPiece_SameColor_ShouldReturnFalse()
         {
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Pawn pawn = new(Color.Black, coordinate);
-            Square square = new(coordinate, pawn);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Coordinate coordinate = Coordinate.GetInstance("E7");
+            Square square = chessboard.GetSquare(coordinate);
 
             Assert.IsFalse(square.HasEnemyPiece(Color.Black));
         }
