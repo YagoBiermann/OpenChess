@@ -136,8 +136,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasTypeOfPiece_HavingTypeOfPiece_ShouldReturnTrue(string origin, char type)
         {
+            Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance(origin);
-            Piece piece = Piece.Create(type, coordinate);
+            Piece piece = Piece.Create(type, coordinate, chessboard);
             Square square = new(coordinate, piece);
 
             Type? pieceType;
@@ -156,8 +157,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasTypeOfPiece_NotHavingTypeOfPiece_ShouldReturnFalse()
         {
+            Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance("A1");
-            Piece piece = Piece.Create('k', coordinate);
+            Piece piece = Piece.Create('k', coordinate, chessboard);
             Square square = new(coordinate, piece);
 
             Assert.IsFalse(square.HasTypeOfPiece(typeof(Queen)));
