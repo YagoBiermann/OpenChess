@@ -10,7 +10,7 @@ namespace OpenChess.Domain
         public override char Name => Color == Color.Black ? 'n' : 'N';
         public override bool IsLongRange => false;
 
-        public override List<MovePositions> CalculateLegalMoves(Chessboard chessboard)
+        public override List<MovePositions> CalculateLegalMoves()
         {
             List<MovePositions> legalMoves = new() { };
             List<MovePositions> moveRange = CalculateMoveRange();
@@ -21,7 +21,7 @@ namespace OpenChess.Domain
                 bool isOutOfChessboard = !currentPosition.Any();
                 if (isOutOfChessboard) { legalMoves.Add(new(move.Direction, currentPosition)); continue; };
 
-                Square currentSquare = chessboard.GetSquare(currentPosition.FirstOrDefault()!);
+                Square currentSquare = Chessboard.GetSquare(currentPosition.FirstOrDefault()!);
                 if (!currentSquare.HasPiece) { legalMoves.Add(new(move.Direction, currentPosition)); continue; }
 
                 bool isAllyPieceOrKing = !currentSquare.HasEnemyPiece(Color) || currentSquare.HasTypeOfPiece(typeof(King));

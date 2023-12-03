@@ -35,7 +35,7 @@ namespace OpenChess.Domain
             return moveRange;
         }
 
-        public bool IsHittingTheEnemyKing(Chessboard chessboard)
+        public bool IsHittingTheEnemyKing()
         {
             List<MovePositions> moveRange = CalculateMoveRange();
             bool isHitting = false;
@@ -47,18 +47,18 @@ namespace OpenChess.Domain
                     continue;
                 }
 
-                List<Coordinate> pieces = chessboard.FindPieces(move.Coordinates);
+                List<Coordinate> pieces = Chessboard.FindPieces(move.Coordinates);
                 if (!pieces.Any()) continue;
                 List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, pieces);
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances)!;
-                Square square = chessboard.GetSquare(nearestPiece.Position);
+                Square square = Chessboard.GetSquare(nearestPiece.Position);
                 if (square.HasEnemyPiece(Color) && square.HasTypeOfPiece(typeof(King))) { isHitting = true; break; }
             }
 
             return isHitting;
         }
 
-        public virtual List<MovePositions> CalculateLegalMoves(Chessboard chessboard)
+        public virtual List<MovePositions> CalculateLegalMoves()
         {
             List<MovePositions> legalMoves = new();
             List<MovePositions> moveRange = CalculateMoveRange();
@@ -66,7 +66,7 @@ namespace OpenChess.Domain
             foreach (MovePositions move in moveRange)
             {
                 Direction currentDirection = move.Direction;
-                List<Coordinate> pieces = chessboard.FindPieces(move.Coordinates);
+                List<Coordinate> pieces = Chessboard.FindPieces(move.Coordinates);
                 if (!pieces.Any())
                 {
                     legalMoves.Add(move);
@@ -77,7 +77,7 @@ namespace OpenChess.Domain
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
 
                 List<Coordinate> rangeOfAttack = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
-                Square square = chessboard.GetSquare(nearestPiece.Position);
+                Square square = Chessboard.GetSquare(nearestPiece.Position);
                 bool isKing = square.HasTypeOfPiece(typeof(King));
 
                 int lastPosition = rangeOfAttack.Count - 1;

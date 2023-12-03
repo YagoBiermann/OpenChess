@@ -56,7 +56,7 @@ namespace OpenChess.Domain
             return moves;
         }
 
-        public override List<MovePositions> CalculateLegalMoves(Chessboard chessboard)
+        public override List<MovePositions> CalculateLegalMoves()
         {
             List<MovePositions> legalMoves = new();
             List<MovePositions> moveRange = CalculateMoveRange();
@@ -68,7 +68,7 @@ namespace OpenChess.Domain
 
                 if (currentDirection.Equals(ForwardDirection))
                 {
-                    List<Coordinate> forwardMoves = CalculateForwardMoves(chessboard, currentCoordinates);
+                    List<Coordinate> forwardMoves = CalculateForwardMoves(Chessboard, currentCoordinates);
                     legalMoves.Add(new(currentDirection, forwardMoves));
                     continue;
                 };
@@ -81,8 +81,8 @@ namespace OpenChess.Domain
                 bool diagonalIsOutOfChessboard = diagonal is null;
                 if (diagonalIsOutOfChessboard) { legalMoves.Add(emptyPosition); continue; };
 
-                Square square = chessboard.GetSquare(diagonal!);
-                bool isEnPassant = diagonal!.Equals(chessboard.EnPassant);
+                Square square = Chessboard.GetSquare(diagonal!);
+                bool isEnPassant = diagonal!.Equals(Chessboard.EnPassant);
                 if (isEnPassant) { legalMoves.Add(sameCurrentPosition); continue; };
                 if (!square.HasPiece) { legalMoves.Add(emptyPosition); continue; }
                 bool hasAllyPiece = !square.HasEnemyPiece(Color);
