@@ -8,6 +8,7 @@ namespace OpenChess.Domain
         public Coordinate? EnPassant { get; set; }
         public int HalfMove { get; set; }
         public int FullMove { get; set; }
+        public string LastPosition { get; }
 
         public Chessboard(string position)
         {
@@ -19,6 +20,7 @@ namespace OpenChess.Domain
             EnPassant = ConvertEnPassant(fenPosition.EnPassantAvailability);
             HalfMove = ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = ConvertMoveAmount(fenPosition.FullMove);
+            LastPosition = position;
         }
 
         public IReadOnlySquare GetReadOnlySquare(string coordinate)
