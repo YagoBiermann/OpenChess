@@ -54,7 +54,10 @@ namespace OpenChess.Domain
         {
             return range.FindAll(c => GetReadOnlySquare(c).HasPiece).ToList();
         }
-
+        public void SwitchTurns()
+        {
+            Turn = ColorUtils.GetOppositeColor(Turn);
+        }
         public List<Coordinate> GetPiecesPosition(Color player)
         {
             List<Coordinate> piecePosition = new();
