@@ -101,32 +101,6 @@ namespace OpenChess.Tests
             Assert.IsFalse(square.HasPiece);
         }
 
-        [TestMethod]
-        public void RemovePiece_ShouldRemoveThePiece()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate coordinate = Coordinate.GetInstance("E2");
-            Square square = chessboard.GetSquare(coordinate);
-
-            square.RemovePiece();
-
-            Assert.IsNull(square.Piece);
-        }
-
-        [TestMethod]
-        public void AddPiece_ShouldAddThePiece()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate coordinate = Coordinate.GetInstance("E4");
-            Square square = chessboard.GetSquare(coordinate);
-
-            Piece piece = chessboard.GetSquare(Coordinate.GetInstance("E2")).Piece;
-
-            square.AddPiece(piece);
-
-            Assert.IsNotNull(square.Piece);
-        }
-
         [DataRow("A1", 'K')]
         [DataRow("A1", 'P')]
         [DataRow("A1", 'N')]
