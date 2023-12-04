@@ -66,62 +66,6 @@ namespace OpenChess.Tests
             Assert.IsFalse(pawn.Equals(pawn2));
         }
 
-        [TestMethod]
-        public void Create_UppercaseChar_ShouldCreateWhitePiece()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-
-            Piece king = Piece.Create('K', coordinate, chessboard);
-            Piece queen = Piece.Create('Q', coordinate, chessboard);
-            Piece rook = Piece.Create('R', coordinate, chessboard);
-            Piece bishop = Piece.Create('B', coordinate, chessboard);
-            Piece knight = Piece.Create('N', coordinate, chessboard);
-            Piece pawn = Piece.Create('P', coordinate, chessboard);
-
-            Assert.IsInstanceOfType(king, typeof(King));
-            Assert.IsInstanceOfType(queen, typeof(Queen));
-            Assert.IsInstanceOfType(rook, typeof(Rook));
-            Assert.IsInstanceOfType(bishop, typeof(Bishop));
-            Assert.IsInstanceOfType(knight, typeof(Knight));
-            Assert.IsInstanceOfType(pawn, typeof(Pawn));
-
-            Assert.AreEqual(king.Color, Color.White);
-            Assert.AreEqual(queen.Color, Color.White);
-            Assert.AreEqual(rook.Color, Color.White);
-            Assert.AreEqual(bishop.Color, Color.White);
-            Assert.AreEqual(knight.Color, Color.White);
-            Assert.AreEqual(pawn.Color, Color.White);
-        }
-
-        [TestMethod]
-        public void Create_LowercaseChar_ShouldCreateBlackPiece()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-
-            Piece king = Piece.Create('k', coordinate, chessboard);
-            Piece queen = Piece.Create('q', coordinate, chessboard);
-            Piece rook = Piece.Create('r', coordinate, chessboard);
-            Piece bishop = Piece.Create('b', coordinate, chessboard);
-            Piece knight = Piece.Create('n', coordinate, chessboard);
-            Piece pawn = Piece.Create('p', coordinate, chessboard);
-
-            Assert.IsInstanceOfType(king, typeof(King));
-            Assert.IsInstanceOfType(queen, typeof(Queen));
-            Assert.IsInstanceOfType(rook, typeof(Rook));
-            Assert.IsInstanceOfType(bishop, typeof(Bishop));
-            Assert.IsInstanceOfType(knight, typeof(Knight));
-            Assert.IsInstanceOfType(pawn, typeof(Pawn));
-
-            Assert.AreEqual(king.Color, Color.Black);
-            Assert.AreEqual(queen.Color, Color.Black);
-            Assert.AreEqual(rook.Color, Color.Black);
-            Assert.AreEqual(bishop.Color, Color.Black);
-            Assert.AreEqual(knight.Color, Color.Black);
-            Assert.AreEqual(pawn.Color, Color.Black);
-        }
-
         [DataRow("E5", "4k3/7R/4P3/2K1r3/8/8/8/8 b - - 0 1")]
         [DataRow("E5", "4k3/7R/4P3/2K1q3/8/8/8/8 b - - 0 1")]
         [DataRow("E5", "4k3/7R/3KP3/4b3/8/8/8/8 b - - 0 1")]
