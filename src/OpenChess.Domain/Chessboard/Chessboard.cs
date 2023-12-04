@@ -3,7 +3,7 @@ namespace OpenChess.Domain
     internal class Chessboard : IReadOnlyChessboard
     {
         private readonly List<List<Square>> _board;
-        public Color Turn { get; set; }
+        public Color Turn { get; private set; }
         public CastlingAvailability CastlingAvailability { get; set; }
         public Coordinate? EnPassant { get; set; }
         public int HalfMove { get; set; }
