@@ -101,19 +101,30 @@ namespace OpenChess.Tests
             Assert.IsFalse(square.HasPiece);
         }
 
-        [DataRow("A1", 'K')]
-        [DataRow("A1", 'P')]
-        [DataRow("A1", 'N')]
-        [DataRow("A1", 'B')]
         [DataRow("A1", 'R')]
-        [DataRow("A1", 'Q')]
+        [DataRow("B1", 'N')]
+        [DataRow("C1", 'B')]
+        [DataRow("D1", 'Q')]
+        [DataRow("E1", 'K')]
+        [DataRow("F1", 'B')]
+        [DataRow("G1", 'N')]
+        [DataRow("H1", 'R')]
+        [DataRow("A2", 'P')]
+        [DataRow("A8", 'r')]
+        [DataRow("B8", 'n')]
+        [DataRow("C8", 'b')]
+        [DataRow("D8", 'q')]
+        [DataRow("E8", 'k')]
+        [DataRow("F8", 'b')]
+        [DataRow("G8", 'n')]
+        [DataRow("H8", 'r')]
+        [DataRow("A7", 'p')]
+
         [TestMethod]
         public void HasTypeOfPiece_HavingTypeOfPiece_ShouldReturnTrue(string origin, char type)
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate coordinate = Coordinate.GetInstance(origin);
-            Piece piece = Piece.Create(type, coordinate, chessboard);
-            Square square = new(coordinate, piece);
+            Square square = chessboard.GetSquare(Coordinate.GetInstance(origin));
 
             Type? pieceType;
 
@@ -132,9 +143,8 @@ namespace OpenChess.Tests
         public void HasTypeOfPiece_NotHavingTypeOfPiece_ShouldReturnFalse()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate coordinate = Coordinate.GetInstance("A1");
-            Piece piece = Piece.Create('k', coordinate, chessboard);
-            Square square = new(coordinate, piece);
+            Coordinate coordinate = Coordinate.GetInstance("E4");
+            Square square = chessboard.GetSquare(coordinate);
 
             Assert.IsFalse(square.HasTypeOfPiece(typeof(Queen)));
             Assert.IsFalse(square.HasTypeOfPiece(typeof(Pawn)));
