@@ -5,7 +5,7 @@ namespace OpenChess.Domain
         public static int CalculateCheckAmount(Color player, Chessboard chessboard)
         {
             Color enemyPlayer = player == Color.Black ? Color.White : Color.Black;
-            List<Coordinate> piecePositions = chessboard.GetAllPiecesFromPlayer(enemyPlayer);
+            List<Coordinate> piecePositions = chessboard.GetPiecesPosition(enemyPlayer);
             int checkAmount = 0;
             foreach (Coordinate origin in piecePositions)
             {

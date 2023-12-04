@@ -47,7 +47,7 @@ namespace OpenChess.Domain
                     continue;
                 }
 
-                List<Coordinate> pieces = Chessboard.FindPieces(move.Coordinates);
+                List<Coordinate> pieces = Chessboard.GetPiecesPosition(move.Coordinates);
                 if (!pieces.Any()) continue;
                 List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, pieces);
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances)!;
@@ -66,7 +66,7 @@ namespace OpenChess.Domain
             foreach (MovePositions move in moveRange)
             {
                 Direction currentDirection = move.Direction;
-                List<Coordinate> pieces = Chessboard.FindPieces(move.Coordinates);
+                List<Coordinate> pieces = Chessboard.GetPiecesPosition(move.Coordinates);
                 if (!pieces.Any())
                 {
                     legalMoves.Add(move);

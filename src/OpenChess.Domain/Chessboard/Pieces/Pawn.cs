@@ -97,7 +97,7 @@ namespace OpenChess.Domain
 
         private List<Coordinate> CalculateForwardMoves(Chessboard chessboard, List<Coordinate> forwardCoordinates)
         {
-            List<Coordinate> piecesPosition = chessboard.FindPieces(forwardCoordinates);
+            List<Coordinate> piecesPosition = chessboard.GetPiecesPosition(forwardCoordinates);
 
             List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, piecesPosition);
             bool noPiecesForward = !distances.Any();

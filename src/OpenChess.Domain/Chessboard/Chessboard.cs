@@ -43,12 +43,12 @@ namespace OpenChess.Domain
             destinationSquare.Piece = piece;
         }
 
-        public List<Coordinate> FindPieces(List<Coordinate> range)
+        public List<Coordinate> GetPiecesPosition(List<Coordinate> range)
         {
             return range.FindAll(c => GetSquare(c).HasPiece).ToList();
         }
 
-        public List<Coordinate> GetAllPiecesFromPlayer(Color player)
+        public List<Coordinate> GetPiecesPosition(Color player)
         {
             List<Coordinate> piecePosition = new();
 
