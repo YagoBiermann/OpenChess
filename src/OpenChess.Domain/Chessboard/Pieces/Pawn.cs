@@ -95,7 +95,7 @@ namespace OpenChess.Domain
             return legalMoves;
         }
 
-        private List<Coordinate> CalculateForwardMoves(Chessboard chessboard, List<Coordinate> forwardCoordinates)
+        private List<Coordinate> CalculateForwardMoves(IReadOnlyChessboard chessboard, List<Coordinate> forwardCoordinates)
         {
             List<Coordinate> piecesPosition = chessboard.GetPiecesPosition(forwardCoordinates);
 
