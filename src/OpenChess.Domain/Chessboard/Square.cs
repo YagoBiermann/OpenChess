@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal class Square
+    internal class Square : IReadOnlySquare
     {
         public Coordinate Coordinate { get; }
         private Piece? _piece;
