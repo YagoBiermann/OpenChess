@@ -112,5 +112,20 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(match.IsFull());
         }
+
+        [TestMethod]
+        public void Play_ValidMove_ShouldBeHandled()
+        {
+            Match match = new(Time.Ten);
+            match.Join(new(Color.White));
+            match.Join(new(Color.Black));
+            string initialPosition = match.Chessboard;
+            Move move = new(match.CurrentPlayer!.Value, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+
+            match.Play(move);
+
+            Assert.AreNotEqual(match.Chessboard, initialPosition);
+            Assert.AreNotEqual(match.CurrentPlayer, move.PlayerId);
+        }
     }
 }
