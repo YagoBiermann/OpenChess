@@ -200,5 +200,16 @@ namespace OpenChess.Tests
             Assert.IsTrue(FEN.IsValid(fromChessboard));
             Assert.AreEqual(chessboard.ToString(), fen);
         }
+
+        [TestMethod]
+        public void SwitchTurns_ShouldSetOppositeColor()
+        {
+            Chessboard chessboard = new(FEN.InitialPosition);
+
+            Assert.AreEqual(Color.White, chessboard.Turn);
+            chessboard.SwitchTurns();
+            Assert.AreEqual(Color.Black, chessboard.Turn);
+        }
     }
+
 }
