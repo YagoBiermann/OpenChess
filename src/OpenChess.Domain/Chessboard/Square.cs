@@ -11,16 +11,7 @@ namespace OpenChess.Domain
             Coordinate = coordinate;
             Piece = piece;
         }
-        public void RemovePiece()
-        {
-            Piece = null;
-        }
-
-        public void AddPiece(Piece piece)
-        {
-            Piece = piece;
-        }
-
+        
         public Piece? Piece
         {
             get { return _piece; }

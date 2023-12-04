@@ -33,7 +33,7 @@ namespace OpenChess.Domain
             Square originSquare = GetSquare(origin);
             Square destinationSquare = GetSquare(destination);
             Piece piece = originSquare.Piece!;
-            originSquare.RemovePiece();
+            originSquare.Piece = null;
             destinationSquare.Piece = piece;
         }
 
