@@ -9,8 +9,8 @@ namespace OpenChess.Tests
         public void IsLongRangeProperty_ShouldBeTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A1")).Piece!;
-            Rook rook2 = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A8")).Piece!;
+            Rook rook = (Rook)chessboard.GetSquare("A1").Piece!;
+            Rook rook2 = (Rook)chessboard.GetSquare("A8").Piece!;
 
             Assert.IsTrue(rook.IsLongRange);
             Assert.IsTrue(rook2.IsLongRange);
@@ -20,8 +20,8 @@ namespace OpenChess.Tests
         public void DirectionsProperty_ShouldReturnUpDownLeftRight()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A1")).Piece!;
-            Rook rook2 = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A8")).Piece!;
+            Rook rook = (Rook)chessboard.GetSquare("A1").Piece!;
+            Rook rook2 = (Rook)chessboard.GetSquare("A8").Piece!;
 
             List<Direction> directions = new()
             {
@@ -39,7 +39,7 @@ namespace OpenChess.Tests
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4R3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
+            Rook rook = (Rook)chessboard.GetSquare("E4").Piece!;
 
             List<MovePositions> expectedMoves = new()
             {
@@ -65,7 +65,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("F4")).Piece!;
+            Rook rook = (Rook)chessboard.GetSquare("F4").Piece!;
             List<Coordinate> expectedMove = new()
             {
                 Coordinate.GetInstance("E4"),
@@ -83,7 +83,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldNotIncludeAllyPieces()
         {
             Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("F4")).Piece!;
+            Rook rook = (Rook)chessboard.GetSquare("F4").Piece!;
             List<Coordinate> expectedMove = new()
             {
                 Coordinate.GetInstance("G4"),
@@ -99,7 +99,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldNotIncludeTheKing()
         {
             Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("F4")).Piece!;
+            Rook rook = (Rook)chessboard.GetSquare("F4").Piece!;
             List<Coordinate> expectedUpMove = new() { Coordinate.GetInstance("F5") };
             List<Coordinate> expectedDownMove = new() { Coordinate.GetInstance("F3") };
 
@@ -115,7 +115,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new("8/8/4K3/8/1RR1r3/8/4k3/8 b - - 0 1");
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("E4")).Piece!;
+            Rook rook = (Rook)chessboard.GetSquare("E4").Piece!;
             List<Coordinate> expectedMove = new()
             {
                 Coordinate.GetInstance("F4"),

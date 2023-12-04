@@ -21,7 +21,7 @@ namespace OpenChess.Tests
         public void Name_ShouldBeInCorrectFormat(string origin, char name)
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Piece piece = chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece;
+            Piece piece = chessboard.GetSquare(origin).Piece;
 
             Assert.AreEqual(name, piece.Name);
         }
@@ -30,8 +30,8 @@ namespace OpenChess.Tests
         public void Equals_SameObject_ShouldReturnTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
-            Pawn pawn2 = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
+            Pawn pawn = (Pawn)chessboard.GetSquare("A7").Piece!;
+            Pawn pawn2 = (Pawn)chessboard.GetSquare("A7").Piece!;
 
             Assert.IsTrue(pawn.Equals(pawn2));
         }
@@ -40,8 +40,8 @@ namespace OpenChess.Tests
         public void Equals_DifferentPieces_ShouldReturnFalse()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A1")).Piece!;
-            Queen queen = (Queen)chessboard.GetSquare(Coordinate.GetInstance("D1")).Piece!;
+            Rook rook = (Rook)chessboard.GetSquare("A1").Piece!;
+            Queen queen = (Queen)chessboard.GetSquare("D1").Piece!;
 
             Assert.IsFalse(rook.Equals(queen));
         }
@@ -50,8 +50,8 @@ namespace OpenChess.Tests
         public void Equals_SamePieceDifferentColors_ShouldReturnFalse()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
-            King king2 = (King)chessboard.GetSquare(Coordinate.GetInstance("E8")).Piece!;
+            King king = (King)chessboard.GetSquare("E1").Piece!;
+            King king2 = (King)chessboard.GetSquare("E8").Piece!;
 
             Assert.IsFalse(king.Equals(king2));
         }
@@ -60,8 +60,8 @@ namespace OpenChess.Tests
         public void Equals_SamePieceDifferentOrigin_ShouldReturnFalse()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
-            Pawn pawn2 = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("B7")).Piece!;
+            Pawn pawn = (Pawn)chessboard.GetSquare("A7").Piece!;
+            Pawn pawn2 = (Pawn)chessboard.GetSquare("B7").Piece!;
 
             Assert.IsFalse(pawn.Equals(pawn2));
         }
