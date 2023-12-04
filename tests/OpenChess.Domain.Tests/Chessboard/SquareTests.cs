@@ -24,7 +24,7 @@ namespace OpenChess.Tests
         [DataRow("A2")]
         [DataRow("A7")]
         [TestMethod]
-        public void Getter_PieceNotNull_ShouldReturnPiece(string origin)
+        public void Getter_SquareNotEmpty_ShouldReturnPiece(string origin)
         {
             Chessboard chessboard = new(FEN.InitialPosition);
             Square square = chessboard.GetSquare(Coordinate.GetInstance(origin));
@@ -33,7 +33,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void Getter_PieceNull_ReturnsNull()
+        public void Getter_EmptySquare_ReturnsNull()
         {
             Coordinate origin = Coordinate.GetInstance("A1");
             Square square = new(origin, null);
