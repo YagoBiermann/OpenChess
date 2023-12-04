@@ -21,6 +21,12 @@ namespace OpenChess.Domain
             FullMove = ConvertMoveAmount(fenPosition.FullMove);
         }
 
+        public Square GetSquare(string coordinate)
+        {
+            Coordinate origin = Coordinate.GetInstance(coordinate);
+            return GetSquare(origin);
+        }
+
         public Square GetSquare(Coordinate coordinate)
         {
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
