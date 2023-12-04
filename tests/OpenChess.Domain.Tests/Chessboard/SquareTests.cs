@@ -27,28 +27,26 @@ namespace OpenChess.Tests
         public void Getter_SquareNotEmpty_ShouldReturnPiece(string origin)
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Square square = chessboard.GetSquare(Coordinate.GetInstance(origin));
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin));
 
-            Assert.IsNotNull(square.Piece);
+            Assert.IsNotNull(square.ReadOnlyPiece);
         }
 
         [TestMethod]
         public void Getter_EmptySquare_ReturnsNull()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Square square = chessboard.GetSquare(Coordinate.GetInstance("E4"));
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(Coordinate.GetInstance("E4"));
 
-            Assert.IsNull(square.Piece);
+            Assert.IsNull(square.ReadOnlyPiece);
         }
-
-
 
         [TestMethod]
         public void HasPiece_SquareWithPiece_ShouldReturnTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance("A1");
-            Square square = chessboard.GetSquare(coordinate);
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(coordinate);
 
             Assert.IsTrue(square.HasPiece);
         }
@@ -58,7 +56,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance("E4");
-            Square square = chessboard.GetSquare(coordinate);
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(coordinate);
 
             Assert.IsFalse(square.HasPiece);
         }
@@ -85,7 +83,7 @@ namespace OpenChess.Tests
         public void HasTypeOfPiece_HavingTypeOfPiece_ShouldReturnTrue(string origin, char type)
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Square square = chessboard.GetSquare(Coordinate.GetInstance(origin));
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin));
 
             Type pieceType = Utils.GetPieceType(type);
 
@@ -101,7 +99,7 @@ namespace OpenChess.Tests
         public void HasTypeOfPiece_NotHavingTypeOfPiece_ShouldReturnFalse(string origin, char type)
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Square square = chessboard.GetSquare(Coordinate.GetInstance(origin));
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin));
 
             Type pieceType = Utils.GetPieceType(type);
 
@@ -113,7 +111,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance("E7");
-            Square square = chessboard.GetSquare(coordinate);
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(coordinate);
 
             Assert.IsTrue(square.HasEnemyPiece(Color.White));
         }
@@ -123,7 +121,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FEN.InitialPosition);
             Coordinate coordinate = Coordinate.GetInstance("E7");
-            Square square = chessboard.GetSquare(coordinate);
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(coordinate);
 
             Assert.IsFalse(square.HasEnemyPiece(Color.Black));
         }

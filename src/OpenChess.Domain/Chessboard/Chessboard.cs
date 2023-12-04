@@ -39,7 +39,7 @@ namespace OpenChess.Domain
 
         public void ChangePiecePosition(Coordinate origin, Coordinate destination)
         {
-            if (!GetSquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
+            if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
 
             Square originSquare = GetSquare(origin);
             Square destinationSquare = GetSquare(destination);
@@ -50,7 +50,7 @@ namespace OpenChess.Domain
 
         public List<Coordinate> GetPiecesPosition(List<Coordinate> range)
         {
-            return range.FindAll(c => GetSquare(c).HasPiece).ToList();
+            return range.FindAll(c => GetReadOnlySquare(c).HasPiece).ToList();
         }
 
         public List<Coordinate> GetPiecesPosition(Color player)
@@ -59,7 +59,7 @@ namespace OpenChess.Domain
 
             _board.ForEach(action: r =>
             {
-                var squares = r.FindAll(c => c.Piece?.Color == player);
+                var squares = r.FindAll(c => c.ReadOnlyPiece?.Color == player);
                 squares.ForEach(s => piecePosition.Add(s.Coordinate));
             });
 
@@ -116,7 +116,7 @@ namespace OpenChess.Domain
                 if (currentSquare.HasPiece)
                 {
                     string emptySquares = amount > 0 ? amount.ToString() : string.Empty;
-                    builtRow += $"{emptySquares}{currentSquare.Piece!.Name}";
+                    builtRow += $"{emptySquares}{currentSquare.ReadOnlyPiece!.Name}";
                     amount = 0;
                     continue;
                 }

@@ -9,8 +9,8 @@ namespace OpenChess.Tests
         public void IsLongRangeProperty_ShouldBeFalse()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Knight whiteKnight = (Knight)chessboard.GetSquare("B1").Piece!;
-            Knight blackKnight = (Knight)chessboard.GetSquare("B8").Piece!;
+            Knight whiteKnight = (Knight)chessboard.GetReadOnlySquare("B1").ReadOnlyPiece!;
+            Knight blackKnight = (Knight)chessboard.GetReadOnlySquare("B8").ReadOnlyPiece!;
 
             Assert.IsFalse(whiteKnight.IsLongRange);
             Assert.IsFalse(blackKnight.IsLongRange);
@@ -20,8 +20,8 @@ namespace OpenChess.Tests
         public void DirectionsProperty_ShouldReturnAllDirections()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Knight whiteKnight = (Knight)chessboard.GetSquare("B1").Piece!;
-            Knight blackKnight = (Knight)chessboard.GetSquare("B8").Piece!;
+            Knight whiteKnight = (Knight)chessboard.GetReadOnlySquare("B1").ReadOnlyPiece!;
+            Knight blackKnight = (Knight)chessboard.GetReadOnlySquare("B8").ReadOnlyPiece!;
 
             List<Direction> directions = new()
                 {
@@ -44,7 +44,7 @@ namespace OpenChess.Tests
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4N3/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
-            Knight knight = (Knight)chessboard.GetSquare("E4").Piece!;
+            Knight knight = (Knight)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
             List<MovePositions> expectedMoves = new()
             {
@@ -73,7 +73,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
-            Knight knight = (Knight)chessboard.GetSquare("G4").Piece!;
+            Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             List<MovePositions> moves = knight.CalculateLegalMoves();
             List<Coordinate> upperLeftMoves = moves.Find(m => m.Direction.Equals(new Direction(-1, 2))).Coordinates;
             List<Coordinate> upperLeftMoves2 = moves.Find(m => m.Direction.Equals(new Direction(-2, 1))).Coordinates;
@@ -89,7 +89,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldNotIncludeAllyPieces()
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
-            Knight knight = (Knight)chessboard.GetSquare("G4").Piece!;
+            Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             List<MovePositions> moves = knight.CalculateLegalMoves();
             List<Coordinate> lowerRightMove = moves.Find(m => m.Direction.Equals(new Direction(1, -2))).Coordinates;
 
@@ -100,7 +100,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldNotIncludeTheKing()
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
-            Knight knight = (Knight)chessboard.GetSquare("G4").Piece!;
+            Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             List<MovePositions> moves = knight.CalculateLegalMoves();
             List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new Direction(-2, -1))).Coordinates;
             List<Coordinate> upperRightMove = moves.Find(m => m.Direction.Equals(new Direction(1, 2))).Coordinates;
@@ -113,7 +113,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
-            Knight knight = (Knight)chessboard.GetSquare("G4").Piece!;
+            Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             List<MovePositions> moves = knight.CalculateLegalMoves();
             List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new Direction(-1, -2))).Coordinates;
             List<Coordinate> expectedLowerLeftMove = new() { Coordinate.GetInstance("F2") };

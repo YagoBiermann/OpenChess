@@ -21,7 +21,7 @@ namespace OpenChess.Domain
                 bool isOutOfChessboard = !currentPosition.Any();
                 if (isOutOfChessboard) { legalMoves.Add(new(move.Direction, currentPosition)); continue; };
 
-                Square currentSquare = Chessboard.GetSquare(currentPosition.FirstOrDefault()!);
+                IReadOnlySquare currentSquare = Chessboard.GetReadOnlySquare(currentPosition.FirstOrDefault()!);
                 if (!currentSquare.HasPiece) { legalMoves.Add(new(move.Direction, currentPosition)); continue; }
 
                 bool isAllyPieceOrKing = !currentSquare.HasEnemyPiece(Color) || currentSquare.HasTypeOfPiece(typeof(King));

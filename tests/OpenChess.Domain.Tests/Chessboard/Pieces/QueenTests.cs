@@ -9,8 +9,8 @@ namespace OpenChess.Tests
         public void IsLongRangeProperty_ShouldBeTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Queen queen = (Queen)chessboard.GetSquare("D1").Piece!;
-            Queen queen2 = (Queen)chessboard.GetSquare("D8").Piece!;
+            Queen queen = (Queen)chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
+            Queen queen2 = (Queen)chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
 
             Assert.IsTrue(queen.IsLongRange);
             Assert.IsTrue(queen2.IsLongRange);
@@ -20,8 +20,8 @@ namespace OpenChess.Tests
         public void DirectionsProperty_ShouldReturnAllDirections()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Queen queen = (Queen)chessboard.GetSquare("D1").Piece!;
-            Queen queen2 = (Queen)chessboard.GetSquare("D8").Piece!;
+            Queen queen = (Queen)chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
+            Queen queen2 = (Queen)chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
 
             List<Direction> directions = new()
             {
@@ -43,7 +43,7 @@ namespace OpenChess.Tests
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4Q3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
-            Queen queen = (Queen)chessboard.GetSquare("E4").Piece!;
+            Queen queen = (Queen)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
             List<MovePositions> expectedMoves = new()
             {
@@ -72,7 +72,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
-            Queen queen = (Queen)chessboard.GetSquare("D4").Piece!;
+            Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             List<MovePositions> moves = queen.CalculateLegalMoves();
 
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
@@ -92,7 +92,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldNotIncludeAllyPieces()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
-            Queen queen = (Queen)chessboard.GetSquare("D4").Piece!;
+            Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             List<MovePositions> moves = queen.CalculateLegalMoves();
 
             List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
@@ -109,7 +109,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldNotIncludeTheKing()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
-            Queen queen = (Queen)chessboard.GetSquare("D4").Piece!;
+            Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             List<MovePositions> moves = queen.CalculateLegalMoves();
 
             List<Coordinate> lowerLeftMoves = moves.Find(m => m.Direction.Equals(new LowerLeft())).Coordinates;
@@ -126,7 +126,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
-            Queen queen = (Queen)chessboard.GetSquare("D4").Piece!;
+            Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
 
             List<Coordinate> downMoves = queen.CalculateLegalMoves().Find(m => m.Direction.Equals(new Down())).Coordinates;
             List<Coordinate> expectedDownMoves = new() { Coordinate.GetInstance("D3"), Coordinate.GetInstance("D2"), Coordinate.GetInstance("D1"), };

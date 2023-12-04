@@ -9,7 +9,7 @@ namespace OpenChess.Domain
             int checkAmount = 0;
             foreach (Coordinate origin in piecePositions)
             {
-                if (chessboard.GetSquare(origin).Piece!.IsHittingTheEnemyKing()) { checkAmount++; };
+                if (chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!.IsHittingTheEnemyKing()) { checkAmount++; };
             }
 
             return checkAmount;

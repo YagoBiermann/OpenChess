@@ -9,8 +9,8 @@ namespace OpenChess.Tests
         public void IsLongRangeProperty_ShouldBeTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Bishop whiteBishop = (Bishop)chessboard.GetSquare("C1").Piece!;
-            Bishop blackBishop = (Bishop)chessboard.GetSquare("C8").Piece!;
+            Bishop whiteBishop = (Bishop)chessboard.GetReadOnlySquare("C1").ReadOnlyPiece!;
+            Bishop blackBishop = (Bishop)chessboard.GetReadOnlySquare("C8").ReadOnlyPiece!;
 
             Assert.IsTrue(whiteBishop.IsLongRange);
             Assert.IsTrue(blackBishop.IsLongRange);
@@ -20,8 +20,8 @@ namespace OpenChess.Tests
         public void DirectionsProperty_ShouldReturnDiagonalDirections()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Bishop whiteBishop = (Bishop)chessboard.GetSquare("C1").Piece!;
-            Bishop blackBishop = (Bishop)chessboard.GetSquare("C8").Piece!;
+            Bishop whiteBishop = (Bishop)chessboard.GetReadOnlySquare("C1").ReadOnlyPiece!;
+            Bishop blackBishop = (Bishop)chessboard.GetReadOnlySquare("C8").ReadOnlyPiece!;
 
             List<Direction> directions = new()
             {
@@ -39,7 +39,7 @@ namespace OpenChess.Tests
         public void CalculateMoveRange_ShouldReturnAllMoves()
         {
             Chessboard chessboard = new("r1bqk1nr/pppp2p1/5p1p/4P1N1/4B1Q1/8/PPP2PPP/RN2K2R b KQkq - 0 1");
-            Bishop bishop = (Bishop)chessboard.GetSquare("E4").Piece!;
+            Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
             List<MovePositions> expectedMoves = new()
             {
@@ -64,7 +64,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
-            Bishop bishop = (Bishop)chessboard.GetSquare("C5").Piece!;
+            Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
             List<MovePositions> moves = bishop.CalculateLegalMoves();
 
             List<Coordinate> lowerRightMove = moves.Find(m => m.Direction.Equals(new LowerRight())).Coordinates;
@@ -77,7 +77,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldNotIncludeAllyPieces()
         {
             Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
-            Bishop bishop = (Bishop)chessboard.GetSquare("C5").Piece!;
+            Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
             List<MovePositions> moves = bishop.CalculateLegalMoves();
 
             List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new LowerLeft())).Coordinates;
@@ -90,7 +90,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_ShouldNotIncludeTheKing()
         {
             Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
-            Bishop bishop = (Bishop)chessboard.GetSquare("C5").Piece!;
+            Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
             List<MovePositions> moves = bishop.CalculateLegalMoves();
 
             List<Coordinate> upperRightMove = moves.Find(m => m.Direction.Equals(new UpperRight())).Coordinates;
@@ -103,7 +103,7 @@ namespace OpenChess.Tests
         public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
-            Bishop bishop = (Bishop)chessboard.GetSquare("C5").Piece!;
+            Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
 
             List<Coordinate> upperLeftMove = bishop.CalculateLegalMoves().Find(m => m.Direction.Equals(new UpperLeft())).Coordinates;
             List<Coordinate> expectedUpperLeftMoves = new() { Coordinate.GetInstance("B6"), Coordinate.GetInstance("A7") };

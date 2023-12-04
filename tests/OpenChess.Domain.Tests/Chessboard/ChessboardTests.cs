@@ -41,7 +41,7 @@ namespace OpenChess.Tests
             Coordinate coordinate = Coordinate.GetInstance(position);
             Type? pieceType = Utils.GetPieceType(name);
             Color pieceColor = Utils.ColorFromChar(color);
-            Piece? piece = chessboard.GetSquare(coordinate).Piece;
+            IReadOnlyPiece? piece = chessboard.GetReadOnlySquare(coordinate).ReadOnlyPiece;
 
             Assert.IsInstanceOfType(piece, pieceType);
             Assert.AreEqual(pieceColor, piece.Color);
@@ -122,7 +122,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(FEN.InitialPosition);
 
             Coordinate origin = Coordinate.GetInstance(coordinate);
-            Piece? piece = chessboard.GetSquare(origin).Piece;
+            IReadOnlyPiece? piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
             Type? pieceType = Utils.GetPieceType(type);
             Color color = Utils.ColorFromChar(c);
 
@@ -141,8 +141,8 @@ namespace OpenChess.Tests
                 for (int col = 0; col <= 7; col++)
                 {
 
-                    Square square = chessboard.GetSquare(Coordinate.GetInstance(col, row));
-                    Assert.IsNull(square.Piece);
+                    IReadOnlySquare square = chessboard.GetReadOnlySquare(Coordinate.GetInstance(col, row));
+                    Assert.IsNull(square.ReadOnlyPiece);
                 }
             }
         }
@@ -156,9 +156,9 @@ namespace OpenChess.Tests
 
             chessboard.ChangePiecePosition(origin, destination);
 
-            Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
-            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
-            Assert.IsInstanceOfType(chessboard.GetSquare(destination).Piece, typeof(Rook));
+            Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
+            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
+            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(Rook));
         }
 
         [TestMethod]
@@ -180,9 +180,9 @@ namespace OpenChess.Tests
 
             chessboard.ChangePiecePosition(origin, destination);
 
-            Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
-            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
-            Assert.IsInstanceOfType(chessboard.GetSquare(destination).Piece, typeof(Rook));
+            Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
+            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
+            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(Rook));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]

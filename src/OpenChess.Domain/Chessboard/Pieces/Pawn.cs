@@ -81,7 +81,7 @@ namespace OpenChess.Domain
                 bool diagonalIsOutOfChessboard = diagonal is null;
                 if (diagonalIsOutOfChessboard) { legalMoves.Add(emptyPosition); continue; };
 
-                Square square = Chessboard.GetSquare(diagonal!);
+                IReadOnlySquare square = Chessboard.GetReadOnlySquare(diagonal!);
                 bool isEnPassant = diagonal!.Equals(Chessboard.EnPassant);
                 if (isEnPassant) { legalMoves.Add(sameCurrentPosition); continue; };
                 if (!square.HasPiece) { legalMoves.Add(emptyPosition); continue; }

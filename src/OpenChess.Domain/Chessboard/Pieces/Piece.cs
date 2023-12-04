@@ -51,7 +51,7 @@ namespace OpenChess.Domain
                 if (!pieces.Any()) continue;
                 List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, pieces);
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances)!;
-                Square square = Chessboard.GetSquare(nearestPiece.Position);
+                IReadOnlySquare square = Chessboard.GetReadOnlySquare(nearestPiece.Position);
                 if (square.HasEnemyPiece(Color) && square.HasTypeOfPiece(typeof(King))) { isHitting = true; break; }
             }
 
@@ -77,7 +77,7 @@ namespace OpenChess.Domain
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
 
                 List<Coordinate> rangeOfAttack = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
-                Square square = Chessboard.GetSquare(nearestPiece.Position);
+                IReadOnlySquare square = Chessboard.GetReadOnlySquare(nearestPiece.Position);
                 bool isKing = square.HasTypeOfPiece(typeof(King));
 
                 int lastPosition = rangeOfAttack.Count - 1;
