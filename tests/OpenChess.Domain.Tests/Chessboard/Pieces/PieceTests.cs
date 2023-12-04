@@ -5,6 +5,27 @@ namespace OpenChess.Tests
     [TestClass]
     public class PieceTests
     {
+        [DataRow("A1", 'R')]
+        [DataRow("B1", 'N')]
+        [DataRow("C1", 'B')]
+        [DataRow("D1", 'Q')]
+        [DataRow("E1", 'K')]
+        [DataRow("A2", 'P')]
+        [DataRow("A8", 'r')]
+        [DataRow("B8", 'n')]
+        [DataRow("C8", 'b')]
+        [DataRow("D8", 'q')]
+        [DataRow("E8", 'k')]
+        [DataRow("A7", 'p')]
+        [TestMethod]
+        public void Name_ShouldBeInCorrectFormat(string origin, char name)
+        {
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Piece piece = chessboard.GetSquare(Coordinate.GetInstance(origin)).Piece;
+
+            Assert.AreEqual(name, piece.Name);
+        }
+
         [TestMethod]
         public void Equals_SameObject_ShouldReturnTrue()
         {
