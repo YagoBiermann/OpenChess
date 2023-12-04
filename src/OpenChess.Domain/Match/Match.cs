@@ -5,7 +5,6 @@ namespace OpenChess.Domain
         public Guid Id { get; }
         private List<Player> _players = new(2);
         private Chessboard _chessboard { get; }
-        private Player? _currentPlayer { get; set; }
         private Stack<string> _pgn = new();
         private MatchStatus _status { get; set; }
         private Player? _winner { get; set; }
@@ -15,7 +14,6 @@ namespace OpenChess.Domain
         {
             Id = Guid.NewGuid();
             _chessboard = new(FEN.InitialPosition);
-            _currentPlayer = null;
             _status = MatchStatus.NotStarted;
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
@@ -38,8 +36,6 @@ namespace OpenChess.Domain
             _players.Add(player);
             if (!IsFull()) { return; };
 
-            Player? whitePlayer = GetPlayerByColor(Color.White);
-            _currentPlayer = whitePlayer;
             _status = MatchStatus.InProgress;
         }
 
@@ -64,7 +60,7 @@ namespace OpenChess.Domain
         }
 
         public MatchStatus Status { get { return _status; } }
-        public Guid? CurrentPlayer { get { return _currentPlayer?.Id; } }
+        public Guid? CurrentPlayer { get { return _players.Find(p => p.Color == _chessboard.Turn)?.Id; } }
         public Time Time { get { return (Time)_time.Minutes; } }
         public Guid? Winner { get { return _winner?.Id; } }
         public Stack<string> Moves { get { return new Stack<string>(_pgn); } }
