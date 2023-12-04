@@ -140,6 +140,22 @@ namespace OpenChess.Domain
             return board;
         }
 
+        private Piece CreatePiece(char type, Coordinate origin)
+        {
+            Color color = char.IsUpper(type) ? Color.White : Color.Black;
+
+            return char.ToUpper(type) switch
+            {
+                'K' => new King(color, origin, this),
+                'Q' => new Queen(color, origin, this),
+                'R' => new Rook(color, origin, this),
+                'B' => new Bishop(color, origin, this),
+                'N' => new Knight(color, origin, this),
+                'P' => new Pawn(color, origin, this),
+                _ => throw new PieceException($"{type} does not represent a piece"),
+            };
+        }
+
         private void SetPiecesOnBoard(string field)
         {
             List<string> fenBoard = field.Split("/").Reverse().ToList();
@@ -153,7 +169,7 @@ namespace OpenChess.Domain
                     if (!char.IsDigit(currentChar))
                     {
                         Coordinate origin = Coordinate.GetInstance(nextPiecePosition, row);
-                        Piece piece = Piece.Create(currentChar, origin, this);
+                        Piece piece = CreatePiece(currentChar, origin);
                         GetSquare(origin).Piece = piece;
 
                         nextPiecePosition++;

@@ -105,22 +105,6 @@ namespace OpenChess.Domain
             return Origin.GetHashCode() ^ Color.GetHashCode();
         }
 
-        public static Piece Create(char type, Coordinate origin, Chessboard chessboard)
-        {
-            Color color = char.IsUpper(type) ? Color.White : Color.Black;
-
-            return char.ToUpper(type) switch
-            {
-                'K' => new King(color, origin, chessboard),
-                'Q' => new Queen(color, origin, chessboard),
-                'R' => new Rook(color, origin, chessboard),
-                'B' => new Bishop(color, origin, chessboard),
-                'N' => new Knight(color, origin, chessboard),
-                'P' => new Pawn(color, origin, chessboard),
-                _ => throw new PieceException($"{type} does not represent a piece"),
-            };
-        }
-
         protected Chessboard Chessboard { get { return _chessboard; } }
     }
 }
