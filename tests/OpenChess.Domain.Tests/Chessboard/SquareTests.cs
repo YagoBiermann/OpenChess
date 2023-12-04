@@ -126,15 +126,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(FEN.InitialPosition);
             Square square = chessboard.GetSquare(Coordinate.GetInstance(origin));
 
-            Type? pieceType;
-
-            if (char.ToLower(type) == 'k') { pieceType = typeof(King); }
-            else if (char.ToLower(type) == 'p') { pieceType = typeof(Pawn); }
-            else if (char.ToLower(type) == 'n') { pieceType = typeof(Knight); }
-            else if (char.ToLower(type) == 'b') { pieceType = typeof(Bishop); }
-            else if (char.ToLower(type) == 'r') { pieceType = typeof(Rook); }
-            else if (char.ToLower(type) == 'q') { pieceType = typeof(Queen); }
-            else { pieceType = null; }
+            Type pieceType = Utils.GetPieceType(type);
 
             Assert.IsTrue(square.HasTypeOfPiece(pieceType));
         }
