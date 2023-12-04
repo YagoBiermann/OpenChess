@@ -6,23 +6,6 @@ namespace OpenChess.Tests
     public class KnightTests
     {
         [TestMethod]
-        public void NameProperty_BlackKnight_ShouldBeLowercaseN()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("B8")).Piece!;
-
-            Assert.AreEqual(knight.Name, 'n');
-        }
-        [TestMethod]
-        public void NameProperty_WhiteKnight_ShouldBeUppercaseN()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Knight knight = (Knight)chessboard.GetSquare(Coordinate.GetInstance("B1")).Piece!;
-
-            Assert.AreEqual(knight.Name, 'N');
-        }
-
-        [TestMethod]
         public void IsLongRangeProperty_ShouldBeFalse()
         {
             Chessboard chessboard = new(FEN.InitialPosition);

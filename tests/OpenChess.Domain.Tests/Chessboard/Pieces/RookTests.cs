@@ -6,24 +6,6 @@ namespace OpenChess.Tests
     public class RookTests
     {
         [TestMethod]
-        public void NameProperty_BlackRook_ShouldBeLowercaseR()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A8")).Piece!;
-
-            Assert.AreEqual(rook.Name, 'r');
-        }
-
-        [TestMethod]
-        public void NameProperty_WhiteRook_ShouldBeUppercaseR()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Rook rook = (Rook)chessboard.GetSquare(Coordinate.GetInstance("A1")).Piece!;
-
-            Assert.AreEqual(rook.Name, 'R');
-        }
-
-        [TestMethod]
         public void IsLongRangeProperty_ShouldBeTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);

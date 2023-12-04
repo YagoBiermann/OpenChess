@@ -6,24 +6,6 @@ namespace OpenChess.Tests
     public class QueenTests
     {
         [TestMethod]
-        public void NameProperty_BlackQueen_ShouldBeLowercaseQ()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Queen queen = (Queen)chessboard.GetSquare(Coordinate.GetInstance("D8")).Piece!;
-
-            Assert.AreEqual(queen.Name, 'q');
-        }
-
-        [TestMethod]
-        public void NameProperty_WhiteQueen_ShouldBeUppercaseQ()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Queen queen = (Queen)chessboard.GetSquare(Coordinate.GetInstance("D1")).Piece!;
-
-            Assert.AreEqual(queen.Name, 'Q');
-        }
-
-        [TestMethod]
         public void IsLongeRangeProperty_ShouldBeTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);

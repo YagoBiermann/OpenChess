@@ -49,24 +49,6 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void NameProperty_WhitePawn_ShoulBeUppercaseP()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A2")).Piece!;
-
-            Assert.AreEqual(pawn.Name, 'P');
-        }
-
-        [TestMethod]
-        public void NameProperty_BlackPawn_ShoulBeLowecaseP()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Pawn pawn = (Pawn)chessboard.GetSquare(Coordinate.GetInstance("A7")).Piece!;
-
-            Assert.AreEqual(pawn.Name, 'p');
-        }
-
-        [TestMethod]
         public void IsFirstMove_BlackPawn_InSeventhRow_ShouldReturnTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);

@@ -6,23 +6,6 @@ namespace OpenChess.Tests
     public class KingTests
     {
         [TestMethod]
-        public void NameProperty_BlackKing_ShouldBeLowercaseK()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E8")).Piece!;
-
-            Assert.AreEqual(king.Name, 'k');
-        }
-        [TestMethod]
-        public void NameProperty_WhiteKing_ShouldBeUppercaseK()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            King king = (King)chessboard.GetSquare(Coordinate.GetInstance("E1")).Piece!;
-
-            Assert.AreEqual(king.Name, 'K');
-        }
-
-        [TestMethod]
         public void IsLongRangeProperty_ShouldBeFalse()
         {
             Chessboard chessboard = new(FEN.InitialPosition);

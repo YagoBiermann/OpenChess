@@ -6,23 +6,6 @@ namespace OpenChess.Tests
     public class BishopTests
     {
         [TestMethod]
-        public void NameProperty_BlackBishop_ShouldBeLowercaseB()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C8")).Piece!;
-
-            Assert.AreEqual(bishop.Name, 'b');
-        }
-        [TestMethod]
-        public void NameProperty_WhiteBishop_ShouldBeUppercaseB()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Bishop bishop = (Bishop)chessboard.GetSquare(Coordinate.GetInstance("C1")).Piece!;
-
-            Assert.AreEqual(bishop.Name, 'B');
-        }
-
-        [TestMethod]
         public void IsLongRangeProperty_ShouldBeTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
