@@ -4,12 +4,17 @@ namespace OpenChess.Domain
     {
         public Coordinate Coordinate { get; }
         private Piece? _piece;
-        public bool HasPiece { get => Piece is not null; }
+        public bool HasPiece { get => ReadOnlyPiece is not null; }
 
         public Square(Coordinate coordinate, Piece? piece = null)
         {
             Coordinate = coordinate;
             Piece = piece;
+        }
+
+        public IReadOnlyPiece? ReadOnlyPiece
+        {
+            get { return _piece; }
         }
         
         public Piece? Piece
@@ -28,13 +33,13 @@ namespace OpenChess.Domain
         public bool HasEnemyPiece(Color currentPlayer)
         {
             if (!HasPiece) return false;
-            return Piece?.Color != currentPlayer;
+            return ReadOnlyPiece?.Color != currentPlayer;
         }
 
         public bool HasTypeOfPiece(Type piece)
         {
             if (!HasPiece) return false;
-            return Piece?.GetType() == piece;
+            return ReadOnlyPiece?.GetType() == piece;
         }
     }
 }
