@@ -6,7 +6,7 @@ namespace OpenChess.Tests
     public class QueenTests
     {
         [TestMethod]
-        public void IsLongeRangeProperty_ShouldBeTrue()
+        public void IsLongRangeProperty_ShouldBeTrue()
         {
             Chessboard chessboard = new(FEN.InitialPosition);
             Queen queen = (Queen)chessboard.GetSquare(Coordinate.GetInstance("D1")).Piece!;
