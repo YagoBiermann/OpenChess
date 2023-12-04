@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal class Chessboard
+    internal class Chessboard : IReadOnlyChessboard
     {
         private readonly List<List<Square>> _board;
         public Color Turn { get; set; }
