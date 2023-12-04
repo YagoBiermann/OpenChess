@@ -131,18 +131,20 @@ namespace OpenChess.Tests
             Assert.IsTrue(square.HasTypeOfPiece(pieceType));
         }
 
+        [DataRow("E4", 'p')]
+        [DataRow("E4", 'q')]
+        [DataRow("E4", 'r')]
+        [DataRow("E4", 'n')]
+        [DataRow("E4", 'b')]
         [TestMethod]
-        public void HasTypeOfPiece_NotHavingTypeOfPiece_ShouldReturnFalse()
+        public void HasTypeOfPiece_NotHavingTypeOfPiece_ShouldReturnFalse(string origin, char type)
         {
             Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate coordinate = Coordinate.GetInstance("E4");
-            Square square = chessboard.GetSquare(coordinate);
+            Square square = chessboard.GetSquare(Coordinate.GetInstance(origin));
 
-            Assert.IsFalse(square.HasTypeOfPiece(typeof(Queen)));
-            Assert.IsFalse(square.HasTypeOfPiece(typeof(Pawn)));
-            Assert.IsFalse(square.HasTypeOfPiece(typeof(Rook)));
-            Assert.IsFalse(square.HasTypeOfPiece(typeof(Bishop)));
-            Assert.IsFalse(square.HasTypeOfPiece(typeof(Knight)));
+            Type pieceType = Utils.GetPieceType(type);
+
+            Assert.IsFalse(square.HasTypeOfPiece(pieceType));
         }
 
         [TestMethod]
