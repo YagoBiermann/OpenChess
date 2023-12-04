@@ -127,5 +127,15 @@ namespace OpenChess.Tests
             Assert.AreNotEqual(match.Chessboard, initialPosition);
             Assert.AreNotEqual(match.CurrentPlayer, move.PlayerId);
         }
+
+        [TestMethod]
+        public void Play_MatchNotStarted_ShouldThrowException()
+        {
+            Match match = new(Time.Three);
+            PlayerInfo player = new(Color.White);
+            match.Join(player);
+            Move move = new(player.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Assert.ThrowsException<MatchException>(() => match.Play(move));
+        }
     }
 }
