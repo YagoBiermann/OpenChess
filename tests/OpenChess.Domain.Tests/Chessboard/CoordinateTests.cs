@@ -157,92 +157,68 @@ namespace OpenChess.Tests
             Assert.IsFalse(ReferenceEquals(coordinate3, coordinate4));
         }
 
+        [DataRow("A1", 0)]
+        [DataRow("A2", 1)]
+        [DataRow("B3", 2)]
+        [DataRow("C4", 3)]
+        [DataRow("D5", 4)]
+        [DataRow("D6", 5)]
+        [DataRow("D7", 6)]
+        [DataRow("D8", 7)]
         [TestMethod]
-        public void RowToIndex_ShouldReturnRowAsInt()
+        public void RowToIndex_ShouldReturnRowAsInt(string c, int row)
         {
-            Coordinate coordinate0 = Coordinate.GetInstance("A1");
-            Coordinate coordinate1 = Coordinate.GetInstance("A2");
-            Coordinate coordinate2 = Coordinate.GetInstance("B3");
-            Coordinate coordinate3 = Coordinate.GetInstance("C4");
-            Coordinate coordinate4 = Coordinate.GetInstance("D5");
-            Coordinate coordinate5 = Coordinate.GetInstance("D6");
-            Coordinate coordinate6 = Coordinate.GetInstance("D7");
-            Coordinate coordinate7 = Coordinate.GetInstance("D8");
+            Coordinate coordinate = Coordinate.GetInstance(c);
 
-            Assert.AreEqual(0, coordinate0.RowToInt);
-            Assert.AreEqual(1, coordinate1.RowToInt);
-            Assert.AreEqual(2, coordinate2.RowToInt);
-            Assert.AreEqual(3, coordinate3.RowToInt);
-            Assert.AreEqual(4, coordinate4.RowToInt);
-            Assert.AreEqual(5, coordinate5.RowToInt);
-            Assert.AreEqual(6, coordinate6.RowToInt);
-            Assert.AreEqual(7, coordinate7.RowToInt);
+            Assert.AreEqual(row, coordinate.RowToInt);
         }
 
+        [DataRow("A1", 0)]
+        [DataRow("B2", 1)]
+        [DataRow("C3", 2)]
+        [DataRow("D4", 3)]
+        [DataRow("E5", 4)]
+        [DataRow("F6", 5)]
+        [DataRow("G7", 6)]
+        [DataRow("H8", 7)]
         [TestMethod]
-        public void ColumnToIndex_ShouldReturnColumnAsInt()
+        public void ColumnToIndex_ShouldReturnColumnAsInt(string c, int row)
         {
-            Coordinate coordinate0 = Coordinate.GetInstance("A1");
-            Coordinate coordinate1 = Coordinate.GetInstance("B2");
-            Coordinate coordinate2 = Coordinate.GetInstance("C3");
-            Coordinate coordinate3 = Coordinate.GetInstance("D4");
-            Coordinate coordinate4 = Coordinate.GetInstance("E5");
-            Coordinate coordinate5 = Coordinate.GetInstance("F6");
-            Coordinate coordinate6 = Coordinate.GetInstance("G7");
-            Coordinate coordinate7 = Coordinate.GetInstance("H8");
+            Coordinate coordinate = Coordinate.GetInstance(c);
 
-            Assert.AreEqual(0, coordinate0.ColumnToInt);
-            Assert.AreEqual(1, coordinate1.ColumnToInt);
-            Assert.AreEqual(2, coordinate2.ColumnToInt);
-            Assert.AreEqual(3, coordinate3.ColumnToInt);
-            Assert.AreEqual(4, coordinate4.ColumnToInt);
-            Assert.AreEqual(5, coordinate5.ColumnToInt);
-            Assert.AreEqual(6, coordinate6.ColumnToInt);
-            Assert.AreEqual(7, coordinate7.ColumnToInt);
+            Assert.AreEqual(row, coordinate.ColumnToInt);
         }
 
+        [DataRow("A1", '1')]
+        [DataRow("A2", '2')]
+        [DataRow("A3", '3')]
+        [DataRow("A4", '4')]
+        [DataRow("A5", '5')]
+        [DataRow("A6", '6')]
+        [DataRow("A7", '7')]
+        [DataRow("A8", '8')]
         [TestMethod]
-        public void Row_ShouldBeNumber()
+        public void Row_ShouldBeNumber(string c, char r)
         {
-            Coordinate coordinate0 = Coordinate.GetInstance("A1");
-            Coordinate coordinate1 = Coordinate.GetInstance("A2");
-            Coordinate coordinate2 = Coordinate.GetInstance("A3");
-            Coordinate coordinate3 = Coordinate.GetInstance("A4");
-            Coordinate coordinate4 = Coordinate.GetInstance("A5");
-            Coordinate coordinate5 = Coordinate.GetInstance("A6");
-            Coordinate coordinate6 = Coordinate.GetInstance("A7");
-            Coordinate coordinate7 = Coordinate.GetInstance("A8");
+            Coordinate coordinate = Coordinate.GetInstance(c);
 
-            Assert.AreEqual('1', coordinate0.Row);
-            Assert.AreEqual('2', coordinate1.Row);
-            Assert.AreEqual('3', coordinate2.Row);
-            Assert.AreEqual('4', coordinate3.Row);
-            Assert.AreEqual('5', coordinate4.Row);
-            Assert.AreEqual('6', coordinate5.Row);
-            Assert.AreEqual('7', coordinate6.Row);
-            Assert.AreEqual('8', coordinate7.Row);
+            Assert.AreEqual(r, coordinate.Row);
         }
 
+        [DataRow("A1", 'A')]
+        [DataRow("B1", 'B')]
+        [DataRow("C1", 'C')]
+        [DataRow("D1", 'D')]
+        [DataRow("E1", 'E')]
+        [DataRow("F1", 'F')]
+        [DataRow("G1", 'G')]
+        [DataRow("H1", 'H')]
         [TestMethod]
-        public void Column_ShouldBeLetter()
+        public void Column_ShouldBeLetter(string c, char r)
         {
-            Coordinate coordinate0 = Coordinate.GetInstance("A1");
-            Coordinate coordinate1 = Coordinate.GetInstance("B1");
-            Coordinate coordinate2 = Coordinate.GetInstance("C1");
-            Coordinate coordinate3 = Coordinate.GetInstance("D1");
-            Coordinate coordinate4 = Coordinate.GetInstance("E1");
-            Coordinate coordinate5 = Coordinate.GetInstance("F1");
-            Coordinate coordinate6 = Coordinate.GetInstance("G1");
-            Coordinate coordinate7 = Coordinate.GetInstance("H1");
+            Coordinate coordinate = Coordinate.GetInstance(c);
 
-            Assert.AreEqual('A', coordinate0.Column);
-            Assert.AreEqual('B', coordinate1.Column);
-            Assert.AreEqual('C', coordinate2.Column);
-            Assert.AreEqual('D', coordinate3.Column);
-            Assert.AreEqual('E', coordinate4.Column);
-            Assert.AreEqual('F', coordinate5.Column);
-            Assert.AreEqual('G', coordinate6.Column);
-            Assert.AreEqual('H', coordinate7.Column);
+            Assert.AreEqual(r, coordinate.Column);
         }
 
         [TestMethod]
