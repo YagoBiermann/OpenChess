@@ -35,8 +35,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Getter_EmptySquare_ReturnsNull()
         {
-            Coordinate origin = Coordinate.GetInstance("A1");
-            Square square = new(origin, null);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Square square = chessboard.GetSquare(Coordinate.GetInstance("E4"));
 
             Assert.IsNull(square.Piece);
         }
