@@ -21,6 +21,32 @@ namespace OpenChess.Tests
             Assert.AreEqual(1, chessboard.FullMove);
         }
 
+        [DataRow("C3", 'Q', 'w')]
+        [DataRow("B4", 'N', 'w')]
+        [DataRow("C5", 'B', 'w')]
+        [DataRow("D4", 'R', 'w')]
+        [DataRow("C4", 'K', 'w')]
+        [DataRow("E2", 'P', 'w')]
+        [DataRow("F5", 'q', 'b')]
+        [DataRow("G6", 'n', 'b')]
+        [DataRow("E6", 'b', 'b')]
+        [DataRow("F7", 'r', 'b')]
+        [DataRow("F6", 'k', 'b')]
+        [DataRow("C7", 'p', 'b')]
+        [TestMethod]
+        public void NewInstance_ShouldConvertPiecesCorrectly(string position, char name, char color)
+        {
+            Chessboard chessboard = new("8/2p2r2/4bkn1/2B2q2/1NKR4/2Q5/4P3/8 w - - 0 1");
+
+            Coordinate coordinate = Coordinate.GetInstance(position);
+            Type? pieceType = Utils.GetPieceType(name);
+            Color pieceColor = Utils.ColorFromChar(color);
+            Piece? piece = chessboard.GetSquare(coordinate).Piece;
+
+            Assert.IsInstanceOfType(piece, pieceType);
+            Assert.AreEqual(pieceColor, piece.Color);
+        }
+
         [TestMethod]
         public void NewInstance_ShouldConvertCastlingCorrectly()
         {
