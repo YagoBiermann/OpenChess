@@ -18,5 +18,10 @@ namespace OpenChess.Tests
 
             return pieceType;
         }
+
+        public static Color ColorFromChar(char color)
+        {
+            return color == 'b' ? Color.Black : Color.White;
+        }
     }
 }
