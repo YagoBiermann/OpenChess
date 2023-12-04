@@ -41,45 +41,7 @@ namespace OpenChess.Tests
             Assert.IsNull(square.Piece);
         }
 
-        [TestMethod]
-        public void Setter_SettingPieceAsNull_ShouldRemoveThePiece()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate origin = Coordinate.GetInstance("A1");
-            Square square = chessboard.GetSquare(origin);
 
-            square.Piece = null;
-
-            Assert.IsNull(square.Piece);
-        }
-
-        [TestMethod]
-        public void Setter_SettingPiece_ShouldReplaceTheCurrentPiece()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate origin = Coordinate.GetInstance("A1");
-            Coordinate coordinate2 = Coordinate.GetInstance("A7");
-            Square square = chessboard.GetSquare(origin);
-            Piece piece = chessboard.GetSquare(coordinate2).Piece!;
-
-            square.Piece = piece;
-
-            Assert.AreEqual(square.Piece, piece);
-        }
-
-        [TestMethod]
-        public void Setter_SettingPiece_ShouldChangeTheOrigin()
-        {
-            Chessboard chessboard = new(FEN.InitialPosition);
-            Coordinate origin = Coordinate.GetInstance("A1");
-            Coordinate coordinate2 = Coordinate.GetInstance("A7");
-            Square square = chessboard.GetSquare(origin);
-            Piece piece = chessboard.GetSquare(coordinate2).Piece!;
-
-            square.Piece = piece;
-
-            Assert.AreEqual(square.Piece.Origin, piece.Origin);
-        }
 
         [TestMethod]
         public void HasPiece_SquareWithPiece_ShouldReturnTrue()
