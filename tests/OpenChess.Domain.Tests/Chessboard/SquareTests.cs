@@ -119,7 +119,6 @@ namespace OpenChess.Tests
         [DataRow("G8", 'n')]
         [DataRow("H8", 'r')]
         [DataRow("A7", 'p')]
-
         [TestMethod]
         public void HasTypeOfPiece_HavingTypeOfPiece_ShouldReturnTrue(string origin, char type)
         {
