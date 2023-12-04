@@ -4,9 +4,9 @@ namespace OpenChess.Tests
 {
     internal static class ExpectedMoves
     {
-        internal static MovePositions GetMove(Coordinate origin, Direction direction, int amount)
+        internal static MoveDirections GetMove(Coordinate origin, Direction direction, int amount)
         {
-            MovePositions move = new(direction, Coordinate.CalculateSequence(origin, direction, amount));
+            MoveDirections move = new(direction, Coordinate.CalculateSequence(origin, direction, amount));
 
             return move;
         }

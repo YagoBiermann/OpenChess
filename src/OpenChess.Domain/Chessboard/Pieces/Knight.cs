@@ -10,12 +10,12 @@ namespace OpenChess.Domain
         public override char Name => Color == Color.Black ? 'n' : 'N';
         public override bool IsLongRange => false;
 
-        public override List<MovePositions> CalculateLegalMoves()
+        public override List<MoveDirections> CalculateLegalMoves()
         {
-            List<MovePositions> legalMoves = new() { };
-            List<MovePositions> moveRange = CalculateMoveRange();
+            List<MoveDirections> legalMoves = new() { };
+            List<MoveDirections> moveRange = CalculateMoveRange();
 
-            foreach (MovePositions move in moveRange)
+            foreach (MoveDirections move in moveRange)
             {
                 List<Coordinate> currentPosition = move.Coordinates;
                 bool isOutOfChessboard = !currentPosition.Any();

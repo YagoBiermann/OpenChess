@@ -8,8 +8,8 @@ namespace OpenChess.Domain
         public List<Direction> Directions { get; }
         public bool IsLongRange { get; }
         public int MoveAmount { get; }
-        public List<MovePositions> CalculateMoveRange();
+        public List<MoveDirections> CalculateMoveRange();
         public bool IsHittingTheEnemyKing();
-        public List<MovePositions> CalculateLegalMoves();
+        public List<MoveDirections> CalculateLegalMoves();
     }
 }

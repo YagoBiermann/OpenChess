@@ -21,14 +21,14 @@ namespace OpenChess.Domain
             get { return IsLongRange ? 8 : 1; }
         }
 
-        public virtual List<MovePositions> CalculateMoveRange()
+        public virtual List<MoveDirections> CalculateMoveRange()
         {
-            List<MovePositions> moveRange = new();
+            List<MoveDirections> moveRange = new();
 
             foreach (Direction direction in Directions)
             {
                 List<Coordinate> coordinates = Coordinate.CalculateSequence(Origin, direction, MoveAmount);
-                MovePositions move = new(direction, coordinates);
+                MoveDirections move = new(direction, coordinates);
                 moveRange.Add(move);
             }
 
@@ -37,10 +37,10 @@ namespace OpenChess.Domain
 
         public bool IsHittingTheEnemyKing()
         {
-            List<MovePositions> moveRange = CalculateMoveRange();
+            List<MoveDirections> moveRange = CalculateMoveRange();
             bool isHitting = false;
 
-            foreach (MovePositions move in moveRange)
+            foreach (MoveDirections move in moveRange)
             {
                 if (this is Pawn pawn && move.Direction.Equals(pawn.ForwardDirection))
                 {
@@ -58,12 +58,12 @@ namespace OpenChess.Domain
             return isHitting;
         }
 
-        public virtual List<MovePositions> CalculateLegalMoves()
+        public virtual List<MoveDirections> CalculateLegalMoves()
         {
-            List<MovePositions> legalMoves = new();
-            List<MovePositions> moveRange = CalculateMoveRange();
+            List<MoveDirections> legalMoves = new();
+            List<MoveDirections> moveRange = CalculateMoveRange();
 
-            foreach (MovePositions move in moveRange)
+            foreach (MoveDirections move in moveRange)
             {
                 Direction currentDirection = move.Direction;
                 List<Coordinate> pieces = Chessboard.GetPiecesPosition(move.Coordinates);

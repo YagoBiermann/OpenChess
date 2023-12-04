@@ -41,7 +41,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4R3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
             Rook rook = (Rook)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
-            List<MovePositions> expectedMoves = new()
+            List<MoveDirections> expectedMoves = new()
             {
                 ExpectedMoves.GetMove(rook.Origin, new Up(), rook.MoveAmount),
                 ExpectedMoves.GetMove(rook.Origin, new Down(), rook.MoveAmount),
@@ -49,10 +49,10 @@ namespace OpenChess.Tests
                 ExpectedMoves.GetMove(rook.Origin, new Right(), rook.MoveAmount)
             };
 
-            List<MovePositions> moves = rook.CalculateMoveRange();
+            List<MoveDirections> moves = rook.CalculateMoveRange();
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (MovePositions move in moves)
+            foreach (MoveDirections move in moves)
             {
                 int index = moves.IndexOf(move);
                 CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
@@ -73,7 +73,7 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("C4"),
             };
 
-            List<MovePositions> moves = rook.CalculateLegalMoves();
+            List<MoveDirections> moves = rook.CalculateLegalMoves();
             List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, leftMoves);
@@ -89,7 +89,7 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("G4"),
             };
 
-            List<MovePositions> moves = rook.CalculateLegalMoves();
+            List<MoveDirections> moves = rook.CalculateLegalMoves();
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, rightMoves);
@@ -103,7 +103,7 @@ namespace OpenChess.Tests
             List<Coordinate> expectedUpMove = new() { Coordinate.GetInstance("F5") };
             List<Coordinate> expectedDownMove = new() { Coordinate.GetInstance("F3") };
 
-            List<MovePositions> moves = rook.CalculateLegalMoves();
+            List<MoveDirections> moves = rook.CalculateLegalMoves();
             List<Coordinate> upMoves = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
             List<Coordinate> downMoves = moves.Find(m => m.Direction.Equals(new Down())).Coordinates;
 
@@ -123,7 +123,7 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("H4"),
             };
 
-            List<MovePositions> moves = rook.CalculateLegalMoves();
+            List<MoveDirections> moves = rook.CalculateLegalMoves();
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, rightMoves);
