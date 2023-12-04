@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal abstract class Piece
+    internal abstract class Piece : IReadOnlyPiece
     {
         public Coordinate Origin { get; set; }
         public Color Color { get; }
