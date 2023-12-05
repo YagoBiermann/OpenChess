@@ -189,5 +189,40 @@ namespace OpenChess.Tests
             Move move = new(player1.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5"));
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
+
+        [TestMethod]
+        public void Play_PlayerInSelfCheckAfterMove_ShouldThrowException()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo player1 = new(Color.White);
+            PlayerInfo player2 = new(Color.Black);
+            match.Join(player1);
+            match.Join(player2);
+
+            List<Move> moves = new()
+            {
+                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
+                new(player2.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5")),
+                new(player1.Id, Coordinate.GetInstance("D1"), Coordinate.GetInstance("H5")),
+                new(player2.Id, Coordinate.GetInstance("F7"), Coordinate.GetInstance("F5")),
+            };
+            string lastPosition = match.Chessboard;
+
+            foreach (Move move in moves)
+            {
+                bool isLastMove = moves.Last() == move;
+                if (isLastMove)
+                {
+                    Assert.ThrowsException<MatchException>(() => match.Play(move));
+                }
+                else
+                {
+                    match.Play(move);
+                }
+            }
+            string currentPosition = match.Chessboard;
+
+            Assert.AreEqual(lastPosition, currentPosition);
+        }
     }
 }
