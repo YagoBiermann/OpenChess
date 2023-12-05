@@ -60,6 +60,20 @@ namespace OpenChess.Domain
             return _players.Any();
         }
 
+        private void PreValidateMove(Move move)
+        {
+            if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
+            if (HasFinished()) { throw new MatchException("Match already finished"); }
+            if (GetPlayerById(move.PlayerId) is null) { throw new MatchException("You are not in this match"); }
+
+            Player player = GetPlayerById(move.PlayerId)!;
+            if (!player.Color.Equals(_chessboard.Turn)) { throw new MatchException("Its not your turn!"); };
+            if (!_chessboard.GetReadOnlySquare(move.Origin).HasPiece) { throw new ChessboardException("There is no piece in this position"); };
+
+            Color pieceColor = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.Color;
+            Color playerColor = GetPlayerById(move.PlayerId)!.Color;
+            if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
+        }
         private Player? GetPlayerByColor(Color color)
         {
             return _players.Where(p => p.Color == color).FirstOrDefault();
