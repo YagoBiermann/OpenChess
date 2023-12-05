@@ -98,7 +98,14 @@ namespace OpenChess.Domain
         }
 
         public MatchStatus Status { get { return _status; } }
-        public Guid? CurrentPlayer { get { return _players.Find(p => p.Color == _chessboard.Turn)?.Id; } }
+        public Guid? CurrentPlayer
+        {
+            get
+            {
+                if (!HasStarted() || HasFinished()) return null;
+                return _players.Find(p => p.Color == _chessboard.Turn)?.Id;
+            }
+        }
         public Time Time { get { return (Time)_time.Minutes; } }
         public Guid? Winner { get { return _winner?.Id; } }
         public Stack<string> Moves { get { return new Stack<string>(_pgn); } }
