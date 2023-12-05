@@ -97,6 +97,16 @@ namespace OpenChess.Domain
             return _players.Where(p => p.Id == id).FirstOrDefault();
         }
 
+        public bool HasStarted()
+        {
+            return Status.Equals(MatchStatus.InProgress);
+        }
+
+        public bool HasFinished()
+        {
+            return Status.Equals(MatchStatus.Finished);
+        }
+
         public MatchStatus Status { get { return _status; } }
         public Guid? CurrentPlayer
         {
