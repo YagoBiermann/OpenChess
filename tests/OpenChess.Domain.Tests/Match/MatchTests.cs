@@ -137,5 +137,18 @@ namespace OpenChess.Tests
             Move move = new(player.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             Assert.ThrowsException<MatchException>(() => match.Play(move));
         }
+
+        [TestMethod]
+        public void Play_PlayerNotInMatch_ShouldThrowException()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo player1 = new(Color.White);
+            PlayerInfo player2 = new(Color.Black);
+            match.Join(player1);
+            match.Join(player2);
+
+            Move move = new(Guid.NewGuid(), Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Assert.ThrowsException<MatchException>(() => match.Play(move));
+        }
     }
 }
