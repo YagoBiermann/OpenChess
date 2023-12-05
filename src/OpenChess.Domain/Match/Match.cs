@@ -74,6 +74,13 @@ namespace OpenChess.Domain
             Color playerColor = GetPlayerById(move.PlayerId)!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
+
+        private void ValidateMove(Move move)
+        {
+            List<MoveDirections> legalMoves = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.CalculateLegalMoves();
+            bool cannotMoveToDestination = !legalMoves.Exists(m => m.Coordinates.Contains(move.Destination));
+            if (cannotMoveToDestination) { throw new MatchException("Cannot move to given position"); };
+        }
         private Player? GetPlayerByColor(Color color)
         {
             return _players.Where(p => p.Color == color).FirstOrDefault();
