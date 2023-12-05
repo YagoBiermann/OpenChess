@@ -19,6 +19,17 @@ namespace OpenChess.Domain
             _time = TimeSpan.FromMinutes((int)time);
         }
 
+        public void Play(Move move)
+        {
+            PreValidateMove(move);
+            ValidateMove(move);
+
+            MakeMove(move);
+
+            PostValidateMove();
+            _chessboard.SwitchTurns();
+        }
+
         public void Join(PlayerInfo playerInfo)
         {
             if (IsFull()) throw new MatchException("Match is full!");
