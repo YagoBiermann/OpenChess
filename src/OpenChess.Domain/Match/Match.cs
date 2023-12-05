@@ -81,6 +81,12 @@ namespace OpenChess.Domain
             bool cannotMoveToDestination = !legalMoves.Exists(m => m.Coordinates.Contains(move.Destination));
             if (cannotMoveToDestination) { throw new MatchException("Cannot move to given position"); };
         }
+
+        private void PostValidateMove()
+        {
+            bool isInSelfCheckAfterMove = Check.IsInCheck(_chessboard.Turn, _chessboard);
+            if (isInSelfCheckAfterMove) { _chessboard = new Chessboard(_chessboard.LastPosition); throw new MatchException("Invalid move!"); };
+        }
         private Player? GetPlayerByColor(Color color)
         {
             return _players.Where(p => p.Color == color).FirstOrDefault();
