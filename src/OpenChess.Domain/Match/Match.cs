@@ -24,7 +24,7 @@ namespace OpenChess.Domain
             PreValidateMove(move);
             ValidateMove(move);
 
-            MakeMove(move);
+            _chessboard.ChangePiecePosition(move.Origin, move.Destination);
 
             PostValidateMove();
             _chessboard.SwitchTurns();
@@ -87,6 +87,7 @@ namespace OpenChess.Domain
             bool isInSelfCheckAfterMove = Check.IsInCheck(_chessboard.Turn, _chessboard);
             if (isInSelfCheckAfterMove) { _chessboard = new Chessboard(_chessboard.LastPosition); throw new MatchException("Invalid move!"); };
         }
+
         private Player? GetPlayerByColor(Color color)
         {
             return _players.Where(p => p.Color == color).FirstOrDefault();
