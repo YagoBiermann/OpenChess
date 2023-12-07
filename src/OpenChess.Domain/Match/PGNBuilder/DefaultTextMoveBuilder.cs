@@ -14,5 +14,12 @@ namespace OpenChess.Domain
             Result = $"{AppendCount(_count)}{char.ToUpper(_movedPiece.Name)}{_destination.ToString().ToLower()}";
             return this;
         }
+
+        public override PGNBuilder AppendCaptureSign()
+        {
+            int index = Result.IndexOf(_movedPiece.Name.ToString().ToUpper());
+            Result = Result.Insert(index + 1, "x");
+            return this;
+        }
     }
 }
