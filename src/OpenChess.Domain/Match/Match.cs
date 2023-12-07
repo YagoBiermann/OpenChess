@@ -5,7 +5,7 @@ namespace OpenChess.Domain
         public Guid Id { get; }
         private List<Player> _players = new(2);
         private Chessboard _chessboard { get; set; }
-        private Stack<string> _pgn = new();
+        private Stack<string> _pgnMoveText = new();
         private MatchStatus _status { get; set; }
         private Player? _winner { get; set; }
         private TimeSpan _time { get; }
@@ -24,9 +24,9 @@ namespace OpenChess.Domain
             PreValidateMove(move);
             ValidateMove(move);
 
-            _chessboard.ChangePiecePosition(move.Origin, move.Destination);
-
+            Piece? capturedPiece = _chessboard.ChangePiecePosition(move.Origin, move.Destination);
             PostValidateMove();
+            BuildPGN(move.Origin, move.Destination, capturedPiece is not null);
             _chessboard.SwitchTurns();
         }
 
@@ -88,6 +88,25 @@ namespace OpenChess.Domain
             if (isInSelfCheckAfterMove) { _chessboard = new Chessboard(_chessboard.LastPosition); throw new MatchException("Invalid move!"); };
         }
 
+        private void BuildPGN(Coordinate origin, Coordinate destination, bool pieceWasCaptured)
+        {
+            PGNBuilder builder;
+            int moveCount = _pgnMoveText.Count + 1;
+            IReadOnlyPiece movedPiece = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
+
+            if (movedPiece is Pawn) builder = new PawnTextMoveBuilder(moveCount, origin, destination);
+            else builder = new DefaultTextMoveBuilder(moveCount, movedPiece, destination);
+
+            builder.Build();
+
+            if (pieceWasCaptured)
+            {
+                builder.AppendCaptureSign();
+            }
+
+            _pgnMoveText.Push(builder.Result);
+        }
+
         private Player? GetPlayerByColor(Color color)
         {
             return _players.Where(p => p.Color == color).FirstOrDefault();
@@ -119,7 +138,7 @@ namespace OpenChess.Domain
         }
         public Time Time { get { return (Time)_time.Minutes; } }
         public Guid? Winner { get { return _winner?.Id; } }
-        public Stack<string> Moves { get { return new Stack<string>(_pgn); } }
+        public Stack<string> Moves { get { return new Stack<string>(_pgnMoveText); } }
         public string Chessboard { get { return _chessboard.ToString(); } }
 
         protected static Player CreateNewPlayer(PlayerInfo info)
