@@ -9,5 +9,10 @@ namespace OpenChess.Domain
             _movedPiece = piece;
             _destination = destination;
         }
+        public override PGNBuilder Build()
+        {
+            Result = $"{AppendCount(_count)}{char.ToUpper(_movedPiece.Name)}{_destination.ToString().ToLower()}";
+            return this;
+        }
     }
 }
