@@ -60,6 +60,35 @@ namespace OpenChess.Domain
             return _players.Any();
         }
 
+        public bool HasStarted()
+        {
+            return Status.Equals(MatchStatus.InProgress);
+        }
+
+        public bool HasFinished()
+        {
+            return Status.Equals(MatchStatus.Finished);
+        }
+
+        public MatchStatus Status { get { return _status; } }
+        public Guid? CurrentPlayer
+        {
+            get
+            {
+                if (!HasStarted() || HasFinished()) return null;
+                return _players.Find(p => p.Color == _chessboard.Turn)?.Id;
+            }
+        }
+        public Time Time { get { return (Time)_time.Minutes; } }
+        public Guid? Winner { get { return _winner?.Id; } }
+        public Stack<string> Moves { get { return new Stack<string>(_pgnMoveText); } }
+        public string Chessboard { get { return _chessboard.ToString(); } }
+
+        protected static Player CreateNewPlayer(PlayerInfo info)
+        {
+            return new Player(info);
+        }
+
         private void PreValidateMove(Move move)
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
@@ -115,35 +144,6 @@ namespace OpenChess.Domain
         private Player? GetPlayerById(Guid id)
         {
             return _players.Where(p => p.Id == id).FirstOrDefault();
-        }
-
-        public bool HasStarted()
-        {
-            return Status.Equals(MatchStatus.InProgress);
-        }
-
-        public bool HasFinished()
-        {
-            return Status.Equals(MatchStatus.Finished);
-        }
-
-        public MatchStatus Status { get { return _status; } }
-        public Guid? CurrentPlayer
-        {
-            get
-            {
-                if (!HasStarted() || HasFinished()) return null;
-                return _players.Find(p => p.Color == _chessboard.Turn)?.Id;
-            }
-        }
-        public Time Time { get { return (Time)_time.Minutes; } }
-        public Guid? Winner { get { return _winner?.Id; } }
-        public Stack<string> Moves { get { return new Stack<string>(_pgnMoveText); } }
-        public string Chessboard { get { return _chessboard.ToString(); } }
-
-        protected static Player CreateNewPlayer(PlayerInfo info)
-        {
-            return new Player(info);
         }
     }
 }
