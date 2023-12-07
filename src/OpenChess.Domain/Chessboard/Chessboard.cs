@@ -39,15 +39,18 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
-        public void ChangePiecePosition(Coordinate origin, Coordinate destination)
+        public Piece? ChangePiecePosition(Coordinate origin, Coordinate destination)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
 
             Square originSquare = GetSquare(origin);
             Square destinationSquare = GetSquare(destination);
             Piece piece = originSquare.Piece!;
+            Piece? capturedPiece = destinationSquare.Piece;
             originSquare.Piece = null;
             destinationSquare.Piece = piece;
+
+            return capturedPiece;
         }
 
         public List<Coordinate> GetPiecesPosition(List<Coordinate> range)
