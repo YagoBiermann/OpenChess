@@ -169,5 +169,17 @@ namespace OpenChess.Tests
 
             Assert.AreEqual("1. Qxd8#", builder.Result);
         }
+
+        [TestMethod]
+        public void PGNBuilder_QueenSideCastling_ShouldBeInRightFormat()
+        {
+            Assert.AreEqual("O-O-O", PGNBuilder.BuildQueenSideCastlingString());
+        }
+
+        [TestMethod]
+        public void PGNBuilder_KingSideCastling_ShouldBeInRightFormat()
+        {
+            Assert.AreEqual("O-O", PGNBuilder.BuildKingSideCastlingString());
+        }
     }
 }
