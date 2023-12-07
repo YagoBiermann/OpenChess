@@ -21,5 +21,6 @@ namespace OpenChess.Domain
             Result = Result.Insert(index + 1, $"{_origin.Column.ToString().ToLower()}x");
             return this;
         }
+        public PawnTextMoveBuilder AppendPromotionSign(char promotingPiece) { Result += $"={char.ToUpper(promotingPiece)}"; return this; }
     }
 }
