@@ -9,5 +9,10 @@ namespace OpenChess.Domain
             _origin = origin;
             _destination = destination;
         }
+        public override PGNBuilder Build()
+        {
+            Result = AppendCount(_count) + _destination.ToString().ToLower();
+            return this;
+        }
     }
 }
