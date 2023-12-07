@@ -120,5 +120,16 @@ namespace OpenChess.Tests
 
             Assert.AreEqual("1. d8=Q#", builder.Result);
         }
+
+        [TestMethod]
+        public void DefaultTextMoveBuilder_Build_ShouldCreateDefaultMove()
+        {
+            IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
+            DefaultTextMoveBuilder builder = new(1, piece, _defaultMoveDestination);
+
+            builder.Build();
+
+            Assert.AreEqual("1. Qd8", builder.Result);
+        }
     }
 }
