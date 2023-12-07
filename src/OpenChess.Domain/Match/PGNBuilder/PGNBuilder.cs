@@ -17,6 +17,14 @@ namespace OpenChess.Domain
         public PGNBuilder AppendCheckSign() { Result += "+"; return this; }
         public PGNBuilder AppendCheckMateSign() { Result += "#"; return this; }
         public abstract PGNBuilder AppendCaptureSign();
+        public static string BuildKingSideCastlingString()
+        {
+            return "O-O";
+        }
+        public static string BuildQueenSideCastlingString()
+        {
+            return "O-O-O";
+        }
         public abstract PGNBuilder Build();
     }
 }
