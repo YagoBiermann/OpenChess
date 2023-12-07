@@ -224,5 +224,62 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(lastPosition, currentPosition);
         }
+
+        [TestMethod]
+        public void Play_ShouldAddPGNMove()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo player1 = new(Color.White);
+            PlayerInfo player2 = new(Color.Black);
+            match.Join(player1);
+            match.Join(player2);
+
+            Move move = new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            match.Play(move);
+
+            Assert.IsTrue(match.Moves.Any());
+        }
+
+        [TestMethod]
+        public void Play_PgnMoveList_ShouldBeInRightPgnFormat()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo player1 = new(Color.White);
+            PlayerInfo player2 = new(Color.Black);
+            match.Join(player1);
+            match.Join(player2);
+
+            List<Move> moves = new()
+            {
+                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
+                new(player2.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("D5")),
+                new(player1.Id, Coordinate.GetInstance("E4"), Coordinate.GetInstance("D5")),
+                new(player2.Id, Coordinate.GetInstance("D8"), Coordinate.GetInstance("D5")),
+                new(player1.Id, Coordinate.GetInstance("F1"), Coordinate.GetInstance("C4")),
+                new(player2.Id, Coordinate.GetInstance("D5"), Coordinate.GetInstance("C4")),
+                new(player1.Id, Coordinate.GetInstance("D2"), Coordinate.GetInstance("D3")),
+                new(player2.Id, Coordinate.GetInstance("C4"), Coordinate.GetInstance("D3")),
+                new(player1.Id, Coordinate.GetInstance("C2"), Coordinate.GetInstance("D3")),
+            };
+            foreach (Move move in moves)
+            {
+                match.Play(move);
+            }
+
+            List<string> expectedMoveList = new()
+            {
+            "1. e4",
+            "2. d5",
+            "3. exd5",
+            "4. Qxd5",
+            "5. Bc4",
+            "6. Qxc4",
+            "7. d3",
+            "8. Qxd3",
+            "9. cxd3",
+            };
+
+            CollectionAssert.AreEqual(expectedMoveList, match.Moves);
+        }
     }
 }
