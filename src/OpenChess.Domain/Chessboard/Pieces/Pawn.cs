@@ -15,6 +15,17 @@ namespace OpenChess.Domain
                 return Coordinate.CalculateNextPosition(Origin, Direction.Opposite(ForwardDirection));
             }
         }
+
+        public bool IsVulnerableToEnPassant
+        {
+            get
+            {
+                bool isBlackVulnerable = Color == Color.Black && Origin.Row == '5';
+                bool isWhiteVulnerable = Color == Color.White && Origin.Row == '4';
+
+                return isBlackVulnerable ^ isWhiteVulnerable;
+            }
+        }
         public bool IsFirstMove
         {
             get
