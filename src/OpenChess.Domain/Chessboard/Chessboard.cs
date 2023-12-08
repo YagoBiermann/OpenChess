@@ -39,6 +39,19 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
+        public IReadOnlyPiece? GetVulnerablePawn
+        {
+            get
+            {
+                if (EnPassant is null) return null;
+
+                Direction direction = EnPassant.Row == '3' ? new Up() : new Down();
+                Coordinate pawnPosition = Coordinate.CalculateNextPosition(EnPassant, direction)!;
+
+                return GetSquare(pawnPosition).Piece;
+            }
+        }
+
         public Piece? RemovePiece(Coordinate position)
         {
             Square square = GetSquare(position);
