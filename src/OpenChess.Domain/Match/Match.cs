@@ -22,9 +22,19 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             PreValidateMove(move);
-            ValidateMove(move);
+            IReadOnlyPiece? capturedPiece = null;
+            IReadOnlyPiece? movedPiece = null;
+            if (EnPassant.IsEnPassantMove(move.Origin, move.Destination, _chessboard))
+            {
+                movedPiece = EnPassant.Handle(move.Origin, move.Destination, _chessboard);
+            }
+            else
+            {
+                ValidateMove(move);
+                capturedPiece = _chessboard.ChangePiecePosition(move.Origin, move.Destination);
+            }
 
-            Piece? capturedPiece = _chessboard.ChangePiecePosition(move.Origin, move.Destination);
+            EnPassant.UpdateState(movedPiece, _chessboard);
             PostValidateMove();
             BuildPGN(move.Origin, move.Destination, capturedPiece is not null);
             _chessboard.SwitchTurns();
