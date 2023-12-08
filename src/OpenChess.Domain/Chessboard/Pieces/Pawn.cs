@@ -26,6 +26,24 @@ namespace OpenChess.Domain
                 return isBlackVulnerable ^ isWhiteVulnerable;
             }
         }
+
+        public bool CanCaptureByEnPassant
+        {
+            get
+            {
+                if (Chessboard.EnPassant is null) return false;
+
+                foreach (Direction direction in Directions)
+                {
+                    if (direction is Up || direction is Down) continue;
+                    Coordinate? diagonal = Coordinate.CalculateSequence(Origin, direction, MoveAmount).FirstOrDefault();
+                    if (Chessboard.EnPassant == diagonal) return true;
+                }
+
+                return false;
+            }
+        }
+
         public bool IsFirstMove
         {
             get
