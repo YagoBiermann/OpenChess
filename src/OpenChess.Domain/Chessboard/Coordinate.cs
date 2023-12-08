@@ -86,6 +86,11 @@ namespace OpenChess.Domain
             return coordinates;
         }
 
+        public static Coordinate? CalculateNextPosition(Coordinate origin, Direction direction)
+        {
+            return CalculateSequence(origin, direction, 1).FirstOrDefault();
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
