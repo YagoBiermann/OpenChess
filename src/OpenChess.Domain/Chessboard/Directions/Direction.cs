@@ -43,5 +43,10 @@ namespace OpenChess.Domain
             if (amount < 1) throw new ChessboardException("Amount can not be less than 1!");
             return new Direction(direction.X * amount, direction.Y * amount);
         }
+
+        public static Direction Opposite(Direction direction)
+        {
+            return new Direction(direction.X * -1, direction.Y * -1);
+        }
     }
 }
