@@ -23,7 +23,7 @@ namespace OpenChess.Domain
         {
             PreValidateMove(move);
             IReadOnlyPiece? capturedPiece = null;
-            IReadOnlyPiece? movedPiece = null;
+            IReadOnlyPiece? movedPiece;
             if (EnPassant.IsEnPassantMove(move.Origin, move.Destination, _chessboard))
             {
                 movedPiece = EnPassant.Handle(move.Origin, move.Destination, _chessboard);
@@ -32,6 +32,7 @@ namespace OpenChess.Domain
             {
                 ValidateMove(move);
                 capturedPiece = _chessboard.ChangePiecePosition(move.Origin, move.Destination);
+                movedPiece = _chessboard.GetReadOnlySquare(move.Destination).ReadOnlyPiece;
             }
 
             EnPassant.UpdateState(movedPiece, _chessboard);
