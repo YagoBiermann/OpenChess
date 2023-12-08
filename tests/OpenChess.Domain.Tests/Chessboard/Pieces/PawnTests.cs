@@ -1,3 +1,4 @@
+using System.Data;
 using OpenChess.Domain;
 
 namespace OpenChess.Tests
@@ -355,6 +356,19 @@ namespace OpenChess.Tests
             MoveDirections move = pawn.CalculateLegalMoves().Where(m => m.Direction.Equals(new UpperLeft())).ToList().FirstOrDefault();
 
             Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
+        }
+
+        [DataRow("E4", "E3")]
+        [DataRow("E5", "E6")]
+        [TestMethod]
+        public void GetEnPassantPosition_ShouldReturnPositionBehind(string origin, string expected)
+        {
+            Coordinate position = Coordinate.GetInstance(origin);
+            Coordinate expectedPosition = Coordinate.GetInstance(expected);
+            Chessboard chessboard = new("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
+            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+
+            Assert.AreEqual(expectedPosition, pawn.GetEnPassantPosition);
         }
     }
 }
