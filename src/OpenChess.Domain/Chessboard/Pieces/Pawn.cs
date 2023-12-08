@@ -9,7 +9,11 @@ namespace OpenChess.Domain
 
         public Coordinate? GetEnPassantPosition
         {
-            get { return Coordinate.CalculateNextPosition(Origin, Direction.Opposite(ForwardDirection)); }
+            get
+            {
+                if (!IsVulnerableToEnPassant) return null;
+                return Coordinate.CalculateNextPosition(Origin, Direction.Opposite(ForwardDirection));
+            }
         }
         public bool IsFirstMove
         {
