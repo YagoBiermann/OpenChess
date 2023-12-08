@@ -370,5 +370,17 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(expectedPosition, pawn.GetEnPassantPosition);
         }
+
+        [DataRow("E2")]
+        [DataRow("E7")]
+        [TestMethod]
+        public void GetEnPassantPosition_PawnNotVulnerable_ShouldReturnNull(string origin)
+        {
+            Coordinate position = Coordinate.GetInstance(origin);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+
+            Assert.IsNull(pawn.GetEnPassantPosition);
+        }
     }
 }
