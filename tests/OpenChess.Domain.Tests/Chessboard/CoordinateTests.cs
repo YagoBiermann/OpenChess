@@ -392,5 +392,21 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(expectedNextPosition, nextPosition);
         }
+
+        [DataRow("E8", "Up")]
+        [DataRow("E1", "Down")]
+        [DataRow("A4", "Left")]
+        [DataRow("H4", "Right")]
+        [DataRow("A8", "UpperLeft")]
+        [DataRow("A1", "LowerLeft")]
+        [DataRow("H8", "UpperRight")]
+        [DataRow("H1", "LowerRight")]
+        [TestMethod]
+        public void CalculateNextPosition_NextPositionOutOfChessboard_ShouldReturnNull(string origin, string direction)
+        {
+            Coordinate? nextPosition = Coordinate.CalculateNextPosition(Coordinate.GetInstance(origin), Utils.GetDirection(direction));
+
+            Assert.IsNull(nextPosition);
+        }
     }
 };
