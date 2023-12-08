@@ -406,5 +406,20 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(pawn.IsVulnerableToEnPassant);
         }
+
+        [DataRow("D4", "E3", "rnbqkbnr/pppp1ppp/8/8/3pP3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("D5", "E6", "rnbqkbnr/pppp1ppp/8/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq - 0 1")]
+        [TestMethod]
+        public void CanCaptureByEnPassant_WithinTheRange_ShouldReturnTrue(string origin, string enPassant, string fen)
+        {
+            Coordinate position = Coordinate.GetInstance(origin);
+            Chessboard chessboard = new(fen)
+            {
+                EnPassant = Coordinate.GetInstance(enPassant)
+            };
+            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+
+            Assert.IsTrue(pawn.CanCaptureByEnPassant);
+        }
     }
 }
