@@ -182,5 +182,59 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => Direction.Multiply(direction, -2));
             Assert.ThrowsException<ChessboardException>(() => Direction.Multiply(direction, -10));
         }
+
+        [TestMethod]
+        public void Opposite_DirectionUp_ShouldReturnDown()
+        {
+            Assert.AreEqual(new Down(), Direction.Opposite(new Up()));
+        }
+
+        [TestMethod]
+        public void Opposite_DirectionDown_ShouldReturnReturnsUp()
+        {
+            Assert.AreEqual(new Up(), Direction.Opposite(new Down()));
+        }
+
+        [TestMethod]
+        public void Opposite_DirectionLeft_ShouldReturnReturnsRight()
+        {
+            Assert.AreEqual(new Right(), Direction.Opposite(new Left()));
+        }
+
+        [TestMethod]
+        public void Opposite_DirectionRight_ShouldReturnReturnsLeft()
+        {
+            Assert.AreEqual(new Left(), Direction.Opposite(new Right()));
+        }
+
+        [TestMethod]
+        public void Opposite_DirectionUpperRight_ShouldReturnReturnsLowerLeft()
+        {
+            Assert.AreEqual(new LowerLeft(), Direction.Opposite(new UpperRight()));
+        }
+
+        [TestMethod]
+        public void Opposite_DirectionLowerLeft_ShouldReturnReturnsUpperRight()
+        {
+            Assert.AreEqual(new UpperRight(), Direction.Opposite(new LowerLeft()));
+        }
+
+        [TestMethod]
+        public void Opposite_DirectionUpperLeft_ShouldReturnReturnsLowerRight()
+        {
+            Assert.AreEqual(new LowerRight(), Direction.Opposite(new UpperLeft()));
+        }
+
+        [TestMethod]
+        public void Opposite_DirectionLowerRight_ShouldReturnReturnsUpperLeft()
+        {
+            Assert.AreEqual(new UpperLeft(), Direction.Opposite(new LowerRight()));
+        }
+
+        [TestMethod]
+        public void Opposite_CustomDirection_ReturnsOppositeValue()
+        {
+            Assert.AreEqual(new Direction(-4, -6), Direction.Opposite(new Direction(4, 6)));
+        }
     }
 }
