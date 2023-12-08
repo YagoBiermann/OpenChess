@@ -233,6 +233,39 @@ namespace OpenChess.Tests
             Piece? piece = chessboard.RemovePiece(position);
             Assert.IsNull(piece);
         }
+
+        [TestMethod]
+        public void GetVulnerablePawn_EnPassantNotNull_ShouldReturnTheWhitePawn()
+        {
+            Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
+            Coordinate position = Coordinate.GetInstance("E3");
+            chessboard.EnPassant = position;
+
+            IReadOnlyPiece? piece = chessboard.GetVulnerablePawn;
+            Assert.IsNotNull(piece);
+            Assert.IsInstanceOfType(piece, typeof(Pawn));
+        }
+
+        [TestMethod]
+        public void GetVulnerablePawn_EnPassantNotNull_ShouldReturnTheBlackPawn()
+        {
+            Chessboard chessboard = new("rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            Coordinate position = Coordinate.GetInstance("E6");
+            chessboard.EnPassant = position;
+
+            IReadOnlyPiece? piece = chessboard.GetVulnerablePawn;
+            Assert.IsNotNull(piece);
+            Assert.IsInstanceOfType(piece, typeof(Pawn));
+        }
+
+        [TestMethod]
+        public void GetVulnerablePawn_EnPassantNull_ShouldReturnNull()
+        {
+            Chessboard chessboard = new(FEN.InitialPosition);
+
+            IReadOnlyPiece? piece = chessboard.GetVulnerablePawn;
+            Assert.IsNull(piece);
+        }
     }
 
 }
