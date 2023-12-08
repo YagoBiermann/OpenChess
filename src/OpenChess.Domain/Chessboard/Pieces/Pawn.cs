@@ -7,6 +7,10 @@ namespace OpenChess.Domain
         {
         }
 
+        public Coordinate? GetEnPassantPosition
+        {
+            get { return Coordinate.CalculateNextPosition(Origin, Direction.Opposite(ForwardDirection)); }
+        }
         public bool IsFirstMove
         {
             get
