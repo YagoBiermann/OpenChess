@@ -382,5 +382,29 @@ namespace OpenChess.Tests
 
             Assert.IsNull(pawn.GetEnPassantPosition);
         }
+
+        [DataRow("E4")]
+        [DataRow("E5")]
+        [TestMethod]
+        public void IsVulnerableToEnPassant_PawnVulnerable_ShouldReturnTrue(string origin)
+        {
+            Coordinate position = Coordinate.GetInstance(origin);
+            Chessboard chessboard = new("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
+            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+
+            Assert.IsTrue(pawn.IsVulnerableToEnPassant);
+        }
+
+        [DataRow("E2")]
+        [DataRow("E7")]
+        [TestMethod]
+        public void IsVulnerableToEnPassant_PawnNotVulnerable_ShouldReturnFalse(string origin)
+        {
+            Coordinate position = Coordinate.GetInstance(origin);
+            Chessboard chessboard = new(FEN.InitialPosition);
+            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+
+            Assert.IsFalse(pawn.IsVulnerableToEnPassant);
+        }
     }
 }
