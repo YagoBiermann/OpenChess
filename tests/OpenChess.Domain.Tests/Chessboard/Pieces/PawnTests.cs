@@ -421,5 +421,20 @@ namespace OpenChess.Tests
 
             Assert.IsTrue(pawn.CanCaptureByEnPassant);
         }
+
+        [DataRow("D7", "E3", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("D2", "E6", "rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
+        [TestMethod]
+        public void CanCaptureByEnPassant_OutOfTheRange_ShouldReturnFalse(string origin, string enPassant, string fen)
+        {
+            Coordinate position = Coordinate.GetInstance(origin);
+            Chessboard chessboard = new(fen)
+            {
+                EnPassant = Coordinate.GetInstance(enPassant)
+            };
+            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+
+            Assert.IsFalse(pawn.CanCaptureByEnPassant);
+        }
     }
 }
