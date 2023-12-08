@@ -39,6 +39,16 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
+        public Piece? RemovePiece(Coordinate position)
+        {
+            Square square = GetSquare(position);
+            if (!square.HasPiece) return null;
+            Piece piece = square.Piece!;
+            square.Piece = null;
+
+            return piece;
+        }
+
         public Piece? ChangePiecePosition(Coordinate origin, Coordinate destination)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
