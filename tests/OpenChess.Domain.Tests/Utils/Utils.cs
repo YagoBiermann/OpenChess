@@ -19,6 +19,19 @@ namespace OpenChess.Tests
             return pieceType;
         }
 
+        public static Direction GetDirection(string direction) => direction switch
+        {
+            "Up" => new Up(),
+            "Down" => new Down(),
+            "Left" => new Left(),
+            "Right" => new Right(),
+            "UpperRight" => new UpperRight(),
+            "UpperLeft" => new UpperLeft(),
+            "LowerRight" => new LowerRight(),
+            "LowerLeft" => new LowerLeft(),
+            _ => throw new Exception($"{direction} is not a valid direction!")
+        };
+
         public static Color ColorFromChar(char color)
         {
             return color == 'b' ? Color.Black : Color.White;
