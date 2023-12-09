@@ -42,7 +42,7 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
-        public Piece? RemovePiece(Coordinate position)
+        private Piece? RemovePiece(Coordinate position)
         {
             Square square = GetSquare(position);
             if (!square.HasPiece) return null;
