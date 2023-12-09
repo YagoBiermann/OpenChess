@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal static class EnPassant
+    internal static class EnPassantHandler
     {
         public static bool IsEnPassantMove(Coordinate origin, Coordinate destination, IReadOnlyChessboard chessboard)
         {
