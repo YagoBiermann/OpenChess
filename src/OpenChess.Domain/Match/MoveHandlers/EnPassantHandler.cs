@@ -26,14 +26,5 @@ namespace OpenChess.Domain
 
             return piece;
         }
-
-        public static void UpdateState(IReadOnlyPiece? piece, Chessboard chessboard)
-        {
-            chessboard.EnPassant.Position = null;
-            if (piece is not Pawn pawn) return;
-            if (!pawn.IsVulnerableToEnPassant) return;
-
-            chessboard.EnPassant.Position = pawn.GetEnPassantPosition;
-        }
     }
 }

@@ -24,6 +24,14 @@ namespace OpenChess.Domain
             }
         }
 
-        
+        public void Update(Coordinate lastMovedPiece)
+        {
+            Position = null;
+            IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(lastMovedPiece).ReadOnlyPiece;
+            if (piece is not Pawn pawn) return;
+            if (!pawn.IsVulnerableToEnPassant) return;
+
+            Position = pawn.GetEnPassantPosition;
+        }
     }
 }
