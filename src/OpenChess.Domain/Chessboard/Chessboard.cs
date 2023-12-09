@@ -127,6 +127,18 @@ namespace OpenChess.Domain
             return capturedPiece;
         }
 
+        private IReadOnlyPiece? HandlePromotion(Coordinate origin, Coordinate destination, string promotingPiece)
+        {
+            if (!Promotion.IsValidString(promotingPiece)) throw new ChessboardException("Invalid promoting piece");
+            IReadOnlyPiece? piece = GetReadOnlySquare(origin).ReadOnlyPiece;
+            if (piece is not Pawn) throw new ChessboardException("Cannot handle promotion because piece is not a pawn.");
+
+            IReadOnlyPiece? capturedPiece = HandleDefault(origin, destination);
+            ReplacePiece(destination, char.Parse(promotingPiece));
+
+            return capturedPiece;
+        }
+
         private bool IsLegalMove(Coordinate origin, Coordinate destination)
         {
             List<MoveDirections> legalMoves = GetReadOnlySquare(origin).ReadOnlyPiece!.CalculateLegalMoves();
