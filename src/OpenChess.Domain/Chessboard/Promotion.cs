@@ -21,5 +21,11 @@ namespace OpenChess.Domain
 
             return isWhitePromoting ^ isBlackPromoting;
         }
+
+        public static bool IsValidString(string value)
+        {
+            Regex rx = new(@"^([qbrn]{1})$", RegexOptions.IgnoreCase);
+            return rx.IsMatch(value);
+        }
     }
 }
