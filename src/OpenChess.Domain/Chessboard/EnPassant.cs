@@ -33,5 +33,14 @@ namespace OpenChess.Domain
 
             Position = pawn.GetEnPassantPosition;
         }
+
+        public bool IsEnPassantMove(Coordinate origin, Coordinate destination)
+        {
+            IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
+
+            if (piece is not Pawn) return false;
+            if (destination == Position) return true;
+            return false;
+        }
     }
 }
