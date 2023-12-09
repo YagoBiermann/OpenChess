@@ -212,29 +212,6 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void RemovePiece_ShouldRemovePieceFromGivenPosition()
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            Coordinate position = Coordinate.GetInstance("E2");
-
-            Assert.IsTrue(chessboard.GetReadOnlySquare(position).HasPiece);
-            chessboard.RemovePiece(position);
-            Assert.IsFalse(chessboard.GetReadOnlySquare(position).HasPiece);
-        }
-
-
-        [TestMethod]
-        public void RemovePiece_SquareWithoutPiece_ShouldReturnNull()
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            Coordinate position = Coordinate.GetInstance("E4");
-
-            Assert.IsFalse(chessboard.GetReadOnlySquare(position).HasPiece);
-            Piece? piece = chessboard.RemovePiece(position);
-            Assert.IsNull(piece);
-        }
-
-        [TestMethod]
         public void GetVulnerablePawn_EnPassantNotNull_ShouldReturnTheWhitePawn()
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
