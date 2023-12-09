@@ -24,9 +24,9 @@ namespace OpenChess.Domain
             PreValidateMove(move);
             IReadOnlyPiece? capturedPiece = null;
             IReadOnlyPiece? movedPiece;
-            if (EnPassant.IsEnPassantMove(move.Origin, move.Destination, _chessboard))
+            if (EnPassantHandler.IsEnPassantMove(move.Origin, move.Destination, _chessboard))
             {
-                movedPiece = EnPassant.Handle(move.Origin, move.Destination, _chessboard);
+                movedPiece = EnPassantHandler.Handle(move.Origin, move.Destination, _chessboard);
             }
             else
             {
@@ -35,7 +35,7 @@ namespace OpenChess.Domain
                 movedPiece = _chessboard.GetReadOnlySquare(move.Destination).ReadOnlyPiece;
             }
 
-            EnPassant.UpdateState(movedPiece, _chessboard);
+            EnPassantHandler.UpdateState(movedPiece, _chessboard);
             PostValidateMove();
             BuildPGN(move.Origin, move.Destination, capturedPiece is not null);
             _chessboard.SwitchTurns();
