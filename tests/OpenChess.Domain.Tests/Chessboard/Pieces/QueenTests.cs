@@ -8,7 +8,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeTrue()
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
             Queen queen2 = (Queen)chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
 
@@ -19,7 +19,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void DirectionsProperty_ShouldReturnAllDirections()
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
             Queen queen2 = (Queen)chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
 

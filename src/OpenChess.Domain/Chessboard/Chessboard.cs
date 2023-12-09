@@ -12,7 +12,7 @@ namespace OpenChess.Domain
 
         public Chessboard(string position)
         {
-            FEN fenPosition = new(position);
+            FenInfo fenPosition = new(position);
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
             Turn = fenPosition.ConvertTurn(fenPosition.Turn);

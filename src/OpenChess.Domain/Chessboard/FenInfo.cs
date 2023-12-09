@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 [assembly: InternalsVisibleTo("OpenChess.Test")]
 namespace OpenChess.Domain
 {
-    internal record FEN
+    internal record FenInfo
     {
         public string Board;
         public string Turn;
@@ -14,7 +14,7 @@ namespace OpenChess.Domain
         public string FullMove;
         public static string InitialPosition { get => "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; }
 
-        public FEN(string position)
+        public FenInfo(string position)
         {
             if (!IsValid(position)) throw new ChessboardException("Invalid FEN string!");
             List<string> fields = position.Split(" ").ToList();

@@ -5,7 +5,7 @@ namespace OpenChess.Tests
     [TestClass]
     public class PGNBuilderTests
     {
-        private Chessboard _chessboard = new(FEN.InitialPosition);
+        private Chessboard _chessboard = new(FenInfo.InitialPosition);
         private Coordinate _defaultMoveDestination = Coordinate.GetInstance("D8");
 
         [TestMethod]

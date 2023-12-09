@@ -9,7 +9,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertFenStringCorrectly()
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
 
             Assert.AreEqual(Color.White, chessboard.Turn);
             Assert.IsNull(chessboard.EnPassant.Position);
@@ -119,7 +119,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_GivenFenString_ShouldAddWhitePiecesCorrectly(string coordinate, char type, char c)
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
 
             Coordinate origin = Coordinate.GetInstance(coordinate);
             IReadOnlyPiece? piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
@@ -134,7 +134,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_InitialPosition_EmptySquares_ShouldReturnPieceAsNull()
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
 
             for (int row = 2; row <= 5; row++)
             {
@@ -197,14 +197,14 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             string fromChessboard = chessboard.ToString();
 
-            Assert.IsTrue(FEN.IsValid(fromChessboard));
+            Assert.IsTrue(FenInfo.IsValid(fromChessboard));
             Assert.AreEqual(chessboard.ToString(), fen);
         }
 
         [TestMethod]
         public void SwitchTurns_ShouldSetOppositeColor()
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
 
             Assert.AreEqual(Color.White, chessboard.Turn);
             chessboard.SwitchTurns();
@@ -214,7 +214,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void RemovePiece_ShouldRemovePieceFromGivenPosition()
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
             Coordinate position = Coordinate.GetInstance("E2");
 
             Assert.IsTrue(chessboard.GetReadOnlySquare(position).HasPiece);
@@ -226,7 +226,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void RemovePiece_SquareWithoutPiece_ShouldReturnNull()
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
             Coordinate position = Coordinate.GetInstance("E4");
 
             Assert.IsFalse(chessboard.GetReadOnlySquare(position).HasPiece);
@@ -261,7 +261,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void GetVulnerablePawn_EnPassantNull_ShouldReturnNull()
         {
-            Chessboard chessboard = new(FEN.InitialPosition);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
 
             IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
             Assert.IsNull(piece);

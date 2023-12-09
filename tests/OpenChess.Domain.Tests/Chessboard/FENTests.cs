@@ -13,13 +13,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValid_GivenValidFEN_ShouldReturnTrue(string position)
         {
-            Assert.IsTrue(FEN.IsValid(position));
+            Assert.IsTrue(FenInfo.IsValid(position));
         }
 
         [TestMethod]
         public void InitialPosition_ShouldBeCorrect()
         {
-            Assert.AreEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", FEN.InitialPosition);
+            Assert.AreEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", FenInfo.InitialPosition);
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 InvalidField")]
@@ -28,7 +28,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValid_MoreThanSixFields_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("w KQkq - 0 1")]
@@ -37,7 +37,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValid_LessThanSixFields_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP w KQkq - 0 1")]
@@ -47,7 +47,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValid_LessThanEightColumns_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace OpenChess.Tests
         {
             string position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/123456 w KQkq - 0 1";
 
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR// w KQkq - 0 1")]
@@ -65,7 +65,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValid_DuplicatedSlashes_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("rnbqkbnr/ppppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
@@ -76,7 +76,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValid_InvalidRow_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1")]
@@ -86,7 +86,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValid_InvalidActiveColor_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq 22 0 1")]
@@ -97,7 +97,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValid_InvalidEnPassant_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQ-q - 0 1")]
@@ -108,7 +108,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValidString_InvalidCastling_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQ-q - 0 1")]
@@ -118,7 +118,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValidString_InvalidHalfMove_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 -1")]
@@ -129,7 +129,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsValidString_InvalidFullMove_ShouldReturnFalse(string position)
         {
-            Assert.IsFalse(FEN.IsValid(position));
+            Assert.IsFalse(FenInfo.IsValid(position));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace OpenChess.Domain
         public Match(Time time)
         {
             Id = Guid.NewGuid();
-            _chessboard = new(FEN.InitialPosition);
+            _chessboard = new(FenInfo.InitialPosition);
             _status = MatchStatus.NotStarted;
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
