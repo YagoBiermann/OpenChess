@@ -2,7 +2,7 @@ namespace OpenChess.Domain
 {
     internal record EnPassant
     {
-        public Coordinate? Position;
+        public Coordinate? Position { get; private set; }
         private Chessboard _chessboard;
 
         public EnPassant(Coordinate? coordinate, Chessboard chessboard)
