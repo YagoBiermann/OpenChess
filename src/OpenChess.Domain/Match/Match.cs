@@ -35,7 +35,7 @@ namespace OpenChess.Domain
                 movedPiece = _chessboard.GetReadOnlySquare(move.Destination).ReadOnlyPiece;
             }
 
-            EnPassantHandler.UpdateState(movedPiece, _chessboard);
+            _chessboard.EnPassant.Update(movedPiece!.Origin);
             PostValidateMove();
             BuildPGN(move.Origin, move.Destination, capturedPiece is not null);
             _chessboard.SwitchTurns();
