@@ -53,6 +53,7 @@ namespace OpenChess.Domain
         public IReadOnlyPiece? MovePiece(Coordinate origin, Coordinate destination)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
+            if (!IsLegalMove(origin, destination)) throw new ChessboardException("Invalid move!");
             IReadOnlyPiece? capturedPiece;
             if (EnPassant.IsEnPassantMove(origin, destination))
             {
@@ -122,6 +123,12 @@ namespace OpenChess.Domain
             RemovePiece(vulnerablePawnPosition);
 
             return piece;
+        }
+
+        private bool IsLegalMove(Coordinate origin, Coordinate destination)
+        {
+            List<MoveDirections> legalMoves = GetReadOnlySquare(origin).ReadOnlyPiece!.CalculateLegalMoves();
+            return legalMoves.Exists(m => m.Coordinates.Contains(destination));
         }
 
         private string BuildEnPassantString()

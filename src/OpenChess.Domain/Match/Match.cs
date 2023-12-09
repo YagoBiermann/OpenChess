@@ -22,7 +22,6 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             PreValidateMove(move);
-            ValidateMove(move);
 
             IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination);
 
@@ -103,13 +102,6 @@ namespace OpenChess.Domain
             Color pieceColor = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.Color;
             Color playerColor = GetPlayerById(move.PlayerId)!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
-        }
-
-        private void ValidateMove(Move move)
-        {
-            List<MoveDirections> legalMoves = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.CalculateLegalMoves();
-            bool cannotMoveToDestination = !legalMoves.Exists(m => m.Coordinates.Contains(move.Destination));
-            if (cannotMoveToDestination) { throw new MatchException("Cannot move to given position"); };
         }
 
         private void PostValidateMove()
