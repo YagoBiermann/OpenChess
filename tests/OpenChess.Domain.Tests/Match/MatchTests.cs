@@ -213,7 +213,7 @@ namespace OpenChess.Tests
                 bool isLastMove = moves.Last() == move;
                 if (isLastMove)
                 {
-                    Assert.ThrowsException<MatchException>(() => match.Play(move));
+                    Assert.ThrowsException<ChessboardException>(() => match.Play(move));
                 }
                 else
                 {
