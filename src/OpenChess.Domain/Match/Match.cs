@@ -21,7 +21,7 @@ namespace OpenChess.Domain
 
         public void Play(Move move)
         {
-            PreValidateMove(move);
+            ValidateMove(move);
 
             IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination);
 
@@ -87,7 +87,7 @@ namespace OpenChess.Domain
             return new Player(info);
         }
 
-        private void PreValidateMove(Move move)
+        private void ValidateMove(Move move)
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
             if (HasFinished()) { throw new MatchException("Match already finished"); }
