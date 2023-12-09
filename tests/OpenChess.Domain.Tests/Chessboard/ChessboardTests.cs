@@ -12,7 +12,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(FEN.InitialPosition);
 
             Assert.AreEqual(Color.White, chessboard.Turn);
-            Assert.IsNull(chessboard.EnPassant);
+            Assert.IsNull(chessboard.EnPassant.Position);
             Assert.IsTrue(chessboard.CastlingAvailability.WhiteKingSide);
             Assert.IsTrue(chessboard.CastlingAvailability.WhiteQueenSide);
             Assert.IsTrue(chessboard.CastlingAvailability.BlackKingSide);
@@ -57,7 +57,7 @@ namespace OpenChess.Tests
             Assert.IsFalse(chessboard.CastlingAvailability.BlackKingSide);
             Assert.IsFalse(chessboard.CastlingAvailability.BlackQueenSide);
             Assert.AreEqual(Color.Black, chessboard.Turn);
-            Assert.IsNull(chessboard.EnPassant);
+            Assert.IsNull(chessboard.EnPassant.Position);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
         }
@@ -75,13 +75,13 @@ namespace OpenChess.Tests
         public void NewInstance_ShouldConvertEnPassantCorrectly()
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk E3 0 1");
-            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant);
+            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant.Position);
         }
         [TestMethod]
         public void NewInstance_NoEnPassant_ShouldBeNull()
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
-            Assert.IsNull(chessboard.EnPassant);
+            Assert.IsNull(chessboard.EnPassant.Position);
         }
 
         [DataRow("A1", 'R', 'w')]
@@ -239,7 +239,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
             Coordinate position = Coordinate.GetInstance("E3");
-            chessboard.EnPassant = position;
+            chessboard.EnPassant.Position = position;
 
             IReadOnlyPiece? piece = chessboard.GetVulnerablePawn;
             Assert.IsNotNull(piece);
@@ -251,7 +251,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             Coordinate position = Coordinate.GetInstance("E6");
-            chessboard.EnPassant = position;
+            chessboard.EnPassant.Position = position;
 
             IReadOnlyPiece? piece = chessboard.GetVulnerablePawn;
             Assert.IsNotNull(piece);

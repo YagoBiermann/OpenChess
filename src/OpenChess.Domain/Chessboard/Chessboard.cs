@@ -17,7 +17,8 @@ namespace OpenChess.Domain
             SetPiecesOnBoard(fenPosition.Board);
             Turn = ConvertTurn(fenPosition.Turn);
             CastlingAvailability = ConvertCastling(fenPosition.CastlingAvailability);
-            EnPassant = ConvertEnPassant(fenPosition.EnPassantAvailability);
+            Coordinate? enPassantPosition = ConvertEnPassant(fenPosition.EnPassantAvailability);
+            EnPassant = new(enPassantPosition, this);
             HalfMove = ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
@@ -43,10 +44,10 @@ namespace OpenChess.Domain
         {
             get
             {
-                if (EnPassant is null) return null;
+                if (EnPassant.Position is null) return null;
 
-                Direction direction = EnPassant.Row == '3' ? new Up() : new Down();
-                Coordinate pawnPosition = Coordinate.CalculateNextPosition(EnPassant, direction)!;
+                Direction direction = EnPassant.Position!.Row == '3' ? new Up() : new Down();
+                Coordinate pawnPosition = Coordinate.CalculateNextPosition(EnPassant.Position, direction)!;
 
                 return GetSquare(pawnPosition).Piece;
             }
@@ -109,7 +110,7 @@ namespace OpenChess.Domain
 
         private string BuildEnPassantString()
         {
-            return EnPassant is null ? "-" : EnPassant.ToString();
+            return EnPassant.Position is null ? "-" : EnPassant.ToString();
         }
         private string BuildCastlingString()
         {

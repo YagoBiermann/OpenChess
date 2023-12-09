@@ -7,7 +7,7 @@ namespace OpenChess.Domain
             IReadOnlyPiece? piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
 
             if (piece is not Pawn) return false;
-            if (destination == chessboard.EnPassant) return true;
+            if (destination == chessboard.EnPassant.Position) return true;
             return false;
         }
 
@@ -29,11 +29,11 @@ namespace OpenChess.Domain
 
         public static void UpdateState(IReadOnlyPiece? piece, Chessboard chessboard)
         {
-            chessboard.EnPassant = null;
+            chessboard.EnPassant.Position = null;
             if (piece is not Pawn pawn) return;
             if (!pawn.IsVulnerableToEnPassant) return;
 
-            chessboard.EnPassant = pawn.GetEnPassantPosition;
+            chessboard.EnPassant.Position = pawn.GetEnPassantPosition;
         }
     }
 }

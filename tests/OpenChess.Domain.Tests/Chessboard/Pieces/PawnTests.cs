@@ -344,7 +344,7 @@ namespace OpenChess.Tests
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("C4").ReadOnlyPiece!;
             MoveDirections move = pawn.CalculateLegalMoves().Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
 
-            Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
+            Assert.AreEqual(chessboard.EnPassant.Position, move.Coordinates.FirstOrDefault());
         }
 
         [TestMethod]
@@ -355,7 +355,7 @@ namespace OpenChess.Tests
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
             MoveDirections move = pawn.CalculateLegalMoves().Where(m => m.Direction.Equals(new UpperLeft())).ToList().FirstOrDefault();
 
-            Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
+            Assert.AreEqual(chessboard.EnPassant.Position, move.Coordinates.FirstOrDefault());
         }
 
         [DataRow("E4", "E3")]
@@ -413,10 +413,8 @@ namespace OpenChess.Tests
         public void CanCaptureByEnPassant_WithinTheRange_ShouldReturnTrue(string origin, string enPassant, string fen)
         {
             Coordinate position = Coordinate.GetInstance(origin);
-            Chessboard chessboard = new(fen)
-            {
-                EnPassant = Coordinate.GetInstance(enPassant)
-            };
+            Chessboard chessboard = new(fen);
+            chessboard.EnPassant.Position = Coordinate.GetInstance(enPassant);
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
 
             Assert.IsTrue(pawn.CanCaptureByEnPassant);
@@ -428,10 +426,8 @@ namespace OpenChess.Tests
         public void CanCaptureByEnPassant_OutOfTheRange_ShouldReturnFalse(string origin, string enPassant, string fen)
         {
             Coordinate position = Coordinate.GetInstance(origin);
-            Chessboard chessboard = new(fen)
-            {
-                EnPassant = Coordinate.GetInstance(enPassant)
-            };
+            Chessboard chessboard = new(fen);
+            chessboard.EnPassant.Position = Coordinate.GetInstance(enPassant);
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
 
             Assert.IsFalse(pawn.CanCaptureByEnPassant);

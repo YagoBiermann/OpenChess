@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         public Color Turn { get; }
         public CastlingAvailability CastlingAvailability { get; }
-        public Coordinate? EnPassant { get; }
+        public EnPassant EnPassant { get; }
         public int HalfMove { get; }
         public int FullMove { get; }
         public IReadOnlySquare GetReadOnlySquare(Coordinate coordinate);

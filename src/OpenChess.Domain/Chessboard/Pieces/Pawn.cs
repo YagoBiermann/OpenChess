@@ -37,7 +37,7 @@ namespace OpenChess.Domain
                 {
                     if (direction is Up || direction is Down) continue;
                     Coordinate? diagonal = Coordinate.CalculateSequence(Origin, direction, MoveAmount).FirstOrDefault();
-                    if (Chessboard.EnPassant == diagonal) return true;
+                    if (Chessboard.EnPassant.Position == diagonal) return true;
                 }
 
                 return false;
@@ -119,7 +119,7 @@ namespace OpenChess.Domain
                 if (diagonalIsOutOfChessboard) { legalMoves.Add(emptyPosition); continue; };
 
                 IReadOnlySquare square = Chessboard.GetReadOnlySquare(diagonal!);
-                bool isEnPassant = diagonal!.Equals(Chessboard.EnPassant);
+                bool isEnPassant = diagonal!.Equals(Chessboard.EnPassant.Position);
                 if (isEnPassant) { legalMoves.Add(sameCurrentPosition); continue; };
                 if (!square.HasPiece) { legalMoves.Add(emptyPosition); continue; }
                 bool hasAllyPiece = !square.HasEnemyPiece(Color);
