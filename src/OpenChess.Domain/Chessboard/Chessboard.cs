@@ -63,6 +63,12 @@ namespace OpenChess.Domain
                 UpdateState(destination);
                 return capturedPiece;
             }
+            else if (_promotion.IsPromoting(origin, destination))
+            {
+                capturedPiece = HandlePromotion(origin, destination, "Q");
+                UpdateState(destination);
+                return capturedPiece;
+            }
             else
             {
                 capturedPiece = HandleDefault(origin, destination);
