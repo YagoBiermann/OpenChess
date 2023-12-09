@@ -25,9 +25,7 @@ namespace OpenChess.Domain
             ValidateMove(move);
 
             IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination);
-            IReadOnlyPiece? movedPiece = _chessboard.GetReadOnlySquare(move.Destination).ReadOnlyPiece;
 
-            _chessboard.EnPassant.Update(movedPiece!.Origin);
             PostValidateMove();
             BuildPGN(move.Origin, move.Destination, capturedPiece is not null);
             _chessboard.SwitchTurns();
