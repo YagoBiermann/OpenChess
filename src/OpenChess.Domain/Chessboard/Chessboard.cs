@@ -95,6 +95,19 @@ namespace OpenChess.Domain
             return $"{chessboard} {turn} {castling} {enPassant} {HalfMove} {FullMove}";
         }
 
+        private IReadOnlyPiece? HandleEnPassant(Coordinate origin, Coordinate destination)
+        {
+            IReadOnlyPiece? piece = GetReadOnlySquare(origin).ReadOnlyPiece;
+            if (piece is not Pawn pawn) throw new ChessboardException("Cannot handle en passant because piece is not a pawn.");
+            if (!pawn.CanCaptureByEnPassant) throw new ChessboardException("This pawn cannot capture by en passant!");
+
+            HandleDefault(origin, destination);
+            Coordinate vulnerablePawnPosition = EnPassant.GetVulnerablePawn!.Origin;
+            RemovePiece(vulnerablePawnPosition);
+
+            return piece;
+        }
+
         private string BuildEnPassantString()
         {
             return EnPassant.Position is null ? "-" : EnPassant.ToString();
