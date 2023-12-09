@@ -120,9 +120,9 @@ namespace OpenChess.Domain
 
             HandleDefault(origin, destination);
             Coordinate vulnerablePawnPosition = EnPassant.GetVulnerablePawn!.Origin;
-            RemovePiece(vulnerablePawnPosition);
+            IReadOnlyPiece? capturedPiece = RemovePiece(vulnerablePawnPosition);
 
-            return piece;
+            return capturedPiece;
         }
 
         private bool IsLegalMove(Coordinate origin, Coordinate destination)
