@@ -241,7 +241,7 @@ namespace OpenChess.Tests
             Coordinate position = Coordinate.GetInstance("E3");
             chessboard.EnPassant.Position = position;
 
-            IReadOnlyPiece? piece = chessboard.GetVulnerablePawn;
+            IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
             Assert.IsNotNull(piece);
             Assert.IsInstanceOfType(piece, typeof(Pawn));
         }
@@ -253,7 +253,7 @@ namespace OpenChess.Tests
             Coordinate position = Coordinate.GetInstance("E6");
             chessboard.EnPassant.Position = position;
 
-            IReadOnlyPiece? piece = chessboard.GetVulnerablePawn;
+            IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
             Assert.IsNotNull(piece);
             Assert.IsInstanceOfType(piece, typeof(Pawn));
         }
@@ -263,7 +263,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FEN.InitialPosition);
 
-            IReadOnlyPiece? piece = chessboard.GetVulnerablePawn;
+            IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
             Assert.IsNull(piece);
         }
     }

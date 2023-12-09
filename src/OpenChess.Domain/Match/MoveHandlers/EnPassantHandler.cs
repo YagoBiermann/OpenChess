@@ -19,7 +19,7 @@ namespace OpenChess.Domain
             {
                 chessboard.ChangePiecePosition(origin, destination);
 
-                Coordinate vulnerablePawnPosition = chessboard.GetVulnerablePawn!.Origin;
+                Coordinate vulnerablePawnPosition = chessboard.EnPassant.GetVulnerablePawn!.Origin;
                 chessboard.RemovePiece(vulnerablePawnPosition);
 
             }
