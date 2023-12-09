@@ -165,6 +165,14 @@ namespace OpenChess.Domain
             HandleIllegalPosition();
             SwitchTurns();
         }
+        private Piece? ReplacePiece(Coordinate position, char piece)
+        {
+            Piece createdPiece = CreatePiece(piece, position);
+            Piece? removedPiece = RemovePiece(position);
+            GetSquare(position).Piece = createdPiece;
+
+            return removedPiece;
+        }
         private string BuildEnPassantString()
         {
             return EnPassant.Position is null ? "-" : EnPassant.ToString();
