@@ -50,18 +50,11 @@ namespace OpenChess.Domain
             return piece;
         }
 
-        public Piece? ChangePiecePosition(Coordinate origin, Coordinate destination)
+        public IReadOnlyPiece? ChangePiecePosition(Coordinate origin, Coordinate destination)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
 
-            Square originSquare = GetSquare(origin);
-            Square destinationSquare = GetSquare(destination);
-            Piece piece = originSquare.Piece!;
-            Piece? capturedPiece = destinationSquare.Piece;
-            originSquare.Piece = null;
-            destinationSquare.Piece = piece;
-
-            return capturedPiece;
+            return HandleDefault(origin, destination);
         }
 
         public List<Coordinate> GetPiecesPosition(List<Coordinate> range)
@@ -93,6 +86,18 @@ namespace OpenChess.Domain
             string enPassant = BuildEnPassantString();
 
             return $"{chessboard} {turn} {castling} {enPassant} {HalfMove} {FullMove}";
+        }
+
+        private IReadOnlyPiece? HandleDefault(Coordinate origin, Coordinate destination)
+        {
+            Square originSquare = GetSquare(origin);
+            Square destinationSquare = GetSquare(destination);
+            Piece piece = originSquare.Piece!;
+            Piece? capturedPiece = destinationSquare.Piece;
+            originSquare.Piece = null;
+            destinationSquare.Piece = piece;
+
+            return capturedPiece;
         }
 
         private IReadOnlyPiece? HandleEnPassant(Coordinate origin, Coordinate destination)
