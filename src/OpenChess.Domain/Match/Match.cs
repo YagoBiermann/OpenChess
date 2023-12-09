@@ -100,6 +100,7 @@ namespace OpenChess.Domain
             Color pieceColor = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.Color;
             Color playerColor = GetPlayerById(move.PlayerId)!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
+            if (move.Promoting is not null && !Promotion.IsValidString(move.Promoting)) { throw new ChessboardException("Invalid promoting piece!"); }
         }
 
         private void BuildPGN(Coordinate origin, Coordinate destination, bool pieceWasCaptured)
