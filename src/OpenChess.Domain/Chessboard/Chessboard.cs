@@ -8,7 +8,7 @@ namespace OpenChess.Domain
         public EnPassant EnPassant { get; private set; }
         public int HalfMove { get; set; }
         public int FullMove { get; set; }
-        public string LastPosition { get; }
+        public string LastPosition { get; private set; }
 
         public Chessboard(string position)
         {
@@ -58,15 +58,15 @@ namespace OpenChess.Domain
             if (EnPassant.IsEnPassantMove(origin, destination))
             {
                 capturedPiece = HandleEnPassant(origin, destination);
-                EnPassant.HandleUpdate(destination);
-                SwitchTurns();
+                UpdateState(destination);
                 return capturedPiece;
             }
-
-            capturedPiece = HandleDefault(origin, destination);
-            EnPassant.HandleUpdate(destination);
-            SwitchTurns();
-            return capturedPiece;
+            else
+            {
+                capturedPiece = HandleDefault(origin, destination);
+                UpdateState(destination);
+                return capturedPiece;
+            }
         }
 
         public List<Coordinate> GetPiecesPosition(List<Coordinate> range)
@@ -130,7 +130,27 @@ namespace OpenChess.Domain
             List<MoveDirections> legalMoves = GetReadOnlySquare(origin).ReadOnlyPiece!.CalculateLegalMoves();
             return legalMoves.Exists(m => m.Coordinates.Contains(destination));
         }
-
+        private void HandleIllegalPosition()
+        {
+            if (Check.IsInCheck(Turn, this)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
+        }
+        private void RestoreToLastPosition()
+        {
+            Chessboard previous = new(LastPosition);
+            _board = previous._board;
+            Turn = previous.Turn;
+            EnPassant = previous.EnPassant;
+            CastlingAvailability = previous.CastlingAvailability;
+            HalfMove = previous.HalfMove;
+            FullMove = previous.FullMove;
+            LastPosition = previous.LastPosition;
+        }
+        private void UpdateState(Coordinate movedPiecePosition)
+        {
+            EnPassant.HandleUpdate(movedPiecePosition);
+            HandleIllegalPosition();
+            SwitchTurns();
+        }
         private string BuildEnPassantString()
         {
             return EnPassant.Position is null ? "-" : EnPassant.ToString();
