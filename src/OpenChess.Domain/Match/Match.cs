@@ -25,9 +25,8 @@ namespace OpenChess.Domain
 
             IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination);
 
-            PostValidateMove();
+            PostValidateMove(move.PlayerId);
             BuildPGN(move.Origin, move.Destination, capturedPiece is not null);
-            _chessboard.SwitchTurns();
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -104,9 +103,9 @@ namespace OpenChess.Domain
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private void PostValidateMove()
+        private void PostValidateMove(Guid currentPlayer)
         {
-            bool isInSelfCheckAfterMove = Check.IsInCheck(_chessboard.Turn, _chessboard);
+            bool isInSelfCheckAfterMove = Check.IsInCheck(GetPlayerById(currentPlayer)!.Color, _chessboard);
             if (isInSelfCheckAfterMove) { _chessboard = new Chessboard(_chessboard.LastPosition); throw new MatchException("Invalid move!"); };
         }
 

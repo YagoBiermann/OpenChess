@@ -59,13 +59,13 @@ namespace OpenChess.Domain
             {
                 capturedPiece = HandleEnPassant(origin, destination);
                 EnPassant.HandleUpdate(destination);
-
+                SwitchTurns();
                 return capturedPiece;
             }
 
             capturedPiece = HandleDefault(origin, destination);
             EnPassant.HandleUpdate(destination);
-
+            SwitchTurns();
             return capturedPiece;
         }
 
