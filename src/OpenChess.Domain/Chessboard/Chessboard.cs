@@ -53,6 +53,7 @@ namespace OpenChess.Domain
         public IReadOnlyPiece? ChangePiecePosition(Coordinate origin, Coordinate destination)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
+            if (EnPassant.IsEnPassantMove(origin, destination)) { return HandleEnPassant(origin, destination); }
 
             return HandleDefault(origin, destination);
         }
