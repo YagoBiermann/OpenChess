@@ -24,7 +24,7 @@ namespace OpenChess.Domain
             PreValidateMove(move);
             IReadOnlyPiece? capturedPiece = null;
             IReadOnlyPiece? movedPiece;
-            if (EnPassantHandler.IsEnPassantMove(move.Origin, move.Destination, _chessboard))
+            if (_chessboard.EnPassant.IsEnPassantMove(move.Origin, move.Destination))
             {
                 movedPiece = EnPassantHandler.Handle(move.Origin, move.Destination, _chessboard);
             }
