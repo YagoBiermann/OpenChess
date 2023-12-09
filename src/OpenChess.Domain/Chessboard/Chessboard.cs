@@ -2,7 +2,7 @@ namespace OpenChess.Domain
 {
     internal class Chessboard : IReadOnlyChessboard
     {
-        private readonly List<List<Square>> _board;
+        private List<List<Square>> _board;
         public Color Turn { get; private set; }
         public CastlingAvailability CastlingAvailability { get; set; }
         public EnPassant EnPassant { get; private set; }
