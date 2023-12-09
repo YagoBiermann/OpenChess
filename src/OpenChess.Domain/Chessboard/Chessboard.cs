@@ -42,16 +42,6 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
-        private Piece? RemovePiece(Coordinate position)
-        {
-            Square square = GetSquare(position);
-            if (!square.HasPiece) return null;
-            Piece piece = square.Piece!;
-            square.Piece = null;
-
-            return piece;
-        }
-
         public IReadOnlyPiece? MovePiece(Coordinate origin, Coordinate destination)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
@@ -178,6 +168,15 @@ namespace OpenChess.Domain
             GetSquare(position).Piece = createdPiece;
 
             return removedPiece;
+        }
+        private Piece? RemovePiece(Coordinate position)
+        {
+            Square square = GetSquare(position);
+            if (!square.HasPiece) return null;
+            Piece piece = square.Piece!;
+            square.Piece = null;
+
+            return piece;
         }
         private string BuildEnPassantString()
         {
