@@ -238,8 +238,8 @@ namespace OpenChess.Tests
         public void GetVulnerablePawn_EnPassantNotNull_ShouldReturnTheWhitePawn()
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
-            Coordinate position = Coordinate.GetInstance("E3");
-            chessboard.EnPassant.Position = position;
+            Coordinate position = Coordinate.GetInstance("E4");
+            chessboard.EnPassant.Update(position);
 
             IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
             Assert.IsNotNull(piece);
@@ -250,8 +250,8 @@ namespace OpenChess.Tests
         public void GetVulnerablePawn_EnPassantNotNull_ShouldReturnTheBlackPawn()
         {
             Chessboard chessboard = new("rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-            Coordinate position = Coordinate.GetInstance("E6");
-            chessboard.EnPassant.Position = position;
+            Coordinate position = Coordinate.GetInstance("E5");
+            chessboard.EnPassant.Update(position);
 
             IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
             Assert.IsNotNull(piece);

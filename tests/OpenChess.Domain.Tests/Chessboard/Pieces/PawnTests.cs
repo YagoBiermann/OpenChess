@@ -407,27 +407,27 @@ namespace OpenChess.Tests
             Assert.IsFalse(pawn.IsVulnerableToEnPassant);
         }
 
-        [DataRow("D4", "E3", "rnbqkbnr/pppp1ppp/8/8/3pP3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1")]
-        [DataRow("D5", "E6", "rnbqkbnr/pppp1ppp/8/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("D4", "E4", "rnbqkbnr/pppp1ppp/8/8/3pP3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("D5", "E5", "rnbqkbnr/pppp1ppp/8/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq - 0 1")]
         [TestMethod]
         public void CanCaptureByEnPassant_WithinTheRange_ShouldReturnTrue(string origin, string enPassant, string fen)
         {
             Coordinate position = Coordinate.GetInstance(origin);
             Chessboard chessboard = new(fen);
-            chessboard.EnPassant.Position = Coordinate.GetInstance(enPassant);
+            chessboard.EnPassant.Update(Coordinate.GetInstance(enPassant));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
 
             Assert.IsTrue(pawn.CanCaptureByEnPassant);
         }
 
-        [DataRow("D7", "E3", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1")]
-        [DataRow("D2", "E6", "rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("D7", "E4", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("D2", "E5", "rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
         [TestMethod]
         public void CanCaptureByEnPassant_OutOfTheRange_ShouldReturnFalse(string origin, string enPassant, string fen)
         {
             Coordinate position = Coordinate.GetInstance(origin);
             Chessboard chessboard = new(fen);
-            chessboard.EnPassant.Position = Coordinate.GetInstance(enPassant);
+            chessboard.EnPassant.Update(Coordinate.GetInstance(enPassant));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
 
             Assert.IsFalse(pawn.CanCaptureByEnPassant);
