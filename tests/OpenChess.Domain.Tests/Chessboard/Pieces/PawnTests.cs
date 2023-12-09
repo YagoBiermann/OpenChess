@@ -414,7 +414,7 @@ namespace OpenChess.Tests
         {
             Coordinate position = Coordinate.GetInstance(origin);
             Chessboard chessboard = new(fen);
-            chessboard.EnPassant.Update(Coordinate.GetInstance(enPassant));
+            chessboard.EnPassant.HandleUpdate(Coordinate.GetInstance(enPassant));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
 
             Assert.IsTrue(pawn.CanCaptureByEnPassant);
@@ -427,7 +427,7 @@ namespace OpenChess.Tests
         {
             Coordinate position = Coordinate.GetInstance(origin);
             Chessboard chessboard = new(fen);
-            chessboard.EnPassant.Update(Coordinate.GetInstance(enPassant));
+            chessboard.EnPassant.HandleUpdate(Coordinate.GetInstance(enPassant));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
 
             Assert.IsFalse(pawn.CanCaptureByEnPassant);

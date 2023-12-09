@@ -57,14 +57,14 @@ namespace OpenChess.Domain
             if (EnPassant.IsEnPassantMove(origin, destination))
             {
                 capturedPiece = HandleEnPassant(origin, destination);
-                EnPassant.Update(destination);
+                EnPassant.HandleUpdate(destination);
 
                 return capturedPiece;
             }
 
             capturedPiece = HandleDefault(origin, destination);
-            EnPassant.Update(destination);
-            
+            EnPassant.HandleUpdate(destination);
+
             return capturedPiece;
         }
 

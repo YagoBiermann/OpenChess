@@ -24,7 +24,7 @@ namespace OpenChess.Domain
             }
         }
 
-        public void Update(Coordinate lastMovedPiece)
+        public void HandleUpdate(Coordinate lastMovedPiece)
         {
             Position = null;
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(lastMovedPiece).ReadOnlyPiece;
