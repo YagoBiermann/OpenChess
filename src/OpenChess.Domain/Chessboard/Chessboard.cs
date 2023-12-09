@@ -3,6 +3,7 @@ namespace OpenChess.Domain
     internal class Chessboard : IReadOnlyChessboard
     {
         private List<List<Square>> _board;
+        private Promotion _promotion;
         public Color Turn { get; private set; }
         public CastlingAvailability CastlingAvailability { get; set; }
         public EnPassant EnPassant { get; private set; }
@@ -22,6 +23,7 @@ namespace OpenChess.Domain
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
+            _promotion = new(this);
         }
 
         public IReadOnlySquare GetReadOnlySquare(string coordinate)
