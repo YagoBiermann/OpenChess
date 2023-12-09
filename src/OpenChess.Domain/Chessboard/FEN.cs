@@ -47,6 +47,43 @@ namespace OpenChess.Domain
             return isValidActiveColor && isValidCastling && isValidEnPassant && isValidHalfMove && isValidFullMove;
         }
 
+        public Color ConvertTurn(string field)
+        {
+            return char.Parse(field) == 'w' ? Color.White : Color.Black;
+        }
+
+        public CastlingAvailability ConvertCastling(string field)
+        {
+            Dictionary<char, bool> pairs = new()
+            {
+                {'K', false},
+                {'Q', false},
+                {'k', false},
+                {'q', false},
+            };
+
+            foreach (char letter in field)
+            {
+                if (letter == 'K') pairs[letter] = true;
+                if (letter == 'Q') pairs[letter] = true;
+                if (letter == 'k') pairs[letter] = true;
+                if (letter == 'q') pairs[letter] = true;
+            }
+
+            return new CastlingAvailability(pairs['K'], pairs['Q'], pairs['k'], pairs['q']);
+        }
+
+        public Coordinate? ConvertEnPassant(string field)
+        {
+            if (field == "-") return null;
+            return Coordinate.GetInstance(field);
+        }
+
+        public int ConvertMoveAmount(string field)
+        {
+            return int.Parse(field);
+        }
+
         private static bool HasSixFields(string value)
         {
             int fields = value.Split(" ").Count();
