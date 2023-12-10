@@ -261,6 +261,18 @@ namespace OpenChess.Tests
             Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
             Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasTypeOfPiece(piece!));
         }
+
+        [DataRow("8/8/8/3r4/2KP4/8/2k2p2/8 b - - 0 1", "F2", "F1", "K")]
+        [DataRow("8/8/8/3r4/2KP4/8/2k2p2/8 b - - 0 1", "F2", "F1", "P")]
+        [TestMethod]
+        public void MovePiece_PromotingPawnToAnInvalidPiece_ShouldThrowException(string fen, string position1, string position2, string promotingPiece)
+        {
+            Chessboard chessboard = new(fen);
+            Coordinate origin = Coordinate.GetInstance(position1);
+            Coordinate destination = Coordinate.GetInstance(position2);
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination, promotingPiece));
+        }
     }
 
 }
