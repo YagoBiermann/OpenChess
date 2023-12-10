@@ -5,7 +5,7 @@ namespace OpenChess.Domain
         private List<List<Square>> _board;
         private Promotion _promotion;
         public Color Turn { get; private set; }
-        public Castling CastlingAvailability { get; set; }
+        public Castling Castling { get; set; }
         public EnPassant EnPassant { get; private set; }
         public int HalfMove { get; set; }
         public int FullMove { get; set; }
@@ -17,7 +17,7 @@ namespace OpenChess.Domain
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
             Turn = fenPosition.ConvertTurn(fenPosition.Turn);
-            CastlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
+            Castling = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
             Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
             EnPassant = new(enPassantPosition, this);
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
@@ -151,7 +151,7 @@ namespace OpenChess.Domain
             _board = previous._board;
             Turn = previous.Turn;
             EnPassant = previous.EnPassant;
-            CastlingAvailability = previous.CastlingAvailability;
+            Castling = previous.Castling;
             HalfMove = previous.HalfMove;
             FullMove = previous.FullMove;
             LastPosition = previous.LastPosition;
@@ -185,7 +185,7 @@ namespace OpenChess.Domain
         }
         private string BuildCastlingString()
         {
-            return CastlingAvailability.ToString();
+            return Castling.ToString();
         }
         private string BuildTurnString()
         {
