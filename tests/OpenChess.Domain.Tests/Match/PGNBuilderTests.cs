@@ -122,6 +122,20 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
+        public void PawnTextMoveBuilder_Build_WithPromotionAndCapture_ShouldAddCaptureAndPromotionSignToMove()
+        {
+            Coordinate origin = Coordinate.GetInstance("D7");
+            Coordinate destination = Coordinate.GetInstance("D8");
+            PawnTextMoveBuilder builder = new(1, origin, destination);
+
+            builder.Build();
+            builder.AppendCaptureSign();
+            builder.AppendPromotionSign('Q');
+
+            Assert.AreEqual("1. dxd8=Q", builder.Result);
+        }
+
+        [TestMethod]
         public void DefaultTextMoveBuilder_Build_ShouldCreateDefaultMove()
         {
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
