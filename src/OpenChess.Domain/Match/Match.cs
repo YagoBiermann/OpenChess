@@ -22,10 +22,13 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             ValidateMove(move);
+            bool isPawn = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece is Pawn;
 
             IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
+            bool pieceWasCaptured = capturedPiece is not null;
 
-            BuildPGN(move.Origin, move.Destination, capturedPiece is not null, move.Promoting);
+            if (isPawn) BuildPawnPGN(move.Origin, move.Destination, pieceWasCaptured, move.Promoting);
+            else BuildDefaultPGN(move.Destination, pieceWasCaptured);
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -103,22 +106,26 @@ namespace OpenChess.Domain
             if (move.Promoting is not null && !Promotion.IsValidString(move.Promoting)) { throw new ChessboardException("Invalid promoting piece!"); }
         }
 
-        private void BuildPGN(Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece)
+        private void BuildPawnPGN(Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece)
         {
-            PGNBuilder builder;
+            int moveCount = _pgnMoveText.Count + 1;
+            var builder = new PawnTextMoveBuilder(moveCount, origin, destination);
+            builder.Build();
+            if (pieceWasCaptured) builder.AppendCaptureSign();
+            if (promotingPiece is not null) { builder.AppendPromotionSign(char.Parse(promotingPiece)); }
+
+            _pgnMoveText.Push(builder.Result);
+        }
+
+        private void BuildDefaultPGN(Coordinate destination, bool pieceWasCaptured)
+        {
             int moveCount = _pgnMoveText.Count + 1;
             IReadOnlyPiece movedPiece = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
 
-            if (movedPiece is Pawn) builder = new PawnTextMoveBuilder(moveCount, origin, destination);
-            else builder = new DefaultTextMoveBuilder(moveCount, movedPiece, destination);
-
+            var builder = new DefaultTextMoveBuilder(moveCount, movedPiece, destination);
             builder.Build();
 
-            if (pieceWasCaptured)
-            {
-                builder.AppendCaptureSign();
-            }
-            if (builder is PawnTextMoveBuilder pawnBuilder && promotingPiece is not null) { pawnBuilder.AppendPromotionSign(char.Parse(promotingPiece)); }
+            if (pieceWasCaptured) { builder.AppendCaptureSign(); }
 
             _pgnMoveText.Push(builder.Result);
         }
