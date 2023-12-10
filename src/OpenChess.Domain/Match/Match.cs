@@ -109,11 +109,11 @@ namespace OpenChess.Domain
         private void BuildPawnPGN(Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece)
         {
             int moveCount = _pgnMoveText.Count + 1;
-            var builder = new PawnTextMoveBuilder(moveCount, origin, destination);
-            builder.Build();
-            if (pieceWasCaptured) builder.AppendCaptureSign();
-            if (promotingPiece is not null) { builder.AppendPromotionSign(char.Parse(promotingPiece)); }
+            char? parsedPromotionPiece = promotingPiece is not null ? char.Parse(promotingPiece) : null;
+            var builder = new PawnTextMoveBuilder(moveCount, origin, destination, parsedPromotionPiece);
+            if (pieceWasCaptured) builder.AppendCaptureSign = true;
 
+            builder.Build();
             _pgnMoveText.Push(builder.Result);
         }
 
@@ -123,10 +123,10 @@ namespace OpenChess.Domain
             IReadOnlyPiece movedPiece = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
 
             var builder = new DefaultTextMoveBuilder(moveCount, movedPiece, destination);
+
+            if (pieceWasCaptured) { builder.AppendCaptureSign = true; }
+
             builder.Build();
-
-            if (pieceWasCaptured) { builder.AppendCaptureSign(); }
-
             _pgnMoveText.Push(builder.Result);
         }
 
