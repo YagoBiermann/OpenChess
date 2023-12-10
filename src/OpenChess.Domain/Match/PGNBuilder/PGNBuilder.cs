@@ -29,5 +29,25 @@ namespace OpenChess.Domain
             return "O-O-O";
         }
         public abstract PGNBuilder Build();
+
+        public static string BuildPawnPGN(int count, Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece)
+        {
+            int moveCount = count;
+            char? parsedPromotionPiece = promotingPiece is not null ? char.Parse(promotingPiece) : null;
+            var builder = new PawnTextMoveBuilder(moveCount, origin, destination, parsedPromotionPiece);
+            if (pieceWasCaptured) builder.AppendCaptureSign = true;
+
+            return builder.Build().Result;
+        }
+
+        public static string BuildDefaultPGN(int count, IReadOnlyPiece pieceMoved, Coordinate destination, bool pieceWasCaptured)
+        {
+            int moveCount = count;
+            var builder = new DefaultTextMoveBuilder(moveCount, pieceMoved, destination);
+
+            if (pieceWasCaptured) { builder.AppendCaptureSign = true; }
+
+            return builder.Build().Result;
+        }
     }
 }

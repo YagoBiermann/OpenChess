@@ -27,8 +27,7 @@ namespace OpenChess.Domain
             IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
             bool pieceWasCaptured = capturedPiece is not null;
 
-            if (isPawn) BuildPawnPGN(move.Origin, move.Destination, pieceWasCaptured, move.Promoting);
-            else BuildDefaultPGN(move.Destination, pieceWasCaptured);
+            ConvertToPGNMove(move, isPawn, pieceWasCaptured);
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -106,28 +105,15 @@ namespace OpenChess.Domain
             if (move.Promoting is not null && !Promotion.IsValidString(move.Promoting)) { throw new ChessboardException("Invalid promoting piece!"); }
         }
 
-        private void BuildPawnPGN(Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece)
+        private void ConvertToPGNMove(Move move, bool isPawn, bool pieceWasCaptured)
         {
-            int moveCount = _pgnMoveText.Count + 1;
-            char? parsedPromotionPiece = promotingPiece is not null ? char.Parse(promotingPiece) : null;
-            var builder = new PawnTextMoveBuilder(moveCount, origin, destination, parsedPromotionPiece);
-            if (pieceWasCaptured) builder.AppendCaptureSign = true;
+            int count = _pgnMoveText.Count + 1;
+            IReadOnlyPiece? pieceMoved = _chessboard.GetReadOnlySquare(move.Destination).ReadOnlyPiece;
+            string pgnMove;
+            if (isPawn) pgnMove = PGNBuilder.BuildPawnPGN(count, move.Origin, move.Destination, pieceWasCaptured, move.Promoting);
+            else pgnMove = PGNBuilder.BuildDefaultPGN(count, pieceMoved!, move.Destination, pieceWasCaptured);
 
-            builder.Build();
-            _pgnMoveText.Push(builder.Result);
-        }
-
-        private void BuildDefaultPGN(Coordinate destination, bool pieceWasCaptured)
-        {
-            int moveCount = _pgnMoveText.Count + 1;
-            IReadOnlyPiece movedPiece = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
-
-            var builder = new DefaultTextMoveBuilder(moveCount, movedPiece, destination);
-
-            if (pieceWasCaptured) { builder.AppendCaptureSign = true; }
-
-            builder.Build();
-            _pgnMoveText.Push(builder.Result);
+            _pgnMoveText.Push(pgnMove);
         }
 
         private Player? GetPlayerByColor(Color color)
