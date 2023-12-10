@@ -23,7 +23,7 @@ namespace OpenChess.Domain
         {
             ValidateMove(move);
 
-            IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination);
+            IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
 
             BuildPGN(move.Origin, move.Destination, capturedPiece is not null);
         }
