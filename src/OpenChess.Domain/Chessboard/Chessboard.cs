@@ -269,6 +269,12 @@ namespace OpenChess.Domain
             };
         }
 
+        private Piece CreatePiece(char type, Coordinate origin, Color player)
+        {
+            char piece = Turn == Color.Black ? char.ToLower(type) : char.ToUpper(type);
+            return CreatePiece(piece, origin, player);
+        }
+
         private void SetPiecesOnBoard(string field)
         {
             List<string> fenBoard = field.Split("/").Reverse().ToList();
