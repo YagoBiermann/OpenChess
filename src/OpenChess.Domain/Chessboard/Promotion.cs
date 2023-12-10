@@ -27,5 +27,7 @@ namespace OpenChess.Domain
             Regex rx = new(@"^([qbrn]{1})$", RegexOptions.IgnoreCase);
             return rx.IsMatch(value);
         }
+
+        public static string DefaultPiece { get { return "Q"; } }
     }
 }
