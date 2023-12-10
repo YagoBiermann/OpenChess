@@ -42,7 +42,7 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
-        public IReadOnlyPiece? MovePiece(Coordinate origin, Coordinate destination)
+        public IReadOnlyPiece? MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
             if (!IsLegalMove(origin, destination)) throw new ChessboardException("Invalid move!");
@@ -55,7 +55,7 @@ namespace OpenChess.Domain
             }
             else if (_promotion.IsPromoting(origin, destination))
             {
-                capturedPiece = HandlePromotion(origin, destination, "Q");
+                capturedPiece = HandlePromotion(origin, destination, promotingPiece);
                 UpdateState(destination);
                 return capturedPiece;
             }
@@ -123,14 +123,15 @@ namespace OpenChess.Domain
             return capturedPiece;
         }
 
-        private IReadOnlyPiece? HandlePromotion(Coordinate origin, Coordinate destination, string promotingPiece)
+        private IReadOnlyPiece? HandlePromotion(Coordinate origin, Coordinate destination, string? promotingPiece)
         {
-            if (!Promotion.IsValidString(promotingPiece)) throw new ChessboardException("Invalid promoting piece");
+            string promotingTo = promotingPiece ?? Promotion.DefaultPiece;
+
+            if (!Promotion.IsValidString(promotingTo)) throw new ChessboardException("Invalid promoting piece");
             IReadOnlyPiece? piece = GetReadOnlySquare(origin).ReadOnlyPiece;
             if (piece is not Pawn) throw new ChessboardException("Cannot handle promotion because piece is not a pawn.");
-
             IReadOnlyPiece? capturedPiece = HandleDefault(origin, destination);
-            ReplacePiece(destination, char.Parse(promotingPiece));
+            ReplacePiece(destination, char.Parse(promotingTo), Turn);
 
             return capturedPiece;
         }
@@ -161,9 +162,9 @@ namespace OpenChess.Domain
             HandleIllegalPosition();
             SwitchTurns();
         }
-        private Piece? ReplacePiece(Coordinate position, char piece)
+        private Piece? ReplacePiece(Coordinate position, char piece, Color player)
         {
-            Piece createdPiece = CreatePiece(piece, position);
+            Piece createdPiece = CreatePiece(piece, position, player);
             Piece? removedPiece = RemovePiece(position);
             GetSquare(position).Piece = createdPiece;
 
