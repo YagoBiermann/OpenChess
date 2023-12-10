@@ -1,45 +1,45 @@
 namespace OpenChess.Domain
 {
-    internal readonly struct CastlingAvailability
+    internal readonly struct Castling
     {
-        public bool WhiteKingSide { get; init; }
-        public bool WhiteQueenSide { get; init; }
-        public bool BlackKingSide { get; init; }
-        public bool BlackQueenSide { get; init; }
+        public bool HasWhiteKingSide { get; init; }
+        public bool HasWhiteQueenSide { get; init; }
+        public bool HasBlackKingSide { get; init; }
+        public bool HasBlackQueenSide { get; init; }
 
 
-        public CastlingAvailability()
+        public Castling()
         {
-            WhiteKingSide = true;
-            WhiteQueenSide = true;
-            BlackKingSide = true;
-            BlackQueenSide = true;
-        }
-        
-        public CastlingAvailability(bool AvailabilityforAll)
-        {
-            WhiteKingSide = AvailabilityforAll;
-            WhiteQueenSide = AvailabilityforAll;
-            BlackKingSide = AvailabilityforAll;
-            BlackQueenSide = AvailabilityforAll;
+            HasWhiteKingSide = true;
+            HasWhiteQueenSide = true;
+            HasBlackKingSide = true;
+            HasBlackQueenSide = true;
         }
 
-        public CastlingAvailability(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide)
+        public Castling(bool AvailabilityforAll)
         {
-            WhiteKingSide = whiteKingSide;
-            WhiteQueenSide = whiteQueenSide;
-            BlackKingSide = blackKingSide;
-            BlackQueenSide = blackQueenSide;
+            HasWhiteKingSide = AvailabilityforAll;
+            HasWhiteQueenSide = AvailabilityforAll;
+            HasBlackKingSide = AvailabilityforAll;
+            HasBlackQueenSide = AvailabilityforAll;
+        }
+
+        public Castling(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide)
+        {
+            HasWhiteKingSide = whiteKingSide;
+            HasWhiteQueenSide = whiteQueenSide;
+            HasBlackKingSide = blackKingSide;
+            HasBlackQueenSide = blackQueenSide;
         }
 
         public override string ToString()
         {
             string castlingAvailability = "";
-            if (WhiteKingSide) castlingAvailability += "K";
-            if (WhiteQueenSide) castlingAvailability += "Q";
-            if (BlackKingSide) castlingAvailability += "k";
-            if (BlackQueenSide) castlingAvailability += "q";
-            if (!WhiteKingSide && !WhiteQueenSide && !BlackKingSide && !BlackQueenSide) castlingAvailability += "-";
+            if (HasWhiteKingSide) castlingAvailability += "K";
+            if (HasWhiteQueenSide) castlingAvailability += "Q";
+            if (HasBlackKingSide) castlingAvailability += "k";
+            if (HasBlackQueenSide) castlingAvailability += "q";
+            if (!HasWhiteKingSide && !HasWhiteQueenSide && !HasBlackKingSide && !HasBlackQueenSide) castlingAvailability += "-";
 
             return castlingAvailability;
         }

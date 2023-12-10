@@ -14,10 +14,10 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(Color.White, chessboard.Turn);
             Assert.IsNull(chessboard.EnPassant.Position);
-            Assert.IsTrue(chessboard.CastlingAvailability.WhiteKingSide);
-            Assert.IsTrue(chessboard.CastlingAvailability.WhiteQueenSide);
-            Assert.IsTrue(chessboard.CastlingAvailability.BlackKingSide);
-            Assert.IsTrue(chessboard.CastlingAvailability.BlackQueenSide);
+            Assert.IsTrue(chessboard.CastlingAvailability.HasWhiteKingSide);
+            Assert.IsTrue(chessboard.CastlingAvailability.HasWhiteQueenSide);
+            Assert.IsTrue(chessboard.CastlingAvailability.HasBlackKingSide);
+            Assert.IsTrue(chessboard.CastlingAvailability.HasBlackQueenSide);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
         }
@@ -53,10 +53,10 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b - - 0 1");
 
-            Assert.IsFalse(chessboard.CastlingAvailability.WhiteKingSide);
-            Assert.IsFalse(chessboard.CastlingAvailability.WhiteQueenSide);
-            Assert.IsFalse(chessboard.CastlingAvailability.BlackKingSide);
-            Assert.IsFalse(chessboard.CastlingAvailability.BlackQueenSide);
+            Assert.IsFalse(chessboard.CastlingAvailability.HasWhiteKingSide);
+            Assert.IsFalse(chessboard.CastlingAvailability.HasWhiteQueenSide);
+            Assert.IsFalse(chessboard.CastlingAvailability.HasBlackKingSide);
+            Assert.IsFalse(chessboard.CastlingAvailability.HasBlackQueenSide);
             Assert.AreEqual(Color.Black, chessboard.Turn);
             Assert.IsNull(chessboard.EnPassant.Position);
             Assert.AreEqual(0, chessboard.HalfMove);
@@ -68,8 +68,8 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
 
-            Assert.IsTrue(chessboard.CastlingAvailability.WhiteKingSide);
-            Assert.IsTrue(chessboard.CastlingAvailability.BlackKingSide);
+            Assert.IsTrue(chessboard.CastlingAvailability.HasWhiteKingSide);
+            Assert.IsTrue(chessboard.CastlingAvailability.HasBlackKingSide);
         }
 
         [TestMethod]

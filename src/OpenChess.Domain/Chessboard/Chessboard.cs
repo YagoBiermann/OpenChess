@@ -5,7 +5,7 @@ namespace OpenChess.Domain
         private List<List<Square>> _board;
         private Promotion _promotion;
         public Color Turn { get; private set; }
-        public CastlingAvailability CastlingAvailability { get; set; }
+        public Castling CastlingAvailability { get; set; }
         public EnPassant EnPassant { get; private set; }
         public int HalfMove { get; set; }
         public int FullMove { get; set; }

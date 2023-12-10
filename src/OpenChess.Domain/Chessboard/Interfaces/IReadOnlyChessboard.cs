@@ -3,7 +3,7 @@ namespace OpenChess.Domain
     internal interface IReadOnlyChessboard
     {
         public Color Turn { get; }
-        public CastlingAvailability CastlingAvailability { get; }
+        public Castling CastlingAvailability { get; }
         public EnPassant EnPassant { get; }
         public int HalfMove { get; }
         public int FullMove { get; }
