@@ -17,9 +17,9 @@ namespace OpenChess.Domain
         {
             return Result = $"{count}. " + Result;
         }
-        public PGNBuilder AppendCheckSign() { Result += "+"; return this; }
-        public PGNBuilder AppendCheckMateSign() { Result += "#"; return this; }
-        public abstract PGNBuilder AppendCaptureSign();
+        protected PGNBuilder BuildCheckSign() { Result += "+"; return this; }
+        protected PGNBuilder BuildCheckMateSign() { Result += "#"; return this; }
+        protected abstract PGNBuilder BuildCaptureSign();
         public static string BuildKingSideCastlingString()
         {
             return "O-O";
