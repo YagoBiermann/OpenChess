@@ -3,6 +3,9 @@ namespace OpenChess.Domain
     internal abstract class PGNBuilder
     {
         protected int _count;
+        public bool AppendCheckSign = false;
+        public bool AppendCheckMateSign = false;
+        public bool AppendCaptureSign = false;
         public string Result { get; protected set; } = "";
 
         public PGNBuilder(int count)
