@@ -318,5 +318,35 @@ namespace OpenChess.Tests
 
             Assert.ThrowsException<ChessboardException>(() => { match.Play(move); });
         }
+
+        [TestMethod]
+        public void Play_PromotingPawn_ShouldAddPgnMoveProperly()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo player1 = new(Color.White);
+            PlayerInfo player2 = new(Color.Black);
+            match.Join(player1);
+            match.Join(player2);
+
+            List<Move> moves = new()
+            {
+                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
+                new(player2.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("D5")),
+                new(player1.Id, Coordinate.GetInstance("E4"), Coordinate.GetInstance("D5")),
+                new(player2.Id, Coordinate.GetInstance("C7"), Coordinate.GetInstance("C6")),
+                new(player1.Id, Coordinate.GetInstance("D5"), Coordinate.GetInstance("D6")),
+                new(player2.Id, Coordinate.GetInstance("D8"), Coordinate.GetInstance("B6")),
+                new(player1.Id, Coordinate.GetInstance("D6"), Coordinate.GetInstance("D7")),
+                new(player2.Id, Coordinate.GetInstance("E8"), Coordinate.GetInstance("D8")),
+                new(player1.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("C8"), "Q")
+            };
+
+            foreach (Move move in moves)
+            {
+                match.Play(move);
+            }
+
+            Assert.AreEqual("9. dxc8=Q", match.Moves.Last());
+        }
     }
 }
