@@ -8,58 +8,58 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstanceWithEmptyConstructor_ShouldBeTrueForAll()
         {
-            Castling castlingAvailability = new();
+            Castling castling = new();
 
-            Assert.IsTrue(castlingAvailability.HasWhiteKingSide);
-            Assert.IsTrue(castlingAvailability.HasWhiteQueenSide);
-            Assert.IsTrue(castlingAvailability.HasBlackKingSide);
-            Assert.IsTrue(castlingAvailability.HasBlackQueenSide);
+            Assert.IsTrue(castling.HasWhiteKingSide);
+            Assert.IsTrue(castling.HasWhiteQueenSide);
+            Assert.IsTrue(castling.HasBlackKingSide);
+            Assert.IsTrue(castling.HasBlackQueenSide);
         }
 
         [TestMethod]
         public void NewInstanceWithOneParameter_ShouldApplyBoolForAll()
         {
-            Castling castlingAvailability = new(false);
-            Castling castlingAvailability2 = new(true);
+            Castling castling = new(false);
+            Castling castling2 = new(true);
 
-            Assert.IsFalse(castlingAvailability.HasWhiteKingSide);
-            Assert.IsFalse(castlingAvailability.HasWhiteQueenSide);
-            Assert.IsFalse(castlingAvailability.HasBlackKingSide);
-            Assert.IsFalse(castlingAvailability.HasBlackQueenSide);
-            Assert.IsTrue(castlingAvailability2.HasWhiteKingSide);
-            Assert.IsTrue(castlingAvailability2.HasWhiteQueenSide);
-            Assert.IsTrue(castlingAvailability2.HasBlackKingSide);
-            Assert.IsTrue(castlingAvailability2.HasBlackQueenSide);
+            Assert.IsFalse(castling.HasWhiteKingSide);
+            Assert.IsFalse(castling.HasWhiteQueenSide);
+            Assert.IsFalse(castling.HasBlackKingSide);
+            Assert.IsFalse(castling.HasBlackQueenSide);
+            Assert.IsTrue(castling2.HasWhiteKingSide);
+            Assert.IsTrue(castling2.HasWhiteQueenSide);
+            Assert.IsTrue(castling2.HasBlackKingSide);
+            Assert.IsTrue(castling2.HasBlackQueenSide);
         }
 
         [TestMethod]
         public void ToString_AllPropertiesFalse_ShouldConvertToHyphen()
         {
-            Castling castlingAvailability = new(false);
+            Castling castling = new(false);
 
-            Assert.AreEqual("-", castlingAvailability.ToString());
+            Assert.AreEqual("-", castling.ToString());
         }
 
         [TestMethod]
         public void ToString_AllPropertiesTrue_ShouldConvertToDefaultCastling()
         {
-            Castling castlingAvailability = new(true);
+            Castling castling = new(true);
 
-            Assert.AreEqual("KQkq", castlingAvailability.ToString());
+            Assert.AreEqual("KQkq", castling.ToString());
         }
 
         [TestMethod]
         public void ToString_ShouldConvertCorrectly()
         {
-            Castling castlingAvailability = new(false, true, true, false);
-            Castling castlingAvailability2 = new(false, true, false, false);
-            Castling castlingAvailability3 = new(false, true, false, true);
-            Castling castlingAvailability4 = new(true, false, true, false);
+            Castling castling = new(false, true, true, false);
+            Castling castling2 = new(false, true, false, false);
+            Castling castling3 = new(false, true, false, true);
+            Castling castling4 = new(true, false, true, false);
 
-            Assert.AreEqual("Qk", castlingAvailability.ToString());
-            Assert.AreEqual("Q", castlingAvailability2.ToString());
-            Assert.AreEqual("Qq", castlingAvailability3.ToString());
-            Assert.AreEqual("Kk", castlingAvailability4.ToString());
+            Assert.AreEqual("Qk", castling.ToString());
+            Assert.AreEqual("Q", castling2.ToString());
+            Assert.AreEqual("Qq", castling3.ToString());
+            Assert.AreEqual("Kk", castling4.ToString());
         }
     }
 }
