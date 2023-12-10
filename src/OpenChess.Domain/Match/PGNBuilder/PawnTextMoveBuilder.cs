@@ -19,7 +19,7 @@ namespace OpenChess.Domain
             return this;
         }
 
-        public override PGNBuilder AppendCaptureSign()
+        protected override PGNBuilder BuildCaptureSign()
         {
             int index = Result.IndexOf(" ");
             Result = Result.Insert(index + 1, $"{_origin.Column.ToString().ToLower()}x");
