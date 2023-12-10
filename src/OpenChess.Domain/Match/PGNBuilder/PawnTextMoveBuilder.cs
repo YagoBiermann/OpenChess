@@ -4,10 +4,14 @@ namespace OpenChess.Domain
     {
         private Coordinate _origin;
         private Coordinate _destination;
-        public PawnTextMoveBuilder(int count, Coordinate origin, Coordinate destination) : base(count)
+        private bool _appendPromotingSign = false;
+        private char? _promotingPiece;
+        public PawnTextMoveBuilder(int count, Coordinate origin, Coordinate destination, char? promotingPiece = null) : base(count)
         {
             _origin = origin;
             _destination = destination;
+            _promotingPiece = promotingPiece;
+            if (promotingPiece is not null) _appendPromotingSign = true;
         }
         public override PGNBuilder Build()
         {
@@ -21,6 +25,6 @@ namespace OpenChess.Domain
             Result = Result.Insert(index + 1, $"{_origin.Column.ToString().ToLower()}x");
             return this;
         }
-        public PawnTextMoveBuilder AppendPromotionSign(char promotingPiece) { Result += $"={char.ToUpper(promotingPiece)}"; return this; }
+        private PawnTextMoveBuilder BuildPromotionSign() { Result += $"={char.ToUpper((char)_promotingPiece!)}"; return this; }
     }
 }
