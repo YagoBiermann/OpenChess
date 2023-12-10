@@ -16,5 +16,27 @@ namespace OpenChess.Domain
 
             Assert.IsTrue(Castling.IsCastling(origin, destination, chessboard));
         }
+
+        [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "E1", "D1")]
+        [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "E1", "F1")]
+        [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "E1", "C8")]
+        [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "F1", "C1")]
+        [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "E8", "F8")]
+        [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "E8", "D8")]
+        [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "E8", "C1")]
+        [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "F8", "E8")]
+        [DataRow("r3Q2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3Q2R w - - 0 1", "E1", "G1")]
+        [DataRow("r3Q2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3Q2R w - - 0 1", "E1", "C1")]
+        [DataRow("r3Q2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3Q2R w - - 0 1", "E8", "C8")]
+        [DataRow("r3Q2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3Q2R w - - 0 1", "E8", "G8")]
+        [TestMethod]
+        public void IsCastling_ShouldReturnFalse(string fen, string position1, string position2)
+        {
+            Chessboard chessboard = new(fen);
+            Coordinate origin = Coordinate.GetInstance(position1);
+            Coordinate destination = Coordinate.GetInstance(position2);
+
+            Assert.IsFalse(Castling.IsCastling(origin, destination, chessboard));
+        }
     }
 }
