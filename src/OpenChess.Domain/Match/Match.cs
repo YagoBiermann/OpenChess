@@ -25,7 +25,7 @@ namespace OpenChess.Domain
 
             IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
 
-            BuildPGN(move.Origin, move.Destination, capturedPiece is not null);
+            BuildPGN(move.Origin, move.Destination, capturedPiece is not null, move.Promoting);
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -103,7 +103,7 @@ namespace OpenChess.Domain
             if (move.Promoting is not null && !Promotion.IsValidString(move.Promoting)) { throw new ChessboardException("Invalid promoting piece!"); }
         }
 
-        private void BuildPGN(Coordinate origin, Coordinate destination, bool pieceWasCaptured)
+        private void BuildPGN(Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece)
         {
             PGNBuilder builder;
             int moveCount = _pgnMoveText.Count + 1;
@@ -118,6 +118,7 @@ namespace OpenChess.Domain
             {
                 builder.AppendCaptureSign();
             }
+            if (builder is PawnTextMoveBuilder pawnBuilder && promotingPiece is not null) { pawnBuilder.AppendPromotionSign(char.Parse(promotingPiece)); }
 
             _pgnMoveText.Push(builder.Result);
         }
