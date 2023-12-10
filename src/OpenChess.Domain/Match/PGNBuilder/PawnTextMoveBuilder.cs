@@ -16,6 +16,9 @@ namespace OpenChess.Domain
         public override PGNBuilder Build()
         {
             Result = AppendCount(_count) + _destination.ToString().ToLower();
+            if (AppendCaptureSign) { BuildCaptureSign(); }
+            if (_appendPromotingSign) { BuildPromotionSign(); }
+            if (AppendCheckSign) { BuildCheckSign(); } else if (AppendCheckMateSign) { BuildCheckMateSign(); }
             return this;
         }
 
