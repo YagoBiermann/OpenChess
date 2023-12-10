@@ -25,9 +25,11 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("E4");
             Coordinate destination = Coordinate.GetInstance("E5");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
-
-            string move = builder.Build().AppendCheckSign().Result;
+            PawnTextMoveBuilder builder = new(1, origin, destination)
+            {
+                AppendCheckSign = true
+            };
+            string move = builder.Build().Result;
 
             Assert.AreEqual("1. e5+", move);
         }
@@ -37,9 +39,9 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("E4");
             Coordinate destination = Coordinate.GetInstance("E5");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
+            PawnTextMoveBuilder builder = new(1, origin, destination) { AppendCheckMateSign = true };
 
-            string move = builder.Build().AppendCheckMateSign().Result;
+            string move = builder.Build().Result;
 
             Assert.AreEqual("1. e5#", move);
         }
@@ -49,9 +51,9 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("E4");
             Coordinate destination = Coordinate.GetInstance("D5");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
+            PawnTextMoveBuilder builder = new(1, origin, destination) { AppendCaptureSign = true };
 
-            string move = builder.Build().AppendCaptureSign().Result;
+            string move = builder.Build().Result;
 
             Assert.AreEqual("1. exd5", move);
         }
@@ -61,9 +63,9 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("E4");
             Coordinate destination = Coordinate.GetInstance("D5");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
+            PawnTextMoveBuilder builder = new(1, origin, destination) { AppendCaptureSign = true, AppendCheckSign = true };
 
-            string move = builder.Build().AppendCaptureSign().AppendCheckSign().Result;
+            string move = builder.Build().Result;
 
             Assert.AreEqual("1. exd5+", move);
         }
@@ -73,9 +75,9 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("E4");
             Coordinate destination = Coordinate.GetInstance("D5");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
+            PawnTextMoveBuilder builder = new(1, origin, destination) { AppendCaptureSign = true, AppendCheckMateSign = true };
 
-            string move = builder.Build().AppendCaptureSign().AppendCheckMateSign().Result;
+            string move = builder.Build().Result;
 
             Assert.AreEqual("1. exd5#", move);
         }
@@ -85,10 +87,11 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("D7");
             Coordinate destination = Coordinate.GetInstance("D8");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
+            char promotingPiece = 'Q';
+            PawnTextMoveBuilder builder = new(1, origin, destination, promotingPiece);
 
             builder.Build();
-            string move = builder.AppendPromotionSign('Q').Result;
+            string move = builder.Result;
 
             Assert.AreEqual("1. d8=Q", move);
         }
@@ -98,11 +101,10 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("D7");
             Coordinate destination = Coordinate.GetInstance("D8");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
+            char promotingPiece = 'Q';
+            PawnTextMoveBuilder builder = new(1, origin, destination, promotingPiece) { AppendCheckSign = true };
 
             builder.Build();
-            builder.AppendPromotionSign('Q');
-            builder.AppendCheckSign();
 
             Assert.AreEqual("1. d8=Q+", builder.Result);
         }
@@ -112,11 +114,10 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("D7");
             Coordinate destination = Coordinate.GetInstance("D8");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
+            char promotingPiece = 'Q';
+            PawnTextMoveBuilder builder = new(1, origin, destination, promotingPiece) { AppendCheckMateSign = true };
 
             builder.Build();
-            builder.AppendPromotionSign('Q');
-            builder.AppendCheckMateSign();
 
             Assert.AreEqual("1. d8=Q#", builder.Result);
         }
@@ -126,11 +127,10 @@ namespace OpenChess.Tests
         {
             Coordinate origin = Coordinate.GetInstance("D7");
             Coordinate destination = Coordinate.GetInstance("D8");
-            PawnTextMoveBuilder builder = new(1, origin, destination);
+            char promotingPiece = 'Q';
+            PawnTextMoveBuilder builder = new(1, origin, destination, promotingPiece) { AppendCaptureSign = true };
 
             builder.Build();
-            builder.AppendCaptureSign();
-            builder.AppendPromotionSign('Q');
 
             Assert.AreEqual("1. dxd8=Q", builder.Result);
         }
@@ -150,10 +150,9 @@ namespace OpenChess.Tests
         public void DefaultTextMoveBuilder_Build_WithCapture_ShouldAddCaptureSignToMove()
         {
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
-            DefaultTextMoveBuilder builder = new(1, piece, _defaultMoveDestination);
+            DefaultTextMoveBuilder builder = new(1, piece, _defaultMoveDestination) { AppendCaptureSign = true };
 
             builder.Build();
-            builder.AppendCaptureSign();
 
             Assert.AreEqual("1. Qxd8", builder.Result);
         }
@@ -162,11 +161,9 @@ namespace OpenChess.Tests
         public void DefaultTextMoveBuilder_Build_WithCaptureAndCheck_ShouldAddCaptureAndCheckSignToMove()
         {
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
-            DefaultTextMoveBuilder builder = new(1, piece, _defaultMoveDestination);
+            DefaultTextMoveBuilder builder = new(1, piece, _defaultMoveDestination) { AppendCaptureSign = true, AppendCheckSign = true };
 
             builder.Build();
-            builder.AppendCaptureSign();
-            builder.AppendCheckSign();
 
             Assert.AreEqual("1. Qxd8+", builder.Result);
         }
@@ -175,11 +172,9 @@ namespace OpenChess.Tests
         public void DefaultTextMoveBuilder_Build_WithCaptureAndCheckmate_ShouldAddCaptureAndCheckmateSignToMove()
         {
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
-            DefaultTextMoveBuilder builder = new(1, piece, _defaultMoveDestination);
+            DefaultTextMoveBuilder builder = new(1, piece, _defaultMoveDestination) { AppendCaptureSign = true, AppendCheckMateSign = true };
 
             builder.Build();
-            builder.AppendCaptureSign();
-            builder.AppendCheckMateSign();
 
             Assert.AreEqual("1. Qxd8#", builder.Result);
         }
