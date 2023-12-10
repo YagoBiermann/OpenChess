@@ -273,7 +273,7 @@ namespace OpenChess.Domain
         private Piece CreatePiece(char type, Coordinate origin, Color player)
         {
             char piece = Turn == Color.Black ? char.ToLower(type) : char.ToUpper(type);
-            return CreatePiece(piece, origin, player);
+            return CreatePiece(piece, origin);
         }
 
         private void SetPiecesOnBoard(string field)
