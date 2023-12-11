@@ -35,29 +35,6 @@ namespace OpenChess.Domain
             return moveRange;
         }
 
-        public bool IsHittingTheEnemyKing()
-        {
-            List<MoveDirections> moveRange = CalculateMoveRange();
-            bool isHitting = false;
-
-            foreach (MoveDirections move in moveRange)
-            {
-                if (this is Pawn pawn && move.Direction.Equals(pawn.ForwardDirection))
-                {
-                    continue;
-                }
-
-                List<Coordinate> pieces = Chessboard.GetPiecesPosition(move.Coordinates);
-                if (!pieces.Any()) continue;
-                List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, pieces);
-                CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances)!;
-                IReadOnlySquare square = Chessboard.GetReadOnlySquare(nearestPiece.Position);
-                if (square.HasEnemyPiece(Color) && square.HasTypeOfPiece(typeof(King))) { isHitting = true; break; }
-            }
-
-            return isHitting;
-        }
-
         public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType())
