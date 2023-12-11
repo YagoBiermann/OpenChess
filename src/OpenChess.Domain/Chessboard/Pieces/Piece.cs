@@ -58,37 +58,6 @@ namespace OpenChess.Domain
             return isHitting;
         }
 
-        public virtual List<MoveDirections> CalculateLegalMoves()
-        {
-            List<MoveDirections> legalMoves = new();
-            List<MoveDirections> moveRange = CalculateMoveRange();
-
-            foreach (MoveDirections move in moveRange)
-            {
-                Direction currentDirection = move.Direction;
-                List<Coordinate> pieces = Chessboard.GetPiecesPosition(move.Coordinates);
-                if (!pieces.Any())
-                {
-                    legalMoves.Add(move);
-                    continue;
-                }
-
-                List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(Origin, pieces);
-                CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
-
-                List<Coordinate> rangeOfAttack = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
-                IReadOnlySquare square = Chessboard.GetReadOnlySquare(nearestPiece.Position);
-                bool isKing = square.HasTypeOfPiece(typeof(King));
-
-                int lastPosition = rangeOfAttack.Count - 1;
-                if (!square.HasEnemyPiece(Color) || isKing) rangeOfAttack.RemoveAt(lastPosition);
-
-                legalMoves.Add(new(currentDirection, rangeOfAttack));
-            }
-
-            return legalMoves;
-        }
-
         public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType())
