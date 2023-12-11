@@ -114,7 +114,7 @@ namespace OpenChess.Domain
         {
             IReadOnlyPiece? piece = GetReadOnlySquare(origin).ReadOnlyPiece;
             if (piece is not Pawn pawn) throw new ChessboardException("Cannot handle en passant because piece is not a pawn.");
-            if (!pawn.CanCaptureByEnPassant) throw new ChessboardException("This pawn cannot capture by en passant!");
+            if (!EnPassant.CanCaptureByEnPassant(pawn)) throw new ChessboardException("This pawn cannot capture by en passant!");
 
             HandleDefault(origin, destination);
             Coordinate vulnerablePawnPosition = EnPassant.GetVulnerablePawn!.Origin;
