@@ -29,9 +29,9 @@ namespace OpenChess.Domain
             Position = null;
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(lastMovedPiece).ReadOnlyPiece;
             if (piece is not Pawn pawn) return;
-            if (!pawn.IsVulnerableToEnPassant) return;
+            if (!IsVulnerableToEnPassant(pawn)) return;
 
-            Position = pawn.GetEnPassantPosition;
+            Position = GetEnPassantPosition(pawn);
         }
 
         public bool IsEnPassantMove(Coordinate origin, Coordinate destination)
@@ -40,6 +40,34 @@ namespace OpenChess.Domain
 
             if (piece is not Pawn) return false;
             if (destination == Position) return true;
+            return false;
+        }
+
+        public Coordinate? GetEnPassantPosition(Pawn pawn)
+        {
+            if (!IsVulnerableToEnPassant(pawn)) return null;
+            return Coordinate.CalculateNextPosition(pawn.Origin, Direction.Opposite(pawn.ForwardDirection));
+        }
+
+        public bool IsVulnerableToEnPassant(Pawn pawn)
+        {
+            bool isBlackVulnerable = pawn.Color == Color.Black && pawn.Origin.Row == '5';
+            bool isWhiteVulnerable = pawn.Color == Color.White && pawn.Origin.Row == '4';
+
+            return isBlackVulnerable ^ isWhiteVulnerable;
+        }
+
+        public bool CanCaptureByEnPassant(Pawn pawn)
+        {
+            if (_chessboard.EnPassant.Position is null) return false;
+
+            foreach (Direction direction in pawn.Directions)
+            {
+                if (direction is Up || direction is Down) continue;
+                Coordinate? diagonal = Coordinate.CalculateSequence(pawn.Origin, direction, pawn.MoveAmount).FirstOrDefault();
+                if (_chessboard.EnPassant.Position == diagonal) return true;
+            }
+
             return false;
         }
     }

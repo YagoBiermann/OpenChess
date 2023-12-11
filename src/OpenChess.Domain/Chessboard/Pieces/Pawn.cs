@@ -7,43 +7,6 @@ namespace OpenChess.Domain
         {
         }
 
-        public Coordinate? GetEnPassantPosition
-        {
-            get
-            {
-                if (!IsVulnerableToEnPassant) return null;
-                return Coordinate.CalculateNextPosition(Origin, Direction.Opposite(ForwardDirection));
-            }
-        }
-
-        public bool IsVulnerableToEnPassant
-        {
-            get
-            {
-                bool isBlackVulnerable = Color == Color.Black && Origin.Row == '5';
-                bool isWhiteVulnerable = Color == Color.White && Origin.Row == '4';
-
-                return isBlackVulnerable ^ isWhiteVulnerable;
-            }
-        }
-
-        public bool CanCaptureByEnPassant
-        {
-            get
-            {
-                if (Chessboard.EnPassant is null) return false;
-
-                foreach (Direction direction in Directions)
-                {
-                    if (direction is Up || direction is Down) continue;
-                    Coordinate? diagonal = Coordinate.CalculateSequence(Origin, direction, MoveAmount).FirstOrDefault();
-                    if (Chessboard.EnPassant.Position == diagonal) return true;
-                }
-
-                return false;
-            }
-        }
-
         public bool IsFirstMove
         {
             get
