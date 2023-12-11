@@ -9,7 +9,5 @@ namespace OpenChess.Domain
         public bool IsLongRange { get; }
         public int MoveAmount { get; }
         public List<MoveDirections> CalculateMoveRange();
-        public bool IsHittingTheEnemyKing();
-        public List<MoveDirections> CalculateLegalMoves();
     }
 }
