@@ -4,6 +4,7 @@ namespace OpenChess.Domain
     {
         private List<List<Square>> _board;
         private Promotion _promotion;
+        private LegalMoves _legalMoves;
         public Color Turn { get; private set; }
         public Castling Castling { get; set; }
         public EnPassant EnPassant { get; private set; }
@@ -24,6 +25,7 @@ namespace OpenChess.Domain
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
             _promotion = new(this);
+            _legalMoves = new(this);
         }
 
         public IReadOnlySquare GetReadOnlySquare(string coordinate)
@@ -45,7 +47,7 @@ namespace OpenChess.Domain
         public IReadOnlyPiece? MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
-            if (!IsLegalMove(origin, destination)) throw new ChessboardException("Invalid move!");
+            if (!_legalMoves.IsLegalMove(origin, destination)) throw new ChessboardException("Invalid move!");
             IReadOnlyPiece? capturedPiece;
             if (EnPassant.IsEnPassantMove(origin, destination))
             {
@@ -136,11 +138,6 @@ namespace OpenChess.Domain
             return capturedPiece;
         }
 
-        private bool IsLegalMove(Coordinate origin, Coordinate destination)
-        {
-            List<MoveDirections> legalMoves = GetReadOnlySquare(origin).ReadOnlyPiece!.CalculateLegalMoves();
-            return legalMoves.Exists(m => m.Coordinates.Contains(destination));
-        }
         private void HandleIllegalPosition()
         {
             if (Check.IsInCheck(Turn, this)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
