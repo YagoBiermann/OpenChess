@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal record EnPassant
+    internal class EnPassant : MoveHandler
     {
         public Coordinate? Position { get; private set; }
         private Chessboard _chessboard;

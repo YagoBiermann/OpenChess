@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal readonly struct Castling
+    internal class Castling : MoveHandler
     {
         public bool HasWhiteKingSide { get; init; }
         public bool HasWhiteQueenSide { get; init; }
