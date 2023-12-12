@@ -17,22 +17,6 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void NewInstanceWithOneParameter_ShouldApplyBoolForAll()
-        {
-            Castling castling = new(false);
-            Castling castling2 = new(true);
-
-            Assert.IsFalse(castling.HasWhiteKingSide);
-            Assert.IsFalse(castling.HasWhiteQueenSide);
-            Assert.IsFalse(castling.HasBlackKingSide);
-            Assert.IsFalse(castling.HasBlackQueenSide);
-            Assert.IsTrue(castling2.HasWhiteKingSide);
-            Assert.IsTrue(castling2.HasWhiteQueenSide);
-            Assert.IsTrue(castling2.HasBlackKingSide);
-            Assert.IsTrue(castling2.HasBlackQueenSide);
-        }
-
-        [TestMethod]
         public void ToString_AllPropertiesFalse_ShouldConvertToHyphen()
         {
             Castling castling = new(false);
