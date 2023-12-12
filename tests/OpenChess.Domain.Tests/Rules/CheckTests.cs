@@ -17,7 +17,7 @@ namespace OpenChess.Tests
         public void IsInCheck_PlayerInCheck_ShouldReturnTrue(char color, string fen)
         {
             Chessboard chessboard = new(fen);
-            Color player = color == 'w' ? Color.White : Color.Black;
+            Color player = Utils.ColorFromChar(color);
 
             Assert.IsTrue(Check.IsInCheck(player, chessboard));
         }
@@ -52,7 +52,7 @@ namespace OpenChess.Tests
         public void CheckAmount_DoubleCheck_ShouldReturn2(char color, string fen)
         {
             Chessboard chessboard = new(fen);
-            Color player = color == 'w' ? Color.White : Color.Black;
+            Color player = Utils.ColorFromChar(color);
 
             Assert.AreEqual(2, Check.CalculateCheckAmount(player, chessboard));
         }
@@ -65,7 +65,7 @@ namespace OpenChess.Tests
         public void CheckAmount_Check_ShouldReturn1(char color, string fen)
         {
             Chessboard chessboard = new(fen);
-            Color player = color == 'w' ? Color.White : Color.Black;
+            Color player = Utils.ColorFromChar(color);
 
             Assert.AreEqual(1, Check.CalculateCheckAmount(player, chessboard));
         }
@@ -81,7 +81,7 @@ namespace OpenChess.Tests
         public void CheckAmount_NotInCheck_ShouldReturn0(char color, string fen)
         {
             Chessboard chessboard = new(fen);
-            Color player = color == 'w' ? Color.White : Color.Black;
+            Color player = Utils.ColorFromChar(color);
 
             Assert.AreEqual(0, Check.CalculateCheckAmount(player, chessboard));
         }
