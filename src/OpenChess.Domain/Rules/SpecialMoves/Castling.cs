@@ -47,6 +47,15 @@ namespace OpenChess.Domain
             return true;
         }
 
+        public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        {
+            if (IsCastling(origin, destination))
+            {
+                return null;
+            }
+            else { return base.Handle(origin, destination, promotingPiece); }
+        }
+
         private static List<Coordinate> WhiteCastlingPositions
         {
             get
