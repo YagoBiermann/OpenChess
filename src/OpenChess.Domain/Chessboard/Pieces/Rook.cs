@@ -3,7 +3,7 @@ namespace OpenChess.Domain
 {
     internal class Rook : Piece
     {
-        public Rook(Color color, Coordinate origin, Chessboard chessboard) : base(color, origin, chessboard)
+        public Rook(Color color, Coordinate origin) : base(color, origin)
         {
         }
 

@@ -220,12 +220,12 @@ namespace OpenChess.Domain
 
             return char.ToUpper(type) switch
             {
-                'K' => new King(color, origin, this),
-                'Q' => new Queen(color, origin, this),
-                'R' => new Rook(color, origin, this),
-                'B' => new Bishop(color, origin, this),
-                'N' => new Knight(color, origin, this),
-                'P' => new Pawn(color, origin, this),
+                'K' => new King(color, origin),
+                'Q' => new Queen(color, origin),
+                'R' => new Rook(color, origin),
+                'B' => new Bishop(color, origin),
+                'N' => new Knight(color, origin),
+                'P' => new Pawn(color, origin),
                 _ => throw new PieceException($"{type} does not represent a piece"),
             };
         }

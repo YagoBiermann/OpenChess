@@ -3,7 +3,7 @@ namespace OpenChess.Domain
 {
     internal class Knight : Piece
     {
-        public Knight(Color color, Coordinate origin, Chessboard chessboard) : base(color, origin, chessboard)
+        public Knight(Color color, Coordinate origin) : base(color, origin)
         {
         }
 

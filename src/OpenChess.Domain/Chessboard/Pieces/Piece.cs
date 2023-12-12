@@ -7,13 +7,10 @@ namespace OpenChess.Domain
         public abstract char Name { get; }
         public abstract List<Direction> Directions { get; }
         public abstract bool IsLongRange { get; }
-        private IReadOnlyChessboard _chessboard;
-
-        public Piece(Color color, Coordinate origin, IReadOnlyChessboard chessboard)
+        public Piece(Color color, Coordinate origin)
         {
             Color = color;
             Origin = origin;
-            _chessboard = chessboard;
         }
 
         public int MoveAmount
@@ -50,7 +47,5 @@ namespace OpenChess.Domain
         {
             return Origin.GetHashCode() ^ Color.GetHashCode();
         }
-
-        protected IReadOnlyChessboard Chessboard { get { return _chessboard; } }
     }
 }
