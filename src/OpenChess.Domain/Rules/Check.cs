@@ -10,7 +10,7 @@ namespace OpenChess.Domain
             foreach (Coordinate origin in piecePositions)
             {
                 IReadOnlyPiece piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
-                if (!IsHittingTheEnemyKing(piece, chessboard)) { checkAmount++; };
+                if (IsHittingTheEnemyKing(piece, chessboard)) { checkAmount++; };
             }
 
             return checkAmount;
