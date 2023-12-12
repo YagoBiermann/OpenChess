@@ -29,6 +29,25 @@ namespace OpenChess.Domain
             _legalMoves = new(this);
             _moveHandler = SetupMoveHandlerChain();
         }
+        
+        public Piece? AddPiece(Coordinate position, char piece, Color player)
+        {
+            Piece createdPiece = CreatePiece(piece, position, player);
+            Piece? removedPiece = RemovePiece(position);
+            GetSquare(position).Piece = createdPiece;
+
+            return removedPiece;
+        }
+
+        public Piece? RemovePiece(Coordinate position)
+        {
+            Square square = GetSquare(position);
+            if (!square.HasPiece) return null;
+            Piece piece = square.Piece!;
+            square.Piece = null;
+
+            return piece;
+        }
 
         public IReadOnlySquare GetReadOnlySquare(string coordinate)
         {
@@ -107,25 +126,6 @@ namespace OpenChess.Domain
             HalfMove = previous.HalfMove;
             FullMove = previous.FullMove;
             LastPosition = previous.LastPosition;
-        }
-
-        public Piece? AddPiece(Coordinate position, char piece, Color player)
-        {
-            Piece createdPiece = CreatePiece(piece, position, player);
-            Piece? removedPiece = RemovePiece(position);
-            GetSquare(position).Piece = createdPiece;
-
-            return removedPiece;
-        }
-
-        public Piece? RemovePiece(Coordinate position)
-        {
-            Square square = GetSquare(position);
-            if (!square.HasPiece) return null;
-            Piece piece = square.Piece!;
-            square.Piece = null;
-
-            return piece;
         }
 
         private IMoveHandler SetupMoveHandlerChain()
