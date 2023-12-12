@@ -8,7 +8,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstanceWithEmptyConstructor_ShouldBeTrueForAll()
         {
-            Castling castling = new();
+            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Castling castling = new(chessboard);
 
             Assert.IsTrue(castling.HasWhiteKingSide);
             Assert.IsTrue(castling.HasWhiteQueenSide);
@@ -19,7 +20,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ToString_AllPropertiesFalse_ShouldConvertToHyphen()
         {
-            Castling castling = new(false);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Castling castling = new(false, false, false, false, chessboard);
 
             Assert.AreEqual("-", castling.ToString());
         }
@@ -27,7 +29,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ToString_AllPropertiesTrue_ShouldConvertToDefaultCastling()
         {
-            Castling castling = new(true);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Castling castling = new(chessboard);
 
             Assert.AreEqual("KQkq", castling.ToString());
         }
@@ -35,10 +38,11 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ToString_ShouldConvertCorrectly()
         {
-            Castling castling = new(false, true, true, false);
-            Castling castling2 = new(false, true, false, false);
-            Castling castling3 = new(false, true, false, true);
-            Castling castling4 = new(true, false, true, false);
+            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Castling castling = new(false, true, true, false, chessboard);
+            Castling castling2 = new(false, true, false, false, chessboard);
+            Castling castling3 = new(false, true, false, true, chessboard);
+            Castling castling4 = new(true, false, true, false, chessboard);
 
             Assert.AreEqual("Qk", castling.ToString());
             Assert.AreEqual("Q", castling2.ToString());
@@ -56,8 +60,8 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1");
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
-
-            Assert.IsTrue(Castling.IsCastling(origin, destination, chessboard));
+            Castling castling = new(chessboard);
+            Assert.IsTrue(castling.IsCastling(origin, destination));
         }
 
         [DataRow("r3k2r/pp3ppp/2p5/8/8/3P4/PPP2PPP/R3K2R w KQkq - 0 1", "E1", "D1")]
@@ -78,8 +82,9 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
+            Castling castling = new(chessboard);
 
-            Assert.IsFalse(Castling.IsCastling(origin, destination, chessboard));
+            Assert.IsFalse(castling.IsCastling(origin, destination));
         }
     }
 }
