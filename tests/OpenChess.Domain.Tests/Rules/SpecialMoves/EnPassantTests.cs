@@ -1,4 +1,6 @@
-namespace OpenChess.Domain
+using OpenChess.Domain;
+
+namespace OpenChess.Tests
 {
     [TestClass]
     public class EnPassantTests
