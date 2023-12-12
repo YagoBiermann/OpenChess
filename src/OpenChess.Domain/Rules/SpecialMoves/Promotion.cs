@@ -22,6 +22,25 @@ namespace OpenChess.Domain
             return rx.IsMatch(value);
         }
 
+        public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        {
+            if (IsPromoting(origin, destination))
+            {
+                string promotingTo = promotingPiece ?? DefaultPiece;
+
+                if (!IsValidString(promotingTo)) throw new ChessboardException("Invalid promoting piece");
+                IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
+                if (piece is not Pawn) throw new ChessboardException("Cannot handle promotion because piece is not a pawn.");
+                IReadOnlyPiece? pieceCaptured = base.Handle(origin, destination).PieceCaptured;
+
+                _chessboard.AddPiece(destination, char.Parse(promotingTo), _chessboard.Turn);
+                IReadOnlyPiece pieceMoved = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
+
+                return new(pieceMoved, pieceCaptured);
+            }
+            else { return base.Handle(origin, destination, promotingPiece); }
+        }
+
         public static string DefaultPiece { get { return "Q"; } }
     }
 }

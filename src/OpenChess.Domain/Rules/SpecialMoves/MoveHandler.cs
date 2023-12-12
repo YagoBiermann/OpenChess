@@ -11,7 +11,7 @@ namespace OpenChess.Domain
 
         public virtual HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
-            if (_nextHandler is null) { return null; }
+            if (_nextHandler is null) { return HandleDefaultMove(origin, destination); }
             else { return _nextHandler.Handle(origin, destination, promotingPiece); }
         }
 
@@ -19,6 +19,18 @@ namespace OpenChess.Domain
         {
             _nextHandler = handler;
             return handler;
+        }
+
+        private HandledMove HandleDefaultMove(Coordinate origin, Coordinate destination)
+        {
+            Square originSquare = _chessboard.GetSquare(origin);
+            Square destinationSquare = _chessboard.GetSquare(destination);
+            Piece piece = originSquare.Piece!;
+            Piece? capturedPiece = destinationSquare.Piece;
+            originSquare.Piece = null;
+            destinationSquare.Piece = piece;
+
+            return new(destinationSquare.Piece, capturedPiece);
         }
     }
 }

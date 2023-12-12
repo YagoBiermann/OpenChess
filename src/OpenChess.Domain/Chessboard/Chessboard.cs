@@ -100,48 +100,11 @@ namespace OpenChess.Domain
             return $"{chessboard} {turn} {castling} {enPassant} {HalfMove} {FullMove}";
         }
 
-        private IReadOnlyPiece? HandleDefault(Coordinate origin, Coordinate destination)
-        {
-            Square originSquare = GetSquare(origin);
-            Square destinationSquare = GetSquare(destination);
-            Piece piece = originSquare.Piece!;
-            Piece? capturedPiece = destinationSquare.Piece;
-            originSquare.Piece = null;
-            destinationSquare.Piece = piece;
-
-            return capturedPiece;
-        }
-
-        private IReadOnlyPiece? HandleEnPassant(Coordinate origin, Coordinate destination)
-        {
-            IReadOnlyPiece? piece = GetReadOnlySquare(origin).ReadOnlyPiece;
-            if (piece is not Pawn pawn) throw new ChessboardException("Cannot handle en passant because piece is not a pawn.");
-            if (!EnPassant.CanCaptureByEnPassant(pawn)) throw new ChessboardException("This pawn cannot capture by en passant!");
-
-            HandleDefault(origin, destination);
-            Coordinate vulnerablePawnPosition = EnPassant.GetVulnerablePawn!.Origin;
-            IReadOnlyPiece? capturedPiece = RemovePiece(vulnerablePawnPosition);
-
-            return capturedPiece;
-        }
-
-        private IReadOnlyPiece? HandlePromotion(Coordinate origin, Coordinate destination, string? promotingPiece)
-        {
-            string promotingTo = promotingPiece ?? Promotion.DefaultPiece;
-
-            if (!Promotion.IsValidString(promotingTo)) throw new ChessboardException("Invalid promoting piece");
-            IReadOnlyPiece? piece = GetReadOnlySquare(origin).ReadOnlyPiece;
-            if (piece is not Pawn) throw new ChessboardException("Cannot handle promotion because piece is not a pawn.");
-            IReadOnlyPiece? capturedPiece = HandleDefault(origin, destination);
-            ReplacePiece(destination, char.Parse(promotingTo), Turn);
-
-            return capturedPiece;
-        }
-
         private void HandleIllegalPosition()
         {
             if (Check.IsInCheck(Turn, this)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
         }
+
         private void RestoreToLastPosition()
         {
             Chessboard previous = new(LastPosition);

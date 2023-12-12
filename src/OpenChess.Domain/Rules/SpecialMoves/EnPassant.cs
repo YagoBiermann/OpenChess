@@ -69,5 +69,22 @@ namespace OpenChess.Domain
 
             return false;
         }
+
+        public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        {
+            if (IsEnPassantMove(origin, destination))
+            {
+                IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
+                var pawn = (Pawn)piece!;
+                if (!CanCaptureByEnPassant(pawn)) throw new ChessboardException("This pawn cannot capture by en passant!");
+
+                var move = base.Handle(origin, destination);
+                Coordinate vulnerablePawnPosition = GetVulnerablePawn!.Origin;
+                IReadOnlyPiece? pieceCaptured = _chessboard.RemovePiece(vulnerablePawnPosition);
+
+                return new(move.PieceMoved, pieceCaptured);
+            }
+            else { return base.Handle(origin, destination, promotingPiece); }
+        }
     }
 }
