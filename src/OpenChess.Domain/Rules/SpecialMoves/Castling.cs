@@ -15,15 +15,6 @@ namespace OpenChess.Domain
             HasBlackQueenSide = true;
         }
 
-        public Castling(bool AvailabilityforAll)
-        {
-            HasWhiteKingSide = AvailabilityforAll;
-            HasWhiteQueenSide = AvailabilityforAll;
-            HasBlackKingSide = AvailabilityforAll;
-            HasBlackQueenSide = AvailabilityforAll;
-        }
-
-        public Castling(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide)
         public Castling(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide, Chessboard chessboard) : base(chessboard)
         {
             HasWhiteKingSide = whiteKingSide;
