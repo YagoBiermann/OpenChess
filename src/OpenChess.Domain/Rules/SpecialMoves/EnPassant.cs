@@ -21,11 +21,12 @@ namespace OpenChess.Domain
                 return _chessboard.GetReadOnlySquare(pawnPosition).ReadOnlyPiece;
             }
         }
-
-        public void HandleUpdate(Coordinate lastMovedPiece)
+        public void Clear()
         {
             Position = null;
-            IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(lastMovedPiece).ReadOnlyPiece;
+        }
+        public void SetVulnerablePawn(IReadOnlyPiece? piece)
+        {
             if (piece is not Pawn pawn) return;
             if (!IsVulnerableToEnPassant(pawn)) return;
 
