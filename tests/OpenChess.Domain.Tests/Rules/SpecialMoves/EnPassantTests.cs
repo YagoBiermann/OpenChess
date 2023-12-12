@@ -60,10 +60,10 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CanCaptureByEnPassant_WithinTheRange_ShouldReturnTrue(string origin, string enPassant, string fen)
         {
-            Coordinate position = Coordinate.GetInstance(origin);
             Chessboard chessboard = new(fen);
-            chessboard.EnPassant.HandleUpdate(Coordinate.GetInstance(enPassant));
-            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+            IReadOnlyPiece? vulnerablePawn = chessboard.GetReadOnlySquare(Coordinate.GetInstance(enPassant)).ReadOnlyPiece;
+            chessboard.EnPassant.SetVulnerablePawn(vulnerablePawn);
+            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
 
             Assert.IsTrue(chessboard.EnPassant.CanCaptureByEnPassant(pawn));
         }
@@ -73,10 +73,10 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CanCaptureByEnPassant_OutOfTheRange_ShouldReturnFalse(string origin, string enPassant, string fen)
         {
-            Coordinate position = Coordinate.GetInstance(origin);
             Chessboard chessboard = new(fen);
-            chessboard.EnPassant.HandleUpdate(Coordinate.GetInstance(enPassant));
-            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+            IReadOnlyPiece? vulnerablePawn = chessboard.GetReadOnlySquare(Coordinate.GetInstance(enPassant)).ReadOnlyPiece;
+            chessboard.EnPassant.SetVulnerablePawn(vulnerablePawn);
+            Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
 
             Assert.IsFalse(chessboard.EnPassant.CanCaptureByEnPassant(pawn));
         }

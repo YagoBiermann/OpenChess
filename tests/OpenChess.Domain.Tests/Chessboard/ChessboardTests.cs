@@ -217,11 +217,12 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
             Coordinate position = Coordinate.GetInstance("E4");
-            chessboard.EnPassant.HandleUpdate(position);
+            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+            chessboard.EnPassant.SetVulnerablePawn(piece);
 
-            IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
-            Assert.IsNotNull(piece);
-            Assert.IsInstanceOfType(piece, typeof(Pawn));
+            IReadOnlyPiece? pawn = chessboard.EnPassant.GetVulnerablePawn;
+            Assert.IsNotNull(pawn);
+            Assert.IsInstanceOfType(pawn, typeof(Pawn));
         }
 
         [TestMethod]
@@ -229,11 +230,14 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             Coordinate position = Coordinate.GetInstance("E5");
-            chessboard.EnPassant.HandleUpdate(position);
+            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+            chessboard.EnPassant.SetVulnerablePawn(piece);
 
-            IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
-            Assert.IsNotNull(piece);
-            Assert.IsInstanceOfType(piece, typeof(Pawn));
+            chessboard.EnPassant.SetVulnerablePawn(piece);
+
+            IReadOnlyPiece? pawn = chessboard.EnPassant.GetVulnerablePawn;
+            Assert.IsNotNull(pawn);
+            Assert.IsInstanceOfType(pawn, typeof(Pawn));
         }
 
         [TestMethod]
