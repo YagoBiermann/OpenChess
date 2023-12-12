@@ -39,7 +39,7 @@ namespace OpenChess.Domain
             return GetSquare(coordinate);
         }
 
-        private Square GetSquare(Coordinate coordinate)
+        public Square GetSquare(Coordinate coordinate)
         {
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
@@ -123,6 +123,8 @@ namespace OpenChess.Domain
             SwitchTurns();
         }
         private Piece? ReplacePiece(Coordinate position, char piece, Color player)
+
+        public Piece? AddPiece(Coordinate position, char piece, Color player)
         {
             Piece createdPiece = CreatePiece(piece, position, player);
             Piece? removedPiece = RemovePiece(position);
@@ -130,7 +132,8 @@ namespace OpenChess.Domain
 
             return removedPiece;
         }
-        private Piece? RemovePiece(Coordinate position)
+
+        public Piece? RemovePiece(Coordinate position)
         {
             Square square = GetSquare(position);
             if (!square.HasPiece) return null;
