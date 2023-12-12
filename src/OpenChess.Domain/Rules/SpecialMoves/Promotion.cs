@@ -2,15 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace OpenChess.Domain
 {
-    internal class Promotion
+    internal class Promotion : MoveHandler
     {
-        private Chessboard _chessboard;
-
-        public Promotion(Chessboard chessboard)
-        {
-            _chessboard = chessboard;
-        }
-
+        public Promotion(Chessboard chessboard) : base(chessboard) { }
         public bool IsPromoting(Coordinate origin, Coordinate destination)
         {
             IReadOnlySquare square = _chessboard.GetReadOnlySquare(origin);

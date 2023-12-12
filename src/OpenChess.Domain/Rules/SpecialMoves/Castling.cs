@@ -2,12 +2,12 @@ namespace OpenChess.Domain
 {
     internal class Castling : MoveHandler
     {
-        public bool HasWhiteKingSide { get; init; }
-        public bool HasWhiteQueenSide { get; init; }
-        public bool HasBlackKingSide { get; init; }
-        public bool HasBlackQueenSide { get; init; }
+        public bool HasWhiteKingSide { get; set; }
+        public bool HasWhiteQueenSide { get; set; }
+        public bool HasBlackKingSide { get; set; }
+        public bool HasBlackQueenSide { get; set; }
 
-        public Castling()
+        public Castling(Chessboard chessboard) : base(chessboard)
         {
             HasWhiteKingSide = true;
             HasWhiteQueenSide = true;
@@ -24,6 +24,7 @@ namespace OpenChess.Domain
         }
 
         public Castling(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide)
+        public Castling(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide, Chessboard chessboard) : base(chessboard)
         {
             HasWhiteKingSide = whiteKingSide;
             HasWhiteQueenSide = whiteQueenSide;
@@ -43,11 +44,11 @@ namespace OpenChess.Domain
             return castlingAvailability;
         }
 
-        public static bool IsCastling(Coordinate origin, Coordinate destination, IReadOnlyChessboard chessboard)
+        public bool IsCastling(Coordinate origin, Coordinate destination)
         {
             bool isNotKingPosition = origin.Column != 'E' || !(origin.Row == '1' || origin.Row == '8');
             if (isNotKingPosition) return false;
-            IReadOnlyPiece? piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
+            IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
             if (piece is not King) return false;
             if (origin.Row == '1' && !WhiteCastlingPositions.Contains(destination)) return false;
             if (origin.Row == '8' && !BlackCastlingPositions.Contains(destination)) return false;

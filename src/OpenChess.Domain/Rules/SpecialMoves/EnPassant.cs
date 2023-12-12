@@ -3,11 +3,9 @@ namespace OpenChess.Domain
     internal class EnPassant : MoveHandler
     {
         public Coordinate? Position { get; private set; }
-        private Chessboard _chessboard;
 
-        public EnPassant(Coordinate? coordinate, Chessboard chessboard)
+        public EnPassant(Coordinate? coordinate, Chessboard chessboard) : base(chessboard)
         {
-            _chessboard = chessboard;
             Position = coordinate;
         }
 
