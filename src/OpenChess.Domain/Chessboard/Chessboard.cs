@@ -5,6 +5,7 @@ namespace OpenChess.Domain
         private List<List<Square>> _board;
         private Promotion _promotion;
         private LegalMoves _legalMoves;
+        private IMoveHandler _moveHandler;
         public Color Turn { get; private set; }
         public Castling Castling { get; set; }
         public EnPassant EnPassant { get; private set; }
@@ -18,7 +19,7 @@ namespace OpenChess.Domain
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
             Turn = fenPosition.ConvertTurn(fenPosition.Turn);
-            Castling = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
+            Castling = fenPosition.ConvertCastling(fenPosition.CastlingAvailability, this);
             Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
             EnPassant = new(enPassantPosition, this);
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
@@ -26,6 +27,7 @@ namespace OpenChess.Domain
             LastPosition = position;
             _promotion = new(this);
             _legalMoves = new(this);
+            SetupMoveHandlerChain();
         }
 
         public IReadOnlySquare GetReadOnlySquare(string coordinate)
@@ -48,25 +50,15 @@ namespace OpenChess.Domain
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
             if (!_legalMoves.IsLegalMove(origin, destination)) throw new ChessboardException("Invalid move!");
-            IReadOnlyPiece? capturedPiece;
-            if (EnPassant.IsEnPassantMove(origin, destination))
-            {
-                capturedPiece = HandleEnPassant(origin, destination);
-                UpdateState(destination);
-                return capturedPiece;
-            }
-            else if (_promotion.IsPromoting(origin, destination))
-            {
-                capturedPiece = HandlePromotion(origin, destination, promotingPiece);
-                UpdateState(destination);
-                return capturedPiece;
-            }
-            else
-            {
-                capturedPiece = HandleDefault(origin, destination);
-                UpdateState(destination);
-                return capturedPiece;
-            }
+
+            HandledMove move = _moveHandler.Handle(origin, destination, promotingPiece);
+
+            HandleIllegalPosition();
+            EnPassant.Clear();
+            EnPassant.SetVulnerablePawn(move.PieceMoved);
+            SwitchTurns();
+
+            return move.PieceCaptured;
         }
 
         public List<Coordinate> GetPiecesPosition(List<Coordinate> range)
@@ -116,13 +108,6 @@ namespace OpenChess.Domain
             FullMove = previous.FullMove;
             LastPosition = previous.LastPosition;
         }
-        private void UpdateState(Coordinate movedPiecePosition)
-        {
-            EnPassant.HandleUpdate(movedPiecePosition);
-            HandleIllegalPosition();
-            SwitchTurns();
-        }
-        private Piece? ReplacePiece(Coordinate position, char piece, Color player)
 
         public Piece? AddPiece(Coordinate position, char piece, Color player)
         {
@@ -142,18 +127,30 @@ namespace OpenChess.Domain
 
             return piece;
         }
+
+        private void SetupMoveHandlerChain()
+        {
+            _promotion.SetNext(EnPassant);
+            EnPassant.SetNext(Castling);
+            Castling.SetNext(new DefaultMove(this));
+            _moveHandler = _promotion;
+        }
+
         private string BuildEnPassantString()
         {
             return EnPassant.Position is null ? "-" : EnPassant.ToString();
         }
+
         private string BuildCastlingString()
         {
             return Castling.ToString();
         }
+
         private string BuildTurnString()
         {
             return Turn == Color.Black ? "b" : "w";
         }
+
         private string BuildChessboardString()
         {
             string chessboard = "";
