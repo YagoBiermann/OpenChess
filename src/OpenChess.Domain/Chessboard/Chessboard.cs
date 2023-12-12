@@ -232,7 +232,7 @@ namespace OpenChess.Domain
 
         private Piece CreatePiece(char type, Coordinate origin, Color player)
         {
-            char piece = Turn == Color.Black ? char.ToLower(type) : char.ToUpper(type);
+            char piece = player == Color.Black ? char.ToLower(type) : char.ToUpper(type);
             return CreatePiece(piece, origin);
         }
 
