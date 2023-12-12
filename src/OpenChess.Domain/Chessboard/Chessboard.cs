@@ -27,7 +27,7 @@ namespace OpenChess.Domain
             LastPosition = position;
             _promotion = new(this);
             _legalMoves = new(this);
-            SetupMoveHandlerChain();
+            _moveHandler = SetupMoveHandlerChain();
         }
 
         public IReadOnlySquare GetReadOnlySquare(string coordinate)
@@ -128,12 +128,12 @@ namespace OpenChess.Domain
             return piece;
         }
 
-        private void SetupMoveHandlerChain()
+        private IMoveHandler SetupMoveHandlerChain()
         {
             _promotion.SetNext(EnPassant);
             EnPassant.SetNext(Castling);
             Castling.SetNext(new DefaultMove(this));
-            _moveHandler = _promotion;
+            return _promotion;
         }
 
         private string BuildEnPassantString()
