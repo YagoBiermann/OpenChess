@@ -4,6 +4,15 @@ namespace OpenChess.Domain
     {
         public CastlingHandler(Chessboard chessboard) : base(chessboard) { }
 
+        public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        {
+            if (IsCastling(origin, destination))
+            {
+                return null;
+            }
+            else { return base.Handle(origin, destination, promotingPiece); }
+        }
+
         private bool IsCastling(Coordinate origin, Coordinate destination)
         {
             bool isNotKingPosition = origin.Column != 'E' || !(origin.Row == '1' || origin.Row == '8');
@@ -14,15 +23,6 @@ namespace OpenChess.Domain
             if (origin.Row == '8' && !BlackCastlingPositions.Contains(destination)) return false;
 
             return true;
-        }
-
-        public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
-        {
-            if (IsCastling(origin, destination))
-            {
-                return null;
-            }
-            else { return base.Handle(origin, destination, promotingPiece); }
         }
 
         private static List<Coordinate> WhiteCastlingPositions
