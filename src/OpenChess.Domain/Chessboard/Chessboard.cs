@@ -3,7 +3,7 @@ namespace OpenChess.Domain
     internal class Chessboard : IReadOnlyChessboard
     {
         private List<List<Square>> _board;
-        private Promotion _promotion;
+        private PromotionHandler _promotionHandler;
         private EnPassantHandler _enPassantHandler { get; set; }
         private LegalMoves _legalMoves;
         private IMoveHandler _moveHandler;
@@ -26,7 +26,7 @@ namespace OpenChess.Domain
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
-            _promotion = new(this);
+            _promotionHandler = new(this);
             _legalMoves = new(this);
             _moveHandler = SetupMoveHandlerChain();
         }
@@ -133,10 +133,10 @@ namespace OpenChess.Domain
 
         private IMoveHandler SetupMoveHandlerChain()
         {
-            _promotion.SetNext(_enPassantHandler);
+            _promotionHandler.SetNext(_enPassantHandler);
             _enPassantHandler.SetNext(Castling);
             Castling.SetNext(new DefaultMove(this));
-            return _promotion;
+            return _promotionHandler;
         }
 
         private string BuildEnPassantString()
