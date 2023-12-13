@@ -5,7 +5,7 @@ namespace OpenChess.Domain
     internal class Promotion : MoveHandler
     {
         public Promotion(Chessboard chessboard) : base(chessboard) { }
-        public bool IsPromoting(Coordinate origin, Coordinate destination)
+        private bool IsPromoting(Coordinate origin, Coordinate destination)
         {
             IReadOnlySquare square = _chessboard.GetReadOnlySquare(origin);
             if (square.ReadOnlyPiece is not Pawn pawn) return false;
@@ -16,7 +16,7 @@ namespace OpenChess.Domain
             return isWhitePromoting ^ isBlackPromoting;
         }
 
-        public static bool IsValidString(string value)
+        private static bool IsValidString(string value)
         {
             Regex rx = new(@"^([qbrn]{1})$", RegexOptions.IgnoreCase);
             return rx.IsMatch(value);

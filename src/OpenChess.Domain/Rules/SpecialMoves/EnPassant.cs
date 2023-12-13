@@ -9,7 +9,7 @@ namespace OpenChess.Domain
             Position = coordinate;
         }
 
-        public IReadOnlyPiece? GetVulnerablePawn
+        private IReadOnlyPiece? GetVulnerablePawn
         {
             get
             {
@@ -33,7 +33,7 @@ namespace OpenChess.Domain
             Position = GetEnPassantPosition(pawn);
         }
 
-        public bool IsEnPassantMove(Coordinate origin, Coordinate destination)
+        private bool IsEnPassantMove(Coordinate origin, Coordinate destination)
         {
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
 
@@ -42,13 +42,13 @@ namespace OpenChess.Domain
             return false;
         }
 
-        public Coordinate? GetEnPassantPosition(Pawn pawn)
+        private Coordinate? GetEnPassantPosition(Pawn pawn)
         {
             if (!IsVulnerableToEnPassant(pawn)) return null;
             return Coordinate.CalculateNextPosition(pawn.Origin, Direction.Opposite(pawn.ForwardDirection));
         }
 
-        public bool IsVulnerableToEnPassant(Pawn pawn)
+        private bool IsVulnerableToEnPassant(Pawn pawn)
         {
             bool isBlackVulnerable = pawn.Color == Color.Black && pawn.Origin.Row == '5';
             bool isWhiteVulnerable = pawn.Color == Color.White && pawn.Origin.Row == '4';
@@ -56,7 +56,7 @@ namespace OpenChess.Domain
             return isBlackVulnerable ^ isWhiteVulnerable;
         }
 
-        public bool CanCaptureByEnPassant(Pawn pawn)
+        private bool CanCaptureByEnPassant(Pawn pawn)
         {
             if (_chessboard.EnPassant.Position is null) return false;
 

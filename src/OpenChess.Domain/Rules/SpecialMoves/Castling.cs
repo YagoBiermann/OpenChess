@@ -35,7 +35,7 @@ namespace OpenChess.Domain
             return castlingAvailability;
         }
 
-        public bool IsCastling(Coordinate origin, Coordinate destination)
+        private bool IsCastling(Coordinate origin, Coordinate destination)
         {
             bool isNotKingPosition = origin.Column != 'E' || !(origin.Row == '1' || origin.Row == '8');
             if (isNotKingPosition) return false;
