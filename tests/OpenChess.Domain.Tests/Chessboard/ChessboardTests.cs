@@ -173,6 +173,16 @@ namespace OpenChess.Tests
             chessboard.SwitchTurns();
             Assert.AreEqual(Color.Black, chessboard.Turn);
         }
+
+        [TestMethod]
+        public void MovePiece_ShouldSwitchTurns()
+        {
+            Chessboard chessboard = new(FenInfo.InitialPosition);
+
+            Assert.AreEqual(Color.White, chessboard.Turn);
+            chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Assert.AreEqual(Color.Black, chessboard.Turn);
+        }
     }
 
 }
