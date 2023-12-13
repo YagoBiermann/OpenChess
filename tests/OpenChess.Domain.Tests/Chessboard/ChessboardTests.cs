@@ -13,7 +13,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
             Assert.AreEqual(Color.White, chessboard.Turn);
-            Assert.IsNull(chessboard.EnPassant.Position);
+            Assert.IsNull(chessboard.EnPassant);
             Assert.IsTrue(chessboard.Castling.HasWhiteKingSide);
             Assert.IsTrue(chessboard.Castling.HasWhiteQueenSide);
             Assert.IsTrue(chessboard.Castling.HasBlackKingSide);
@@ -58,7 +58,7 @@ namespace OpenChess.Tests
             Assert.IsFalse(chessboard.Castling.HasBlackKingSide);
             Assert.IsFalse(chessboard.Castling.HasBlackQueenSide);
             Assert.AreEqual(Color.Black, chessboard.Turn);
-            Assert.IsNull(chessboard.EnPassant.Position);
+            Assert.IsNull(chessboard.EnPassant);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
         }
@@ -76,13 +76,13 @@ namespace OpenChess.Tests
         public void NewInstance_ShouldConvertEnPassantCorrectly()
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk E3 0 1");
-            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant.Position);
+            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant);
         }
         [TestMethod]
         public void NewInstance_NoEnPassant_ShouldBeNull()
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
-            Assert.IsNull(chessboard.EnPassant.Position);
+            Assert.IsNull(chessboard.EnPassant);
         }
 
         [DataRow("A1", 'R', 'w')]
@@ -179,9 +179,9 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
-            Assert.IsNull(chessboard.EnPassant.Position);
+            Assert.IsNull(chessboard.EnPassant);
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
-            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant.Position);
+            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant);
         }
 
         [TestMethod]
@@ -190,7 +190,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E3"));
-            Assert.IsNull(chessboard.EnPassant.Position);
+            Assert.IsNull(chessboard.EnPassant);
         }
     }
 

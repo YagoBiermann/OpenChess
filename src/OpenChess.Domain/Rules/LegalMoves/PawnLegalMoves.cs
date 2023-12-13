@@ -35,7 +35,7 @@ namespace OpenChess.Domain
                 if (diagonalIsOutOfChessboard) { legalMoves.Add(emptyPosition); continue; };
 
                 IReadOnlySquare square = _chessboard.GetReadOnlySquare(diagonal!);
-                bool isEnPassant = diagonal!.Equals(_chessboard.EnPassant.Position);
+                bool isEnPassant = diagonal!.Equals(_chessboard.EnPassant);
                 if (isEnPassant) { legalMoves.Add(sameCurrentPosition); continue; };
                 if (!square.HasPiece) { legalMoves.Add(emptyPosition); continue; }
                 bool hasAllyPiece = !square.HasEnemyPiece(pawn.Color);

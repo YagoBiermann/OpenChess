@@ -354,7 +354,7 @@ namespace OpenChess.Tests
             List<MoveDirections> moves = legalMoves.CalculateLegalMoves(pawn);
             MoveDirections move = moves.Where(m => m.Direction.Equals(new LowerRight())).ToList().FirstOrDefault();
 
-            Assert.AreEqual(chessboard.EnPassant.Position, move.Coordinates.FirstOrDefault());
+            Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
         }
 
         [TestMethod]
@@ -366,7 +366,7 @@ namespace OpenChess.Tests
             List<MoveDirections> moves = legalMoves.CalculateLegalMoves(pawn);
             MoveDirections move = moves.Where(m => m.Direction.Equals(new UpperLeft())).ToList().FirstOrDefault();
 
-            Assert.AreEqual(chessboard.EnPassant.Position, move.Coordinates.FirstOrDefault());
+            Assert.AreEqual(chessboard.EnPassant, move.Coordinates.FirstOrDefault());
         }
     }
 }

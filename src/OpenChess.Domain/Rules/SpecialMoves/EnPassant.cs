@@ -2,35 +2,30 @@ namespace OpenChess.Domain
 {
     internal class EnPassant : MoveHandler
     {
-        public Coordinate? Position { get; private set; }
-
-        public EnPassant(Coordinate? coordinate, Chessboard chessboard) : base(chessboard)
-        {
-            Position = coordinate;
-        }
+        public EnPassant(Chessboard chessboard) : base(chessboard) { }
 
         private IReadOnlyPiece? GetVulnerablePawn
         {
             get
             {
-                if (Position is null) return null;
+                if (_chessboard.EnPassant is null) return null;
 
-                Direction direction = Position!.Row == '3' ? new Up() : new Down();
-                Coordinate pawnPosition = Coordinate.CalculateNextPosition(Position, direction)!;
+                Direction direction = _chessboard.EnPassant!.Row == '3' ? new Up() : new Down();
+                Coordinate pawnPosition = Coordinate.CalculateNextPosition(_chessboard.EnPassant, direction)!;
 
                 return _chessboard.GetReadOnlySquare(pawnPosition).ReadOnlyPiece;
             }
         }
         public void Clear()
         {
-            Position = null;
+            _chessboard.EnPassant = null;
         }
         public void SetVulnerablePawn(IReadOnlyPiece? piece)
         {
             if (piece is not Pawn pawn) return;
             if (!IsVulnerableToEnPassant(pawn)) return;
 
-            Position = GetEnPassantPosition(pawn);
+            _chessboard.EnPassant = GetEnPassantPosition(pawn);
         }
 
         private bool IsEnPassantMove(Coordinate origin, Coordinate destination)
@@ -38,7 +33,7 @@ namespace OpenChess.Domain
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
 
             if (piece is not Pawn) return false;
-            if (destination == Position) return true;
+            if (destination == _chessboard.EnPassant) return true;
             return false;
         }
 
@@ -58,13 +53,13 @@ namespace OpenChess.Domain
 
         private bool CanCaptureByEnPassant(Pawn pawn)
         {
-            if (_chessboard.EnPassant.Position is null) return false;
+            if (_chessboard.EnPassant is null) return false;
 
             foreach (Direction direction in pawn.Directions)
             {
                 if (direction is Up || direction is Down) continue;
                 Coordinate? diagonal = Coordinate.CalculateSequence(pawn.Origin, direction, pawn.MoveAmount).FirstOrDefault();
-                if (_chessboard.EnPassant.Position == diagonal) return true;
+                if (_chessboard.EnPassant == diagonal) return true;
             }
 
             return false;

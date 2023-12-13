@@ -4,11 +4,12 @@ namespace OpenChess.Domain
     {
         private List<List<Square>> _board;
         private Promotion _promotion;
+        private EnPassant EnPassantHandler { get; set; }
         private LegalMoves _legalMoves;
         private IMoveHandler _moveHandler;
-        public Color Turn { get; private set; }
         public Castling Castling { get; set; }
-        public EnPassant EnPassant { get; private set; }
+        public Color Turn { get; private set; }
+        public Coordinate? EnPassant { get; set; }
         public int HalfMove { get; set; }
         public int FullMove { get; set; }
         public string LastPosition { get; private set; }
@@ -20,8 +21,8 @@ namespace OpenChess.Domain
             SetPiecesOnBoard(fenPosition.Board);
             Turn = fenPosition.ConvertTurn(fenPosition.Turn);
             Castling = fenPosition.ConvertCastling(fenPosition.CastlingAvailability, this);
-            Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
-            EnPassant = new(enPassantPosition, this);
+            EnPassant = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
+            EnPassantHandler = new(this);
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
@@ -73,8 +74,8 @@ namespace OpenChess.Domain
             HandledMove move = _moveHandler.Handle(origin, destination, promotingPiece);
 
             HandleIllegalPosition();
-            EnPassant.Clear();
-            EnPassant.SetVulnerablePawn(move.PieceMoved);
+            EnPassantHandler.Clear();
+            EnPassantHandler.SetVulnerablePawn(move.PieceMoved);
             SwitchTurns();
 
             return move.PieceCaptured;
@@ -132,15 +133,15 @@ namespace OpenChess.Domain
 
         private IMoveHandler SetupMoveHandlerChain()
         {
-            _promotion.SetNext(EnPassant);
-            EnPassant.SetNext(Castling);
+            _promotion.SetNext(EnPassantHandler);
+            EnPassantHandler.SetNext(Castling);
             Castling.SetNext(new DefaultMove(this));
             return _promotion;
         }
 
         private string BuildEnPassantString()
         {
-            return EnPassant.Position is null ? "-" : EnPassant.ToString();
+            return EnPassant is null ? "-" : EnPassant.ToString();
         }
 
         private string BuildCastlingString()
