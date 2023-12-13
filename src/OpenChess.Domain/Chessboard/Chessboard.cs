@@ -137,7 +137,7 @@ namespace OpenChess.Domain
         {
             _promotionHandler.SetNext(_enPassantHandler);
             _enPassantHandler.SetNext(_castlingHandler);
-            _castlingHandler.SetNext(new DefaultMove(this));
+            _castlingHandler.SetNext(new DefaultMoveHandler(this));
             return _promotionHandler;
         }
 
