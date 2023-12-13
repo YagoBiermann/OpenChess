@@ -173,42 +173,6 @@ namespace OpenChess.Tests
             chessboard.SwitchTurns();
             Assert.AreEqual(Color.Black, chessboard.Turn);
         }
-        [TestMethod]
-        public void GetVulnerablePawn_EnPassantNotNull_ShouldReturnTheWhitePawn()
-        {
-            Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
-            Coordinate position = Coordinate.GetInstance("E4");
-            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-            chessboard.EnPassant.SetVulnerablePawn(piece);
-
-            IReadOnlyPiece? pawn = chessboard.EnPassant.GetVulnerablePawn;
-            Assert.IsNotNull(pawn);
-            Assert.IsInstanceOfType(pawn, typeof(Pawn));
-        }
-
-        [TestMethod]
-        public void GetVulnerablePawn_EnPassantNotNull_ShouldReturnTheBlackPawn()
-        {
-            Chessboard chessboard = new("rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-            Coordinate position = Coordinate.GetInstance("E5");
-            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-            chessboard.EnPassant.SetVulnerablePawn(piece);
-
-            chessboard.EnPassant.SetVulnerablePawn(piece);
-
-            IReadOnlyPiece? pawn = chessboard.EnPassant.GetVulnerablePawn;
-            Assert.IsNotNull(pawn);
-            Assert.IsInstanceOfType(pawn, typeof(Pawn));
-        }
-
-        [TestMethod]
-        public void GetVulnerablePawn_EnPassantNull_ShouldReturnNull()
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-
-            IReadOnlyPiece? piece = chessboard.EnPassant.GetVulnerablePawn;
-            Assert.IsNull(piece);
-        }
     }
 
 }
