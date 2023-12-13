@@ -8,8 +8,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstanceWithEmptyConstructor_ShouldBeTrueForAll()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            Castling castling = new(chessboard);
+            CastlingAvailability castling = new();
 
             Assert.IsTrue(castling.HasWhiteKingSide);
             Assert.IsTrue(castling.HasWhiteQueenSide);
@@ -20,8 +19,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ToString_AllPropertiesFalse_ShouldConvertToHyphen()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            Castling castling = new(false, false, false, false, chessboard);
+            CastlingAvailability castling = new(false, false, false, false);
 
             Assert.AreEqual("-", castling.ToString());
         }
@@ -29,8 +27,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ToString_AllPropertiesTrue_ShouldConvertToDefaultCastling()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            Castling castling = new(chessboard);
+            CastlingAvailability castling = new();
 
             Assert.AreEqual("KQkq", castling.ToString());
         }
@@ -38,11 +35,10 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ToString_ShouldConvertCorrectly()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            Castling castling = new(false, true, true, false, chessboard);
-            Castling castling2 = new(false, true, false, false, chessboard);
-            Castling castling3 = new(false, true, false, true, chessboard);
-            Castling castling4 = new(true, false, true, false, chessboard);
+            CastlingAvailability castling = new(false, true, true, false);
+            CastlingAvailability castling2 = new(false, true, false, false);
+            CastlingAvailability castling3 = new(false, true, false, true);
+            CastlingAvailability castling4 = new(true, false, true, false);
 
             Assert.AreEqual("Qk", castling.ToString());
             Assert.AreEqual("Q", castling2.ToString());

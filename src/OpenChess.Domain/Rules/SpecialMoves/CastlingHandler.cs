@@ -1,39 +1,8 @@
 namespace OpenChess.Domain
 {
-    internal class Castling : MoveHandler
+    internal class CastlingHandler : MoveHandler
     {
-        public bool HasWhiteKingSide { get; set; }
-        public bool HasWhiteQueenSide { get; set; }
-        public bool HasBlackKingSide { get; set; }
-        public bool HasBlackQueenSide { get; set; }
-
-        public Castling(Chessboard chessboard) : base(chessboard)
-        {
-            HasWhiteKingSide = true;
-            HasWhiteQueenSide = true;
-            HasBlackKingSide = true;
-            HasBlackQueenSide = true;
-        }
-
-        public Castling(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide, Chessboard chessboard) : base(chessboard)
-        {
-            HasWhiteKingSide = whiteKingSide;
-            HasWhiteQueenSide = whiteQueenSide;
-            HasBlackKingSide = blackKingSide;
-            HasBlackQueenSide = blackQueenSide;
-        }
-
-        public override string ToString()
-        {
-            string castlingAvailability = "";
-            if (HasWhiteKingSide) castlingAvailability += "K";
-            if (HasWhiteQueenSide) castlingAvailability += "Q";
-            if (HasBlackKingSide) castlingAvailability += "k";
-            if (HasBlackQueenSide) castlingAvailability += "q";
-            if (!HasWhiteKingSide && !HasWhiteQueenSide && !HasBlackKingSide && !HasBlackQueenSide) castlingAvailability += "-";
-
-            return castlingAvailability;
-        }
+        public CastlingHandler(Chessboard chessboard) : base(chessboard) { }
 
         private bool IsCastling(Coordinate origin, Coordinate destination)
         {

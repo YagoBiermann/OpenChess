@@ -52,7 +52,7 @@ namespace OpenChess.Domain
             return char.Parse(field) == 'w' ? Color.White : Color.Black;
         }
 
-        public Castling ConvertCastling(string field, Chessboard chessboard)
+        public CastlingAvailability ConvertCastling(string field)
         {
             Dictionary<char, bool> pairs = new()
             {
@@ -70,7 +70,7 @@ namespace OpenChess.Domain
                 if (letter == 'q') pairs[letter] = true;
             }
 
-            return new Castling(pairs['K'], pairs['Q'], pairs['k'], pairs['q'], chessboard);
+            return new CastlingAvailability(pairs['K'], pairs['Q'], pairs['k'], pairs['q']);
         }
 
         public Coordinate? ConvertEnPassant(string field)

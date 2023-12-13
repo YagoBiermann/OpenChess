@@ -5,9 +5,10 @@ namespace OpenChess.Domain
         private List<List<Square>> _board;
         private PromotionHandler _promotionHandler;
         private EnPassantHandler _enPassantHandler { get; set; }
+        private CastlingHandler _castlingHandler { get; set; }
         private LegalMoves _legalMoves;
         private IMoveHandler _moveHandler;
-        public Castling Castling { get; set; }
+        public CastlingAvailability CastlingAvailability { get; set; }
         public Color Turn { get; private set; }
         public Coordinate? EnPassant { get; set; }
         public int HalfMove { get; set; }
@@ -20,13 +21,14 @@ namespace OpenChess.Domain
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
             Turn = fenPosition.ConvertTurn(fenPosition.Turn);
-            Castling = fenPosition.ConvertCastling(fenPosition.CastlingAvailability, this);
+            CastlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
             EnPassant = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
             _enPassantHandler = new(this);
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
             _promotionHandler = new(this);
+            _castlingHandler = new(this);
             _legalMoves = new(this);
             _moveHandler = SetupMoveHandlerChain();
         }
@@ -125,7 +127,7 @@ namespace OpenChess.Domain
             _board = previous._board;
             Turn = previous.Turn;
             EnPassant = previous.EnPassant;
-            Castling = previous.Castling;
+            CastlingAvailability = previous.CastlingAvailability;
             HalfMove = previous.HalfMove;
             FullMove = previous.FullMove;
             LastPosition = previous.LastPosition;
@@ -134,8 +136,8 @@ namespace OpenChess.Domain
         private IMoveHandler SetupMoveHandlerChain()
         {
             _promotionHandler.SetNext(_enPassantHandler);
-            _enPassantHandler.SetNext(Castling);
-            Castling.SetNext(new DefaultMove(this));
+            _enPassantHandler.SetNext(_castlingHandler);
+            _castlingHandler.SetNext(new DefaultMove(this));
             return _promotionHandler;
         }
 
@@ -146,7 +148,7 @@ namespace OpenChess.Domain
 
         private string BuildCastlingString()
         {
-            return Castling.ToString();
+            return CastlingAvailability.ToString();
         }
 
         private string BuildTurnString()
