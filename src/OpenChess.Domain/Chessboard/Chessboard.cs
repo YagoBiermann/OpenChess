@@ -29,7 +29,7 @@ namespace OpenChess.Domain
             _legalMoves = new(this);
             _moveHandler = SetupMoveHandlerChain();
         }
-        
+
         public Piece? AddPiece(Coordinate position, char piece, Color player)
         {
             Piece createdPiece = CreatePiece(piece, position, player);
@@ -84,10 +84,7 @@ namespace OpenChess.Domain
         {
             return range.FindAll(c => GetReadOnlySquare(c).HasPiece).ToList();
         }
-        public void SwitchTurns()
-        {
-            Turn = ColorUtils.GetOppositeColor(Turn);
-        }
+
         public List<Coordinate> GetPiecesPosition(Color player)
         {
             List<Coordinate> piecePosition = new();
@@ -109,6 +106,11 @@ namespace OpenChess.Domain
             string enPassant = BuildEnPassantString();
 
             return $"{chessboard} {turn} {castling} {enPassant} {HalfMove} {FullMove}";
+        }
+
+        private void SwitchTurns()
+        {
+            Turn = ColorUtils.GetOppositeColor(Turn);
         }
 
         private void HandleIllegalPosition()
