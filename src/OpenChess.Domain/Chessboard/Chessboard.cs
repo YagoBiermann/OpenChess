@@ -4,8 +4,8 @@ namespace OpenChess.Domain
     {
         private List<List<Square>> _board;
         private PromotionHandler _promotionHandler;
-        private EnPassantHandler _enPassantHandler { get; set; }
-        private CastlingHandler _castlingHandler { get; set; }
+        private EnPassantHandler _enPassantHandler;
+        private CastlingHandler _castlingHandler;
         private LegalMoves _legalMoves;
         private IMoveHandler _moveHandler;
         public CastlingAvailability CastlingAvailability { get; set; }
