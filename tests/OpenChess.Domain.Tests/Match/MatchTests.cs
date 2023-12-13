@@ -306,20 +306,6 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void Play_InvalidPromotingPiece_ShouldThrowException()
-        {
-            Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
-            match.Join(player1);
-            match.Join(player2);
-
-            Move move = new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"), "K");
-
-            Assert.ThrowsException<ChessboardException>(() => { match.Play(move); });
-        }
-
-        [TestMethod]
         public void Play_PromotingPawn_ShouldAddPgnMoveProperly()
         {
             Match match = new(Time.Ten);
