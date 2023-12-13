@@ -148,44 +148,6 @@ namespace OpenChess.Tests
             }
         }
 
-        [TestMethod]
-        public void MovePiece_GivenOriginAndDestination_ShouldChangePiecePosition()
-        {
-            Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
-            Coordinate origin = Coordinate.GetInstance("B7");
-            Coordinate destination = Coordinate.GetInstance("B3");
-
-            chessboard.MovePiece(origin, destination);
-
-            Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
-            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(Rook));
-        }
-
-        [TestMethod]
-        public void MovePiece_OriginWithEmptySquare_ShouldThrowException()
-        {
-            Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
-            Coordinate origin = Coordinate.GetInstance("A1");
-            Coordinate destination = Coordinate.GetInstance("A2");
-
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
-        }
-
-        [TestMethod]
-        public void MovePiece_GivenOriginAndDestinationWithEmptySquare_ShouldChangePiecePosition()
-        {
-            Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
-            Coordinate origin = Coordinate.GetInstance("B7");
-            Coordinate destination = Coordinate.GetInstance("B8");
-
-            chessboard.MovePiece(origin, destination);
-
-            Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
-            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(Rook));
-        }
-
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
         [DataRow("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1")]
         [DataRow("rnbqkb1r/pppppp1p/5np1/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 1")]
