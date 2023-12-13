@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         private List<List<Square>> _board;
         private Promotion _promotion;
-        private EnPassant EnPassantHandler { get; set; }
+        private EnPassantHandler _enPassantHandler { get; set; }
         private LegalMoves _legalMoves;
         private IMoveHandler _moveHandler;
         public Castling Castling { get; set; }
@@ -22,7 +22,7 @@ namespace OpenChess.Domain
             Turn = fenPosition.ConvertTurn(fenPosition.Turn);
             Castling = fenPosition.ConvertCastling(fenPosition.CastlingAvailability, this);
             EnPassant = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
-            EnPassantHandler = new(this);
+            _enPassantHandler = new(this);
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
@@ -74,8 +74,8 @@ namespace OpenChess.Domain
             HandledMove move = _moveHandler.Handle(origin, destination, promotingPiece);
 
             HandleIllegalPosition();
-            EnPassantHandler.Clear();
-            EnPassantHandler.SetVulnerablePawn(move.PieceMoved);
+            _enPassantHandler.Clear();
+            _enPassantHandler.SetVulnerablePawn(move.PieceMoved);
             SwitchTurns();
 
             return move.PieceCaptured;
@@ -133,8 +133,8 @@ namespace OpenChess.Domain
 
         private IMoveHandler SetupMoveHandlerChain()
         {
-            _promotion.SetNext(EnPassantHandler);
-            EnPassantHandler.SetNext(Castling);
+            _promotion.SetNext(_enPassantHandler);
+            _enPassantHandler.SetNext(Castling);
             Castling.SetNext(new DefaultMove(this));
             return _promotion;
         }

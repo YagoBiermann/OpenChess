@@ -1,8 +1,8 @@
 namespace OpenChess.Domain
 {
-    internal class EnPassant : MoveHandler
+    internal class EnPassantHandler : MoveHandler
     {
-        public EnPassant(Chessboard chessboard) : base(chessboard) { }
+        public EnPassantHandler(Chessboard chessboard) : base(chessboard) { }
 
         private IReadOnlyPiece? GetVulnerablePawn
         {
