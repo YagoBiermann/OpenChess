@@ -183,6 +183,16 @@ namespace OpenChess.Tests
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             Assert.AreEqual(Color.Black, chessboard.Turn);
         }
+
+        [TestMethod]
+        public void MovePiece_ShouldSetPawnAsVulnerableOnMovingTwoSquaresForward()
+        {
+            Chessboard chessboard = new(FenInfo.InitialPosition);
+
+            Assert.IsNull(chessboard.EnPassant.Position);
+            chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant.Position);
+        }
     }
 
 }
