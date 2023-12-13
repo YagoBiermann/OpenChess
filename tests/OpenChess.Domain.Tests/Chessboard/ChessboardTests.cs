@@ -165,16 +165,6 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void SwitchTurns_ShouldSetOppositeColor()
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-
-            Assert.AreEqual(Color.White, chessboard.Turn);
-            chessboard.SwitchTurns();
-            Assert.AreEqual(Color.Black, chessboard.Turn);
-        }
-
-        [TestMethod]
         public void MovePiece_ShouldSwitchTurns()
         {
             Chessboard chessboard = new(FenInfo.InitialPosition);
