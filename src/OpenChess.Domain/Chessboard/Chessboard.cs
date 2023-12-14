@@ -7,8 +7,10 @@ namespace OpenChess.Domain
         private EnPassantHandler _enPassantHandler;
         private CastlingHandler _castlingHandler;
         private IMoveHandler _moveHandler;
-        public CastlingAvailability CastlingAvailability { get; private set; }
-        public EnPassantAvailability EnPassantAvailability { get; private set; }
+        private CastlingAvailability _castlingAvailability { get; set; }
+        private EnPassantAvailability _enPassantAvailability { get; set; }
+        public IEnPassantAvailability EnPassantAvailability => _enPassantAvailability;
+        public ICastlingAvailability CastlingAvailability => _castlingAvailability;
         public Color Turn { get; private set; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
@@ -20,9 +22,9 @@ namespace OpenChess.Domain
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
             Turn = fenPosition.ConvertTurn(fenPosition.Turn);
-            CastlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
+            _castlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
             Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
-            EnPassantAvailability = new(enPassantPosition);
+            _enPassantAvailability = new(enPassantPosition);
             _enPassantHandler = new(this);
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
@@ -73,9 +75,9 @@ namespace OpenChess.Domain
             HandledMove move = _moveHandler.Handle(origin, destination, promotingPiece);
 
             HandleIllegalPosition();
-            EnPassantAvailability.ClearEnPassant();
-            EnPassantAvailability.SetVulnerablePawn(move.PieceMoved);
-            CastlingAvailability.UpdateAvailability(origin, Turn);
+            _enPassantAvailability.ClearEnPassant();
+            _enPassantAvailability.SetVulnerablePawn(move.PieceMoved);
+            _castlingAvailability.UpdateAvailability(origin, Turn);
             SwitchTurns();
 
             return move.PieceCaptured;
@@ -124,8 +126,8 @@ namespace OpenChess.Domain
             Chessboard previous = new(LastPosition);
             _board = previous._board;
             Turn = previous.Turn;
-            EnPassantAvailability = previous.EnPassantAvailability;
-            CastlingAvailability = previous.CastlingAvailability;
+            _enPassantAvailability = (EnPassantAvailability)previous.EnPassantAvailability;
+            _castlingAvailability = (CastlingAvailability)previous.CastlingAvailability;
             HalfMove = previous.HalfMove;
             FullMove = previous.FullMove;
             LastPosition = previous.LastPosition;
@@ -141,12 +143,12 @@ namespace OpenChess.Domain
 
         private string BuildEnPassantString()
         {
-            return EnPassantAvailability.EnPassantPosition is null ? "-" : EnPassantAvailability.EnPassantPosition.ToString();
+            return _enPassantAvailability.EnPassantPosition is null ? "-" : _enPassantAvailability.EnPassantPosition.ToString();
         }
 
         private string BuildCastlingString()
         {
-            return CastlingAvailability.ToString();
+            return _castlingAvailability.ToString();
         }
 
         private string BuildTurnString()
