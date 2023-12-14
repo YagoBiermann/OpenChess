@@ -19,8 +19,8 @@ namespace OpenChess.Domain
             if (isNotKingPosition) return false;
             IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
             if (piece is not King) return false;
-            if (origin.Row == '1' && !WhiteCastlingPositions.Contains(destination)) return false;
-            if (origin.Row == '8' && !BlackCastlingPositions.Contains(destination)) return false;
+            if (origin.Row == '1' && !GetCastlingDestinations(Color.White).Contains(destination)) return false;
+            if (origin.Row == '8' && !GetCastlingDestinations(Color.Black).Contains(destination)) return false;
 
             return true;
         }
