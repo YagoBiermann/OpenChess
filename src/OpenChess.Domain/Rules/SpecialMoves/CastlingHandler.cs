@@ -37,6 +37,23 @@ namespace OpenChess.Domain
             return true;
         }
 
+        private HandledMove DoCastle(Coordinate destination, Color player)
+        {
+            List<Coordinate> piecePositions = GetCastlingSide(destination, player);
+            Coordinate kingPosition = piecePositions.First();
+            Coordinate rookPosition = piecePositions.Last();
+            Coordinate kingDestination = piecePositions[2];
+            Coordinate rookDestination = piecePositions[1];
+
+            Piece king = _chessboard.RemovePiece(kingPosition)!;
+            Piece rook = _chessboard.RemovePiece(rookPosition)!;
+
+            _chessboard.AddPiece(kingDestination, king.Name, king.Color);
+            _chessboard.AddPiece(rookDestination, rook.Name, rook.Color);
+
+            return new(king, null);
+        }
+
         private bool IsKingSideCastlingAvailable(Color color)
         {
             if (color == Color.Black) return _chessboard.CastlingAvailability.HasBlackKingSide;
