@@ -127,6 +127,20 @@ namespace OpenChess.Domain
             return isCastlingKingSide ? kingSidePositions : queenSidePositions;
         }
 
+        private static List<Coordinate> DefaultPiecePosition(Color color, bool isCastlingKingSide)
+        {
+            List<Coordinate> kingSidePositions = new()
+            {
+                GetKingSidePositions(color)[0],
+                GetKingSidePositions(color)[3],
+            };
+            List<Coordinate> queenSidePositions = new()
+            {
+                GetQueenSidePositions(color)[0],
+                GetQueenSidePositions(color)[4],
+            };
+
+            return isCastlingKingSide ? kingSidePositions : queenSidePositions;
         }
 
         {
