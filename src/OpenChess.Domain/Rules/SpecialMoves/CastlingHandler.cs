@@ -25,7 +25,18 @@ namespace OpenChess.Domain
             return true;
         }
 
+        private bool CanCastle(Coordinate destination, Color player)
         {
+            bool isCastlingKingSide = IsCastlingKingSide(destination, player);
+            bool isCastlingQueenSide = IsCastlingQueenSide(destination, player);
+            if (isCastlingKingSide && !IsKingSideCastlingAvailable(player)) return false;
+            if (isCastlingQueenSide && !IsQueenSideCastlingAvailable(player)) return false;
+            if (AnyPieceHittingTheCastlingSquares(GetPossiblyHittedPositions(destination, player))) return false;
+            if (HasPieceInBetween(PiecesInBetween(player, isCastlingKingSide))) return false;
+            if (HasKingOrRookMoved(DefaultPiecePosition(player, isCastlingKingSide))) return false;
+            return true;
+        }
+
         private bool IsKingSideCastlingAvailable(Color color)
         {
             if (color == Color.Black) return _chessboard.CastlingAvailability.HasBlackKingSide;
