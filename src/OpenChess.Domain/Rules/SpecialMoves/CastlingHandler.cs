@@ -8,7 +8,8 @@ namespace OpenChess.Domain
         {
             if (IsCastling(origin, destination))
             {
-                return null;
+                if (!CanCastle(destination, _chessboard.Turn)) { throw new ChessboardException("Cannot castle!"); }
+                return DoCastle(destination, _chessboard.Turn);
             }
             else { return base.Handle(origin, destination, promotingPiece); }
         }
