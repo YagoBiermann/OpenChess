@@ -109,6 +109,21 @@ namespace OpenChess.Domain
 
             return hittenPositions;
         }
+
+        private static List<Coordinate> PiecesInBetween(Color color, bool isCastlingKingSide)
+        {
+            List<Coordinate> kingSidePositions = new()
+            {
+                GetKingSidePositions(color)[1],
+                GetKingSidePositions(color)[2],
+            };
+            List<Coordinate> queenSidePositions = new()
+            {
+                GetQueenSidePositions(color)[1],
+                GetQueenSidePositions(color)[2],
+                GetQueenSidePositions(color)[3],
+            };
+
             return isCastlingKingSide ? kingSidePositions : queenSidePositions;
         }
 
