@@ -143,8 +143,18 @@ namespace OpenChess.Domain
             return isCastlingKingSide ? kingSidePositions : queenSidePositions;
         }
 
+        private static List<Coordinate> GetCastlingDestinations(Color color)
         {
+
+            List<Coordinate> positions = new()
             {
+                GetKingSidePositions(color)[2],
+                GetQueenSidePositions(color)[2],
+            };
+
+            return positions;
+        }
+
         private static List<Coordinate> GetQueenSidePositions(Color player)
         {
             string row = player == Color.Black ? "8" : "1";
