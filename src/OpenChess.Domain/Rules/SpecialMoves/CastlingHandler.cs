@@ -48,6 +48,14 @@ namespace OpenChess.Domain
             return GetQueenSidePositions(player).Contains(destination);
         }
 
+        private List<Coordinate> GetCastlingSide(Coordinate destination, Color player)
+        {
+            if (IsCastlingKingSide(destination, player)) return GetKingSidePositions(player);
+            if (IsCastlingQueenSide(destination, player)) return GetQueenSidePositions(player);
+            throw new ChessboardException("Castling side could not be determined");
+        }
+
+
         }
 
         private static List<Coordinate> BlackCastlingPositions
