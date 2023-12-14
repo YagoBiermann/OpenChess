@@ -13,11 +13,11 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
             Assert.AreEqual(Color.White, chessboard.Turn);
-            Assert.IsNull(chessboard.EnPassant);
-            Assert.IsTrue(chessboard.CastlingAvailability.HasWhiteKingSide);
-            Assert.IsTrue(chessboard.CastlingAvailability.HasWhiteQueenSide);
-            Assert.IsTrue(chessboard.CastlingAvailability.HasBlackKingSide);
-            Assert.IsTrue(chessboard.CastlingAvailability.HasBlackQueenSide);
+            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsWhiteKingSideAvailable);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsWhiteQueenSideAvailable);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsBlackKingSideAvailable);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsBlackQueenSideAvailable);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
         }
@@ -53,12 +53,12 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b - - 0 1");
 
-            Assert.IsFalse(chessboard.CastlingAvailability.HasWhiteKingSide);
-            Assert.IsFalse(chessboard.CastlingAvailability.HasWhiteQueenSide);
-            Assert.IsFalse(chessboard.CastlingAvailability.HasBlackKingSide);
-            Assert.IsFalse(chessboard.CastlingAvailability.HasBlackQueenSide);
+            Assert.IsFalse(chessboard.CastlingAvailability.IsWhiteKingSideAvailable);
+            Assert.IsFalse(chessboard.CastlingAvailability.IsWhiteQueenSideAvailable);
+            Assert.IsFalse(chessboard.CastlingAvailability.IsBlackKingSideAvailable);
+            Assert.IsFalse(chessboard.CastlingAvailability.IsBlackQueenSideAvailable);
             Assert.AreEqual(Color.Black, chessboard.Turn);
-            Assert.IsNull(chessboard.EnPassant);
+            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
         }
@@ -68,21 +68,21 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
 
-            Assert.IsTrue(chessboard.CastlingAvailability.HasWhiteKingSide);
-            Assert.IsTrue(chessboard.CastlingAvailability.HasBlackKingSide);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsWhiteKingSideAvailable);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsBlackKingSideAvailable);
         }
 
         [TestMethod]
         public void NewInstance_ShouldConvertEnPassantCorrectly()
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk E3 0 1");
-            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant);
+            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassantAvailability.EnPassantPosition);
         }
         [TestMethod]
         public void NewInstance_NoEnPassant_ShouldBeNull()
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
-            Assert.IsNull(chessboard.EnPassant);
+            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
         }
 
         [DataRow("A1", 'R', 'w')]
@@ -179,9 +179,9 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
-            Assert.IsNull(chessboard.EnPassant);
+            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
-            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassant);
+            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassantAvailability.EnPassantPosition);
         }
 
         [TestMethod]
@@ -190,7 +190,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E3"));
-            Assert.IsNull(chessboard.EnPassant);
+            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
         }
     }
 
