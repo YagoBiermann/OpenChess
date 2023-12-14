@@ -26,7 +26,22 @@ namespace OpenChess.Domain
         }
 
         {
+        private bool HasPieceInBetween(List<Coordinate> castlingPositions)
+        {
+            return HasPiece(castlingPositions);
+        }
+
+        private bool HasPiece(List<Coordinate> castlingPositions)
+        {
+            bool hasPiece = false;
+            foreach (Coordinate position in castlingPositions)
             {
+                hasPiece = _chessboard.GetReadOnlySquare(position).HasPiece;
+                if (hasPiece) break;
+            }
+
+            return hasPiece;
+        }
 
         private bool AnyPieceHittingTheCastlingSquares(List<Coordinate> castlingPositions)
         {
