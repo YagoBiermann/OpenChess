@@ -57,14 +57,14 @@ namespace OpenChess.Domain
 
         private bool IsKingSideCastlingAvailable(Color color)
         {
-            if (color == Color.Black) return _chessboard.CastlingAvailability.HasBlackKingSide;
-            return _chessboard.CastlingAvailability.HasWhiteKingSide;
+            if (color == Color.Black) return _chessboard.CastlingAvailability.IsBlackKingSideAvailable;
+            return _chessboard.CastlingAvailability.IsWhiteKingSideAvailable;
         }
 
         private bool IsQueenSideCastlingAvailable(Color color)
         {
-            if (color == Color.Black) return _chessboard.CastlingAvailability.HasBlackQueenSide;
-            return _chessboard.CastlingAvailability.HasWhiteQueenSide;
+            if (color == Color.Black) return _chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
+            return _chessboard.CastlingAvailability.IsWhiteQueenSideAvailable;
         }
 
         private bool HasKingOrRookMoved(List<Coordinate> defaultPositions)

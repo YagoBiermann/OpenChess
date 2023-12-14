@@ -2,45 +2,45 @@ namespace OpenChess.Domain
 {
     internal struct CastlingAvailability : ICastlingAvailability
     {
-        public bool HasWhiteKingSide { get; private set; }
-        public bool HasWhiteQueenSide { get; private set; }
-        public bool HasBlackKingSide { get; private set; }
-        public bool HasBlackQueenSide { get; private set; }
+        public bool IsWhiteKingSideAvailable { get; private set; }
+        public bool IsWhiteQueenSideAvailable { get; private set; }
+        public bool IsBlackKingSideAvailable { get; private set; }
+        public bool IsBlackQueenSideAvailable { get; private set; }
 
         public CastlingAvailability()
         {
-            HasWhiteKingSide = true;
-            HasWhiteQueenSide = true;
-            HasBlackKingSide = true;
-            HasBlackQueenSide = true;
+            IsWhiteKingSideAvailable = true;
+            IsWhiteQueenSideAvailable = true;
+            IsBlackKingSideAvailable = true;
+            IsBlackQueenSideAvailable = true;
         }
 
         public CastlingAvailability(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide)
         {
-            HasWhiteKingSide = whiteKingSide;
-            HasWhiteQueenSide = whiteQueenSide;
-            HasBlackKingSide = blackKingSide;
-            HasBlackQueenSide = blackQueenSide;
+            IsWhiteKingSideAvailable = whiteKingSide;
+            IsWhiteQueenSideAvailable = whiteQueenSide;
+            IsBlackKingSideAvailable = blackKingSide;
+            IsBlackQueenSideAvailable = blackQueenSide;
         }
 
         public void UpdateAvailability(Coordinate origin, Color player)
         {
-            if (player is Color.White && origin.Equals(Coordinate.GetInstance("E1"))) { HasWhiteKingSide = false; HasWhiteQueenSide = false; }
-            if (player is Color.White && origin.Equals(Coordinate.GetInstance("A1"))) { HasWhiteQueenSide = false; };
-            if (player is Color.White && origin.Equals(Coordinate.GetInstance("H1"))) { HasWhiteKingSide = false; };
-            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("E8"))) { HasBlackKingSide = false; HasBlackQueenSide = false; }
-            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("A8"))) { HasBlackQueenSide = false; };
-            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("H8"))) { HasBlackKingSide = false; };
+            if (player is Color.White && origin.Equals(Coordinate.GetInstance("E1"))) { IsWhiteKingSideAvailable = false; IsWhiteQueenSideAvailable = false; }
+            if (player is Color.White && origin.Equals(Coordinate.GetInstance("A1"))) { IsWhiteQueenSideAvailable = false; };
+            if (player is Color.White && origin.Equals(Coordinate.GetInstance("H1"))) { IsWhiteKingSideAvailable = false; };
+            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("E8"))) { IsBlackKingSideAvailable = false; IsBlackQueenSideAvailable = false; }
+            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("A8"))) { IsBlackQueenSideAvailable = false; };
+            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("H8"))) { IsBlackKingSideAvailable = false; };
         }
 
         public override string ToString()
         {
             string castlingAvailability = "";
-            if (HasWhiteKingSide) castlingAvailability += "K";
-            if (HasWhiteQueenSide) castlingAvailability += "Q";
-            if (HasBlackKingSide) castlingAvailability += "k";
-            if (HasBlackQueenSide) castlingAvailability += "q";
-            if (!HasWhiteKingSide && !HasWhiteQueenSide && !HasBlackKingSide && !HasBlackQueenSide) castlingAvailability += "-";
+            if (IsWhiteKingSideAvailable) castlingAvailability += "K";
+            if (IsWhiteQueenSideAvailable) castlingAvailability += "Q";
+            if (IsBlackKingSideAvailable) castlingAvailability += "k";
+            if (IsBlackQueenSideAvailable) castlingAvailability += "q";
+            if (!IsWhiteKingSideAvailable && !IsWhiteQueenSideAvailable && !IsBlackKingSideAvailable && !IsBlackQueenSideAvailable) castlingAvailability += "-";
 
             return castlingAvailability;
         }
