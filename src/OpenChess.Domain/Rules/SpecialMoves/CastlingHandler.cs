@@ -25,18 +25,33 @@ namespace OpenChess.Domain
             return true;
         }
 
-        private static List<Coordinate> WhiteCastlingPositions
         {
-            get
             {
-                List<Coordinate> positions = new()
-                {
-                    Coordinate.GetInstance("G1"),
-                    Coordinate.GetInstance("C1"),
-                };
 
-                return positions;
+        private bool AnyPieceHittingTheCastlingSquares(List<Coordinate> castlingPositions)
+        {
+            ILegalMoves legalMoves = new LegalMoves(_chessboard);
+            Color enemyPlayer = ColorUtils.GetOppositeColor(_chessboard.Turn);
+            List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(enemyPlayer);
+            bool isHitting = false;
+
+            foreach (Coordinate position in piecePositions)
+            {
+                IReadOnlyPiece currentPiece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+                isHitting = Check.IsHittingTheEnemyKing(currentPiece, _chessboard);
+                if (isHitting) break;
+
+                List<MoveDirections> moves = legalMoves.CalculateLegalMoves(currentPiece);
+                castlingPositions.ForEach(p =>
+                {
+                    isHitting = moves.Where(m => m.Coordinates.Contains(p)).Any();
+                    if (isHitting) return;
+                });
+                if (isHitting) break;
             }
+
+            return isHitting;
+        }
 
         private bool IsCastlingKingSide(Coordinate destination, Color player)
         {
@@ -55,14 +70,20 @@ namespace OpenChess.Domain
             throw new ChessboardException("Castling side could not be determined");
         }
 
+        private List<Coordinate> GetPossiblyHittedPositions(Coordinate destination, Color color)
+        {
+            List<Coordinate> positions = GetCastlingSide(destination, color);
+            List<Coordinate> hittenPositions = new() { positions[0], positions[1], positions[2] };
+
+            return hittenPositions;
+        }
+            return isCastlingKingSide ? kingSidePositions : queenSidePositions;
+        }
 
         }
 
-        private static List<Coordinate> BlackCastlingPositions
         {
-            get
             {
-                List<Coordinate> positions = new()
         private static List<Coordinate> GetQueenSidePositions(Color player)
         {
             string row = player == Color.Black ? "8" : "1";
