@@ -45,5 +45,27 @@ namespace OpenChess.Tests
             Assert.AreEqual("Qq", castling3.ToString());
             Assert.AreEqual("Kk", castling4.ToString());
         }
+
+        [DataRow("rnbqk2r/pppp1ppp/5n2/1B2p3/1b2P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1", 'w')]
+        [DataRow("r3k2r/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R b KQkq - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_CastlingToKingSide_ShouldBeHandledCorrectly(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate destination = Coordinate.GetInstance($"G{row}");
+            Coordinate rookPosition = Coordinate.GetInstance($"F{row}");
+            Chessboard chessboard = new(position);
+
+            chessboard.MovePiece(origin, destination);
+
+            Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"H{row}")).HasPiece);
+            Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"E{row}")).HasPiece);
+            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
+            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
+            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(King));
+            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(rookPosition).ReadOnlyPiece, typeof(Rook));
+        }
     }
 }
