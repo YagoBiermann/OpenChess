@@ -23,6 +23,16 @@ namespace OpenChess.Domain
             HasBlackQueenSide = blackQueenSide;
         }
 
+        public void UpdateAvailability(Coordinate origin, Color player)
+        {
+            if (player is Color.White && origin.Equals(Coordinate.GetInstance("E1"))) { HasWhiteKingSide = false; HasWhiteQueenSide = false; }
+            if (player is Color.White && origin.Equals(Coordinate.GetInstance("A1"))) { HasWhiteQueenSide = false; };
+            if (player is Color.White && origin.Equals(Coordinate.GetInstance("H1"))) { HasWhiteKingSide = false; };
+            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("E8"))) { HasBlackKingSide = false; HasBlackQueenSide = false; }
+            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("A8"))) { HasBlackQueenSide = false; };
+            if (player is Color.Black && origin.Equals(Coordinate.GetInstance("H8"))) { HasBlackKingSide = false; };
+        }
+
         public override string ToString()
         {
             string castlingAvailability = "";

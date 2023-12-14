@@ -74,6 +74,7 @@ namespace OpenChess.Domain
             HandleIllegalPosition();
             _enPassantHandler.Clear();
             _enPassantHandler.SetVulnerablePawn(move.PieceMoved);
+            CastlingAvailability.UpdateAvailability(origin, Turn);
             SwitchTurns();
 
             return move.PieceCaptured;
