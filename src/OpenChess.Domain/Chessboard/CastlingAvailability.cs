@@ -2,10 +2,10 @@ namespace OpenChess.Domain
 {
     internal struct CastlingAvailability
     {
-        public bool HasWhiteKingSide { get; set; }
-        public bool HasWhiteQueenSide { get; set; }
-        public bool HasBlackKingSide { get; set; }
-        public bool HasBlackQueenSide { get; set; }
+        public bool HasWhiteKingSide { get; private set; }
+        public bool HasWhiteQueenSide { get; private set; }
+        public bool HasBlackKingSide { get; private set; }
+        public bool HasBlackQueenSide { get; private set; }
 
         public CastlingAvailability()
         {

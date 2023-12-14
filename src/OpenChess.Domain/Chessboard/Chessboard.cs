@@ -7,11 +7,11 @@ namespace OpenChess.Domain
         private EnPassantHandler _enPassantHandler;
         private CastlingHandler _castlingHandler;
         private IMoveHandler _moveHandler;
-        public CastlingAvailability CastlingAvailability { get; set; }
+        public CastlingAvailability CastlingAvailability { get; private set; }
         public Color Turn { get; private set; }
-        public Coordinate? EnPassant { get; set; }
-        public int HalfMove { get; set; }
-        public int FullMove { get; set; }
+        public Coordinate? EnPassant { get; private set; }
+        public int HalfMove { get; private set; }
+        public int FullMove { get; private set; }
         public string LastPosition { get; private set; }
 
         public Chessboard(string position)
