@@ -4,19 +4,6 @@ namespace OpenChess.Domain
     {
         public EnPassantHandler(Chessboard chessboard) : base(chessboard) { }
 
-        public void Clear()
-        {
-            _chessboard.EnPassant = null;
-        }
-
-        public void SetVulnerablePawn(IReadOnlyPiece? piece)
-        {
-            if (piece is not Pawn pawn) return;
-            if (!IsVulnerableToEnPassant(pawn)) return;
-
-            _chessboard.EnPassant = GetEnPassantPosition(pawn);
-        }
-
         public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (IsEnPassantMove(origin, destination))
@@ -55,20 +42,6 @@ namespace OpenChess.Domain
             if (piece is not Pawn) return false;
             if (destination == _chessboard.EnPassant) return true;
             return false;
-        }
-
-        private Coordinate? GetEnPassantPosition(Pawn pawn)
-        {
-            if (!IsVulnerableToEnPassant(pawn)) return null;
-            return Coordinate.CalculateNextPosition(pawn.Origin, Direction.Opposite(pawn.ForwardDirection));
-        }
-
-        private bool IsVulnerableToEnPassant(Pawn pawn)
-        {
-            bool isBlackVulnerable = pawn.Color == Color.Black && pawn.Origin.Row == '5';
-            bool isWhiteVulnerable = pawn.Color == Color.White && pawn.Origin.Row == '4';
-
-            return isBlackVulnerable ^ isWhiteVulnerable;
         }
 
         private bool CanCaptureByEnPassant(Pawn pawn)
