@@ -8,8 +8,8 @@ namespace OpenChess.Domain
         private CastlingHandler _castlingHandler;
         private IMoveHandler _moveHandler;
         public CastlingAvailability CastlingAvailability { get; private set; }
+        public EnPassantAvailability EnPassantAvailability { get; private set; }
         public Color Turn { get; private set; }
-        public Coordinate? EnPassant { get; private set; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
         public string LastPosition { get; private set; }
@@ -21,7 +21,8 @@ namespace OpenChess.Domain
             SetPiecesOnBoard(fenPosition.Board);
             Turn = fenPosition.ConvertTurn(fenPosition.Turn);
             CastlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
-            EnPassant = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
+            Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
+            EnPassantAvailability = new(enPassantPosition);
             _enPassantHandler = new(this);
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
@@ -72,8 +73,8 @@ namespace OpenChess.Domain
             HandledMove move = _moveHandler.Handle(origin, destination, promotingPiece);
 
             HandleIllegalPosition();
-            _enPassantHandler.Clear();
-            _enPassantHandler.SetVulnerablePawn(move.PieceMoved);
+            EnPassantAvailability.ClearEnPassant();
+            EnPassantAvailability.SetVulnerablePawn(move.PieceMoved);
             CastlingAvailability.UpdateAvailability(origin, Turn);
             SwitchTurns();
 
@@ -123,7 +124,7 @@ namespace OpenChess.Domain
             Chessboard previous = new(LastPosition);
             _board = previous._board;
             Turn = previous.Turn;
-            EnPassant = previous.EnPassant;
+            EnPassantAvailability = previous.EnPassantAvailability;
             CastlingAvailability = previous.CastlingAvailability;
             HalfMove = previous.HalfMove;
             FullMove = previous.FullMove;
@@ -140,7 +141,7 @@ namespace OpenChess.Domain
 
         private string BuildEnPassantString()
         {
-            return EnPassant is null ? "-" : EnPassant.ToString();
+            return EnPassantAvailability.EnPassantPosition is null ? "-" : EnPassantAvailability.EnPassantPosition.ToString();
         }
 
         private string BuildCastlingString()
