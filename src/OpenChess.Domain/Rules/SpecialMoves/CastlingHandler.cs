@@ -37,6 +37,17 @@ namespace OpenChess.Domain
 
                 return positions;
             }
+
+        private bool IsCastlingKingSide(Coordinate destination, Color player)
+        {
+            return GetKingSidePositions(player).Contains(destination);
+        }
+
+        private bool IsCastlingQueenSide(Coordinate destination, Color player)
+        {
+            return GetQueenSidePositions(player).Contains(destination);
+        }
+
         }
 
         private static List<Coordinate> BlackCastlingPositions
