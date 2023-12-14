@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal class EnPassantAvailability
+    internal class EnPassantAvailability : IEnPassantAvailability
     {
         public Coordinate? EnPassantPosition { get; private set; }
         public bool IsAvailable { get; private set; }

@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal struct CastlingAvailability
+    internal struct CastlingAvailability : ICastlingAvailability
     {
         public bool HasWhiteKingSide { get; private set; }
         public bool HasWhiteQueenSide { get; private set; }
