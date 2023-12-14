@@ -10,10 +10,10 @@ namespace OpenChess.Tests
         {
             CastlingAvailability castling = new();
 
-            Assert.IsTrue(castling.HasWhiteKingSide);
-            Assert.IsTrue(castling.HasWhiteQueenSide);
-            Assert.IsTrue(castling.HasBlackKingSide);
-            Assert.IsTrue(castling.HasBlackQueenSide);
+            Assert.IsTrue(castling.IsWhiteKingSideAvailable);
+            Assert.IsTrue(castling.IsWhiteQueenSideAvailable);
+            Assert.IsTrue(castling.IsBlackKingSideAvailable);
+            Assert.IsTrue(castling.IsBlackQueenSideAvailable);
         }
 
         [TestMethod]
