@@ -26,6 +26,11 @@ namespace OpenChess.Domain
         }
 
         {
+        private bool HasKingOrRookMoved(List<Coordinate> defaultPositions)
+        {
+            return !HasPiece(defaultPositions);
+        }
+
         private bool HasPieceInBetween(List<Coordinate> castlingPositions)
         {
             return HasPiece(castlingPositions);
