@@ -6,6 +6,7 @@ namespace OpenChess.Domain
 
         public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
+            ThrowIfIllegalMove(origin, destination);
             return base.Handle(origin, destination, promotingPiece);
         }
     }

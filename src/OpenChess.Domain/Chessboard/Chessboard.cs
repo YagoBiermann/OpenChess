@@ -6,7 +6,6 @@ namespace OpenChess.Domain
         private PromotionHandler _promotionHandler;
         private EnPassantHandler _enPassantHandler;
         private CastlingHandler _castlingHandler;
-        private LegalMoves _legalMoves;
         private IMoveHandler _moveHandler;
         public CastlingAvailability CastlingAvailability { get; set; }
         public Color Turn { get; private set; }
@@ -29,7 +28,6 @@ namespace OpenChess.Domain
             LastPosition = position;
             _promotionHandler = new(this);
             _castlingHandler = new(this);
-            _legalMoves = new(this);
             _moveHandler = SetupMoveHandlerChain();
         }
 
@@ -71,8 +69,6 @@ namespace OpenChess.Domain
         public IReadOnlyPiece? MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
-            if (!_legalMoves.IsLegalMove(origin, destination)) throw new ChessboardException("Invalid move!");
-
             HandledMove move = _moveHandler.Handle(origin, destination, promotingPiece);
 
             HandleIllegalPosition();

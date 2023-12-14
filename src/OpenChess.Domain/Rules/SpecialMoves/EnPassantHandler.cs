@@ -21,6 +21,7 @@ namespace OpenChess.Domain
         {
             if (IsEnPassantMove(origin, destination))
             {
+                ThrowIfIllegalMove(origin, destination);
                 IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
                 var pawn = (Pawn)piece!;
                 if (!CanCaptureByEnPassant(pawn)) throw new ChessboardException("This pawn cannot capture by en passant!");

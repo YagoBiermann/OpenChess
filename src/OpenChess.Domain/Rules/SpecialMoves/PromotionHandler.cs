@@ -10,6 +10,7 @@ namespace OpenChess.Domain
         {
             if (IsPromoting(origin, destination))
             {
+                ThrowIfIllegalMove(origin, destination);
                 string promotingTo = promotingPiece ?? DefaultPiece;
 
                 if (!IsValidString(promotingTo)) throw new ChessboardException("Invalid promoting piece");
@@ -26,7 +27,7 @@ namespace OpenChess.Domain
         }
 
         public static string DefaultPiece { get { return "Q"; } }
-        
+
         private bool IsPromoting(Coordinate origin, Coordinate destination)
         {
             IReadOnlySquare square = _chessboard.GetReadOnlySquare(origin);

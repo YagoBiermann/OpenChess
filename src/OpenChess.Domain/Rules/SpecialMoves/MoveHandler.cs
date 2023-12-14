@@ -4,9 +4,11 @@ namespace OpenChess.Domain
     {
         protected IMoveHandler? _nextHandler = null;
         protected Chessboard _chessboard;
+        protected LegalMoves _legalMoves;
         public MoveHandler(Chessboard chessboard)
         {
             _chessboard = chessboard;
+            _legalMoves = new LegalMoves(_chessboard);
         }
 
         public virtual HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
@@ -19,6 +21,11 @@ namespace OpenChess.Domain
         {
             _nextHandler = handler;
             return handler;
+        }
+
+        protected void ThrowIfIllegalMove(Coordinate origin, Coordinate destination)
+        {
+            if (!_legalMoves.IsLegalMove(origin, destination)) throw new ChessboardException("Invalid move!");
         }
 
         private HandledMove HandleDefaultMove(Coordinate origin, Coordinate destination)
