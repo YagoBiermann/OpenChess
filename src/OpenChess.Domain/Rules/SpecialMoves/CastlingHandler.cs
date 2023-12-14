@@ -44,13 +44,37 @@ namespace OpenChess.Domain
             get
             {
                 List<Coordinate> positions = new()
+        private static List<Coordinate> GetQueenSidePositions(Color player)
+        {
+            string row = player == Color.Black ? "8" : "1";
+
+
+            List<Coordinate> positions = new()
                 {
-                    Coordinate.GetInstance("G8"),
-                    Coordinate.GetInstance("C8"),
+                    Coordinate.GetInstance($"E{row}"),
+                    Coordinate.GetInstance($"D{row}"),
+                    Coordinate.GetInstance($"C{row}"),
+                    Coordinate.GetInstance($"B{row}"),
+                    Coordinate.GetInstance($"A{row}"),
                 };
 
-                return positions;
-            }
+            return positions;
+        }
+
+        private static List<Coordinate> GetKingSidePositions(Color player)
+        {
+            string row = player == Color.Black ? "8" : "1";
+
+
+            List<Coordinate> positions = new()
+                {
+                    Coordinate.GetInstance($"E{row}"),
+                    Coordinate.GetInstance($"F{row}"),
+                    Coordinate.GetInstance($"G{row}"),
+                    Coordinate.GetInstance($"H{row}"),
+                };
+
+            return positions;
         }
     }
 }
