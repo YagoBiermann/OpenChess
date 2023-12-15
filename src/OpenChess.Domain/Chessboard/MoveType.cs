@@ -2,10 +2,11 @@ namespace OpenChess.Domain
 {
     internal enum MoveType
     {
-        Default,
-        QueenSideCastling,
-        KingSideCastling,
-        PawnPromotion,
-        EnPassant,
+        DefaultMove,
+        QueenSideCastlingMove,
+        KingSideCastlingMove,
+        PawnPromotionMove,
+        EnPassantMove,
+        PawnMove,
     }
 }
