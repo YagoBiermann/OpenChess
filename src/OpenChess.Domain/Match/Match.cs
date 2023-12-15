@@ -91,8 +91,26 @@ namespace OpenChess.Domain
         }
         public Time Time { get { return (Time)_time.Minutes; } }
         public Guid? Winner { get { return _winner?.Id; } }
-        public Stack<string> Moves { get { return new Stack<string>(_pgnMoveText); } }
+        public Stack<string> Moves
+        {
+            get
+            {
+                Stack<string> moves = new(_pgnMoveText.Reverse());
+                return moves;
+            }
+        }
         public string Chessboard { get { return _chessboard.ToString(); } }
+        public List<PlayerInfo> Players
+        {
+            get
+            {
+                List<PlayerInfo> players = new();
+                _players.ForEach(p => players.Add(p.Info));
+
+                return players;
+            }
+        }
+
 
         protected static Player CreateNewPlayer(PlayerInfo info)
         {
