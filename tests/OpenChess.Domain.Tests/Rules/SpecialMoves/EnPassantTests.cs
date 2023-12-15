@@ -45,5 +45,25 @@ namespace OpenChess.Tests
 
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
         }
+
+        [TestMethod]
+        public void MovePiece_ShouldSetPawnAsVulnerableOnMovingTwoSquaresForward()
+        {
+            Chessboard chessboard = new(FenInfo.InitialPosition);
+
+            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
+            chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassantAvailability.EnPassantPosition);
+        }
+
+        [TestMethod]
+        public void MovePiece_ShouldNotSetPawnAsVulnerableOnMovingOneSquaresForward()
+        {
+            Chessboard chessboard = new(FenInfo.InitialPosition);
+
+            chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E3"));
+            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
+        }
+
     }
 }

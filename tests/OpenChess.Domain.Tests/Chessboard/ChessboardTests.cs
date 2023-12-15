@@ -174,25 +174,6 @@ namespace OpenChess.Tests
             Assert.AreEqual(Color.Black, chessboard.Turn);
         }
 
-        [TestMethod]
-        public void MovePiece_ShouldSetPawnAsVulnerableOnMovingTwoSquaresForward()
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-
-            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
-            chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
-            Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassantAvailability.EnPassantPosition);
-        }
-
-        [TestMethod]
-        public void MovePiece_ShouldNotSetPawnAsVulnerableOnMovingOneSquaresForward()
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-
-            chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E3"));
-            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
-        }
-
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "D6", "B6")]
         [TestMethod]
         public void MovePiece_InvalidMove_ShouldThrowExceptionAndRestoreChessboardToLastPosition(string position, string orig, string dest)
