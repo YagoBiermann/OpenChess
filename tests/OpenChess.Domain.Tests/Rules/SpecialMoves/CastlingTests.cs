@@ -202,5 +202,23 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
         }
+
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 'w')]
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 'b')]
+        [DataRow("r1b1kb1r/ppp1pppp/2nq1n2/3p4/3P4/2NQ1N2/PPP1PPPP/R1B1KB1R w KQkq - 0 1", 'w')]
+        [DataRow("r1b1kb1r/ppp1pppp/2nq1n2/3p4/3P4/2NQ1N2/PPP1PPPP/R1B1KB1R b KQkq - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_AnyPiecesInBetweenKingAndRook_ShouldNotBeAbleToCastle(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
+            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
+            Chessboard chessboard = new(position);
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
+        }
     }
 }
