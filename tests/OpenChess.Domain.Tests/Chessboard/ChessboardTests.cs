@@ -192,5 +192,19 @@ namespace OpenChess.Tests
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E3"));
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
         }
+
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "D6", "B6")]
+        [TestMethod]
+        public void MovePiece_InvalidMove_ShouldThrowExceptionAndRestoreChessboardToLastPosition(string position, string orig, string dest)
+        {
+            Chessboard chessboard = new(position);
+            Coordinate origin = Coordinate.GetInstance(orig);
+            Coordinate destination = Coordinate.GetInstance(dest);
+
+            string currentPosition = chessboard.ToString();
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
+            Assert.AreEqual(currentPosition, chessboard.ToString());
+        }
     }
 }
