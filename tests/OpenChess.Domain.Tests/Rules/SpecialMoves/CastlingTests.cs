@@ -186,5 +186,21 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
         }
+
+        [DataRow("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", 'w')]
+        [DataRow("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R b - - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_CastlingNotAvailable_ShouldNotBeAbleToCastle(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
+            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
+            Chessboard chessboard = new(position);
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
+        }
     }
 }
