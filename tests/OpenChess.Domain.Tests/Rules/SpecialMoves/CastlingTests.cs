@@ -126,5 +126,56 @@ namespace OpenChess.Tests
 
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
         }
+
+        [DataRow("r6r/pp2k2p/6p1/8/8/1P4P1/P3K2P/R6R b KQkq - 0 1", 'b', true)]
+        [DataRow("r6r/pp2k2p/6p1/8/8/1P4P1/P3K2P/R6R w KQkq - 0 1", 'w', true)]
+        [DataRow("r6r/pp2k2p/6p1/8/8/1P4P1/P3K2P/R6R b KQkq - 0 1", 'b', false)]
+        [DataRow("r6r/pp2k2p/6p1/8/8/1P4P1/P3K2P/R6R w KQkq - 0 1", 'w', false)]
+        [TestMethod]
+        public void MovePiece_KingMoved_ShouldNotBeAbleToCastle(string position, char color, bool isCastlingKingSide)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            string column = isCastlingKingSide ? "G" : "C";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate destination = Coordinate.GetInstance($"{column}{row}");
+            Chessboard chessboard = new(position);
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
+        }
+
+        [DataRow("1r2k2r/pp5p/6p1/8/8/1P4P1/P6P/1R2K2R w KQkq - 0 1", 'w')]
+        [DataRow("1r2k2r/pp5p/6p1/8/8/1P4P1/P6P/1R2K2R b KQkq - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_QueenSideRookMoved_ShouldNotBeAbleToCastleOnlyInQueenSide(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
+            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
+            Chessboard chessboard = new(position);
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
+            chessboard.MovePiece(origin, kingSideDestination);
+            Assert.IsTrue(chessboard.GetReadOnlySquare(kingSideDestination).HasPiece);
+        }
+
+        [DataRow("r3k1r1/pp5p/6p1/8/8/1P4P1/P6P/R3K1R1 w KQkq - 0 1", 'w')]
+        [DataRow("r3k1r1/pp5p/6p1/8/8/1P4P1/P6P/R3K1R1 b KQkq - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_KingSideRookMoved_ShouldNotBeAbleToCastleOnlyInKingSide(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
+            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
+            Chessboard chessboard = new(position);
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
+            chessboard.MovePiece(origin, queenSideDestination);
+            Assert.IsTrue(chessboard.GetReadOnlySquare(queenSideDestination).HasPiece);
+        }
     }
 }
