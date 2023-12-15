@@ -23,7 +23,7 @@ namespace OpenChess.Domain
         {
             ValidateMove(move);
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
-            ConvertToPGNMove(move, movePlayed);
+            ConvertToPGNMove(movePlayed);
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -100,15 +100,15 @@ namespace OpenChess.Domain
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private void ConvertToPGNMove(Move move, MovePlayed movePlayed)
+        private void ConvertToPGNMove(MovePlayed movePlayed)
         {
             int count = _pgnMoveText.Count + 1;
             bool pieceWasCaptured = movePlayed.PieceCaptured is not null;
             string pgnMove;
-            if (movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove) pgnMove = PGNBuilder.BuildPawnPGN(count, move.Origin, move.Destination, pieceWasCaptured, move.Promoting);
+            if (movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove) pgnMove = PGNBuilder.BuildPawnPGN(count, movePlayed.Origin, movePlayed.Destination, pieceWasCaptured, movePlayed.PromotedPiece);
             else if (movePlayed.MoveType == MoveType.QueenSideCastlingMove) pgnMove = PGNBuilder.BuildQueenSideCastlingString();
             else if (movePlayed.MoveType == MoveType.KingSideCastlingMove) pgnMove = PGNBuilder.BuildKingSideCastlingString();
-            else pgnMove = PGNBuilder.BuildDefaultPGN(count, movePlayed.PieceMoved, move.Destination, pieceWasCaptured);
+            else pgnMove = PGNBuilder.BuildDefaultPGN(count, movePlayed.PieceMoved, movePlayed.Destination, pieceWasCaptured);
 
             _pgnMoveText.Push(pgnMove);
         }

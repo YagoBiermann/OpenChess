@@ -21,7 +21,7 @@ namespace OpenChess.Domain
                 _chessboard.AddPiece(destination, char.Parse(promotingTo), _chessboard.Turn);
                 IReadOnlyPiece pieceMoved = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
 
-                return new(pieceMoved, pieceCaptured, MoveType.PawnPromotionMove);
+                return new(origin, destination, pieceMoved, pieceCaptured, MoveType.PawnPromotionMove, promotingTo);
             }
             else { return base.Handle(origin, destination, promotingPiece); }
         }

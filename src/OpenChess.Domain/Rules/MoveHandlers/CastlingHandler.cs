@@ -9,7 +9,7 @@ namespace OpenChess.Domain
             if (IsCastling(origin, destination))
             {
                 if (!CanCastle(destination, _chessboard.Turn)) { throw new ChessboardException("Cannot castle!"); }
-                return DoCastle(destination, _chessboard.Turn);
+                return DoCastle(origin, destination, _chessboard.Turn);
             }
             else { return base.Handle(origin, destination, promotingPiece); }
         }
@@ -38,7 +38,7 @@ namespace OpenChess.Domain
             return true;
         }
 
-        private MovePlayed DoCastle(Coordinate destination, Color player)
+        private MovePlayed DoCastle(Coordinate origin, Coordinate destination, Color player)
         {
             List<Coordinate> piecePositions = GetCastlingSide(destination, player);
             Coordinate kingPosition = piecePositions.First();
@@ -54,7 +54,7 @@ namespace OpenChess.Domain
 
             MoveType moveType = GetMoveType(destination, player);
 
-            return new(king, null, moveType);
+            return new(origin, destination, king, null, moveType);
         }
 
         private MoveType GetMoveType(Coordinate destination, Color player)
