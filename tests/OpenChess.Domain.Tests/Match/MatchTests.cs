@@ -2,9 +2,29 @@ using OpenChess.Domain;
 
 namespace OpenChess.Tests
 {
+
     [TestClass]
     public class MatchTests
     {
+        private static MatchInfo RestoreMatch(string mId, string p1Id, string p2Id, int mtime = 5, string mstatus = "InProgress", string? winner = null)
+        {
+            string matchId = mId;
+            string player1Id = p1Id;
+            string player2Id = p2Id;
+
+            PlayerInfo player1 = new(player1Id, 'w', matchId);
+            PlayerInfo player2 = new(player2Id, 'b', matchId);
+            List<PlayerInfo> players = new() { player1, player2 };
+            var status = mstatus;
+            var time = mtime;
+            List<string> pgnMoves = new() { "2. d5", "1. e4" };
+            string fen = "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq D6 0 1";
+            var pgnStack = new Stack<string>(pgnMoves);
+            MatchInfo matchInfo = new(matchId, players, fen, pgnStack, status, time, winner);
+
+            return matchInfo;
+        }
+
         [DataRow(3)]
         [DataRow(5)]
         [DataRow(10)]
@@ -20,6 +40,35 @@ namespace OpenChess.Tests
             Assert.IsFalse(match.IsFull());
             Assert.IsNull(match.CurrentPlayer);
             Assert.AreEqual(time, (int)match.Time);
+        }
+
+        [TestMethod]
+        public void NewInstance_ShouldRestoreGameStateCorrectly()
+        {
+            MatchInfo matchInfo = RestoreMatch(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+            Match match = new(matchInfo);
+
+            Assert.AreEqual(match.Id, matchInfo.MatchId);
+            Assert.AreEqual(match.Time, Time.Five);
+            Assert.AreEqual(match.Status, MatchStatus.InProgress);
+            Assert.AreEqual(match.Chessboard, matchInfo.Fen);
+            Assert.IsNull(match.Winner);
+            CollectionAssert.AreEquivalent(match.Players, matchInfo.Players);
+            CollectionAssert.AreEqual(match.Moves, matchInfo.PgnMoves);
+        }
+
+        [TestMethod]
+        public void NewInstance_RestoringGameState_InvalidProperties_ShouldThrowException()
+        {
+            string matchId = Guid.NewGuid().ToString();
+            string player1 = Guid.NewGuid().ToString();
+            string player2 = Guid.NewGuid().ToString();
+            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, player1, player2, 6));
+            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, player1, player2, 5, "imProges"));
+            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, player1, "invalidId"));
+            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, "invalidId", player2));
+            Assert.ThrowsException<MatchException>(() => RestoreMatch("invalidId", player1, player2));
+            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, player1, player2, 5, "InProgress", "invalidId"));
         }
 
         [TestMethod]
@@ -67,11 +116,11 @@ namespace OpenChess.Tests
         public void Join_AddingPlayerThatIsAlreadyInAnotherMatch_ShouldThrowException()
         {
             Match match = new(Time.Ten);
-            PlayerInfo player = new(Guid.NewGuid(), Color.White, match.Id);
+            PlayerInfo player = new(Guid.NewGuid(), Color.White, null);
             match.Join(player);
             Match match2 = new(Time.Ten);
 
-            Assert.ThrowsException<MatchException>(() => match2.Join(player));
+            Assert.ThrowsException<MatchException>(() => match2.Join(match.Players.FirstOrDefault()));
         }
 
         [TestMethod]
@@ -268,15 +317,15 @@ namespace OpenChess.Tests
 
             List<string> expectedMoveList = new()
             {
-            "1. e4",
-            "2. d5",
-            "3. exd5",
-            "4. Qxd5",
-            "5. Bc4",
-            "6. Qxc4",
-            "7. d3",
-            "8. Qxd3",
-            "9. cxd3",
+                "9. cxd3",
+                "8. Qxd3",
+                "7. d3",
+                "6. Qxc4",
+                "5. Bc4",
+                "4. Qxd5",
+                "3. exd5",
+                "2. d5",
+                "1. e4",
             };
 
             CollectionAssert.AreEqual(expectedMoveList, match.Moves);
@@ -332,7 +381,7 @@ namespace OpenChess.Tests
                 match.Play(move);
             }
 
-            Assert.AreEqual("9. dxc8=Q", match.Moves.Last());
+            Assert.AreEqual("9. dxc8=Q", match.Moves.Peek());
         }
     }
 }
