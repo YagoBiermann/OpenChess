@@ -47,7 +47,11 @@ namespace OpenChess.Tests
         }
 
         [DataRow("rnbqk2r/pppp1ppp/5n2/1B2p3/1b2P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1", 'w')]
+        [DataRow("1nb1k1n1/ppp2p1r/8/2bp4/1r1pP3/3NBN2/P3QP2/R3K2R w KQ - 0 1", 'w')]
+        [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R w KQkq - 0 1", 'w')]
         [DataRow("r3k2r/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R b KQkq - 0 1", 'b')]
+        [DataRow("r3k2r/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R b KQkq - 0 1", 'b')]
+        [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
         public void MovePiece_CastlingToKingSide_ShouldBeHandledCorrectly(string position, char color)
         {
@@ -69,7 +73,11 @@ namespace OpenChess.Tests
         }
 
         [DataRow("r2qkbnr/pp1nppp1/2p4p/5bB1/3PN2Q/8/PPP2PPP/R3KBNR w KQkq - 0 1", 'w')]
+        [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R w KQkq - 0 1", 'w')]
+        [DataRow("1nb1k1n1/ppp2p1r/8/2bp4/1r1pP3/3NBN2/P3QP2/R3K2R w KQ - 0 1", 'w')]
         [DataRow("r3k2r/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R b KQkq - 0 1", 'b')]
+        [DataRow("r3k2r/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R b KQkq - 0 1", 'b')]
+        [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
         public void MovePiece_CastlingToQueenSide_ShouldBeHandledCorrectly(string position, char color)
         {
