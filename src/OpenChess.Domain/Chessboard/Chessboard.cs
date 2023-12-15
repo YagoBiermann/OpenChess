@@ -68,7 +68,7 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
-        public IReadOnlyPiece? MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public HandledMove MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
             HandledMove move = _moveHandler.Handle(origin, destination, promotingPiece);
@@ -79,7 +79,7 @@ namespace OpenChess.Domain
             _castlingAvailability.UpdateAvailability(origin, Turn);
             SwitchTurns();
 
-            return move.PieceCaptured;
+            return move;
         }
 
         public List<Coordinate> GetPiecesPosition(List<Coordinate> range)

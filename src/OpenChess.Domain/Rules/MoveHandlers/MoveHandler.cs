@@ -37,7 +37,8 @@ namespace OpenChess.Domain
             originSquare.Piece = null;
             destinationSquare.Piece = piece;
 
-            return new(destinationSquare.Piece, capturedPiece);
+            MoveType movePlayed = piece is Pawn ? MoveType.PawnMove : MoveType.DefaultMove;
+            return new(destinationSquare.Piece, capturedPiece, movePlayed);
         }
     }
 }

@@ -52,7 +52,14 @@ namespace OpenChess.Domain
             _chessboard.AddPiece(kingDestination, king.Name, king.Color);
             _chessboard.AddPiece(rookDestination, rook.Name, rook.Color);
 
-            return new(king, null);
+            MoveType moveType = GetMoveType(destination, player);
+
+            return new(king, null, moveType);
+        }
+
+        private MoveType GetMoveType(Coordinate destination, Color player)
+        {
+            return IsCastlingKingSide(destination, player) ? MoveType.KingSideCastlingMove : MoveType.QueenSideCastlingMove;
         }
 
         private bool IsKingSideCastlingAvailable(Color color)

@@ -17,7 +17,7 @@ namespace OpenChess.Domain
                 Coordinate vulnerablePawnPosition = GetVulnerablePawn!.Origin;
                 IReadOnlyPiece? pieceCaptured = _chessboard.RemovePiece(vulnerablePawnPosition);
 
-                return new(move.PieceMoved, pieceCaptured);
+                return new(move.PieceMoved, pieceCaptured, MoveType.EnPassantMove);
             }
             else { return base.Handle(origin, destination, promotingPiece); }
         }
