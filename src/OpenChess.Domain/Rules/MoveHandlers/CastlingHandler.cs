@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         public CastlingHandler(Chessboard chessboard) : base(chessboard) { }
 
-        public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public override MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (IsCastling(origin, destination))
             {
@@ -38,7 +38,7 @@ namespace OpenChess.Domain
             return true;
         }
 
-        private HandledMove DoCastle(Coordinate destination, Color player)
+        private MovePlayed DoCastle(Coordinate destination, Color player)
         {
             List<Coordinate> piecePositions = GetCastlingSide(destination, player);
             Coordinate kingPosition = piecePositions.First();

@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         public EnPassantHandler(Chessboard chessboard) : base(chessboard) { }
 
-        public override HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public override MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (IsEnPassantMove(origin, destination))
             {

@@ -68,10 +68,10 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
-        public HandledMove MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public MovePlayed MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
-            HandledMove move = _moveHandler.Handle(origin, destination, promotingPiece);
+            MovePlayed move = _moveHandler.Handle(origin, destination, promotingPiece);
 
             HandleIllegalPosition();
             _enPassantAvailability.ClearEnPassant();

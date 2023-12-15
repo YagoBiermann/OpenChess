@@ -17,7 +17,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
 
-            HandledMove movePlayed = chessboard.MovePiece(origin, destination);
+            MovePlayed movePlayed = chessboard.MovePiece(origin, destination);
 
             Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
             Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
@@ -56,7 +56,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance("B7");
             Coordinate destination = Coordinate.GetInstance("B8");
 
-            HandledMove movePlayed = chessboard.MovePiece(origin, destination);
+            MovePlayed movePlayed = chessboard.MovePiece(origin, destination);
 
             Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
             Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);

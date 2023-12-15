@@ -11,7 +11,7 @@ namespace OpenChess.Domain
             _legalMoves = new LegalMoves(_chessboard);
         }
 
-        public virtual HandledMove Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public virtual MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (_nextHandler is null) { return HandleDefaultMove(origin, destination); }
             else { return _nextHandler.Handle(origin, destination, promotingPiece); }
@@ -28,7 +28,7 @@ namespace OpenChess.Domain
             if (!_legalMoves.IsLegalMove(origin, destination)) throw new ChessboardException("Invalid move!");
         }
 
-        private HandledMove HandleDefaultMove(Coordinate origin, Coordinate destination)
+        private MovePlayed HandleDefaultMove(Coordinate origin, Coordinate destination)
         {
             Square originSquare = _chessboard.GetSquare(origin);
             Square destinationSquare = _chessboard.GetSquare(destination);

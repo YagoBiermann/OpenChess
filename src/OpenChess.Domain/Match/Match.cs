@@ -22,7 +22,7 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             ValidateMove(move);
-            HandledMove movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
+            MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
             ConvertToPGNMove(move, movePlayed);
         }
 
@@ -100,7 +100,7 @@ namespace OpenChess.Domain
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private void ConvertToPGNMove(Move move, HandledMove movePlayed)
+        private void ConvertToPGNMove(Move move, MovePlayed movePlayed)
         {
             int count = _pgnMoveText.Count + 1;
             bool pieceWasCaptured = movePlayed.PieceCaptured is not null;
