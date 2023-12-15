@@ -1,4 +1,4 @@
 namespace OpenChess.Domain
 {
-    internal record HandledMove(IReadOnlyPiece PieceMoved, IReadOnlyPiece? PieceCaptured, MoveType moveType = MoveType.Default);
+    internal record HandledMove(IReadOnlyPiece PieceMoved, IReadOnlyPiece? PieceCaptured, MoveType MoveType = MoveType.DefaultMove);
 }
