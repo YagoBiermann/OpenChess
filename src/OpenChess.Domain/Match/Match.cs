@@ -17,6 +17,29 @@ namespace OpenChess.Domain
             _status = MatchStatus.NotStarted;
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
+            _pgnMoveText = new();
+        }
+
+        public Match(MatchInfo matchInfo)
+        {
+            var matchId = matchInfo.MatchId;
+            var players = matchInfo.Players;
+            var fen = matchInfo.Fen;
+            var pgnMoves = matchInfo.PgnMoves;
+            var status = matchInfo.Status;
+            var time = matchInfo.Time;
+            var winnerId = matchInfo.WinnerId;
+
+            Id = matchId;
+            RestorePlayers(_players, players, matchId);
+            _chessboard = new Chessboard(fen);
+            _pgnMoveText = pgnMoves;
+            _status = status;
+            _time = TimeSpan.FromMinutes((int)time);
+
+            if (winnerId is null) { _winner = null; return; }
+            Player winner = GetPlayerById((Guid)winnerId, _players) ?? throw new MatchException("Couldn't determine the winner");
+            _winner = winner;
         }
 
         public void Play(Move move)
