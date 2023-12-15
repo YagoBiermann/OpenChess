@@ -28,16 +28,7 @@ namespace OpenChess.Domain
 
         public void Join(PlayerInfo playerInfo)
         {
-            if (IsFull()) throw new MatchException("Match is full!");
-
-            bool sameColor = GetPlayerByColor(playerInfo.Color) is not null;
-            bool sameId = GetPlayerById(playerInfo.Id) is not null;
-            if (sameColor) throw new MatchException($"Match already contains a player of same color!");
-            if (sameId) throw new MatchException($"Player is already in the match!");
-
-            Guid? currentMatch = playerInfo.CurrentMatch;
-            if (currentMatch is not null && currentMatch != Id) { throw new MatchException("Player already assigned to another match!"); }
-
+            CanJoinMatch(playerInfo, _players, Id);
             Player player = CreateNewPlayer(playerInfo);
             player.Join(Id);
             _players.Add(player);
@@ -113,14 +104,23 @@ namespace OpenChess.Domain
             _pgnMoveText.Push(pgnMove);
         }
 
-        private Player? GetPlayerByColor(Color color)
+
+        private static void CanJoinMatch(PlayerInfo playerInfo, List<Player> players, Guid matchId)
         {
-            return _players.Where(p => p.Color == color).FirstOrDefault();
+            if (players.Count == 2) throw new MatchException("Match is full!");
+
+            bool sameColor = GetPlayerByColor(playerInfo.Color, players) is not null;
+            bool sameId = GetPlayerById(playerInfo.Id, players) is not null;
+            if (sameColor) throw new MatchException($"Match already contains a player of same color!");
+            if (sameId) throw new MatchException($"Player is already in the match!");
+
+            Guid? currentMatch = playerInfo.CurrentMatch;
+            if (currentMatch is not null && currentMatch != matchId) { throw new MatchException("Player already assigned to another match!"); }
+        }
+        {
         }
 
-        private Player? GetPlayerById(Guid id)
         {
-            return _players.Where(p => p.Id == id).FirstOrDefault();
         }
     }
 }
