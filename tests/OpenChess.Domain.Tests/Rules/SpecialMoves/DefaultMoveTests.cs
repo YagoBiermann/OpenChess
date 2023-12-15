@@ -7,7 +7,7 @@ namespace OpenChess.Tests
     {
 
         [DataRow("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1", "B7", "B3", 'r', 'B')]
-        [DataRow("rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b KQkq - 0 1", "C3", "D5", 'N', 'p')]
+        [DataRow("rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR w KQkq - 0 1", "C3", "D5", 'N', 'p')]
         [DataRow("rnbqk2r/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR b KQkq - 0 1", "B4", "C3", 'b', 'N')]
         [DataRow("1K6/7r/k3p3/3P4/8/8/8/8 b - - 0 1", "E6", "D5", 'p', 'P')]
         [TestMethod]

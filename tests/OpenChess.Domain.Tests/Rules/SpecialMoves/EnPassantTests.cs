@@ -5,7 +5,7 @@ namespace OpenChess.Tests
     [TestClass]
     public class EnPassantTests
     {
-        [DataRow("D4", "E3", "rnbqkbnr/pppp1ppp/8/8/3pP3/8/PPPP1PPP/RNBQKBNR w KQkq E3 0 1", 'w', 'b')]
+        [DataRow("D4", "E3", "rnbqkbnr/pppp1ppp/8/8/3pP3/8/PPPP1PPP/RNBQKBNR b KQkq E3 0 1", 'w', 'b')]
         [DataRow("D5", "E6", "rnbqkbnr/pppp1ppp/8/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq E6 0 1", 'b', 'w')]
         [TestMethod]
         public void MovePiece_PawnVulnerable_ShouldBeCapturedByEnPassant(string position1, string position2, string fen, char color1, char color2)
