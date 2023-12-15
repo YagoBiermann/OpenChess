@@ -5,10 +5,10 @@ namespace OpenChess.Domain
         public Guid Id { get; }
         private List<Player> _players = new(2);
         private Chessboard _chessboard { get; set; }
-        private Stack<string> _pgnMoveText = new();
+        private Stack<string> _pgnMoveText { get; set; }
         private MatchStatus _status { get; set; }
-        private Player? _winner { get; set; }
         private TimeSpan _time { get; }
+        private Player? _winner { get; set; }
 
         public Match(Time time)
         {
