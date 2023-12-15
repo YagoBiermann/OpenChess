@@ -111,6 +111,12 @@ namespace OpenChess.Domain
             }
         }
 
+        public static Guid TryParseId(string id)
+        {
+            bool parsedCorrectly = Guid.TryParse(id, out Guid parsedId);
+            if (!parsedCorrectly) { throw new MatchException($"given id: {id} is invalid!"); }
+            return parsedId;
+        }
 
         protected static Player CreateNewPlayer(PlayerInfo info)
         {
