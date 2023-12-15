@@ -127,10 +127,15 @@ namespace OpenChess.Domain
             Guid? currentMatch = playerInfo.CurrentMatch;
             if (currentMatch is not null && currentMatch != matchId) { throw new MatchException("Player already assigned to another match!"); }
         }
+
+        private static Player? GetPlayerByColor(Color color, List<Player> players)
         {
+            return players.Where(p => p.Color == color).FirstOrDefault();
         }
 
+        private static Player? GetPlayerById(Guid id, List<Player> players)
         {
+            return players.Where(p => p.Id == id).FirstOrDefault();
         }
     }
 }
