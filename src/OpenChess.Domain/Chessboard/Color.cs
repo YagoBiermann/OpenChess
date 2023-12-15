@@ -2,8 +2,8 @@ namespace OpenChess.Domain
 {
     internal enum Color
     {
-        Black,
-        White
+        Black = 'b',
+        White = 'w'
     }
 
     internal static class ColorUtils
