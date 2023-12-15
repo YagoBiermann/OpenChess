@@ -7,10 +7,10 @@ namespace OpenChess.Domain
         private EnPassantHandler _enPassantHandler;
         private CastlingHandler _castlingHandler;
         private IMoveHandler _moveHandler;
-        private CastlingAvailability _castlingAvailability { get; set; }
-        private EnPassantAvailability _enPassantAvailability { get; set; }
-        public IEnPassantAvailability EnPassantAvailability => _enPassantAvailability;
-        public ICastlingAvailability CastlingAvailability => _castlingAvailability;
+        private CastlingAvailability _castlingAvailability;
+        public ICastlingAvailability CastlingAvailability { get => _castlingAvailability; private set { _castlingAvailability = (CastlingAvailability)value; } }
+        private EnPassantAvailability _enPassantAvailability;
+        public IEnPassantAvailability EnPassantAvailability { get => _enPassantAvailability; private set { _enPassantAvailability = (EnPassantAvailability)value; } }
         public Color Turn { get; private set; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
@@ -33,7 +33,6 @@ namespace OpenChess.Domain
             _castlingHandler = new(this);
             _moveHandler = SetupMoveHandlerChain();
         }
-
         public Piece? AddPiece(Coordinate position, char piece, Color player)
         {
             Piece createdPiece = CreatePiece(piece, position, player);
