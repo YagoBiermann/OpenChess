@@ -102,12 +102,17 @@ namespace OpenChess.Domain
                 isHitting = Check.IsHittingTheEnemyKing(currentPiece, _chessboard);
                 if (isHitting) break;
 
-                List<MoveDirections> moves = legalMoves.CalculateLegalMoves(currentPiece);
-                castlingPositions.ForEach(p =>
+                List<MoveDirections> moves;
+                if (currentPiece is Pawn) { moves = currentPiece.CalculateMoveRange(); }
+                else { moves = legalMoves.CalculateLegalMoves(currentPiece); };
+
+                foreach (MoveDirections move in moves)
                 {
-                    isHitting = moves.Where(m => m.Coordinates.Contains(p)).Any();
-                    if (isHitting) return;
-                });
+                    var lastPosition = move.Coordinates.LastOrDefault();
+                    if (lastPosition is null) { isHitting = false; break; }
+                    if (castlingPositions.Contains(lastPosition)) { isHitting = true; break; }
+                }
+
                 if (isHitting) break;
             }
 
