@@ -97,5 +97,34 @@ namespace OpenChess.Tests
             Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(King));
             Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(rookPosition).ReadOnlyPiece, typeof(Rook));
         }
+
+        [DataRow("r3k2r/pppppppp/2N3N1/8/8/2n3n1/PPPPPPPP/R3K2R w KQkq - 0 1", 'w', false)]
+        [DataRow("r3k2r/ppp1p1pp/3pBp2/8/8/3PbP2/PPP1P1PP/R3K2R w KQkq - 0 1", 'w', false)]
+        [DataRow("r3k2r/ppp1p1pp/3pNp2/8/8/3PnP2/PPP1P1PP/R3K2R w KQkq - 0 1", 'w', false)]
+        [DataRow("r3k2r/ppP1p1Pp/3p1p2/8/8/3P1P2/PPp1P1pP/R3K2R w KQkq - 0 1", 'w', false)]
+        [DataRow("r3k2r/ppp1p1pp/3pBp2/8/8/3PbP2/PPP1P1PP/R3K2R b KQkq - 0 1", 'b', false)]
+        [DataRow("r3k2r/pppppppp/2N3N1/8/8/2n3n1/PPPPPPPP/R3K2R b KQkq - 0 1", 'b', false)]
+        [DataRow("r3k2r/ppp1p1pp/3pNp2/8/8/3PnP2/PPP1P1PP/R3K2R b KQkq - 0 1", 'b', false)]
+        [DataRow("r3k2r/ppP1p1Pp/3p1p2/8/8/3P1P2/PPp1P1pP/R3K2R b KQkq - 0 1", 'b', false)]
+        [DataRow("r3k2r/pppppppp/2N3N1/8/8/2n3n1/PPPPPPPP/R3K2R w KQkq - 0 1", 'w', false)]
+        [DataRow("r3k2r/ppp1p1pp/3pBp2/8/8/3PbP2/PPP1P1PP/R3K2R w KQkq - 0 1", 'w', true)]
+        [DataRow("r3k2r/ppp1p1pp/3pNp2/8/8/3PnP2/PPP1P1PP/R3K2R w KQkq - 0 1", 'w', true)]
+        [DataRow("r3k2r/ppP1p1Pp/3p1p2/8/8/3P1P2/PPp1P1pP/R3K2R w KQkq - 0 1", 'w', true)]
+        [DataRow("r3k2r/ppp1p1pp/3pBp2/8/8/3PbP2/PPP1P1PP/R3K2R b KQkq - 0 1", 'b', true)]
+        [DataRow("r3k2r/pppppppp/2N3N1/8/8/2n3n1/PPPPPPPP/R3K2R b KQkq - 0 1", 'b', true)]
+        [DataRow("r3k2r/ppp1p1pp/3pNp2/8/8/3PnP2/PPP1P1PP/R3K2R b KQkq - 0 1", 'b', true)]
+        [DataRow("r3k2r/ppP1p1Pp/3p1p2/8/8/3P1P2/PPp1P1pP/R3K2R b KQkq - 0 1", 'b', true)]
+        [TestMethod]
+        public void MovePiece_AnyEnemyPieceHittingSquaresWhereKingPassThroughDuringTheCastling_ShouldNotBeAbleToCastle(string position, char color, bool isCastlingKingSide)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            string column = isCastlingKingSide ? "G" : "C";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate destination = Coordinate.GetInstance($"{column}{row}");
+            Chessboard chessboard = new(position);
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
+        }
     }
 }
