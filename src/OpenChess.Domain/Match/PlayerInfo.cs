@@ -6,17 +6,17 @@ namespace OpenChess.Domain
         public Color Color { get; }
         public Guid? CurrentMatch { get; }
 
-        public PlayerInfo(int color)
+        public PlayerInfo(char color)
         {
             Id = Guid.NewGuid();
-            Color = TryParseColor(color);
+            Color = ColorUtils.TryParseColor(color);
         }
 
-        public PlayerInfo(string id, int color, string currentMatch)
+        public PlayerInfo(string id, char color, string currentMatch)
         {
-            Id = TryParseId(id);
-            CurrentMatch = TryParseId(currentMatch);
-            Color = TryParseColor(color);
+            Id = Match.TryParseId(id);
+            CurrentMatch = Match.TryParseId(currentMatch);
+            Color = ColorUtils.TryParseColor(color);
         }
 
         public PlayerInfo(Color color)
@@ -30,20 +30,6 @@ namespace OpenChess.Domain
             Id = id;
             Color = color;
             CurrentMatch = currentMatch;
-        }
-
-        private Color TryParseColor(int color)
-        {
-            bool colorExists = Enum.IsDefined(typeof(Color), color);
-            if (!colorExists) throw new MatchException($"Could not cast the value {color} to a color.");
-            return (Color)color;
-        }
-
-        private Guid TryParseId(string id)
-        {
-            bool parsedCorrectly = Guid.TryParse(id, out Guid parsedId);
-            if (!parsedCorrectly) { throw new MatchException($"given id: {id} is invalid!"); }
-            return parsedId;
         }
     }
 }
