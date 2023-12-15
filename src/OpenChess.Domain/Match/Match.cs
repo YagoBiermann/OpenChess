@@ -22,12 +22,8 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             ValidateMove(move);
-            bool isPawn = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece is Pawn;
-
-            IReadOnlyPiece? capturedPiece = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
-            bool pieceWasCaptured = capturedPiece is not null;
-
-            ConvertToPGNMove(move, isPawn, pieceWasCaptured);
+            HandledMove movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
+            ConvertToPGNMove(move, movePlayed);
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -104,13 +100,15 @@ namespace OpenChess.Domain
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private void ConvertToPGNMove(Move move, bool isPawn, bool pieceWasCaptured)
+        private void ConvertToPGNMove(Move move, HandledMove movePlayed)
         {
             int count = _pgnMoveText.Count + 1;
-            IReadOnlyPiece? pieceMoved = _chessboard.GetReadOnlySquare(move.Destination).ReadOnlyPiece;
+            bool pieceWasCaptured = movePlayed.PieceCaptured is not null;
             string pgnMove;
-            if (isPawn) pgnMove = PGNBuilder.BuildPawnPGN(count, move.Origin, move.Destination, pieceWasCaptured, move.Promoting);
-            else pgnMove = PGNBuilder.BuildDefaultPGN(count, pieceMoved!, move.Destination, pieceWasCaptured);
+            if (movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove) pgnMove = PGNBuilder.BuildPawnPGN(count, move.Origin, move.Destination, pieceWasCaptured, move.Promoting);
+            else if (movePlayed.MoveType == MoveType.QueenSideCastlingMove) pgnMove = PGNBuilder.BuildQueenSideCastlingString();
+            else if (movePlayed.MoveType == MoveType.KingSideCastlingMove) pgnMove = PGNBuilder.BuildKingSideCastlingString();
+            else pgnMove = PGNBuilder.BuildDefaultPGN(count, movePlayed.PieceMoved, move.Destination, pieceWasCaptured);
 
             _pgnMoveText.Push(pgnMove);
         }
