@@ -80,14 +80,14 @@ namespace OpenChess.Domain
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
             if (HasFinished()) { throw new MatchException("Match already finished"); }
-            if (GetPlayerById(move.PlayerId) is null) { throw new MatchException("You are not in this match"); }
+            if (GetPlayerById(move.PlayerId, _players) is null) { throw new MatchException("You are not in this match"); }
 
-            Player player = GetPlayerById(move.PlayerId)!;
+            Player player = GetPlayerById(move.PlayerId, _players)!;
             if (!player.Color.Equals(_chessboard.Turn)) { throw new MatchException("Its not your turn!"); };
             if (!_chessboard.GetReadOnlySquare(move.Origin).HasPiece) { throw new ChessboardException("There is no piece in this position"); };
 
             Color pieceColor = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.Color;
-            Color playerColor = GetPlayerById(move.PlayerId)!.Color;
+            Color playerColor = GetPlayerById(move.PlayerId, _players)!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
