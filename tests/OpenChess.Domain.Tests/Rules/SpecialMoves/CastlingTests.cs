@@ -220,5 +220,60 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
         }
+
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_MovingQueenSideRook_ShouldLoseQueenSideCastling(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"A{row}");
+            Coordinate destination = Coordinate.GetInstance($"B{row}");
+            Chessboard chessboard = new(position);
+
+            bool isAvailableBefore = color == 'w' ? chessboard.CastlingAvailability.IsWhiteQueenSideAvailable : chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
+            Assert.IsTrue(isAvailableBefore);
+            chessboard.MovePiece(origin, destination);
+            bool isAvailableAfter = color == 'w' ? chessboard.CastlingAvailability.IsWhiteQueenSideAvailable : chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
+            Assert.IsFalse(isAvailableAfter);
+        }
+
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_MovingKingSideRook_ShouldLoseKingSideCastling(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"H{row}");
+            Coordinate destination = Coordinate.GetInstance($"G{row}");
+            Chessboard chessboard = new(position);
+
+            bool isAvailableBefore = color == 'w' ? chessboard.CastlingAvailability.IsWhiteKingSideAvailable : chessboard.CastlingAvailability.IsBlackKingSideAvailable;
+            Assert.IsTrue(isAvailableBefore);
+            chessboard.MovePiece(origin, destination);
+            bool isAvailableAfter = color == 'w' ? chessboard.CastlingAvailability.IsWhiteKingSideAvailable : chessboard.CastlingAvailability.IsBlackKingSideAvailable;
+            Assert.IsFalse(isAvailableAfter);
+        }
+
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_MovingKing_ShouldLoseCastling(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate destination = Coordinate.GetInstance($"D{row}");
+            Chessboard chessboard = new(position);
+
+            chessboard.MovePiece(origin, destination);
+            bool isKingSideAvailable = color == 'w' ? chessboard.CastlingAvailability.IsWhiteKingSideAvailable : chessboard.CastlingAvailability.IsBlackKingSideAvailable;
+            bool isQueenSideAvailable = color == 'w' ? chessboard.CastlingAvailability.IsWhiteQueenSideAvailable : chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
+
+            Assert.IsFalse(isKingSideAvailable);
+            Assert.IsFalse(isQueenSideAvailable);
+        }
     }
 }

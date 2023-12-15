@@ -193,5 +193,4 @@ namespace OpenChess.Tests
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
         }
     }
-
 }
