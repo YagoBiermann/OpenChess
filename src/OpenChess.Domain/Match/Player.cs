@@ -10,6 +10,7 @@ namespace OpenChess.Domain
         {
             Id = info.Id;
             Color = info.Color;
+            CurrentMatch = info.CurrentMatch;
         }
 
         public void Join(Guid match)
