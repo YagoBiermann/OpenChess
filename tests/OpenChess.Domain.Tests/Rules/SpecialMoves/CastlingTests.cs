@@ -177,5 +177,21 @@ namespace OpenChess.Tests
             chessboard.MovePiece(origin, queenSideDestination);
             Assert.IsTrue(chessboard.GetReadOnlySquare(queenSideDestination).HasPiece);
         }
+
+        [DataRow("r3k2r/pp5p/6p1/8/8/1Pb3P1/P6P/R3K2R w KQkq - 0 1", 'w')]
+        [DataRow("r3k2r/pp5p/2B3p1/8/8/1P4P1/P6P/R3K2R b KQkq - 0 1", 'b')]
+        [TestMethod]
+        public void MovePiece_KingInCheck_ShouldNotBeAbleToCastle(string position, char color)
+        {
+            Color player = Utils.ColorFromChar(color);
+            string row = player == Color.White ? "1" : "8";
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
+            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
+            Chessboard chessboard = new(position);
+
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
+            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
+        }
     }
 }
