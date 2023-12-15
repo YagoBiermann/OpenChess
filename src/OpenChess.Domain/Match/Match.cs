@@ -104,6 +104,16 @@ namespace OpenChess.Domain
             _pgnMoveText.Push(pgnMove);
         }
 
+        private static void RestorePlayers(List<Player> players, List<PlayerInfo> playersInfo, Guid matchId)
+        {
+            foreach (PlayerInfo playerInfo in playersInfo)
+            {
+                Player restoredPlayer = new(playerInfo);
+                if (playerInfo.CurrentMatch is null) throw new MatchException("Player is not in a match!");
+                CanJoinMatch(playerInfo, players, matchId);
+                players.Add(restoredPlayer);
+            }
+        }
 
         private static void CanJoinMatch(PlayerInfo playerInfo, List<Player> players, Guid matchId)
         {
