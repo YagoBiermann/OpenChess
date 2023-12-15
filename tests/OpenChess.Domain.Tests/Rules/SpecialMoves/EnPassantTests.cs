@@ -14,10 +14,10 @@ namespace OpenChess.Tests
             var origin = Coordinate.GetInstance(position1);
             var destination = Coordinate.GetInstance(position2);
 
-            IReadOnlyPiece? pieceCaptured = chessboard.MovePiece(origin, destination);
+            IReadOnlyPiece? pieceCaptured = chessboard.MovePiece(origin, destination).PieceCaptured;
 
             Assert.IsInstanceOfType(pieceCaptured, typeof(Pawn));
-            Assert.AreEqual(pieceCaptured.Color, Utils.ColorFromChar(color1));
+            Assert.AreEqual(pieceCaptured!.Color, Utils.ColorFromChar(color1));
             Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
             Assert.AreEqual(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!.Color, Utils.ColorFromChar(color2));
         }

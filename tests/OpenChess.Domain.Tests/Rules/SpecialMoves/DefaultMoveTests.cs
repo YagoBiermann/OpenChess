@@ -17,12 +17,12 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
 
-            IReadOnlyPiece? pieceCaptured = chessboard.MovePiece(origin, destination);
+            HandledMove movePlayed = chessboard.MovePiece(origin, destination);
 
             Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
             Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
-            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, Utils.GetPieceType(moved));
-            Assert.IsInstanceOfType(pieceCaptured, Utils.GetPieceType(captured));
+            Assert.IsInstanceOfType(movePlayed.PieceMoved, Utils.GetPieceType(moved));
+            Assert.IsInstanceOfType(movePlayed.PieceCaptured, Utils.GetPieceType(captured));
         }
 
         [DataRow("rnbqk2r/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR b KQkq - 0 1", "F6", "E8")]
@@ -56,12 +56,12 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance("B7");
             Coordinate destination = Coordinate.GetInstance("B8");
 
-            IReadOnlyPiece? pieceCaptured = chessboard.MovePiece(origin, destination);
+            HandledMove movePlayed = chessboard.MovePiece(origin, destination);
 
             Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
             Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
-            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(Rook));
-            Assert.IsNull(pieceCaptured);
+            Assert.IsInstanceOfType(movePlayed.PieceMoved, typeof(Rook));
+            Assert.IsNull(movePlayed.PieceCaptured);
         }
 
     }
