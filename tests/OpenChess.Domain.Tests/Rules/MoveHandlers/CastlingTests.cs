@@ -5,6 +5,45 @@ namespace OpenChess.Tests
     [TestClass]
     public class CastlingTests
     {
+        private static Chessboard MovePiece(string position, char color, bool castlingKingSide)
+        {
+            string row = GetRow(color);
+            string column = GetColumn(castlingKingSide);
+            Coordinate origin = Coordinate.GetInstance($"E{row}");
+            Coordinate destination = Coordinate.GetInstance($"{column}{row}");
+            Chessboard chessboard = new(position);
+
+            chessboard.MovePiece(origin, destination);
+            return chessboard;
+        }
+
+        private static Chessboard MovePiece(string position, string origin, string destination)
+        {
+            Chessboard chessboard = new(position);
+            chessboard.MovePiece(Coordinate.GetInstance($"{origin}"), Coordinate.GetInstance($"{destination}"));
+            return chessboard;
+        }
+
+        private static bool GetQueenCastling(char color, Chessboard chessboard)
+        {
+            return color == 'w' ? chessboard.CastlingAvailability.IsWhiteQueenSideAvailable : chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
+        }
+
+        private static bool GetKingCastling(char color, Chessboard chessboard)
+        {
+            return color == 'w' ? chessboard.CastlingAvailability.IsWhiteKingSideAvailable : chessboard.CastlingAvailability.IsBlackKingSideAvailable;
+        }
+
+        private static string GetColumn(bool castlingKingSide)
+        {
+            return castlingKingSide ? "G" : "C";
+        }
+
+        private static string GetRow(char color)
+        {
+            return color == 'w' ? "1" : "8";
+        }
+
         [TestMethod]
         public void NewInstanceWithEmptyConstructor_ShouldBeTrueForAll()
         {
@@ -55,18 +94,14 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_CastlingToKingSide_ShouldBeHandledCorrectly(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate destination = Coordinate.GetInstance($"G{row}");
+            Chessboard chessboard = MovePiece(position, color, true);
+            string row = GetRow(color);
+            string column = GetColumn(true);
+            Coordinate destination = Coordinate.GetInstance($"{column}{row}");
             Coordinate rookPosition = Coordinate.GetInstance($"F{row}");
-            Chessboard chessboard = new(position);
-
-            chessboard.MovePiece(origin, destination);
 
             Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"H{row}")).HasPiece);
             Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"E{row}")).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
             Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
             Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(King));
             Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(rookPosition).ReadOnlyPiece, typeof(Rook));
@@ -81,14 +116,12 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_CastlingToQueenSide_ShouldBeHandledCorrectly(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate destination = Coordinate.GetInstance($"C{row}");
+            string row = GetRow(color);
+            string column = GetColumn(false);
+            Coordinate destination = Coordinate.GetInstance($"{column}{row}");
             Coordinate rookPosition = Coordinate.GetInstance($"D{row}");
-            Chessboard chessboard = new(position);
 
-            chessboard.MovePiece(origin, destination);
+            Chessboard chessboard = MovePiece(position, color, false);
 
             Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"A{row}")).HasPiece);
             Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"E{row}")).HasPiece);
@@ -109,15 +142,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_AnyEnemyPieceHittingSquaresWhereKingPassThroughDuringTheCastling_ShouldNotBeAbleToCastle(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
-            Coordinate kingSideDestination = Coordinate.GetInstance($"C{row}");
-            Chessboard chessboard = new(position);
-
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
         }
 
         [DataRow("r6r/pp2k2p/6p1/8/8/1P4P1/P3K2P/R6R b KQkq - 0 1", 'b', true)]
@@ -127,14 +153,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_KingMoved_ShouldNotBeAbleToCastle(string position, char color, bool isCastlingKingSide)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            string column = isCastlingKingSide ? "G" : "C";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate destination = Coordinate.GetInstance($"{column}{row}");
-            Chessboard chessboard = new(position);
-
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, isCastlingKingSide));
         }
 
         [DataRow("1r2k2r/pp5p/6p1/8/8/1P4P1/P6P/1R2K2R w KQkq - 0 1", 'w')]
@@ -142,15 +161,10 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_QueenSideRookMoved_ShouldNotBeAbleToCastleOnlyInQueenSide(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
-            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
-            Chessboard chessboard = new(position);
+            Coordinate kingSideDestination = Coordinate.GetInstance($"G{GetRow(color)}");
 
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
-            chessboard.MovePiece(origin, kingSideDestination);
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
+            Chessboard chessboard = MovePiece(position, color, true);
             Assert.IsTrue(chessboard.GetReadOnlySquare(kingSideDestination).HasPiece);
         }
 
@@ -159,15 +173,10 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_KingSideRookMoved_ShouldNotBeAbleToCastleOnlyInKingSide(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
-            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
-            Chessboard chessboard = new(position);
+            Coordinate queenSideDestination = Coordinate.GetInstance($"C{GetRow(color)}");
 
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
-            chessboard.MovePiece(origin, queenSideDestination);
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
+            Chessboard chessboard = MovePiece(position, color, false);
             Assert.IsTrue(chessboard.GetReadOnlySquare(queenSideDestination).HasPiece);
         }
 
@@ -176,15 +185,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_KingInCheck_ShouldNotBeAbleToCastle(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
-            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
-            Chessboard chessboard = new(position);
-
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
         }
 
         [DataRow("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", 'w')]
@@ -192,15 +194,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_CastlingNotAvailable_ShouldNotBeAbleToCastle(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
-            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
-            Chessboard chessboard = new(position);
-
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 'w')]
@@ -210,15 +205,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_AnyPiecesInBetweenKingAndRook_ShouldNotBeAbleToCastle(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate queenSideDestination = Coordinate.GetInstance($"C{row}");
-            Coordinate kingSideDestination = Coordinate.GetInstance($"G{row}");
-            Chessboard chessboard = new(position);
-
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, kingSideDestination));
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, queenSideDestination));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
+            Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
         }
 
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
@@ -226,17 +214,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_MovingQueenSideRook_ShouldLoseQueenSideCastling(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"A{row}");
-            Coordinate destination = Coordinate.GetInstance($"B{row}");
-            Chessboard chessboard = new(position);
-
-            bool isAvailableBefore = color == 'w' ? chessboard.CastlingAvailability.IsWhiteQueenSideAvailable : chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
-            Assert.IsTrue(isAvailableBefore);
-            chessboard.MovePiece(origin, destination);
-            bool isAvailableAfter = color == 'w' ? chessboard.CastlingAvailability.IsWhiteQueenSideAvailable : chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
-            Assert.IsFalse(isAvailableAfter);
+            Chessboard chessboard = MovePiece(position, $"E{GetRow(color)}", $"C{GetRow(color)}");
+            bool isAvailable = GetQueenCastling(color, chessboard);
+            Assert.IsFalse(isAvailable);
         }
 
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
@@ -244,17 +224,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_MovingKingSideRook_ShouldLoseKingSideCastling(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"H{row}");
-            Coordinate destination = Coordinate.GetInstance($"G{row}");
-            Chessboard chessboard = new(position);
-
-            bool isAvailableBefore = color == 'w' ? chessboard.CastlingAvailability.IsWhiteKingSideAvailable : chessboard.CastlingAvailability.IsBlackKingSideAvailable;
-            Assert.IsTrue(isAvailableBefore);
-            chessboard.MovePiece(origin, destination);
-            bool isAvailableAfter = color == 'w' ? chessboard.CastlingAvailability.IsWhiteKingSideAvailable : chessboard.CastlingAvailability.IsBlackKingSideAvailable;
-            Assert.IsFalse(isAvailableAfter);
+            Chessboard chessboard = MovePiece(position, $"E{GetRow(color)}", $"G{GetRow(color)}");
+            bool isAvailable = GetKingCastling(color, chessboard);
+            Assert.IsFalse(isAvailable);
         }
 
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
@@ -262,15 +234,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_MovingKing_ShouldLoseCastling(string position, char color)
         {
-            Color player = Utils.ColorFromChar(color);
-            string row = player == Color.White ? "1" : "8";
-            Coordinate origin = Coordinate.GetInstance($"E{row}");
-            Coordinate destination = Coordinate.GetInstance($"D{row}");
-            Chessboard chessboard = new(position);
-
-            chessboard.MovePiece(origin, destination);
-            bool isKingSideAvailable = color == 'w' ? chessboard.CastlingAvailability.IsWhiteKingSideAvailable : chessboard.CastlingAvailability.IsBlackKingSideAvailable;
-            bool isQueenSideAvailable = color == 'w' ? chessboard.CastlingAvailability.IsWhiteQueenSideAvailable : chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
+            Chessboard chessboard = MovePiece(position, $"E{GetRow(color)}", $"F{GetRow(color)}");
+            bool isKingSideAvailable = GetKingCastling(color, chessboard);
+            bool isQueenSideAvailable = GetQueenCastling(color, chessboard);
 
             Assert.IsFalse(isKingSideAvailable);
             Assert.IsFalse(isQueenSideAvailable);
