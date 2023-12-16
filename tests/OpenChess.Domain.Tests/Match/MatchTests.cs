@@ -383,5 +383,25 @@ namespace OpenChess.Tests
 
             Assert.AreEqual("9. dxc8=Q", match.Moves.Peek());
         }
+
+        [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "G8")]
+        [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1", "E1", "G1")]
+        [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "C8")]
+        [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1", "E1", "C1")]
+        [TestMethod]
+        public void Play_Castling_ShouldAddPgnMoveProperly(string fen, string origin, string destination)
+        {
+            string castlingPgn = destination[0] == 'G' ? "O-O" : "O-O-O";
+            string matchId = Guid.NewGuid().ToString();
+            PlayerInfo player1 = new(Guid.NewGuid().ToString(), 'w', matchId);
+            PlayerInfo player2 = new(Guid.NewGuid().ToString(), 'b', matchId);
+            List<PlayerInfo> players = new() { player1, player2 };
+            MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), 5);
+            Match match = new(matchInfo);
+            Guid currentPlayer = match.CurrentPlayer!.Value;
+            match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination)));
+
+            Assert.AreEqual(castlingPgn, match.Moves.Peek());
+        }
     }
 }
