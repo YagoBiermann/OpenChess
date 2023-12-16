@@ -25,6 +25,20 @@ namespace OpenChess.Tests
             return matchInfo;
         }
 
+        private static Match RestoreAndPlay(string fen, string origin, string destination, string? promoting = null)
+        {
+            string matchId = Guid.NewGuid().ToString();
+            PlayerInfo player1 = new(Guid.NewGuid().ToString(), 'w', matchId);
+            PlayerInfo player2 = new(Guid.NewGuid().ToString(), 'b', matchId);
+            List<PlayerInfo> players = new() { player1, player2 };
+            MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), 5);
+            Match match = new(matchInfo);
+            Guid currentPlayer = match.CurrentPlayer!.Value;
+            match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting));
+
+            return match;
+        }
+
         [DataRow(3)]
         [DataRow(5)]
         [DataRow(10)]
@@ -354,34 +368,12 @@ namespace OpenChess.Tests
             }
         }
 
+        [DataRow("rnbk1bnr/pp1Ppppp/1qp5/8/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D7", "C8", "Q")]
         [TestMethod]
-        public void Play_PromotingPawn_ShouldAddPgnMoveProperly()
+        public void Play_PromotingPawn_ShouldAddPgnMoveProperly(string fen, string origin, string destination, string promoting)
         {
-            Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
-            match.Join(player1);
-            match.Join(player2);
-
-            List<Move> moves = new()
-            {
-                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
-                new(player2.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("D5")),
-                new(player1.Id, Coordinate.GetInstance("E4"), Coordinate.GetInstance("D5")),
-                new(player2.Id, Coordinate.GetInstance("C7"), Coordinate.GetInstance("C6")),
-                new(player1.Id, Coordinate.GetInstance("D5"), Coordinate.GetInstance("D6")),
-                new(player2.Id, Coordinate.GetInstance("D8"), Coordinate.GetInstance("B6")),
-                new(player1.Id, Coordinate.GetInstance("D6"), Coordinate.GetInstance("D7")),
-                new(player2.Id, Coordinate.GetInstance("E8"), Coordinate.GetInstance("D8")),
-                new(player1.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("C8"), "Q")
-            };
-
-            foreach (Move move in moves)
-            {
-                match.Play(move);
-            }
-
-            Assert.AreEqual("9. dxc8=Q", match.Moves.Peek());
+            Match match = RestoreAndPlay(fen, origin, destination);
+            Assert.AreEqual("1. dxc8=Q", match.Moves.Peek());
         }
 
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "G8")]
@@ -391,15 +383,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_Castling_ShouldAddPgnMoveProperly(string fen, string origin, string destination)
         {
+            Match match = RestoreAndPlay(fen, origin, destination);
             string castlingPgn = destination[0] == 'G' ? "O-O" : "O-O-O";
-            string matchId = Guid.NewGuid().ToString();
-            PlayerInfo player1 = new(Guid.NewGuid().ToString(), 'w', matchId);
-            PlayerInfo player2 = new(Guid.NewGuid().ToString(), 'b', matchId);
-            List<PlayerInfo> players = new() { player1, player2 };
-            MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), 5);
-            Match match = new(matchInfo);
-            Guid currentPlayer = match.CurrentPlayer!.Value;
-            match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination)));
 
             Assert.AreEqual(castlingPgn, match.Moves.Peek());
         }
