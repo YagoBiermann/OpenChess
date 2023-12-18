@@ -25,7 +25,6 @@ namespace OpenChess.Domain
         private ILegalMoves GetMoveStrategy(IReadOnlyPiece piece)
         {
             if (piece is Pawn) { return new PawnLegalMoves(_chessboard); }
-            if (piece is Knight) { return new KnightLegalMoves(_chessboard); }
 
             return new DefaultLegalMoves(_chessboard);
         }
