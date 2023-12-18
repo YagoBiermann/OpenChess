@@ -12,23 +12,15 @@ namespace OpenChess.Domain
         public List<MoveDirections> CalculateLegalMoves(IReadOnlyPiece piece)
         {
             List<MoveDirections> legalMoves = new();
-            List<MoveDirections> moveRange = piece.CalculateMoveRange();
+            List<MoveDirections> moveRange = new MovesCalculator(_chessboard).CalculateLegalMoves(piece);
 
             foreach (MoveDirections move in moveRange)
             {
                 Direction currentDirection = move.Direction;
-                List<Coordinate> pieces = _chessboard.GetPiecesPosition(move.Coordinates);
-                if (!pieces.Any())
-                {
-                    legalMoves.Add(move);
-                    continue;
-                }
-
-                List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(piece.Origin, pieces);
-                CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
-
-                List<Coordinate> rangeOfAttack = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
-                IReadOnlySquare square = _chessboard.GetReadOnlySquare(nearestPiece.Position);
+                List<Coordinate> rangeOfAttack = move.Coordinates;
+                if (!move.Coordinates.Any()) { legalMoves.Add(new(currentDirection, rangeOfAttack)); continue; }
+                IReadOnlySquare square = _chessboard.GetReadOnlySquare(rangeOfAttack.Last());
+                if (!square.HasPiece) { legalMoves.Add(new(currentDirection, rangeOfAttack)); continue; }
                 bool isKing = square.HasTypeOfPiece(typeof(King));
 
                 int lastPosition = rangeOfAttack.Count - 1;

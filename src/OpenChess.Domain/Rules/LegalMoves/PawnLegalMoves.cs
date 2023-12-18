@@ -13,7 +13,7 @@ namespace OpenChess.Domain
         {
             Pawn pawn = (Pawn)piece;
             List<MoveDirections> legalMoves = new();
-            List<MoveDirections> moveRange = pawn.CalculateMoveRange();
+            List<MoveDirections> moveRange = new MovesCalculator(_chessboard).CalculateLegalMoves(piece);
 
             foreach (MoveDirections move in moveRange)
             {
@@ -21,7 +21,7 @@ namespace OpenChess.Domain
                 List<Coordinate> currentCoordinates = move.Coordinates;
                 if (currentDirection.Equals(pawn.ForwardDirection))
                 {
-                    List<Coordinate> forwardMoves = CalculateForwardMoves(_chessboard, pawn, currentCoordinates);
+                    List<Coordinate> forwardMoves = CalculateForwardMoves(_chessboard, currentCoordinates);
                     legalMoves.Add(new(currentDirection, forwardMoves));
                     continue;
                 };
@@ -48,16 +48,11 @@ namespace OpenChess.Domain
             return legalMoves;
         }
 
-        private List<Coordinate> CalculateForwardMoves(IReadOnlyChessboard chessboard, Pawn pawn, List<Coordinate> forwardCoordinates)
+        private List<Coordinate> CalculateForwardMoves(IReadOnlyChessboard chessboard, List<Coordinate> forwardCoordinates)
         {
-            List<Coordinate> piecesPosition = chessboard.GetPiecesPosition(forwardCoordinates);
-
-            List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(pawn.Origin, piecesPosition);
-            bool noPiecesForward = !distances.Any();
-            if (noPiecesForward) return forwardCoordinates;
-            CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
-
-            List<Coordinate> forwardMoves = Coordinate.CalculateSequence(pawn.Origin, pawn.ForwardDirection, nearestPiece.DistanceBetween);
+            List<Coordinate> forwardMoves = new(forwardCoordinates);
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(forwardMoves.Last());
+            if (!square.HasPiece) { return forwardMoves; }
             int lastPosition = forwardMoves.Count - 1;
             forwardMoves.RemoveAt(lastPosition);
 
