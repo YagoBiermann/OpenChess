@@ -1,7 +1,7 @@
 
 namespace OpenChess.Domain
 {
-    internal class MovesCalculator : ILegalMoves
+    internal class MovesCalculator : IMoveCalculator
     {
         private IReadOnlyChessboard _chessboard;
         public MovesCalculator(IReadOnlyChessboard chessboard)
@@ -9,7 +9,7 @@ namespace OpenChess.Domain
             _chessboard = chessboard;
         }
 
-        public List<MoveDirections> CalculateLegalMoves(IReadOnlyPiece piece)
+        public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
             List<MoveDirections> legalMoves = new();
             List<MoveDirections> moveRange = piece.CalculateMoveRange();

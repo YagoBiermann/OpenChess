@@ -73,8 +73,8 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("C4"),
             };
 
-            ILegalMoves legalMoves = new DefaultLegalMoves(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateLegalMoves(rook);
+            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, leftMoves);
@@ -90,8 +90,8 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("G4"),
             };
 
-            ILegalMoves legalMoves = new DefaultLegalMoves(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateLegalMoves(rook);
+            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, rightMoves);
@@ -105,8 +105,8 @@ namespace OpenChess.Tests
             List<Coordinate> expectedUpMove = new() { Coordinate.GetInstance("F5") };
             List<Coordinate> expectedDownMove = new() { Coordinate.GetInstance("F3") };
 
-            ILegalMoves legalMoves = new DefaultLegalMoves(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateLegalMoves(rook);
+            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> upMoves = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
             List<Coordinate> downMoves = moves.Find(m => m.Direction.Equals(new Down())).Coordinates;
 
@@ -126,8 +126,8 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("H4"),
             };
 
-            ILegalMoves legalMoves = new DefaultLegalMoves(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateLegalMoves(rook);
+            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, rightMoves);

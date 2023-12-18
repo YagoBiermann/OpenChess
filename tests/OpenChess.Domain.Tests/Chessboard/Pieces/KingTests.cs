@@ -74,8 +74,8 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
-            ILegalMoves legalMoves = new DefaultLegalMoves(chessboard);
-            List<Coordinate> moves = legalMoves.CalculateLegalMoves(king).Find(m => m.Direction.Equals(new UpperRight())).Coordinates;
+            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            List<Coordinate> moves = legalMoves.CalculateMoves(king).Find(m => m.Direction.Equals(new UpperRight())).Coordinates;
             List<Coordinate> expectedMove = new() { Coordinate.GetInstance("F2") };
 
             CollectionAssert.AreEqual(expectedMove, moves);
@@ -87,8 +87,8 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
-            ILegalMoves legalMoves = new DefaultLegalMoves(chessboard);
-            List<Coordinate> moves = legalMoves.CalculateLegalMoves(king).Find(m => m.Direction.Equals(new UpperLeft())).Coordinates;
+            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            List<Coordinate> moves = legalMoves.CalculateMoves(king).Find(m => m.Direction.Equals(new UpperLeft())).Coordinates;
 
             Assert.IsFalse(moves.Any());
         }
@@ -99,8 +99,8 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/8/8/8/3k4/3K4/8/8 w - - 0 1");
             King king = (King)chessboard.GetReadOnlySquare("D3").ReadOnlyPiece!;
 
-            ILegalMoves legalMoves = new DefaultLegalMoves(chessboard);
-            List<Coordinate> up = legalMoves.CalculateLegalMoves(king).Find(m => m.Direction.Equals(new Up())).Coordinates;
+            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            List<Coordinate> up = legalMoves.CalculateMoves(king).Find(m => m.Direction.Equals(new Up())).Coordinates;
 
             Assert.IsFalse(up.Any());
         }
@@ -111,8 +111,8 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
-            ILegalMoves legalMoves = new DefaultLegalMoves(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateLegalMoves(king);
+            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            List<MoveDirections> moves = legalMoves.CalculateMoves(king);
             List<Coordinate> up = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
             List<Coordinate> left = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
             List<Coordinate> right = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;

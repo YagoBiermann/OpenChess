@@ -23,7 +23,7 @@ namespace OpenChess.Domain
 
         public static bool IsHittingTheEnemyKing(IReadOnlyPiece piece, Chessboard chessboard)
         {
-            List<MoveDirections> moveRange = new MovesCalculator(chessboard).CalculateLegalMoves(piece);
+            List<MoveDirections> moveRange = new MovesCalculator(chessboard).CalculateMoves(piece);
             bool isHitting = false;
 
             foreach (MoveDirections move in moveRange)

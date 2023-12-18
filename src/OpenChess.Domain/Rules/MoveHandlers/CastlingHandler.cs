@@ -98,7 +98,7 @@ namespace OpenChess.Domain
 
         private bool AnyPieceHittingTheCastlingSquares(List<Coordinate> castlingPositions)
         {
-            ILegalMoves legalMoves = new LegalMoves(_chessboard);
+            IMoveCalculator legalMoves = new LegalMoves(_chessboard);
             Color enemyPlayer = ColorUtils.GetOppositeColor(_chessboard.Turn);
             List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(enemyPlayer);
             bool isHitting = false;
@@ -111,7 +111,7 @@ namespace OpenChess.Domain
 
                 List<MoveDirections> moves;
                 if (currentPiece is Pawn) { moves = currentPiece.CalculateMoveRange(); }
-                else { moves = legalMoves.CalculateLegalMoves(currentPiece); };
+                else { moves = legalMoves.CalculateMoves(currentPiece); };
 
                 foreach (MoveDirections move in moves)
                 {
