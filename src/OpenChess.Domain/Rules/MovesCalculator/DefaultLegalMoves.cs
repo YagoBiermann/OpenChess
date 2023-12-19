@@ -9,11 +9,16 @@ namespace OpenChess.Domain
             if (!legalMoves.Any()) return legalMoves;
 
             IReadOnlySquare square = chessboard.GetReadOnlySquare(legalMoves.Last());
-            if (!square.HasPiece) { return legalMoves; }
-            bool isKing = square.HasTypeOfPiece(typeof(King));
-
             int lastPosition = legalMoves.IndexOf(legalMoves.Last());
-            if (!square.HasEnemyPiece(piece.Color) || isKing) legalMoves.RemoveAt(lastPosition);
+            if (piece is not Pawn && !square.HasPiece) { return legalMoves; }
+            Coordinate? enPassant = chessboard.EnPassantAvailability.EnPassantPosition;
+            bool isKing = square.HasTypeOfPiece(typeof(King));
+            bool hasAllyOrKing = !square.HasEnemyPiece(piece.Color) || isKing;
+            bool isEnPassant = square.Coordinate.Equals(enPassant);
+            bool doesntHavePieceOrIsNotEnPassant = !square.HasPiece || !isEnPassant;
+
+            if (piece is Pawn && (hasAllyOrKing || doesntHavePieceOrIsNotEnPassant)) legalMoves.RemoveAt(lastPosition);
+            if (piece is not Pawn && hasAllyOrKing) legalMoves.RemoveAt(lastPosition);
 
             return legalMoves;
         }

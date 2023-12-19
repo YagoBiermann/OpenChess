@@ -11,7 +11,7 @@ namespace OpenChess.Domain
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
-            IMoveCalculatorStrategy strategy = GetMoveStrategy(piece);
+            IMoveCalculatorStrategy strategy = new DefaultLegalMoves();
             return new MovesCalculator(_chessboard, strategy).CalculateMoves(piece);
         }
 
@@ -21,12 +21,6 @@ namespace OpenChess.Domain
             List<MoveDirections> legalMoves = CalculateMoves(piece);
 
             return legalMoves.Exists(m => m.Coordinates.Contains(destination));
-        }
-
-        private static IMoveCalculatorStrategy GetMoveStrategy(IReadOnlyPiece piece)
-        {
-            if (piece is Pawn) { return new PawnLegalMoves(); }
-            return new DefaultLegalMoves();
         }
     }
 }
