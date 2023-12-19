@@ -1,12 +1,14 @@
 
 namespace OpenChess.Domain
 {
-    internal class MovesCalculator : IMoveCalculator
+    internal class MovesCalculator
     {
         private IReadOnlyChessboard _chessboard;
-        public MovesCalculator(IReadOnlyChessboard chessboard)
+        private IMoveCalculatorStrategy _strategy;
+        public MovesCalculator(IReadOnlyChessboard chessboard, IMoveCalculatorStrategy strategy)
         {
             _chessboard = chessboard;
+            _strategy = strategy;
         }
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
