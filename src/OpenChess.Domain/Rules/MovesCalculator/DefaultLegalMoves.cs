@@ -1,33 +1,19 @@
 
 namespace OpenChess.Domain
 {
-    internal class DefaultLegalMoves : IMoveCalculator
+    internal class DefaultLegalMoves : IMoveCalculatorStrategy
     {
-        private IReadOnlyChessboard _chessboard;
-        public DefaultLegalMoves(IReadOnlyChessboard chessboard)
+        public List<Coordinate> Calculate(IReadOnlyChessboard chessboard, IReadOnlyPiece piece, List<Coordinate> rangeOfAttack)
         {
-            _chessboard = chessboard;
-        }
+            List<Coordinate> legalMoves = new(rangeOfAttack);
+            if (!legalMoves.Any()) return legalMoves;
 
-        public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
-        {
-            List<MoveDirections> legalMoves = new();
-            List<MoveDirections> moveRange = new MovesCalculator(_chessboard).CalculateMoves(piece);
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(legalMoves.Last());
+            if (!square.HasPiece) { return legalMoves; }
+            bool isKing = square.HasTypeOfPiece(typeof(King));
 
-            foreach (MoveDirections move in moveRange)
-            {
-                Direction currentDirection = move.Direction;
-                List<Coordinate> rangeOfAttack = move.Coordinates;
-                if (!move.Coordinates.Any()) { legalMoves.Add(new(currentDirection, rangeOfAttack)); continue; }
-                IReadOnlySquare square = _chessboard.GetReadOnlySquare(rangeOfAttack.Last());
-                if (!square.HasPiece) { legalMoves.Add(new(currentDirection, rangeOfAttack)); continue; }
-                bool isKing = square.HasTypeOfPiece(typeof(King));
-
-                int lastPosition = rangeOfAttack.Count - 1;
-                if (!square.HasEnemyPiece(piece.Color) || isKing) rangeOfAttack.RemoveAt(lastPosition);
-
-                legalMoves.Add(new(currentDirection, rangeOfAttack));
-            }
+            int lastPosition = legalMoves.IndexOf(legalMoves.Last());
+            if (!square.HasEnemyPiece(piece.Color) || isKing) legalMoves.RemoveAt(lastPosition);
 
             return legalMoves;
         }

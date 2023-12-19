@@ -1,63 +1,24 @@
 
 namespace OpenChess.Domain
 {
-    internal class PawnLegalMoves : IMoveCalculator
+    internal class PawnLegalMoves : IMoveCalculatorStrategy
     {
-        private IReadOnlyChessboard _chessboard;
-        public PawnLegalMoves(IReadOnlyChessboard chessboard)
+        public List<Coordinate> Calculate(IReadOnlyChessboard chessboard, IReadOnlyPiece piece, List<Coordinate> rangeOfAttack)
         {
-            _chessboard = chessboard;
-        }
-
-        public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
-        {
+            if (piece is not Pawn) throw new Exception("This class only handles pawn moves");
             Pawn pawn = (Pawn)piece;
-            List<MoveDirections> legalMoves = new();
-            List<MoveDirections> moveRange = new MovesCalculator(_chessboard).CalculateMoves(piece);
+            List<Coordinate> legalMoves = new(rangeOfAttack);
+            Coordinate? enPassant = chessboard.EnPassantAvailability.EnPassantPosition;
+            int lastPosition = legalMoves.Count - 1;
+            if (!legalMoves.Any()) return legalMoves;
 
-            foreach (MoveDirections move in moveRange)
-            {
-                Direction currentDirection = move.Direction;
-                List<Coordinate> currentCoordinates = move.Coordinates;
-                if (currentDirection.Equals(pawn.ForwardDirection))
-                {
-                    List<Coordinate> forwardMoves = CalculateForwardMoves(_chessboard, currentCoordinates);
-                    legalMoves.Add(new(currentDirection, forwardMoves));
-                    continue;
-                };
-
-                List<Coordinate> emptyList = new();
-                MoveDirections emptyPosition = new(currentDirection, emptyList);
-                MoveDirections sameCurrentPosition = new(currentDirection, currentCoordinates);
-
-                Coordinate? diagonal = currentCoordinates.FirstOrDefault();
-                bool diagonalIsOutOfChessboard = diagonal is null;
-                if (diagonalIsOutOfChessboard) { legalMoves.Add(emptyPosition); continue; };
-
-                IReadOnlySquare square = _chessboard.GetReadOnlySquare(diagonal!);
-                bool isEnPassant = diagonal!.Equals(_chessboard.EnPassantAvailability.EnPassantPosition);
-                if (isEnPassant) { legalMoves.Add(sameCurrentPosition); continue; };
-                if (!square.HasPiece) { legalMoves.Add(emptyPosition); continue; }
-                bool hasAllyPiece = !square.HasEnemyPiece(pawn.Color);
-                bool hasKing = square.HasTypeOfPiece(typeof(King));
-                if (hasAllyPiece || hasKing) { legalMoves.Add(emptyPosition); continue; }
-
-                legalMoves.Add(sameCurrentPosition);
-            }
+            IReadOnlySquare square = chessboard.GetReadOnlySquare(legalMoves.Last());
+            bool isEnPassant = square.Coordinate.Equals(enPassant);
+            bool hasAllyPiece = !square.HasEnemyPiece(pawn.Color);
+            bool hasKing = square.HasTypeOfPiece(typeof(King));
+            if (hasAllyPiece || hasKing || !square.HasPiece || !isEnPassant) { legalMoves.RemoveAt(lastPosition); }
 
             return legalMoves;
         }
-
-        private List<Coordinate> CalculateForwardMoves(IReadOnlyChessboard chessboard, List<Coordinate> forwardCoordinates)
-        {
-            List<Coordinate> forwardMoves = new(forwardCoordinates);
-            IReadOnlySquare square = chessboard.GetReadOnlySquare(forwardMoves.Last());
-            if (!square.HasPiece) { return forwardMoves; }
-            int lastPosition = forwardMoves.Count - 1;
-            forwardMoves.RemoveAt(lastPosition);
-
-            return forwardMoves;
-        }
-
     }
 }
