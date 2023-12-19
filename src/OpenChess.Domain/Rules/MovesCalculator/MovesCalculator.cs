@@ -29,7 +29,8 @@ namespace OpenChess.Domain
                 List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(piece.Origin, pieces);
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
                 List<Coordinate> rangeOfAttack = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
-                legalMoves.Add(new(currentDirection, rangeOfAttack));
+                List<Coordinate> newRangeOfAttack = _strategy.Calculate(_chessboard, piece, rangeOfAttack);
+                legalMoves.Add(new(currentDirection, newRangeOfAttack));
             }
 
             return legalMoves;
