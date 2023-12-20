@@ -9,8 +9,7 @@ namespace OpenChess.Domain
         }
         public int CalculateCheckAmount(Color player)
         {
-            Color enemyPlayer = ColorUtils.GetOppositeColor(player);
-            List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(enemyPlayer);
+            List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(player);
             int checkAmount = 0;
             foreach (Coordinate origin in piecePositions)
             {
