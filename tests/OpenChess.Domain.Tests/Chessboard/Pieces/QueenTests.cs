@@ -73,7 +73,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            IMoveCalculator legalMoves = new LegalMoves(chessboard);
             List<MoveDirections> moves = legalMoves.CalculateMoves(queen);
 
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
@@ -94,7 +94,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            IMoveCalculator legalMoves = new LegalMoves(chessboard);
             List<MoveDirections> moves = legalMoves.CalculateMoves(queen);
 
             List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
@@ -112,7 +112,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            IMoveCalculator legalMoves = new LegalMoves(chessboard);
             List<MoveDirections> moves = legalMoves.CalculateMoves(queen);
 
             List<Coordinate> lowerLeftMoves = moves.Find(m => m.Direction.Equals(new LowerLeft())).Coordinates;
@@ -130,7 +130,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            IMoveCalculator legalMoves = new DefaultLegalMoves(chessboard);
+            IMoveCalculator legalMoves = new LegalMoves(chessboard);
             List<MoveDirections> moves = legalMoves.CalculateMoves(queen);
             List<Coordinate> downMoves = moves.Find(m => m.Direction.Equals(new Down())).Coordinates;
             List<Coordinate> expectedDownMoves = new() { Coordinate.GetInstance("D3"), Coordinate.GetInstance("D2"), Coordinate.GetInstance("D1"), };

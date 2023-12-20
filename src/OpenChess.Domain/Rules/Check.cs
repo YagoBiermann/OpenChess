@@ -23,16 +23,15 @@ namespace OpenChess.Domain
 
         public static bool IsHittingTheEnemyKing(IReadOnlyPiece piece, Chessboard chessboard)
         {
-            List<MoveDirections> moveRange = new MovesCalculator(chessboard).CalculateMoves(piece);
+            IMoveCalculatorStrategy strategy = new CheckMoveCalculatorStrategy();
+            List<MoveDirections> moveRange = new MovesCalculator(chessboard, strategy).CalculateMoves(piece);
             bool isHitting = false;
 
             foreach (MoveDirections move in moveRange)
             {
-                if (piece is Pawn pawn && move.Direction.Equals(pawn.ForwardDirection)) { continue; }
                 if (!move.Coordinates.Any()) continue;
                 IReadOnlySquare square = chessboard.GetReadOnlySquare(move.Coordinates.Last());
-                if (!square.HasPiece) continue;
-                if (square.HasEnemyPiece(piece.Color) && square.HasTypeOfPiece(typeof(King))) { isHitting = true; break; }
+                if (square.HasPiece && square.ReadOnlyPiece is King) { isHitting = true; break; }
             }
 
             return isHitting;
