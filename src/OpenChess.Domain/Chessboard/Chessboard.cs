@@ -15,6 +15,7 @@ namespace OpenChess.Domain
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
         public string LastPosition { get; private set; }
+        public Color Opponent { get => Turn == Color.White ? Color.Black : Color.White; }
 
         public Chessboard(string position)
         {
@@ -113,7 +114,7 @@ namespace OpenChess.Domain
 
         private void SwitchTurns()
         {
-            Turn = ColorUtils.GetOppositeColor(Turn);
+            Turn = Opponent;
         }
 
         private void HandleIllegalPosition()
