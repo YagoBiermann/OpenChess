@@ -99,7 +99,7 @@ namespace OpenChess.Domain
         private bool AnyPieceHittingTheCastlingSquares(List<Coordinate> castlingPositions)
         {
             IMoveCalculator legalMoves = new LegalMovesCalculator(_chessboard);
-            Color enemyPlayer = ColorUtils.GetOppositeColor(_chessboard.Turn);
+            Color enemyPlayer = _chessboard.Opponent;
             List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(enemyPlayer);
             bool isHitting = false;
 
