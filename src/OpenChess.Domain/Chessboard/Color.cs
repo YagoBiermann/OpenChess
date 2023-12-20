@@ -8,11 +8,6 @@ namespace OpenChess.Domain
 
     internal static class ColorUtils
     {
-        public static Color GetOppositeColor(Color color)
-        {
-            return color == Color.Black ? Color.White : Color.Black;
-        }
-
         public static Color TryParseColor(char color)
         {
             bool colorExists = Enum.IsDefined(typeof(Color), (int)color);
