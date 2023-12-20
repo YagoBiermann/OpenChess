@@ -4,11 +4,11 @@ namespace OpenChess.Domain
     {
         protected IMoveHandler? _nextHandler = null;
         protected Chessboard _chessboard;
-        protected LegalMoves _legalMoves;
+        protected LegalMovesCalculator _legalMoves;
         public MoveHandler(Chessboard chessboard)
         {
             _chessboard = chessboard;
-            _legalMoves = new LegalMoves(_chessboard);
+            _legalMoves = new LegalMovesCalculator(_chessboard);
         }
 
         public virtual MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)

@@ -73,7 +73,7 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("C4"),
             };
 
-            IMoveCalculator legalMoves = new LegalMoves(chessboard);
+            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
             List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
 
@@ -90,7 +90,7 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("G4"),
             };
 
-            IMoveCalculator legalMoves = new LegalMoves(chessboard);
+            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
             List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
 
@@ -105,7 +105,7 @@ namespace OpenChess.Tests
             List<Coordinate> expectedUpMove = new() { Coordinate.GetInstance("F5") };
             List<Coordinate> expectedDownMove = new() { Coordinate.GetInstance("F3") };
 
-            IMoveCalculator legalMoves = new LegalMoves(chessboard);
+            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
             List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> upMoves = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
             List<Coordinate> downMoves = moves.Find(m => m.Direction.Equals(new Down())).Coordinates;
@@ -126,7 +126,7 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("H4"),
             };
 
-            IMoveCalculator legalMoves = new LegalMoves(chessboard);
+            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
             List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
 
