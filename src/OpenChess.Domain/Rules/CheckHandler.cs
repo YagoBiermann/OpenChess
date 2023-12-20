@@ -28,7 +28,7 @@ namespace OpenChess.Domain
 
         public bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
         {
-            IMoveCalculatorStrategy strategy = new CheckMoveStrategy();
+            IMoveCalculatorStrategy strategy = new LegalMoveStrategy();
             List<MoveDirections> moveRange = new MovesCalculator(_chessboard, strategy).CalculateMoves(piece);
             bool isHitting = false;
 
