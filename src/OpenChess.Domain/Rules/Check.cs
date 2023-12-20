@@ -2,35 +2,40 @@ namespace OpenChess.Domain
 {
     internal class Check
     {
-        public int CalculateCheckAmount(Color player, Chessboard chessboard)
+        private IReadOnlyChessboard _chessboard;
+        public Check(IReadOnlyChessboard chessboard)
+        {
+            _chessboard = chessboard;
+        }
+        public int CalculateCheckAmount(Color player)
         {
             Color enemyPlayer = ColorUtils.GetOppositeColor(player);
-            List<Coordinate> piecePositions = chessboard.GetPiecesPosition(enemyPlayer);
+            List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(enemyPlayer);
             int checkAmount = 0;
             foreach (Coordinate origin in piecePositions)
             {
-                IReadOnlyPiece piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
-                if (IsHittingTheEnemyKing(piece, chessboard)) { checkAmount++; };
+                IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
+                if (IsHittingTheEnemyKing(piece)) { checkAmount++; };
             }
 
             return checkAmount;
         }
 
-        public bool IsInCheck(Color player, Chessboard chessboard)
+        public bool IsInCheck(Color player)
         {
-            return CalculateCheckAmount(player, chessboard) > 0;
+            return CalculateCheckAmount(player) > 0;
         }
 
-        public bool IsHittingTheEnemyKing(IReadOnlyPiece piece, Chessboard chessboard)
+        public bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
         {
             IMoveCalculatorStrategy strategy = new CheckMoveStrategy();
-            List<MoveDirections> moveRange = new MovesCalculator(chessboard, strategy).CalculateMoves(piece);
+            List<MoveDirections> moveRange = new MovesCalculator(_chessboard, strategy).CalculateMoves(piece);
             bool isHitting = false;
 
             foreach (MoveDirections move in moveRange)
             {
                 if (!move.Coordinates.Any()) continue;
-                IReadOnlySquare square = chessboard.GetReadOnlySquare(move.Coordinates.Last());
+                IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
                 if (square.HasPiece && square.ReadOnlyPiece is King) { isHitting = true; break; }
             }
 
