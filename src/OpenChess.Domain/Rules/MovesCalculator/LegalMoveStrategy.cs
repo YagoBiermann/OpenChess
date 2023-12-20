@@ -12,14 +12,13 @@ namespace OpenChess.Domain
             int lastPosition = legalMoves.IndexOf(legalMoves.Last());
             if (piece is not Pawn && !square.HasPiece) { return legalMoves; }
             Coordinate? enPassant = chessboard.EnPassantAvailability.EnPassantPosition;
-            bool isKing = square.HasTypeOfPiece(typeof(King));
-            bool hasAllyOrKing = !square.HasEnemyPiece(piece.Color) || isKing;
+            bool squareHasAllyPiece = !square.HasEnemyPiece(piece.Color);
             bool isEnPassant = square.Coordinate.Equals(enPassant);
-            bool isEmptyAndIsNotEnPassant = !square.HasPiece && !isEnPassant;
+            bool squareIsEmptyAndIsNotEnPassant = !square.HasPiece && !isEnPassant;
             bool isForwardMove = piece is Pawn pawn && move.Direction.Equals(pawn.ForwardDirection);
 
-            if (piece is Pawn && (hasAllyOrKing || isEmptyAndIsNotEnPassant || isForwardMove)) legalMoves.RemoveAt(lastPosition);
-            if (piece is not Pawn && hasAllyOrKing) legalMoves.RemoveAt(lastPosition);
+            if (piece is Pawn && (squareHasAllyPiece || squareIsEmptyAndIsNotEnPassant || isForwardMove)) legalMoves.RemoveAt(lastPosition);
+            if (piece is not Pawn && squareHasAllyPiece) legalMoves.RemoveAt(lastPosition);
 
             return legalMoves;
         }
