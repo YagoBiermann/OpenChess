@@ -11,7 +11,7 @@ namespace OpenChess.Domain
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
-            IMoveCalculatorStrategy strategy = new DefaultLegalMoves();
+            IMoveCalculatorStrategy strategy = new LegalMoveStrategy();
             return new MovesCalculator(_chessboard, strategy).CalculateMoves(piece);
         }
 

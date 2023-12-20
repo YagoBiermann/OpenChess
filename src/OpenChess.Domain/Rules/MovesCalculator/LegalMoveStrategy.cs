@@ -1,7 +1,7 @@
 
 namespace OpenChess.Domain
 {
-    internal class DefaultLegalMoves : IMoveCalculatorStrategy
+    internal class LegalMoveStrategy : IMoveCalculatorStrategy
     {
         public List<Coordinate> Calculate(IReadOnlyChessboard chessboard, IReadOnlyPiece piece, MoveDirections move)
         {
