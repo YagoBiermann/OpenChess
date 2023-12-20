@@ -120,7 +120,7 @@ namespace OpenChess.Domain
         private void HandleIllegalPosition()
         {
             CheckHandler checkHandler = new(this);
-            if (checkHandler.IsInCheck(Turn)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
+            if (checkHandler.IsInCheck(Opponent)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
         }
 
         private void RestoreToLastPosition()
