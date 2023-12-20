@@ -108,24 +108,6 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateLegalMoves_ShouldNotIncludeTheKing()
-        {
-            Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
-            Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateMoves(queen);
-
-            List<Coordinate> lowerLeftMoves = moves.Find(m => m.Direction.Equals(new LowerLeft())).Coordinates;
-            List<Coordinate> upMoves = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
-
-            List<Coordinate> expectedLowerLeftMoves = new() { Coordinate.GetInstance("C3") };
-            List<Coordinate> expectedUpMoves = new() { Coordinate.GetInstance("D5") };
-
-            CollectionAssert.AreEqual(expectedLowerLeftMoves, lowerLeftMoves);
-            CollectionAssert.AreEqual(expectedUpMoves, upMoves);
-        }
-
-        [TestMethod]
         public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");

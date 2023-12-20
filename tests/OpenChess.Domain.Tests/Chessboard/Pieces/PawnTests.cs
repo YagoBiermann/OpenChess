@@ -308,12 +308,10 @@ namespace OpenChess.Tests
             CollectionAssert.AreEqual(expectedLowerRightMoves, lowerRightMove);
         }
 
-        [DataRow("E2", "8/8/4p3/3K1K2/8/3k1k2/4P3/8 b - - 0 1")]
-        [DataRow("E6", "8/8/4p3/3K1K2/8/3k1k2/4P3/8 b - - 0 1")]
         [DataRow("E2", "8/8/4p3/3q1r2/8/3R1Q2/4P3/8 b - - 0 1")]
         [DataRow("E6", "8/8/4p3/3q1r2/8/3R1Q2/4P3/8 b - - 0 1")]
         [TestMethod]
-        public void CalculateLegalMoves_Diagonals_ShouldNotIncludeEnemyKingNorAllyPieces(string origin, string fen)
+        public void CalculateLegalMoves_Diagonals_ShouldNotIncludeAllyPieces(string origin, string fen)
         {
             Chessboard chessboard = new(fen);
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;

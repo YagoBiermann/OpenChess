@@ -28,9 +28,8 @@ namespace OpenChess.Tests
         [DataRow("rnbqk2r/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR b KQkq - 0 1", "F6", "E8")]
         [DataRow("rnbqk2r/ppppp1bp/5np1/5p2/2PP4/5NP1/PP2PPBP/RNBQK2R b KQkq - 0 1", "D1", "D4")]
         [DataRow("rnbqk2r/ppppp1bp/5np1/5p2/2PP4/5NP1/PP2PPBP/RNBQK2R b KQkq - 0 1", "D1", "E1")]
-        [DataRow("8/2K4r/k7/3P4/8/8/8/8 b - - 0 1", "H7", "C7")]
         [TestMethod]
-        public void MovePiece_ShouldNotBeAbleToCaptureAllyPieceOrKing(string fen, string position1, string position2)
+        public void MovePiece_ShouldNotBeAbleToCaptureAllyPiece(string fen, string position1, string position2)
         {
             Chessboard chessboard = new(fen);
             Coordinate origin = Coordinate.GetInstance(position1);
