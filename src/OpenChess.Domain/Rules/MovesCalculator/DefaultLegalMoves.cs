@@ -15,10 +15,10 @@ namespace OpenChess.Domain
             bool isKing = square.HasTypeOfPiece(typeof(King));
             bool hasAllyOrKing = !square.HasEnemyPiece(piece.Color) || isKing;
             bool isEnPassant = square.Coordinate.Equals(enPassant);
-            bool isEmptyOrIsNotEnPassant = !square.HasPiece || !isEnPassant;
+            bool isEmptyAndIsNotEnPassant = !square.HasPiece && !isEnPassant;
             bool isForwardMove = piece is Pawn pawn && move.Direction.Equals(pawn.ForwardDirection);
 
-            if (piece is Pawn && (hasAllyOrKing || isEmptyOrIsNotEnPassant || isForwardMove)) legalMoves.RemoveAt(lastPosition);
+            if (piece is Pawn && (hasAllyOrKing || isEmptyAndIsNotEnPassant || isForwardMove)) legalMoves.RemoveAt(lastPosition);
             if (piece is not Pawn && hasAllyOrKing) legalMoves.RemoveAt(lastPosition);
 
             return legalMoves;

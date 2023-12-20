@@ -1,7 +1,7 @@
 
 namespace OpenChess.Domain
 {
-    internal class MovesCalculator
+    internal class MovesCalculator : IMoveCalculator
     {
         private IReadOnlyChessboard _chessboard;
         private IMoveCalculatorStrategy _strategy;
@@ -20,15 +20,18 @@ namespace OpenChess.Domain
             {
                 Direction currentDirection = move.Direction;
                 List<Coordinate> pieces = _chessboard.GetPiecesPosition(move.Coordinates);
-                if (!pieces.Any())
+                if (piece is Pawn pawn)
                 {
-                    legalMoves.Add(move);
-                    continue;
+                    bool isEnPassantPosition = move.Coordinates.Contains(_chessboard.EnPassantAvailability.EnPassantPosition!);
+                    bool isForwardMove = move.Direction.Equals(pawn.ForwardDirection);
+                    if (isEnPassantPosition) { legalMoves.Add(move); continue; }
+                    if (!pieces.Any() && !isForwardMove) { legalMoves.Add(new(move.Direction, new())); continue; }
                 }
+                if (!pieces.Any()) { legalMoves.Add(move); continue; }
 
                 List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(piece.Origin, pieces);
                 CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
-                List<Coordinate> rangeOfAttack = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();                
+                List<Coordinate> rangeOfAttack = move.Coordinates.Take(nearestPiece.DistanceBetween).ToList();
                 List<Coordinate> newRangeOfAttack = _strategy.Calculate(_chessboard, piece, new(move.Direction, rangeOfAttack));
                 legalMoves.Add(new(currentDirection, newRangeOfAttack));
             }
