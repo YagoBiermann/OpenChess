@@ -19,7 +19,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
 
-            Assert.IsTrue(Check.IsInCheck(player, chessboard));
+            Assert.IsTrue(new Check(chessboard).IsInCheck(player));
         }
 
         [DataRow("r7/3R2k1/4P3/4K3/8/8/8/8 w - - 0 1", 'w')]
@@ -41,7 +41,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Color player = color == 'w' ? Color.White : Color.Black;
 
-            Assert.IsFalse(Check.IsInCheck(player, chessboard));
+            Assert.IsFalse(new Check(chessboard).IsInCheck(player));
         }
 
         [DataRow("3b4/8/4n3/5PK1/8/k4r2/8/3r4 w - - 0 1", 'w')]
@@ -54,7 +54,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
 
-            Assert.AreEqual(2, Check.CalculateCheckAmount(player, chessboard));
+            Assert.AreEqual(2, new Check(chessboard).CalculateCheckAmount(player));
         }
 
         [DataRow("rn1qkb1r/ppp2pp1/5n1p/1B1p2B1/3P2b1/4P1P1/PP3P1P/RN1QK1NR b KQkq - 0 1", 'b')]
@@ -67,7 +67,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
 
-            Assert.AreEqual(1, Check.CalculateCheckAmount(player, chessboard));
+            Assert.AreEqual(1, new Check(chessboard).CalculateCheckAmount(player));
         }
 
         [DataRow("3bk3/5P2/4P3/4K3/8/8/4B3/8 w - - 0 1", 'w')]
@@ -83,7 +83,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
 
-            Assert.AreEqual(0, Check.CalculateCheckAmount(player, chessboard));
+            Assert.AreEqual(0, new Check(chessboard).CalculateCheckAmount(player));
         }
 
         [DataRow("4k3/7R/4P3/2K1r3/8/8/8/8 b - - 0 1", "E5")]
@@ -98,7 +98,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance(coordinate);
             IReadOnlyPiece piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
 
-            Assert.IsTrue(Check.IsHittingTheEnemyKing(piece, chessboard));
+            Assert.IsTrue(new Check(chessboard).IsHittingTheEnemyKing(piece));
         }
 
         [DataRow("4k3/7R/4P3/4p3/4K3/8/8/8 b - - 0 1", "E5")]
@@ -113,7 +113,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance(coordinate);
             IReadOnlyPiece piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
 
-            Assert.IsFalse(Check.IsHittingTheEnemyKing(piece, chessboard));
+            Assert.IsFalse(new Check(chessboard).IsHittingTheEnemyKing(piece));
         }
     }
 }

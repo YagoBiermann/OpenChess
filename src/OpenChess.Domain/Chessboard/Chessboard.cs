@@ -118,7 +118,8 @@ namespace OpenChess.Domain
 
         private void HandleIllegalPosition()
         {
-            if (Check.IsInCheck(Turn, this)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
+            Check checkHandler = new(this);
+            if (checkHandler.IsInCheck(Turn)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
         }
 
         private void RestoreToLastPosition()
