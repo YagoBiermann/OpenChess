@@ -106,9 +106,6 @@ namespace OpenChess.Domain
             foreach (Coordinate position in piecePositions)
             {
                 IReadOnlyPiece currentPiece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-                isHitting = Check.IsHittingTheEnemyKing(currentPiece, _chessboard);
-                if (isHitting) break;
-
                 List<MoveDirections> moves;
                 if (currentPiece is Pawn) { moves = currentPiece.CalculateMoveRange(); }
                 else { moves = legalMoves.CalculateMoves(currentPiece); };
