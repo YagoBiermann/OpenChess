@@ -1,9 +1,9 @@
 namespace OpenChess.Domain
 {
-    internal class Check
+    internal class CheckHandler
     {
         private IReadOnlyChessboard _chessboard;
-        public Check(IReadOnlyChessboard chessboard)
+        public CheckHandler(IReadOnlyChessboard chessboard)
         {
             _chessboard = chessboard;
         }
