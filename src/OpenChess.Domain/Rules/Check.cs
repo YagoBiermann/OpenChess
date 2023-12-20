@@ -1,8 +1,8 @@
 namespace OpenChess.Domain
 {
-    internal static class Check
+    internal class Check
     {
-        public static int CalculateCheckAmount(Color player, Chessboard chessboard)
+        public int CalculateCheckAmount(Color player, Chessboard chessboard)
         {
             Color enemyPlayer = ColorUtils.GetOppositeColor(player);
             List<Coordinate> piecePositions = chessboard.GetPiecesPosition(enemyPlayer);
@@ -16,12 +16,12 @@ namespace OpenChess.Domain
             return checkAmount;
         }
 
-        public static bool IsInCheck(Color player, Chessboard chessboard)
+        public bool IsInCheck(Color player, Chessboard chessboard)
         {
             return CalculateCheckAmount(player, chessboard) > 0;
         }
 
-        public static bool IsHittingTheEnemyKing(IReadOnlyPiece piece, Chessboard chessboard)
+        public bool IsHittingTheEnemyKing(IReadOnlyPiece piece, Chessboard chessboard)
         {
             IMoveCalculatorStrategy strategy = new CheckMoveStrategy();
             List<MoveDirections> moveRange = new MovesCalculator(chessboard, strategy).CalculateMoves(piece);
