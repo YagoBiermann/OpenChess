@@ -25,7 +25,7 @@ namespace OpenChess.Domain
             foreach (Direction direction in Directions)
             {
                 List<Coordinate> coordinates = Coordinate.CalculateSequence(Origin, direction, MoveAmount);
-                MoveDirections move = new(direction, coordinates);
+                MoveDirections move = new(direction, coordinates, this);
                 moveRange.Add(move);
             }
 

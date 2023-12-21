@@ -113,9 +113,9 @@ namespace OpenChess.Tests
 
             List<MoveDirections> expectedMoves = new()
             {
-                ExpectedMoves.GetMove(pawn.Origin, new Up(), pawn.ForwardMoveAmount),
-                ExpectedMoves.GetMove(pawn.Origin, new UpperLeft(), pawn.MoveAmount),
-                ExpectedMoves.GetMove(pawn.Origin, new UpperRight(), pawn.MoveAmount)
+                ExpectedMoves.GetMove(pawn.Origin, new Up(), pawn.ForwardMoveAmount, pawn),
+                ExpectedMoves.GetMove(pawn.Origin, new UpperLeft(), pawn.MoveAmount, pawn),
+                ExpectedMoves.GetMove(pawn.Origin, new UpperRight(), pawn.MoveAmount, pawn)
             };
 
             List<MoveDirections> moves = pawn.CalculateMoveRange();
@@ -145,9 +145,9 @@ namespace OpenChess.Tests
 
             List<MoveDirections> expectedMoves = new()
             {
-                ExpectedMoves.GetMove(pawn.Origin, new Down(), pawn.ForwardMoveAmount),
-                ExpectedMoves.GetMove(pawn.Origin, new LowerLeft(), pawn.MoveAmount),
-                ExpectedMoves.GetMove(pawn.Origin, new LowerRight(), pawn.MoveAmount)
+                ExpectedMoves.GetMove(pawn.Origin, new Down(), pawn.ForwardMoveAmount, pawn),
+                ExpectedMoves.GetMove(pawn.Origin, new LowerLeft(), pawn.MoveAmount, pawn),
+                ExpectedMoves.GetMove(pawn.Origin, new LowerRight(), pawn.MoveAmount, pawn)
             };
 
             List<MoveDirections> moves = pawn.CalculateMoveRange();

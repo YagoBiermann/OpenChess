@@ -48,14 +48,14 @@ namespace OpenChess.Tests
 
             List<MoveDirections> expectedMoves = new()
             {
-                ExpectedMoves.GetMove(knight.Origin, new Direction(1,2), knight.MoveAmount),
-                ExpectedMoves.GetMove(knight.Origin, new Direction(-1,2), knight.MoveAmount),
-                ExpectedMoves.GetMove(knight.Origin, new Direction(1,-2), knight.MoveAmount),
-                ExpectedMoves.GetMove(knight.Origin, new Direction(-1,-2), knight.MoveAmount),
-                ExpectedMoves.GetMove(knight.Origin, new Direction(2,1), knight.MoveAmount),
-                ExpectedMoves.GetMove(knight.Origin, new Direction(2,-1), knight.MoveAmount),
-                ExpectedMoves.GetMove(knight.Origin, new Direction(-2,-1), knight.MoveAmount),
-                ExpectedMoves.GetMove(knight.Origin, new Direction(-2,1), knight.MoveAmount),
+                ExpectedMoves.GetMove(knight.Origin, new Direction(1,2), knight.MoveAmount, knight),
+                ExpectedMoves.GetMove(knight.Origin, new Direction(-1,2), knight.MoveAmount, knight),
+                ExpectedMoves.GetMove(knight.Origin, new Direction(1,-2), knight.MoveAmount, knight),
+                ExpectedMoves.GetMove(knight.Origin, new Direction(-1,-2), knight.MoveAmount, knight),
+                ExpectedMoves.GetMove(knight.Origin, new Direction(2,1), knight.MoveAmount, knight),
+                ExpectedMoves.GetMove(knight.Origin, new Direction(2,-1), knight.MoveAmount, knight),
+                ExpectedMoves.GetMove(knight.Origin, new Direction(-2,-1), knight.MoveAmount, knight),
+                ExpectedMoves.GetMove(knight.Origin, new Direction(-2,1), knight.MoveAmount, knight),
             };
 
             List<MoveDirections> moves = knight.CalculateMoveRange();

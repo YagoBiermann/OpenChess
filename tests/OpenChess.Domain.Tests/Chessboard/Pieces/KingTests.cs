@@ -47,14 +47,14 @@ namespace OpenChess.Tests
 
             List<MoveDirections> expectedMoves = new()
             {
-                ExpectedMoves.GetMove(king.Origin, new Up(), king.MoveAmount),
-                ExpectedMoves.GetMove(king.Origin, new Down(), king.MoveAmount),
-                ExpectedMoves.GetMove(king.Origin, new Left(), king.MoveAmount),
-                ExpectedMoves.GetMove(king.Origin, new Right(), king.MoveAmount),
-                ExpectedMoves.GetMove(king.Origin, new UpperLeft(), king.MoveAmount),
-                ExpectedMoves.GetMove(king.Origin, new UpperRight(), king.MoveAmount),
-                ExpectedMoves.GetMove(king.Origin, new LowerLeft(), king.MoveAmount),
-                ExpectedMoves.GetMove(king.Origin, new LowerRight(), king.MoveAmount),
+                ExpectedMoves.GetMove(king.Origin, new Up(), king.MoveAmount, king),
+                ExpectedMoves.GetMove(king.Origin, new Down(), king.MoveAmount, king),
+                ExpectedMoves.GetMove(king.Origin, new Left(), king.MoveAmount, king),
+                ExpectedMoves.GetMove(king.Origin, new Right(), king.MoveAmount, king),
+                ExpectedMoves.GetMove(king.Origin, new UpperLeft(), king.MoveAmount, king),
+                ExpectedMoves.GetMove(king.Origin, new UpperRight(), king.MoveAmount, king),
+                ExpectedMoves.GetMove(king.Origin, new LowerLeft(), king.MoveAmount, king),
+                ExpectedMoves.GetMove(king.Origin, new LowerRight(), king.MoveAmount, king),
             };
 
             List<MoveDirections> moves = king.CalculateMoveRange();

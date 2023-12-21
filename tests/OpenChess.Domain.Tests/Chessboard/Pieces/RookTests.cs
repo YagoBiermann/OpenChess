@@ -43,10 +43,10 @@ namespace OpenChess.Tests
 
             List<MoveDirections> expectedMoves = new()
             {
-                ExpectedMoves.GetMove(rook.Origin, new Up(), rook.MoveAmount),
-                ExpectedMoves.GetMove(rook.Origin, new Down(), rook.MoveAmount),
-                ExpectedMoves.GetMove(rook.Origin, new Left(), rook.MoveAmount),
-                ExpectedMoves.GetMove(rook.Origin, new Right(), rook.MoveAmount)
+                ExpectedMoves.GetMove(rook.Origin, new Up(), rook.MoveAmount, rook),
+                ExpectedMoves.GetMove(rook.Origin, new Down(), rook.MoveAmount, rook),
+                ExpectedMoves.GetMove(rook.Origin, new Left(), rook.MoveAmount, rook),
+                ExpectedMoves.GetMove(rook.Origin, new Right(), rook.MoveAmount, rook)
             };
 
             List<MoveDirections> moves = rook.CalculateMoveRange();

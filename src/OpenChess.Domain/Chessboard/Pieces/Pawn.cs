@@ -45,12 +45,12 @@ namespace OpenChess.Domain
                 if (direction.Equals(ForwardDirection))
                 {
                     List<Coordinate> forward = Coordinate.CalculateSequence(Origin, direction, ForwardMoveAmount);
-                    moves.Add(new(direction, forward));
+                    moves.Add(new(direction, forward, this));
                     continue;
                 }
 
                 List<Coordinate> coordinates = Coordinate.CalculateSequence(Origin, direction, MoveAmount);
-                moves.Add(new(direction, coordinates));
+                moves.Add(new(direction, coordinates, this));
             }
 
             return moves;
