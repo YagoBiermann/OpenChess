@@ -84,6 +84,20 @@ namespace OpenChess.Domain
             return move;
         }
 
+        public List<IReadOnlyPiece> FindPiece(Color player, Type piece)
+        {
+            List<IReadOnlyPiece> piecePosition = new();
+
+            List<Coordinate> positions = GetPiecesPosition(player);
+            positions.ForEach(position =>
+            {
+                IReadOnlyPiece currentPiece = GetSquare(position).ReadOnlyPiece!;
+                if (currentPiece.GetType() == piece) { piecePosition.Add(currentPiece); };
+            });
+
+            return piecePosition;
+        }
+
         public List<Coordinate> GetPiecesPosition(List<Coordinate> range)
         {
             return range.FindAll(c => GetReadOnlySquare(c).HasPiece).ToList();
