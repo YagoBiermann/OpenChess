@@ -7,28 +7,16 @@ namespace OpenChess.Domain
         {
             _chessboard = chessboard;
         }
-        public int CalculateCheckAmount(Color player)
-        {
-            List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(player);
-            int checkAmount = 0;
-            foreach (Coordinate origin in piecePositions)
-            {
-                IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
-                if (IsHittingTheEnemyKing(piece)) { checkAmount++; };
-            }
 
-            return checkAmount;
-        }
-
-        public bool IsInCheck(Color player)
+        public bool IsInCheck(Color player, out int checkAmount)
         {
-            return CalculateCheckAmount(player) > 0;
+            checkAmount = CalculateCheckAmount(player);
+            return checkAmount > 0;
         }
 
         public bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
         {
-            IMoveCalculatorStrategy strategy = new IncludeEnemyPieceStrategy();
-            List<MoveDirections> moveRange = new MovesCalculator(_chessboard, strategy).CalculateMoves(piece);
+            List<MoveDirections> moveRange = new LegalMovesCalculator(_chessboard).CalculateMoves(piece);
             bool isHitting = false;
 
             foreach (MoveDirections move in moveRange)
@@ -39,6 +27,19 @@ namespace OpenChess.Domain
             }
 
             return isHitting;
+        }
+
+        private int CalculateCheckAmount(Color player)
+        {
+            List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(player));
+            int checkAmount = 0;
+            foreach (Coordinate position in piecePositions)
+            {
+                IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+                if (IsHittingTheEnemyKing(piece)) { checkAmount++; };
+            }
+
+            return checkAmount;
         }
     }
 }
