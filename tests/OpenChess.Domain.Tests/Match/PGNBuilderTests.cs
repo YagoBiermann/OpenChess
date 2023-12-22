@@ -12,7 +12,6 @@ namespace OpenChess.Tests
         public void PawnMove_Default_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-
             Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
         }
 
@@ -25,7 +24,15 @@ namespace OpenChess.Tests
         public void PawnMove_WithCapture_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
+            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+        }
 
+        [DataRow("r1bqkb1r/ppp2ppp/2nP1n2/4p3/8/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 0 1", "D6", "D7", "1. d7+")]
+        [DataRow("r1bqkb1r/ppp2ppp/2n2n2/8/8/2Np4/PPP3PP/R1BQKB1R b KQkq - 0 1", "D3", "D2", "1. d2+")]
+        [TestMethod]
+        public void PawnMove_WithCheck_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination, string expectedPGNMove)
+        {
+            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
             Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
         }
     }
