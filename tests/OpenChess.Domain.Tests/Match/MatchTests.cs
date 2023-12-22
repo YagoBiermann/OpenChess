@@ -6,38 +6,7 @@ namespace OpenChess.Tests
     [TestClass]
     public class MatchTests
     {
-        private static MatchInfo RestoreMatch(string mId, string p1Id, string p2Id, int mtime = 5, string mstatus = "InProgress", string? winner = null)
-        {
-            string matchId = mId;
-            string player1Id = p1Id;
-            string player2Id = p2Id;
-
-            PlayerInfo player1 = new(player1Id, 'w', matchId);
-            PlayerInfo player2 = new(player2Id, 'b', matchId);
-            List<PlayerInfo> players = new() { player1, player2 };
-            var status = mstatus;
-            var time = mtime;
-            List<string> pgnMoves = new() { "2. d5", "1. e4" };
-            string fen = "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq D6 0 1";
-            var pgnStack = new Stack<string>(pgnMoves);
-            MatchInfo matchInfo = new(matchId, players, fen, pgnStack, status, time, winner);
-
-            return matchInfo;
-        }
-
-        private static Match RestoreAndPlay(string fen, string origin, string destination, string? promoting = null)
-        {
-            string matchId = Guid.NewGuid().ToString();
-            PlayerInfo player1 = new(Guid.NewGuid().ToString(), 'w', matchId);
-            PlayerInfo player2 = new(Guid.NewGuid().ToString(), 'b', matchId);
-            List<PlayerInfo> players = new() { player1, player2 };
-            MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), 5);
-            Match match = new(matchInfo);
-            Guid currentPlayer = match.CurrentPlayer!.Value;
-            match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting));
-
-            return match;
-        }
+        private readonly string _fen = "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq D6 0 1";
 
         [DataRow(3)]
         [DataRow(5)]
@@ -59,7 +28,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldRestoreGameStateCorrectly()
         {
-            MatchInfo matchInfo = RestoreMatch(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(_fen, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
             Match match = new(matchInfo);
 
             Assert.AreEqual(match.Id, matchInfo.MatchId);
@@ -77,12 +46,12 @@ namespace OpenChess.Tests
             string matchId = Guid.NewGuid().ToString();
             string player1 = Guid.NewGuid().ToString();
             string player2 = Guid.NewGuid().ToString();
-            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, player1, player2, 6));
-            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, player1, player2, 5, "imProges"));
-            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, player1, "invalidId"));
-            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, "invalidId", player2));
-            Assert.ThrowsException<MatchException>(() => RestoreMatch("invalidId", player1, player2));
-            Assert.ThrowsException<MatchException>(() => RestoreMatch(matchId, player1, player2, 5, "InProgress", "invalidId"));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, 6));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, 5, "imProges"));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, "invalidId"));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, "invalidId", player2));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, "invalidId", player1, player2));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, 5, "InProgress", "invalidId"));
         }
 
         [TestMethod]
@@ -372,7 +341,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_PromotingPawn_ShouldAddPgnMoveProperly(string fen, string origin, string destination, string promoting)
         {
-            Match match = RestoreAndPlay(fen, origin, destination);
+            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
             Assert.AreEqual("1. dxc8=Q", match.Moves.Peek());
         }
 
@@ -383,7 +352,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_Castling_ShouldAddPgnMoveProperly(string fen, string origin, string destination)
         {
-            Match match = RestoreAndPlay(fen, origin, destination);
+            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
             string castlingPgn = destination[0] == 'G' ? "O-O" : "O-O-O";
 
             Assert.AreEqual(castlingPgn, match.Moves.Peek());
