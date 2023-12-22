@@ -35,5 +35,16 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
             Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
         }
+
+        [DataRow("rnbk1bnr/pp1Ppppp/1qp5/8/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D7", "C8", "R", "1. dxc8=R+")]
+        [DataRow("rnbk1bnr/pp1Ppppp/1qp5/8/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D7", "C8", "Q", "1. dxc8=Q+")]
+        [DataRow("rnbk1bnr/pp1Ppppp/8/8/8/8/PPP2PPP/RNBQKBNR w KQkq - 0 1", "D7", "C8", "B", "1. dxc8=B+")]
+        [DataRow("rnbk1bnr/pp1Ppppp/8/8/8/8/PPP2PPP/RNBQKBNR w KQkq - 0 1", "D7", "C8", "N", "1. dxc8=N+")]
+        [TestMethod]
+        public void PawnMove_PromotingPawnWithCaptureAndCheck_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination, string promoting, string expectedPGNMove)
+        {
+            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination, promoting);
+            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+        }
     }
 }
