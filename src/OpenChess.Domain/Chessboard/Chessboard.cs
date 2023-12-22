@@ -2,6 +2,7 @@ namespace OpenChess.Domain
 {
     internal class Chessboard : IReadOnlyChessboard
     {
+        private Dictionary<Color, List<Coordinate>> _piecesPositionCache { get; } = new();
         private List<List<Square>> _board;
         private PromotionHandler _promotionHandler;
         private EnPassantHandler _enPassantHandler;
@@ -39,6 +40,7 @@ namespace OpenChess.Domain
             Piece createdPiece = CreatePiece(piece, position, player);
             Piece? removedPiece = RemovePiece(position);
             GetSquare(position).Piece = createdPiece;
+            _piecesPositionCache.Clear();
 
             return removedPiece;
         }
@@ -49,6 +51,7 @@ namespace OpenChess.Domain
             if (!square.HasPiece) return null;
             Piece piece = square.Piece!;
             square.Piece = null;
+            _piecesPositionCache.Clear();
 
             return piece;
         }
@@ -80,6 +83,7 @@ namespace OpenChess.Domain
             _enPassantAvailability.SetVulnerablePawn(move.PieceMoved);
             _castlingAvailability.UpdateAvailability(origin, Turn);
             SwitchTurns();
+            _piecesPositionCache.Clear();
 
             return move;
         }
@@ -105,6 +109,7 @@ namespace OpenChess.Domain
 
         public List<Coordinate> GetPiecesPosition(Color player)
         {
+            if (_piecesPositionCache.ContainsKey(player)) { return _piecesPositionCache[player]; }
             List<Coordinate> piecePosition = new();
 
             _board.ForEach(action: r =>
@@ -112,6 +117,7 @@ namespace OpenChess.Domain
                 var squares = r.FindAll(c => c.ReadOnlyPiece?.Color == player);
                 squares.ForEach(s => piecePosition.Add(s.Coordinate));
             });
+            _piecesPositionCache.Add(player, piecePosition);
 
             return piecePosition;
         }
