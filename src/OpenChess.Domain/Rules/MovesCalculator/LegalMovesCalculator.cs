@@ -1,4 +1,3 @@
-
 namespace OpenChess.Domain
 {
     internal class LegalMovesCalculator : IMoveCalculator
@@ -11,7 +10,7 @@ namespace OpenChess.Domain
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
-            IMoveCalculatorStrategy strategy = new LegalMoveStrategy();
+            IMoveCalculatorStrategy strategy = new IncludeEnemyPieceStrategy();
             return new MovesCalculator(_chessboard, strategy).CalculateMoves(piece);
         }
 
