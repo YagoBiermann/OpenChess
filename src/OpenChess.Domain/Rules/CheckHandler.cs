@@ -23,7 +23,7 @@ namespace OpenChess.Domain
             {
                 if (!move.Coordinates.Any()) continue;
                 IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
-                if (square.HasPiece && square.ReadOnlyPiece is King) { isHitting = true; break; }
+                if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color) { isHitting = true; break; }
             }
 
             return isHitting;
