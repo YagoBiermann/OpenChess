@@ -16,7 +16,7 @@ namespace OpenChess.Domain
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
         public string LastPosition { get; private set; }
-        public Color Opponent { get => Turn == Color.White ? Color.Black : Color.White; }
+        public Color Opponent { get => ColorUtils.GetOppositeColor(Turn); }
 
         public Chessboard(string position)
         {
