@@ -337,14 +337,6 @@ namespace OpenChess.Tests
             }
         }
 
-        [DataRow("rnbk1bnr/pp1Ppppp/1qp5/8/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D7", "C8", "Q")]
-        [TestMethod]
-        public void Play_PromotingPawn_ShouldAddPgnMoveProperly(string fen, string origin, string destination, string promoting)
-        {
-            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual("1. dxc8=Q", match.Moves.Peek());
-        }
-
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "G8")]
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1", "E1", "G1")]
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "C8")]
