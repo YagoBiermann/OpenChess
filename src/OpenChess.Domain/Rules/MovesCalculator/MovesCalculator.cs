@@ -5,10 +5,11 @@ namespace OpenChess.Domain
     {
         private IReadOnlyChessboard _chessboard;
         private IMoveCalculatorStrategy _strategy;
-        public MovesCalculator(IReadOnlyChessboard chessboard, IMoveCalculatorStrategy strategy)
+        public MovesCalculator(IReadOnlyChessboard chessboard, IMoveCalculatorStrategy? strategy = null)
         {
             _chessboard = chessboard;
-            _strategy = strategy;
+            if (strategy is null) { _strategy = new IncludeAllPiecesStrategy(); }
+            _strategy = strategy!;
         }
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
