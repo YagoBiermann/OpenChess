@@ -216,7 +216,7 @@ namespace OpenChess.Domain
             return builtRow;
         }
 
-        private List<List<Square>> CreateBoard()
+        private static List<List<Square>> CreateBoard()
         {
             List<List<Square>> board = new()
             {
@@ -241,7 +241,7 @@ namespace OpenChess.Domain
             return board;
         }
 
-        private Piece CreatePiece(char type, Coordinate origin)
+        private static Piece CreatePiece(char type, Coordinate origin)
         {
             Color color = char.IsUpper(type) ? Color.White : Color.Black;
 
@@ -257,7 +257,7 @@ namespace OpenChess.Domain
             };
         }
 
-        private Piece CreatePiece(char type, Coordinate origin, Color player)
+        private static Piece CreatePiece(char type, Coordinate origin, Color player)
         {
             char piece = player == Color.Black ? char.ToLower(type) : char.ToUpper(type);
             return CreatePiece(piece, origin);
