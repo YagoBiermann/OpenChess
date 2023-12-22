@@ -30,15 +30,13 @@ namespace OpenChess.Domain
 
         private MovePlayed HandleDefaultMove(Coordinate origin, Coordinate destination)
         {
-            Square originSquare = _chessboard.GetSquare(origin);
-            Square destinationSquare = _chessboard.GetSquare(destination);
-            Piece piece = originSquare.Piece!;
-            Piece? capturedPiece = destinationSquare.Piece;
-            originSquare.Piece = null;
-            destinationSquare.Piece = piece;
-
+            Piece? piece = _chessboard.RemovePiece(origin);
+            Piece? capturedPiece = _chessboard.RemovePiece(destination);
+            _chessboard.AddPiece(destination, piece!.Name, piece.Color);
+            Piece pieceMoved = _chessboard.GetSquare(destination).Piece!;
             MoveType movePlayed = piece is Pawn ? MoveType.PawnMove : MoveType.DefaultMove;
-            return new(origin, destination, destinationSquare.Piece, capturedPiece, movePlayed);
+
+            return new(origin, destination, pieceMoved, capturedPiece, movePlayed);
         }
     }
 }
