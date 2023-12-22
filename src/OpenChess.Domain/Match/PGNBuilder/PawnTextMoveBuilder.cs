@@ -5,13 +5,16 @@ namespace OpenChess.Domain
         private Coordinate _origin;
         private Coordinate _destination;
         private bool _appendPromotingSign = false;
-        private char? _promotingPiece;
-        public PawnTextMoveBuilder(int count, Coordinate origin, Coordinate destination, char? promotingPiece = null) : base(count)
+        private char? _promotingPiece = null;
+        public PawnTextMoveBuilder(int count, MovePlayed move) : base(count)
         {
-            _origin = origin;
-            _destination = destination;
-            _promotingPiece = promotingPiece;
-            if (promotingPiece is not null) _appendPromotingSign = true;
+            _origin = move.Origin;
+            _destination = move.Destination;
+            if (move.PromotedPiece is not null)
+            {
+                _appendPromotingSign = true;
+                _promotingPiece = char.Parse(move.PromotedPiece);
+            };
         }
         public override PGNBuilder Build()
         {

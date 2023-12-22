@@ -30,28 +30,27 @@ namespace OpenChess.Domain
         }
         public abstract PGNBuilder Build();
 
-        public static string BuildPawnPGN(int count, Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece, CheckCondition checkCondition)
+        public static string BuildPawnPGN(int count, MovePlayed move, CheckCondition checkCondition)
         {
             int moveCount = count;
-            char? parsedPromotionPiece = promotingPiece is not null ? char.Parse(promotingPiece) : null;
-            var builder = new PawnTextMoveBuilder(moveCount, origin, destination, parsedPromotionPiece);
-            SetBuilderSign(builder, checkCondition, pieceWasCaptured);
+            var builder = new PawnTextMoveBuilder(moveCount, move);
+            SetBuilderSign(builder, move, checkCondition);
 
             return builder.Build().Result;
         }
 
-        public static string BuildDefaultPGN(int count, IReadOnlyPiece pieceMoved, Coordinate destination, bool pieceWasCaptured, CheckCondition checkCondition)
+        public static string BuildDefaultPGN(int count, MovePlayed move, CheckCondition checkCondition)
         {
             int moveCount = count;
-            var builder = new DefaultTextMoveBuilder(moveCount, pieceMoved, destination);
-            SetBuilderSign(builder, checkCondition, pieceWasCaptured);
+            var builder = new DefaultTextMoveBuilder(moveCount, move);
+            SetBuilderSign(builder, move, checkCondition);
 
             return builder.Build().Result;
         }
 
-        protected static void SetBuilderSign(PGNBuilder builder, CheckCondition checkCondition, bool pieceWasCaptured)
+        protected static void SetBuilderSign(PGNBuilder builder, MovePlayed move, CheckCondition checkCondition)
         {
-            if (pieceWasCaptured) builder.AppendCaptureSign = true;
+            if (move.PieceCaptured is not null) builder.AppendCaptureSign = true;
             if (checkCondition == CheckCondition.Check) builder.AppendCheckSign = true;
             else if (checkCondition == CheckCondition.Checkmate) builder.AppendCheckMateSign = true;
         }
