@@ -30,24 +30,30 @@ namespace OpenChess.Domain
         }
         public abstract PGNBuilder Build();
 
-        public static string BuildPawnPGN(int count, Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece)
+        public static string BuildPawnPGN(int count, Coordinate origin, Coordinate destination, bool pieceWasCaptured, string? promotingPiece, CheckCondition checkCondition)
         {
             int moveCount = count;
             char? parsedPromotionPiece = promotingPiece is not null ? char.Parse(promotingPiece) : null;
             var builder = new PawnTextMoveBuilder(moveCount, origin, destination, parsedPromotionPiece);
-            if (pieceWasCaptured) builder.AppendCaptureSign = true;
+            SetBuilderSign(builder, checkCondition, pieceWasCaptured);
 
             return builder.Build().Result;
         }
 
-        public static string BuildDefaultPGN(int count, IReadOnlyPiece pieceMoved, Coordinate destination, bool pieceWasCaptured)
+        public static string BuildDefaultPGN(int count, IReadOnlyPiece pieceMoved, Coordinate destination, bool pieceWasCaptured, CheckCondition checkCondition)
         {
             int moveCount = count;
             var builder = new DefaultTextMoveBuilder(moveCount, pieceMoved, destination);
-
-            if (pieceWasCaptured) { builder.AppendCaptureSign = true; }
+            SetBuilderSign(builder, checkCondition, pieceWasCaptured);
 
             return builder.Build().Result;
+        }
+
+        protected static void SetBuilderSign(PGNBuilder builder, CheckCondition checkCondition, bool pieceWasCaptured)
+        {
+            if (pieceWasCaptured) builder.AppendCaptureSign = true;
+            if (checkCondition == CheckCondition.Check) builder.AppendCheckSign = true;
+            else if (checkCondition == CheckCondition.Checkmate) builder.AppendCheckMateSign = true;
         }
     }
 }

@@ -9,6 +9,8 @@ namespace OpenChess.Domain
         private MatchStatus _status { get; set; }
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
+        private CheckmateHandler _checkmateHandler { get; }
+        private CheckHandler _checkHandler { get; }
 
         public Match(Time time)
         {
@@ -18,6 +20,8 @@ namespace OpenChess.Domain
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
             _pgnMoveText = new();
+            _checkmateHandler = new CheckmateHandler(_chessboard);
+            _checkHandler = new CheckHandler(_chessboard);
         }
 
         public Match(MatchInfo matchInfo)
@@ -36,6 +40,8 @@ namespace OpenChess.Domain
             _pgnMoveText = pgnMoves;
             _status = status;
             _time = TimeSpan.FromMinutes((int)time);
+            _checkmateHandler = new CheckmateHandler(_chessboard);
+            _checkHandler = new CheckHandler(_chessboard);
 
             if (winnerId is null) { _winner = null; return; }
             Player winner = GetPlayerById((Guid)winnerId, _players) ?? throw new MatchException("Couldn't determine the winner");
@@ -46,7 +52,12 @@ namespace OpenChess.Domain
         {
             ValidateMove(move);
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
-            ConvertToPGNMove(movePlayed);
+
+            bool isInCheck = _checkHandler.IsInCheck(_chessboard.Opponent, out int checkAmount);
+            bool isInCheckmate = _checkmateHandler.IsInCheckmate(_chessboard.Opponent, checkAmount);
+
+            CheckCondition checkCondition = GetCheckCondition(isInCheck, isInCheckmate);
+            ConvertToPGNMove(movePlayed, checkCondition);
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -138,17 +149,24 @@ namespace OpenChess.Domain
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private void ConvertToPGNMove(MovePlayed movePlayed)
+        private void ConvertToPGNMove(MovePlayed movePlayed, CheckCondition checkCondition)
         {
             int count = _pgnMoveText.Count + 1;
             bool pieceWasCaptured = movePlayed.PieceCaptured is not null;
             string pgnMove;
-            if (movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove) pgnMove = PGNBuilder.BuildPawnPGN(count, movePlayed.Origin, movePlayed.Destination, pieceWasCaptured, movePlayed.PromotedPiece);
+            if (movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove) pgnMove = PGNBuilder.BuildPawnPGN(count, movePlayed.Origin, movePlayed.Destination, pieceWasCaptured, movePlayed.PromotedPiece, checkCondition);
             else if (movePlayed.MoveType == MoveType.QueenSideCastlingMove) pgnMove = PGNBuilder.BuildQueenSideCastlingString();
             else if (movePlayed.MoveType == MoveType.KingSideCastlingMove) pgnMove = PGNBuilder.BuildKingSideCastlingString();
-            else pgnMove = PGNBuilder.BuildDefaultPGN(count, movePlayed.PieceMoved, movePlayed.Destination, pieceWasCaptured);
+            else pgnMove = PGNBuilder.BuildDefaultPGN(count, movePlayed.PieceMoved, movePlayed.Destination, pieceWasCaptured, checkCondition);
 
             _pgnMoveText.Push(pgnMove);
+        }
+
+        private static CheckCondition GetCheckCondition(bool isCheck, bool isCheckmate)
+        {
+            if (isCheck && !isCheckmate) return CheckCondition.Check;
+            if (isCheckmate) return CheckCondition.Checkmate;
+            return CheckCondition.Default;
         }
 
         private static void RestorePlayers(List<Player> players, List<PlayerInfo> playersInfo, Guid matchId)
