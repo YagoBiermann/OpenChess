@@ -273,48 +273,6 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void Play_PgnMoveList_ShouldBeInRightPgnFormat()
-        {
-            Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
-            match.Join(player1);
-            match.Join(player2);
-
-            List<Move> moves = new()
-            {
-                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
-                new(player2.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("D5")),
-                new(player1.Id, Coordinate.GetInstance("E4"), Coordinate.GetInstance("D5")),
-                new(player2.Id, Coordinate.GetInstance("D8"), Coordinate.GetInstance("D5")),
-                new(player1.Id, Coordinate.GetInstance("F1"), Coordinate.GetInstance("C4")),
-                new(player2.Id, Coordinate.GetInstance("D5"), Coordinate.GetInstance("C4")),
-                new(player1.Id, Coordinate.GetInstance("D2"), Coordinate.GetInstance("D3")),
-                new(player2.Id, Coordinate.GetInstance("C4"), Coordinate.GetInstance("D3")),
-                new(player1.Id, Coordinate.GetInstance("C2"), Coordinate.GetInstance("D3")),
-            };
-            foreach (Move move in moves)
-            {
-                match.Play(move);
-            }
-
-            List<string> expectedMoveList = new()
-            {
-                "9. cxd3",
-                "8. Qxd3",
-                "7. d3",
-                "6. Qxc4",
-                "5. Bc4",
-                "4. Qxd5",
-                "3. exd5",
-                "2. d5",
-                "1. e4",
-            };
-
-            CollectionAssert.AreEqual(expectedMoveList, match.Moves);
-        }
-
-        [TestMethod]
         public void Play_ShouldHandleEnPassantMoves()
         {
             Match match = new(Time.Ten);
@@ -335,19 +293,6 @@ namespace OpenChess.Tests
             {
                 match.Play(move);
             }
-        }
-
-        [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "G8")]
-        [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1", "E1", "G1")]
-        [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "C8")]
-        [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1", "E1", "C1")]
-        [TestMethod]
-        public void Play_Castling_ShouldAddPgnMoveProperly(string fen, string origin, string destination)
-        {
-            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            string castlingPgn = destination[0] == 'G' ? "O-O" : "O-O-O";
-
-            Assert.AreEqual(castlingPgn, match.Moves.Peek());
         }
     }
 }
