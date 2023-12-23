@@ -88,13 +88,27 @@ namespace OpenChess.Tests
             Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
         }
 
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "H1", "H8", "1. Rxh8+")]
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "C2", "G6", "1. Bxg6+")]
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "D5", "C7", "1. Nxc7+")]
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "E2", "E7", "1. Qxe7+")]
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "A8", "A1", "1. Rxa1+")]
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "B4", "C2", "1. Nxc2+")]
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "G7", "C3", "1. Bxc3+")]
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "E7", "E2", "1. Qxe2+")]
+        [TestMethod]
+        public void PieceMove_CaptureWithCheck_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination, string expectedPGNMove)
+        {
+            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
+            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+        }
 
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "G8")]
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1", "E1", "G1")]
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "C8")]
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1", "E1", "C1")]
         [TestMethod]
-        public void Play_Castling_ShouldAddPgnMoveProperly(string fen, string origin, string destination)
+        public void Play_Castling_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
             string castlingPgn = destination[0] == 'G' ? "O-O" : "O-O-O";
@@ -103,7 +117,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void Play_PgnMoveList_ShouldBeInRightPgnFormat()
+        public void Play_PgnMoveList_ShouldAddPGNInCorrectFormat()
         {
             Match match = new(Time.Ten);
             PlayerInfo player1 = new(Color.White);
