@@ -88,6 +88,23 @@ namespace OpenChess.Tests
             Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
         }
 
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR w KQkq - 0 1", "B1", "C3", "1. Nc3")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR w KQkq - 0 1", "A1", "A2", "1. Ra2")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR w KQkq - 0 1", "F1", "B5", "1. Bb5")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR w KQkq - 0 1", "D1", "G4", "1. Qg4")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR w KQkq - 0 1", "E1", "E2", "1. Ke2")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR b KQkq - 0 1", "E8", "E7", "1. Ke7")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR b KQkq - 0 1", "A8", "A7", "1. Ra7")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR b KQkq - 0 1", "B8", "C6", "1. Nc6")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR b KQkq - 0 1", "D8", "H4", "1. Qh4")]
+        [DataRow("rnbqkbnr/1ppp1pp1/p6p/4p3/4P3/P6P/1PPP1PP1/RNBQKBNR b KQkq - 0 1", "F8", "B4", "1. Bb4")]
+        [TestMethod]
+        public void PieceMove_Default_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination, string expectedPGNMove)
+        {
+            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
+            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+        }
+
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "H1", "H8", "1. Rxh8+")]
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "C2", "G6", "1. Bxg6+")]
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "D5", "C7", "1. Nxc7+")]
