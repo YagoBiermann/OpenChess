@@ -6,7 +6,7 @@ namespace OpenChess.Domain
         private List<Player> _players = new(2);
         private Chessboard _chessboard { get; set; }
         private Stack<string> _pgnMoveText { get; set; }
-        private MatchStatus _status { get; set; }
+        private MatchStatus _matchStatus { get; set; }
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
         private CheckHandler _checkHandler { get; }
@@ -15,7 +15,7 @@ namespace OpenChess.Domain
         {
             Id = Guid.NewGuid();
             _chessboard = new(FenInfo.InitialPosition);
-            _status = MatchStatus.NotStarted;
+            _matchStatus = MatchStatus.NotStarted;
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
             _pgnMoveText = new();
@@ -36,7 +36,7 @@ namespace OpenChess.Domain
             RestorePlayers(_players, players, matchId);
             _chessboard = new Chessboard(fen);
             _pgnMoveText = pgnMoves;
-            _status = status;
+            _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
             _checkHandler = new CheckHandler(_chessboard);
 
@@ -64,7 +64,7 @@ namespace OpenChess.Domain
             _players.Add(player);
             if (!IsFull()) { return; };
 
-            _status = MatchStatus.InProgress;
+            _matchStatus = MatchStatus.InProgress;
         }
 
         public bool IsFull()
@@ -87,7 +87,7 @@ namespace OpenChess.Domain
             return Status.Equals(MatchStatus.Finished);
         }
 
-        public MatchStatus Status { get { return _status; } }
+        public MatchStatus Status { get { return _matchStatus; } }
         public Guid? CurrentPlayer
         {
             get
@@ -182,7 +182,7 @@ namespace OpenChess.Domain
         private void DeclareWinnerAndFinish()
         {
             _winner = GetPlayerByColor(_chessboard.Opponent, _players);
-            _status = MatchStatus.Finished;
+            _matchStatus = MatchStatus.Finished;
         }
     }
 }
