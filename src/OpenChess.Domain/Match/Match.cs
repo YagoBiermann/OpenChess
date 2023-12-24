@@ -9,7 +9,6 @@ namespace OpenChess.Domain
         private MatchStatus _status { get; set; }
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
-        private CheckmateHandler _checkmateHandler { get; }
         private CheckHandler _checkHandler { get; }
 
         public Match(Time time)
@@ -20,7 +19,6 @@ namespace OpenChess.Domain
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
             _pgnMoveText = new();
-            _checkmateHandler = new CheckmateHandler(_chessboard);
             _checkHandler = new CheckHandler(_chessboard);
         }
 
@@ -40,7 +38,6 @@ namespace OpenChess.Domain
             _pgnMoveText = pgnMoves;
             _status = status;
             _time = TimeSpan.FromMinutes((int)time);
-            _checkmateHandler = new CheckmateHandler(_chessboard);
             _checkHandler = new CheckHandler(_chessboard);
 
             if (winnerId is null) { _winner = null; return; }
@@ -53,11 +50,8 @@ namespace OpenChess.Domain
             ValidateMove(move);
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
 
-            bool isInCheck = _checkHandler.IsInCheck(_chessboard.Opponent, out int checkAmount);
-            bool isInCheckmate = _checkmateHandler.IsInCheckmate(_chessboard.Opponent, checkAmount);
-
-            CheckCondition checkCondition = GetCheckCondition(isInCheck, isInCheckmate);
-            ConvertToPGNMove(movePlayed, checkCondition);
+            bool isInCheckmate = _checkHandler.IsInCheckmate(_chessboard.Turn, out CheckState checkState);
+            ConvertToPGNMove(movePlayed, checkState);
         }
 
         public void Join(PlayerInfo playerInfo)
