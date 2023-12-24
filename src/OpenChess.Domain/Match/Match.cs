@@ -51,7 +51,7 @@ namespace OpenChess.Domain
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
 
             bool isInCheckmate = _checkHandler.IsInCheckmate(_chessboard.Turn, out CheckState checkState);
-
+            if (isInCheckmate) DeclareWinnerAndFinish();
             string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
             _pgnMoveText.Push(convertedMove);
         }
@@ -177,6 +177,12 @@ namespace OpenChess.Domain
         private static Player? GetPlayerById(Guid id, List<Player> players)
         {
             return players.Where(p => p.Id == id).FirstOrDefault();
+        }
+
+        private void DeclareWinnerAndFinish()
+        {
+            _winner = GetPlayerByColor(_chessboard.Opponent, _players);
+            _status = MatchStatus.Finished;
         }
     }
 }
