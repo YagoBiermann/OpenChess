@@ -1,9 +1,10 @@
 namespace OpenChess.Domain
 {
-    enum CheckCondition
+    enum CheckState
     {
-        Default,
+        NotInCheck,
         Check,
+        DoubleCheck,
         Checkmate,
     }
 }

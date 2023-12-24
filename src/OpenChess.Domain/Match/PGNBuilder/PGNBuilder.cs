@@ -30,29 +30,30 @@ namespace OpenChess.Domain
         }
         public abstract PGNBuilder Build();
 
-        public static string BuildPawnPGN(int count, MovePlayed move, CheckCondition checkCondition)
+        public static string BuildPawnPGN(int count, MovePlayed move, CheckState checkState)
         {
             int moveCount = count;
             var builder = new PawnTextMoveBuilder(moveCount, move);
-            SetBuilderSign(builder, move, checkCondition);
+            SetBuilderSign(builder, move, checkState);
 
             return builder.Build().Result;
         }
 
-        public static string BuildDefaultPGN(int count, MovePlayed move, CheckCondition checkCondition)
+        public static string BuildDefaultPGN(int count, MovePlayed move, CheckState checkState)
         {
             int moveCount = count;
             var builder = new DefaultTextMoveBuilder(moveCount, move);
-            SetBuilderSign(builder, move, checkCondition);
+            SetBuilderSign(builder, move, checkState);
 
             return builder.Build().Result;
         }
 
-        protected static void SetBuilderSign(PGNBuilder builder, MovePlayed move, CheckCondition checkCondition)
+        protected static void SetBuilderSign(PGNBuilder builder, MovePlayed move, CheckState checkState)
         {
             if (move.PieceCaptured is not null) builder.AppendCaptureSign = true;
-            if (checkCondition == CheckCondition.Check) builder.AppendCheckSign = true;
-            else if (checkCondition == CheckCondition.Checkmate) builder.AppendCheckMateSign = true;
+            bool IsInCheck = checkState == CheckState.Check || checkState == CheckState.DoubleCheck;
+            if (IsInCheck) builder.AppendCheckSign = true;
+            else if (checkState == CheckState.Checkmate) builder.AppendCheckMateSign = true;
         }
     }
 }

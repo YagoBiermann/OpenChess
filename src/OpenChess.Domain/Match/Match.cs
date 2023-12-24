@@ -143,23 +143,17 @@ namespace OpenChess.Domain
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private void ConvertToPGNMove(MovePlayed movePlayed, CheckCondition checkCondition)
+        private void ConvertToPGNMove(MovePlayed movePlayed, CheckState checkState)
         {
             int count = _pgnMoveText.Count + 1;
             string pgnMove;
-            if (movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove || movePlayed.MoveType == MoveType.EnPassantMove) pgnMove = PGNBuilder.BuildPawnPGN(count, movePlayed, checkCondition);
+            bool isPawnMove = movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove || movePlayed.MoveType == MoveType.EnPassantMove;
+            if (isPawnMove) pgnMove = PGNBuilder.BuildPawnPGN(count, movePlayed, checkState);
             else if (movePlayed.MoveType == MoveType.QueenSideCastlingMove) pgnMove = PGNBuilder.BuildQueenSideCastlingString();
             else if (movePlayed.MoveType == MoveType.KingSideCastlingMove) pgnMove = PGNBuilder.BuildKingSideCastlingString();
-            else pgnMove = PGNBuilder.BuildDefaultPGN(count, movePlayed, checkCondition);
+            else pgnMove = PGNBuilder.BuildDefaultPGN(count, movePlayed, checkState);
 
             _pgnMoveText.Push(pgnMove);
-        }
-
-        private static CheckCondition GetCheckCondition(bool isCheck, bool isCheckmate)
-        {
-            if (isCheck && !isCheckmate) return CheckCondition.Check;
-            if (isCheckmate) return CheckCondition.Checkmate;
-            return CheckCondition.Default;
         }
 
         private static void RestorePlayers(List<Player> players, List<PlayerInfo> playersInfo, Guid matchId)
