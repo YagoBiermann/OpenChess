@@ -51,7 +51,9 @@ namespace OpenChess.Domain
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
 
             bool isInCheckmate = _checkHandler.IsInCheckmate(_chessboard.Turn, out CheckState checkState);
-            ConvertToPGNMove(movePlayed, checkState);
+
+            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
+            _pgnMoveText.Push(convertedMove);
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -141,19 +143,6 @@ namespace OpenChess.Domain
             Color pieceColor = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.Color;
             Color playerColor = GetPlayerById(move.PlayerId, _players)!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
-        }
-
-        private void ConvertToPGNMove(MovePlayed movePlayed, CheckState checkState)
-        {
-            int count = _pgnMoveText.Count + 1;
-            string pgnMove;
-            bool isPawnMove = movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove || movePlayed.MoveType == MoveType.EnPassantMove;
-            if (isPawnMove) pgnMove = PGNBuilder.BuildPawnPGN(count, movePlayed, checkState);
-            else if (movePlayed.MoveType == MoveType.QueenSideCastlingMove) pgnMove = PGNBuilder.BuildQueenSideCastlingString();
-            else if (movePlayed.MoveType == MoveType.KingSideCastlingMove) pgnMove = PGNBuilder.BuildKingSideCastlingString();
-            else pgnMove = PGNBuilder.BuildDefaultPGN(count, movePlayed, checkState);
-
-            _pgnMoveText.Push(pgnMove);
         }
 
         private static void RestorePlayers(List<Player> players, List<PlayerInfo> playersInfo, Guid matchId)

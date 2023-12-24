@@ -30,7 +30,20 @@ namespace OpenChess.Domain
         }
         public abstract PGNBuilder Build();
 
-        public static string BuildPawnPGN(int count, MovePlayed move, CheckState checkState)
+        public static string ConvertMoveToPGN(int moveCount, MovePlayed movePlayed, CheckState checkState)
+        {
+            int count = moveCount + 1;
+            string moveConvertedToPgn;
+            bool isPawnMove = movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove || movePlayed.MoveType == MoveType.EnPassantMove;
+            if (isPawnMove) moveConvertedToPgn = PGNBuilder.BuildPawnPGN(count, movePlayed, checkState);
+            else if (movePlayed.MoveType == MoveType.QueenSideCastlingMove) moveConvertedToPgn = BuildQueenSideCastlingString();
+            else if (movePlayed.MoveType == MoveType.KingSideCastlingMove) moveConvertedToPgn = BuildKingSideCastlingString();
+            else moveConvertedToPgn = BuildDefaultPGN(count, movePlayed, checkState);
+
+            return moveConvertedToPgn;
+        }
+
+        private static string BuildPawnPGN(int count, MovePlayed move, CheckState checkState)
         {
             int moveCount = count;
             var builder = new PawnTextMoveBuilder(moveCount, move);
@@ -39,7 +52,7 @@ namespace OpenChess.Domain
             return builder.Build().Result;
         }
 
-        public static string BuildDefaultPGN(int count, MovePlayed move, CheckState checkState)
+        private static string BuildDefaultPGN(int count, MovePlayed move, CheckState checkState)
         {
             int moveCount = count;
             var builder = new DefaultTextMoveBuilder(moveCount, move);
@@ -48,7 +61,7 @@ namespace OpenChess.Domain
             return builder.Build().Result;
         }
 
-        protected static void SetBuilderSign(PGNBuilder builder, MovePlayed move, CheckState checkState)
+        private static void SetBuilderSign(PGNBuilder builder, MovePlayed move, CheckState checkState)
         {
             if (move.PieceCaptured is not null) builder.AppendCaptureSign = true;
             bool IsInCheck = checkState == CheckState.Check || checkState == CheckState.DoubleCheck;
