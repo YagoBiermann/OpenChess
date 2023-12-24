@@ -72,9 +72,9 @@ namespace OpenChess.Domain
             };
         }
 
-        private bool CanSolveCheckByMovingAPiece() { throw new Exception("Not implemented yet"); }
+        private bool CanSolveCheckByMovingAPiece() { return true; }
 
-        private bool CanSolveCheckByCoveringTheKing() { throw new Exception("Not implemented yet"); }
+        private bool CanSolveCheckByCoveringTheKing() { return true; }
 
         private bool CanSolveCheckByMovingTheKing(Color player)
         {
@@ -101,7 +101,7 @@ namespace OpenChess.Domain
                 foreach (MoveDirections move in moves)
                 {
                     allMoves.AddRange(move.Coordinates);
-
+                    if (!move.Coordinates.Any()) continue;
                     IReadOnlySquare lastPosition = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
                     bool isEnemyKing = lastPosition.ReadOnlyPiece is King && lastPosition.HasEnemyPiece(piece.Color);
                     if (isEnemyKing)
@@ -119,6 +119,7 @@ namespace OpenChess.Domain
         private List<Coordinate> GetPositionOfProtectedPieces(List<Coordinate> piecesPosition)
         {
             List<Coordinate> protectedPieces = new();
+            if (!protectedPieces.Any()) return protectedPieces;
 
             foreach (Coordinate position in piecesPosition)
             {
