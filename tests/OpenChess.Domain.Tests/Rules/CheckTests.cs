@@ -19,7 +19,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
 
-            Assert.IsTrue(new CheckHandler(chessboard).IsInCheck(player, out int checkAmount));
+            Assert.IsTrue(new CheckHandler(chessboard).IsInCheck(player, out CheckState checkAmount));
         }
 
         [DataRow("r7/3R2k1/4P3/4K3/8/8/8/8 w - - 0 1", 'w')]
@@ -41,7 +41,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             Color player = color == 'w' ? Color.White : Color.Black;
 
-            Assert.IsFalse(new CheckHandler(chessboard).IsInCheck(player, out int checkAmount));
+            Assert.IsFalse(new CheckHandler(chessboard).IsInCheck(player, out CheckState checkAmount));
         }
 
         [DataRow("3b4/8/4n3/5PK1/8/k4r2/8/3r4 w - - 0 1", 'w')]
@@ -49,13 +49,13 @@ namespace OpenChess.Tests
         [DataRow("3b4/4n3/8/5PK1/2N5/k4R2/8/3r4 w - - 0 1", 'b')]
         [DataRow("r1bqkbnr/1pp2ppp/p1Bp1N2/4p3/4P3/8/PPPP1PPP/RNBQK2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void CheckAmount_DoubleCheck_ShouldReturn2(string fen, char color)
+        public void CheckState_DoubleCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
-            new CheckHandler(chessboard).IsInCheck(player, out int checkAmount);
+            new CheckHandler(chessboard).IsInCheck(player, out CheckState checkState);
 
-            Assert.AreEqual(2, checkAmount);
+            Assert.AreEqual(CheckState.DoubleCheck, checkState);
         }
 
         [DataRow("rn1qkb1r/ppp2pp1/5n1p/1B1p2B1/3P2b1/4P1P1/PP3P1P/RN1QK1NR b KQkq - 0 1", 'b')]
@@ -63,13 +63,13 @@ namespace OpenChess.Tests
         [DataRow("rn1qkb1r/pp1n2p1/2p2p1p/1B1p2BQ/3P4/4P1P1/PP3P1P/RN2K1NR b KQkq - 0 1", 'b')]
         [DataRow("3bk3/5P2/4P3/4K3/8/8/4B3/8 w - - 0 1", 'b')]
         [TestMethod]
-        public void CheckAmount_Check_ShouldReturn1(string fen, char color)
+        public void CheckState_Check_ShouldReturnCorrectEnum(string fen, char color)
         {
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
-            new CheckHandler(chessboard).IsInCheck(player, out int checkAmount);
+            new CheckHandler(chessboard).IsInCheck(player, out CheckState checkState);
 
-            Assert.AreEqual(1, checkAmount);
+            Assert.AreEqual(CheckState.Check, checkState);
         }
 
         [DataRow("3bk3/5P2/4P3/4K3/8/8/4B3/8 w - - 0 1", 'w')]
@@ -80,13 +80,13 @@ namespace OpenChess.Tests
         [DataRow("rnb1kbnr/pppp1ppp/8/8/2B1Pp1q/8/PPPP2PP/RNBQK1NR b KQkq - 0 1", 'b')]
         [DataRow("rnb1k1nr/ppp1qppp/8/8/3N4/1B6/PPP3PP/RNBQK2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void CheckAmount_NotInCheck_ShouldReturn0(string fen, char color)
+        public void CheckState_NotInCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
-            new CheckHandler(chessboard).IsInCheck(player, out int checkAmount);
+            new CheckHandler(chessboard).IsInCheck(player, out CheckState checkState);
 
-            Assert.AreEqual(0, checkAmount);
+            Assert.AreEqual(CheckState.NotInCheck, checkState);
         }
 
         [DataRow("4k3/7R/4P3/2K1r3/8/8/8/8 b - - 0 1", "E5")]
