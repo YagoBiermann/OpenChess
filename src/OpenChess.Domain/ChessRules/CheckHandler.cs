@@ -6,6 +6,7 @@ namespace OpenChess.Domain
         private IReadOnlyChessboard _chessboard;
         private IMoveCalculator _checkmateCalculator;
         private IMoveCalculator _protectedPiecesCalculator;
+        private IMoveCalculator _legalMovesCalculator;
         public CheckHandler(IReadOnlyChessboard chessboard)
         {
             IMoveCalculatorStrategy allyPiecesStrategy = new IncludeAllyPieceStrategy();
@@ -14,6 +15,7 @@ namespace OpenChess.Domain
             _chessboard = chessboard;
             _protectedPiecesCalculator = moveCalculator;
             _checkmateCalculator = new CheckmateCalculator(chessboard);
+            _legalMovesCalculator = new LegalMovesCalculator(_chessboard);
         }
 
         public bool IsInCheckmate(Color player, out CheckState checkState)
@@ -40,7 +42,7 @@ namespace OpenChess.Domain
 
         private List<Coordinate> CalculateMoveHittingTheEnemyKing(IReadOnlyPiece piece)
         {
-            List<MoveDirections> moves = new LegalMovesCalculator(_chessboard).CalculateMoves(piece);
+            List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
             List<Coordinate> movesTowardsTheKing = new();
 
             foreach (MoveDirections move in moves)
@@ -91,14 +93,13 @@ namespace OpenChess.Domain
 
         private bool CanSolveCheckByMovingTheKing(Color player)
         {
-            IMoveCalculator legalMoves = new LegalMovesCalculator(_chessboard);
             IReadOnlyPiece king = _chessboard.FindPiece(player, typeof(King)).First();
             List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(player));
             List<Coordinate> protectedPiecesPosition = GetPositionOfProtectedPieces(piecesPosition);
             List<Coordinate> enemyMoves = CalculateCheckmateMoves(piecesPosition).SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
             enemyMoves.AddRange(protectedPiecesPosition);
 
-            List<Coordinate> kingMoves = legalMoves.CalculateMoves(king).SelectMany(m => m.Coordinates).ToList();
+            List<Coordinate> kingMoves = _legalMovesCalculator.CalculateMoves(king).SelectMany(m => m.Coordinates).ToList();
             bool canBeSolved = kingMoves.Except(enemyMoves).ToList().Any();
 
             return canBeSolved;
