@@ -124,6 +124,13 @@ namespace OpenChess.Domain
             }
         }
 
+        public PlayerInfo GetPlayerByColor(Color color)
+        {
+            PlayerInfo? player = (_players.Find(p => p.Color == color)?.Info) ?? throw new MatchException("player not found");
+
+            return player.Value;
+        }
+
         public PlayerInfo GetWhitePlayer()
         {
             PlayerInfo? player = (_players.Find(p => p.Color == Color.White)?.Info) ?? throw new MatchException("player not found");
