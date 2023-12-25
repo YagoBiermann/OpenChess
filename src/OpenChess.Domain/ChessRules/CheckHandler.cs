@@ -49,8 +49,11 @@ namespace OpenChess.Domain
                 IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
                 if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color)
                 {
+                    Coordinate kingPosition = move.Coordinates.Last();
                     movesTowardsTheKing.Add(piece.Origin);
-                    movesTowardsTheKing.AddRange(move.Coordinates); break;
+                    movesTowardsTheKing.AddRange(move.Coordinates);
+                    movesTowardsTheKing.Remove(kingPosition);
+                    break;
                 }
             }
 
