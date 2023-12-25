@@ -86,7 +86,7 @@ namespace OpenChess.Domain
             enemyMoves.AddRange(protectedPiecesPosition);
 
             List<Coordinate> kingMoves = legalMoves.CalculateMoves(king).SelectMany(m => m.Coordinates).ToList();
-            bool canBeSolved = !kingMoves.Intersect(enemyMoves).Any();
+            bool canBeSolved = !kingMoves.Except(enemyMoves).Any();
 
             return canBeSolved;
         }
