@@ -3,6 +3,7 @@ namespace OpenChess.Domain
     internal class CheckHandler
     {
         private List<IReadOnlyPiece> _piecesHittingTheKing = new();
+        private List<Coordinate> _movesTowardsTheKing = new();
         private IReadOnlyChessboard _chessboard;
         private IMoveCalculator _checkmateCalculator;
         private IMoveCalculator _protectedPiecesCalculator;
@@ -36,11 +37,11 @@ namespace OpenChess.Domain
 
         public bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
         {
-            List<Coordinate> movesTowardsTheKing = CalculateMoveHittingTheEnemyKing(piece);
+            List<Coordinate> movesTowardsTheKing = CalculateMoveTowardsTheKing(piece);
             return movesTowardsTheKing.Any();
         }
 
-        private List<Coordinate> CalculateMoveHittingTheEnemyKing(IReadOnlyPiece piece)
+        private List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
         {
             List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
             List<Coordinate> movesTowardsTheKing = new();
