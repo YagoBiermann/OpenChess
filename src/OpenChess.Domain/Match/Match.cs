@@ -124,6 +124,20 @@ namespace OpenChess.Domain
             }
         }
 
+        public PlayerInfo GetWhitePlayer()
+        {
+            PlayerInfo? player = (_players.Find(p => p.Color == Color.White)?.Info) ?? throw new MatchException("player not found");
+
+            return player.Value;
+        }
+
+        public PlayerInfo GetBlackPlayer()
+        {
+            PlayerInfo? player = (_players.Find(p => p.Color == Color.Black)?.Info) ?? throw new MatchException("player not found");
+
+            return player.Value;
+        }
+
         public static Guid TryParseId(string id)
         {
             bool parsedCorrectly = Guid.TryParse(id, out Guid parsedId);
@@ -188,6 +202,7 @@ namespace OpenChess.Domain
         private void DeclareWinnerAndFinish()
         {
             _winner = GetPlayerByColor(_chessboard.Opponent, _players);
+            _currentPlayerCheckState = CheckState.Checkmate;
             _matchStatus = MatchStatus.Finished;
         }
     }
