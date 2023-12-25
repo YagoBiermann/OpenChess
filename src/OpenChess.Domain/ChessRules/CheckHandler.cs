@@ -2,6 +2,7 @@ namespace OpenChess.Domain
 {
     internal class CheckHandler
     {
+        private List<IReadOnlyPiece> _piecesHittingTheKing = new();
         private IReadOnlyChessboard _chessboard;
         private IMoveCalculator _checkmateCalculator;
         private IMoveCalculator _protectedPiecesCalculator;
@@ -58,15 +59,16 @@ namespace OpenChess.Domain
 
         private int CalculateCheckAmount(Color player)
         {
+            _piecesHittingTheKing.Clear();
             List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(player));
-            int checkAmount = 0;
+
             foreach (Coordinate position in piecePositions)
             {
                 IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-                if (IsHittingTheEnemyKing(piece)) { checkAmount++; };
+                if (IsHittingTheEnemyKing(piece)) { _piecesHittingTheKing.Add(piece); };
             }
 
-            return checkAmount;
+            return _piecesHittingTheKing.Count;
         }
 
         private static CheckState GetCheckState(int checkAmount)
