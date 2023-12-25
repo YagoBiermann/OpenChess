@@ -159,7 +159,7 @@ namespace OpenChess.Tests
         [DataRow("1r2k2r/pp5p/6p1/8/8/1P4P1/P6P/1R2K2R w KQkq - 0 1", 'w')]
         [DataRow("1r2k2r/pp5p/6p1/8/8/1P4P1/P6P/1R2K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_QueenSideRookMoved_ShouldNotBeAbleToCastleOnlyInQueenSide(string position, char color)
+        public void MovePiece_QueenSideRookMoved_ShouldBeAbleToCastleOnlyInQueenSide(string position, char color)
         {
             Coordinate kingSideDestination = Coordinate.GetInstance($"G{GetRow(color)}");
 
@@ -171,7 +171,7 @@ namespace OpenChess.Tests
         [DataRow("r3k1r1/pp5p/6p1/8/8/1P4P1/P6P/R3K1R1 w KQkq - 0 1", 'w')]
         [DataRow("r3k1r1/pp5p/6p1/8/8/1P4P1/P6P/R3K1R1 b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_KingSideRookMoved_ShouldNotBeAbleToCastleOnlyInKingSide(string position, char color)
+        public void MovePiece_KingSideRookMoved_ShouldBeAbleToCastleOnlyInKingSide(string position, char color)
         {
             Coordinate queenSideDestination = Coordinate.GetInstance($"C{GetRow(color)}");
 
