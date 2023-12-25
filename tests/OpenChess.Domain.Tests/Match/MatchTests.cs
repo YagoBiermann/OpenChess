@@ -79,7 +79,7 @@ namespace OpenChess.Tests
             match.Join(blackPlayer);
 
             Assert.AreEqual(MatchStatus.InProgress, match.Status);
-            Assert.AreEqual(whitePlayer.Id, match.CurrentPlayer);
+            Assert.AreEqual(whitePlayer.Id, match.CurrentPlayer!.Value.Id);
         }
 
         [TestMethod]
@@ -152,7 +152,7 @@ namespace OpenChess.Tests
             match.Join(new(Color.White));
             match.Join(new(Color.Black));
             string initialPosition = match.Chessboard;
-            Move move = new(match.CurrentPlayer!.Value, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
 
             match.Play(move);
 
