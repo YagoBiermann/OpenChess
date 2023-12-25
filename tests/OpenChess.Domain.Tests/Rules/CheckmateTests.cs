@@ -74,5 +74,20 @@ namespace OpenChess.Tests
             Assert.IsTrue(match.HasFinished());
             Assert.AreEqual(match.Winner.GetValueOrDefault(), match.OpponentPlayer.GetValueOrDefault().Id);
         }
+
+        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "C5", "Check")]
+        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "D5", "Check")]
+        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "C7", "Check")]
+        [DataRow("8/8/2k1P3/8/8/2Q1K3/7p/8 b - - 0 1", "C6", "D7", "Check")]
+        [TestMethod]
+        public void Check_TryingToSolveByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination, string checkState)
+        {
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, checkState);
+            Match match = new(matchInfo);
+            Assert.AreEqual(CheckState.DoubleCheck, match.CurrentPlayerCheckState);
+            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+
+            Assert.ThrowsException<ChessboardException>(() => match.Play(move));
+        }
     }
 }
