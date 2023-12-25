@@ -58,5 +58,20 @@ namespace OpenChess.Tests
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
+
+        [DataRow("k7/1R6/1P6/p7/4BB2/8/5K2/8 w - - 0 1", "B7", "B8")]
+        [TestMethod]
+        public void DoubleCheck_WithoutSolution_ShouldFinishTheMatch(string fen, string origin, string destination)
+        {
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, "DoubleCheck");
+            Match match = new(matchInfo);
+            Assert.IsFalse(match.HasFinished());
+
+            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            match.Play(move);
+
+            Assert.IsTrue(match.HasFinished());
+            Assert.AreEqual(match.Winner.GetValueOrDefault(), match.OpponentPlayer.GetValueOrDefault().Id);
+        }
     }
 }
