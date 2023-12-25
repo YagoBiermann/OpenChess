@@ -105,7 +105,7 @@ namespace OpenChess.Domain
         {
             get
             {
-                if (!HasStarted() || HasFinished()) return null;
+                if (!IsFull()) return null;
                 return GetPlayerByColor(_chessboard.Opponent);
             }
         }
@@ -134,9 +134,9 @@ namespace OpenChess.Domain
 
         public PlayerInfo GetPlayerByColor(Color color)
         {
-            PlayerInfo? player = (_players.Find(p => p.Color == color)?.Info) ?? throw new MatchException("player not found");
+            PlayerInfo player = (_players.Find(p => p.Color == color)?.Info) ?? throw new MatchException("player not found");
 
-            return player.Value;
+            return player;
         }
 
         public static Guid TryParseId(string id)
