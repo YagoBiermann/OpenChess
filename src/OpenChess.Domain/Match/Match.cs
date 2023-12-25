@@ -131,20 +131,6 @@ namespace OpenChess.Domain
             return player.Value;
         }
 
-        public PlayerInfo GetWhitePlayer()
-        {
-            PlayerInfo? player = (_players.Find(p => p.Color == Color.White)?.Info) ?? throw new MatchException("player not found");
-
-            return player.Value;
-        }
-
-        public PlayerInfo GetBlackPlayer()
-        {
-            PlayerInfo? player = (_players.Find(p => p.Color == Color.Black)?.Info) ?? throw new MatchException("player not found");
-
-            return player.Value;
-        }
-
         public static Guid TryParseId(string id)
         {
             bool parsedCorrectly = Guid.TryParse(id, out Guid parsedId);
