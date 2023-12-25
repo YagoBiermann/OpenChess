@@ -47,5 +47,16 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
 
+        [DataRow("3B4/8/kR6/8/8/3BK3/8/8 b - - 0 1", "A6", "B6")]
+        [TestMethod]
+        public void DoubleCheck_TryingToSolveByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
+        {
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, "DoubleCheck");
+            Match match = new(matchInfo);
+            Assert.AreEqual(CheckState.DoubleCheck, match.CurrentPlayerCheckState);
+            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+
+            Assert.ThrowsException<ChessboardException>(() => match.Play(move));
+        }
     }
 }
