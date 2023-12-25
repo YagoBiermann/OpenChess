@@ -34,6 +34,18 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
         }
-        
+
+        [DataRow("8/1r6/k1R5/8/8/3BK3/8/8 b - - 0 1", "B7", "B6")]
+        [TestMethod]
+        public void DoubleCheck_TryingToSolveByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
+        {
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, "DoubleCheck");
+            Match match = new(matchInfo);
+            Assert.AreEqual(CheckState.DoubleCheck, match.CurrentPlayerCheckState);
+            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+
+            Assert.ThrowsException<ChessboardException>(() => match.Play(move));
+        }
+
     }
 }
