@@ -20,7 +20,7 @@ namespace OpenChess.Domain
             if (!IsInCheck(player, out checkState)) return false;
             if (checkState == CheckState.DoubleCheck) return !CanSolveCheckByMovingTheKing(player);
 
-            return CanSolveCheckByCoveringTheKing() || CanSolveCheckByMovingAPiece() || CanSolveCheckByMovingTheKing(player);
+            return CanSolveCheckByCoveringTheKing() || CanSolveCheckByCapturingEnemyPiece() || CanSolveCheckByMovingTheKing(player);
         }
 
         public bool IsInCheck(Color player, out CheckState checkState)
@@ -70,7 +70,7 @@ namespace OpenChess.Domain
             };
         }
 
-        private bool CanSolveCheckByMovingAPiece() { return true; }
+        private bool CanSolveCheckByCapturingEnemyPiece() { return true; }
 
         private bool CanSolveCheckByCoveringTheKing() { return true; }
 
