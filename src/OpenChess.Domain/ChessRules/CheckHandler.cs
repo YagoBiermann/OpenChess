@@ -33,17 +33,27 @@ namespace OpenChess.Domain
 
         public bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
         {
-            List<MoveDirections> moveRange = new LegalMovesCalculator(_chessboard).CalculateMoves(piece);
-            bool isHitting = false;
+            List<Coordinate> movesTowardsTheKing = CalculateMoveHittingTheEnemyKing(piece);
+            return movesTowardsTheKing.Any();
+        }
 
-            foreach (MoveDirections move in moveRange)
+        private List<Coordinate> CalculateMoveHittingTheEnemyKing(IReadOnlyPiece piece)
+        {
+            List<MoveDirections> moves = new LegalMovesCalculator(_chessboard).CalculateMoves(piece);
+            List<Coordinate> movesTowardsTheKing = new();
+
+            foreach (MoveDirections move in moves)
             {
                 if (!move.Coordinates.Any()) continue;
                 IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
-                if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color) { isHitting = true; break; }
+                if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color)
+                {
+                    movesTowardsTheKing.Add(piece.Origin);
+                    movesTowardsTheKing.AddRange(move.Coordinates); break;
+                }
             }
 
-            return isHitting;
+            return movesTowardsTheKing;
         }
 
         private int CalculateCheckAmount(Color player)
@@ -84,9 +94,9 @@ namespace OpenChess.Domain
             enemyMoves.AddRange(protectedPiecesPosition);
 
             List<Coordinate> kingMoves = legalMoves.CalculateMoves(king).SelectMany(m => m.Coordinates).ToList();
-            var canBeSolved = kingMoves.Except(enemyMoves).ToList();
+            bool canBeSolved = kingMoves.Except(enemyMoves).ToList().Any();
 
-            return canBeSolved.Any();
+            return canBeSolved;
         }
 
         private List<List<MoveDirections>> CalculateCheckmateMoves(List<Coordinate> piecesPosition)
