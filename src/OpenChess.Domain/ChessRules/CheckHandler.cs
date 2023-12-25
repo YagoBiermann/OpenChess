@@ -3,24 +3,22 @@ namespace OpenChess.Domain
     internal class CheckHandler
     {
         private IReadOnlyChessboard _chessboard;
-        private IMoveCalculator _legalMovesCalculator;
+        private IMoveCalculator _checkmateCalculator;
         private IMoveCalculator _protectedPiecesCalculator;
         public CheckHandler(IReadOnlyChessboard chessboard)
         {
             IMoveCalculatorStrategy allyPiecesStrategy = new IncludeAllyPieceStrategy();
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard, allyPiecesStrategy);
 
-            IMoveCalculatorStrategy legalMovesStrategy = new IncludeEnemyPieceStrategy();
-            IMoveCalculator legalMovesCalculator = new MovesCalculator(chessboard, legalMovesStrategy);
             _chessboard = chessboard;
             _protectedPiecesCalculator = moveCalculator;
-            _legalMovesCalculator = legalMovesCalculator;
+            _checkmateCalculator = new CheckmateCalculator(chessboard);
         }
 
         public bool IsInCheckmate(Color player, out CheckState checkState)
         {
             if (!IsInCheck(player, out checkState)) return false;
-            if (checkState == CheckState.DoubleCheck) return CanSolveCheckByMovingTheKing(player);
+            if (checkState == CheckState.DoubleCheck) return !CanSolveCheckByMovingTheKing(player);
 
             return CanSolveCheckByCoveringTheKing() || CanSolveCheckByMovingAPiece() || CanSolveCheckByMovingTheKing(player);
         }
@@ -82,35 +80,23 @@ namespace OpenChess.Domain
             IReadOnlyPiece king = _chessboard.FindPiece(player, typeof(King)).First();
             List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(player));
             List<Coordinate> protectedPiecesPosition = GetPositionOfProtectedPieces(piecesPosition);
-            List<Coordinate> enemyMoves = CalculateAllLegalMoves(piecesPosition);
+            List<Coordinate> enemyMoves = CalculateCheckmateMoves(piecesPosition).SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
             enemyMoves.AddRange(protectedPiecesPosition);
 
             List<Coordinate> kingMoves = legalMoves.CalculateMoves(king).SelectMany(m => m.Coordinates).ToList();
-            bool canBeSolved = !kingMoves.Except(enemyMoves).Any();
+            var canBeSolved = kingMoves.Except(enemyMoves).ToList();
 
-            return canBeSolved;
+            return canBeSolved.Any();
         }
 
-        private List<Coordinate> CalculateAllLegalMoves(List<Coordinate> piecesPosition)
+        private List<List<MoveDirections>> CalculateCheckmateMoves(List<Coordinate> piecesPosition)
         {
-            List<Coordinate> allMoves = new();
+            List<List<MoveDirections>> allMoves = new();
             foreach (Coordinate position in piecesPosition)
             {
                 IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-                List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
-                foreach (MoveDirections move in moves)
-                {
-                    allMoves.AddRange(move.Coordinates);
-                    if (!move.Coordinates.Any()) continue;
-                    IReadOnlySquare lastPosition = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
-                    bool isEnemyKing = lastPosition.ReadOnlyPiece is King && lastPosition.HasEnemyPiece(piece.Color);
-                    if (isEnemyKing)
-                    {
-                        Coordinate? nextPosition = Coordinate.CalculateNextPosition(lastPosition.Coordinate, move.Direction);
-                        if (nextPosition is null) { continue; }
-                        allMoves.Add(nextPosition);
-                    }
-                }
+                List<MoveDirections> move = _checkmateCalculator.CalculateMoves(piece);
+                allMoves.Add(move);
             }
 
             return allMoves;
@@ -119,7 +105,7 @@ namespace OpenChess.Domain
         private List<Coordinate> GetPositionOfProtectedPieces(List<Coordinate> piecesPosition)
         {
             List<Coordinate> protectedPieces = new();
-            if (!protectedPieces.Any()) return protectedPieces;
+            if (!piecesPosition.Any()) return protectedPieces;
 
             foreach (Coordinate position in piecesPosition)
             {
@@ -127,6 +113,7 @@ namespace OpenChess.Domain
                 List<MoveDirections> moves = _protectedPiecesCalculator.CalculateMoves(piece);
                 foreach (MoveDirections move in moves)
                 {
+                    if (!move.Coordinates.Any()) continue;
                     Coordinate lastPosition = move.Coordinates.Last();
                     if (_chessboard.GetReadOnlySquare(lastPosition).HasPiece) protectedPieces.Add(lastPosition);
                 }
