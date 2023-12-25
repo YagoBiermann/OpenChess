@@ -97,11 +97,19 @@ namespace OpenChess.Domain
             get
             {
                 if (!HasStarted() || HasFinished()) return null;
-                var player = _players.Find(p => p.Color == _chessboard.Turn) ?? throw new MatchException("Player not found!");
-
-                return player.Info;
+                return GetPlayerByColor(_chessboard.Turn);
             }
         }
+
+        public PlayerInfo? OpponentPlayer
+        {
+            get
+            {
+                if (!HasStarted() || HasFinished()) return null;
+                return GetPlayerByColor(_chessboard.Opponent);
+            }
+        }
+
         public Time Time { get { return (Time)_time.Minutes; } }
         public Guid? Winner { get { return _winner?.Id; } }
         public Stack<string> Moves
