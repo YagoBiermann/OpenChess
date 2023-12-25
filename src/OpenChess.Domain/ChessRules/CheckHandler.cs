@@ -44,7 +44,6 @@ namespace OpenChess.Domain
         private List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
         {
             List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
-            List<Coordinate> movesTowardsTheKing = new();
 
             foreach (MoveDirections move in moves)
             {
@@ -52,15 +51,16 @@ namespace OpenChess.Domain
                 IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
                 if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color)
                 {
+                    _movesTowardsTheKing.Clear();
                     Coordinate kingPosition = move.Coordinates.Last();
-                    movesTowardsTheKing.Add(piece.Origin);
-                    movesTowardsTheKing.AddRange(move.Coordinates);
-                    movesTowardsTheKing.Remove(kingPosition);
+                    _movesTowardsTheKing.Add(piece.Origin);
+                    _movesTowardsTheKing.AddRange(move.Coordinates);
+                    _movesTowardsTheKing.Remove(kingPosition);
                     break;
                 }
             }
 
-            return movesTowardsTheKing;
+            return _movesTowardsTheKing;
         }
 
         private int CalculateCheckAmount(Color player)
