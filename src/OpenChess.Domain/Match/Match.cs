@@ -90,14 +90,16 @@ namespace OpenChess.Domain
         {
             return Status.Equals(MatchStatus.Finished);
         }
-
+        public CheckState CurrentPlayerCheckState { get { return _currentPlayerCheckState; } }
         public MatchStatus Status { get { return _matchStatus; } }
-        public Guid? CurrentPlayer
+        public PlayerInfo? CurrentPlayer
         {
             get
             {
                 if (!HasStarted() || HasFinished()) return null;
-                return _players.Find(p => p.Color == _chessboard.Turn)?.Id;
+                var player = _players.Find(p => p.Color == _chessboard.Turn) ?? throw new MatchException("Player not found!");
+
+                return player.Info;
             }
         }
         public Time Time { get { return (Time)_time.Minutes; } }
