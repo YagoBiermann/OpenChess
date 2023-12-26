@@ -34,34 +34,30 @@ namespace OpenChess.Domain
             return checkState != CheckState.NotInCheck;
         }
 
-        private bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
+        private bool CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(Color player)
         {
-            List<Coordinate> movesTowardsTheKing = CalculateMoveTowardsTheKing(piece);
-            return movesTowardsTheKing.Any();
+            if (_movesTowardsTheKing.Count >= 2) return false;
+            List<Coordinate> opponentMovesTowardsTheKing = new(_movesTowardsTheKing.First().Value);
+            List<List<MoveDirections>> allLegalMovesFromPlayer = _legalMovesCalculator.CalculateAllMoves(player);
+            allLegalMovesFromPlayer.RemoveAll(m => m.Where(c => c.Piece is King).Any());
+            List<Coordinate> allMoves = allLegalMovesFromPlayer.SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
+            bool canBeSolved = allMoves.Intersect(opponentMovesTowardsTheKing).Any();
+
+            return canBeSolved;
         }
 
-        private List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
+        private bool CanSolveCheckByMovingTheKing(Color player)
         {
-            if (_movesTowardsTheKing.ContainsKey(piece)) { return _movesTowardsTheKing[piece]; };
-            List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
-            List<Coordinate> movesTowardsTheKing = new();
+            IReadOnlyPiece king = _chessboard.FindPiece(player, typeof(King)).First();
+            List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(player));
+            List<Coordinate> protectedPiecesPosition = GetPositionOfProtectedPieces(piecesPosition);
+            List<Coordinate> enemyMoves = CalculateCheckmateMoves(piecesPosition).SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
+            enemyMoves.AddRange(protectedPiecesPosition);
 
-            foreach (MoveDirections move in moves)
-            {
-                if (!move.Coordinates.Any()) continue;
-                IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
-                if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color)
-                {
-                    Coordinate kingPosition = move.Coordinates.Last();
-                    movesTowardsTheKing.Add(piece.Origin);
-                    movesTowardsTheKing.AddRange(move.Coordinates);
-                    movesTowardsTheKing.Remove(kingPosition);
-                    _movesTowardsTheKing.Add(piece, movesTowardsTheKing);
-                    break;
-                }
-            }
+            List<Coordinate> kingMoves = _legalMovesCalculator.CalculateMoves(king).SelectMany(m => m.Coordinates).ToList();
+            bool canBeSolved = kingMoves.Except(enemyMoves).ToList().Any();
 
-            return movesTowardsTheKing;
+            return canBeSolved;
         }
 
         private int CalculateCheckAmount(Color player)
@@ -87,32 +83,6 @@ namespace OpenChess.Domain
                 2 => CheckState.DoubleCheck,
                 _ => throw new MatchException("The game could not compute the current check state")
             };
-        }
-
-        private bool CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(Color player)
-        {
-            if (_movesTowardsTheKing.Count >= 2) return false;
-            List<Coordinate> opponentMovesTowardsTheKing = new(_movesTowardsTheKing.First().Value);
-            List<List<MoveDirections>> allLegalMovesFromPlayer = _legalMovesCalculator.CalculateAllMoves(player);
-            allLegalMovesFromPlayer.RemoveAll(m => m.Where(c => c.Piece is King).Any());
-            List<Coordinate> allMoves = allLegalMovesFromPlayer.SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
-            bool canBeSolved = allMoves.Intersect(opponentMovesTowardsTheKing).Any();
-
-            return canBeSolved;
-        }
-
-        private bool CanSolveCheckByMovingTheKing(Color player)
-        {
-            IReadOnlyPiece king = _chessboard.FindPiece(player, typeof(King)).First();
-            List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(player));
-            List<Coordinate> protectedPiecesPosition = GetPositionOfProtectedPieces(piecesPosition);
-            List<Coordinate> enemyMoves = CalculateCheckmateMoves(piecesPosition).SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
-            enemyMoves.AddRange(protectedPiecesPosition);
-
-            List<Coordinate> kingMoves = _legalMovesCalculator.CalculateMoves(king).SelectMany(m => m.Coordinates).ToList();
-            bool canBeSolved = kingMoves.Except(enemyMoves).ToList().Any();
-
-            return canBeSolved;
         }
 
         private List<List<MoveDirections>> CalculateCheckmateMoves(List<Coordinate> piecesPosition)
@@ -146,6 +116,35 @@ namespace OpenChess.Domain
             }
 
             return protectedPieces;
+        }
+        private bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
+        {
+            List<Coordinate> movesTowardsTheKing = CalculateMoveTowardsTheKing(piece);
+            return movesTowardsTheKing.Any();
+        }
+
+        private List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
+        {
+            if (_movesTowardsTheKing.ContainsKey(piece)) { return _movesTowardsTheKing[piece]; };
+            List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
+            List<Coordinate> movesTowardsTheKing = new();
+
+            foreach (MoveDirections move in moves)
+            {
+                if (!move.Coordinates.Any()) continue;
+                IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
+                if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color)
+                {
+                    Coordinate kingPosition = move.Coordinates.Last();
+                    movesTowardsTheKing.Add(piece.Origin);
+                    movesTowardsTheKing.AddRange(move.Coordinates);
+                    movesTowardsTheKing.Remove(kingPosition);
+                    _movesTowardsTheKing.Add(piece, movesTowardsTheKing);
+                    break;
+                }
+            }
+
+            return movesTowardsTheKing;
         }
     }
 }
