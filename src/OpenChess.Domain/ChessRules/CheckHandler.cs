@@ -23,7 +23,7 @@ namespace OpenChess.Domain
             if (!IsInCheck(player, out checkState)) return false;
             if (checkState == CheckState.DoubleCheck) return !CanSolveCheckByMovingTheKing(player);
 
-            return CanSolveCheckByCoveringTheKing() || CanSolveCheckByCapturingEnemyPiece() || CanSolveCheckByMovingTheKing(player);
+            return !CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(player) && !CanSolveCheckByMovingTheKing(player);
         }
 
         public bool IsInCheck(Color player, out CheckState checkState)
@@ -89,9 +89,17 @@ namespace OpenChess.Domain
             };
         }
 
-        private bool CanSolveCheckByCapturingEnemyPiece() { return true; }
+        private bool CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(Color player)
+        {
+            if (_movesTowardsTheKing.Count >= 2) return false;
+            List<Coordinate> opponentMovesTowardsTheKing = new(_movesTowardsTheKing.First().Value);
+            List<List<MoveDirections>> allLegalMovesFromPlayer = _legalMovesCalculator.CalculateAllMoves(player);
+            allLegalMovesFromPlayer.RemoveAll(m => m.Where(c => c.Piece is King).Any());
+            List<Coordinate> allMoves = allLegalMovesFromPlayer.SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
+            bool canBeSolved = allMoves.Intersect(opponentMovesTowardsTheKing).Any();
 
-        private bool CanSolveCheckByCoveringTheKing() { return true; }
+            return canBeSolved;
+        }
 
         private bool CanSolveCheckByMovingTheKing(Color player)
         {
