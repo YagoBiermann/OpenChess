@@ -5,15 +5,10 @@ namespace OpenChess.Domain
         private Dictionary<IReadOnlyPiece, List<Coordinate>> _movesTowardsTheKing = new();
         private IReadOnlyChessboard _chessboard;
         private IMoveCalculator _checkmateCalculator;
-        private IMoveCalculator _protectedPiecesCalculator;
         private LegalMovesCalculator _legalMovesCalculator;
         public CheckHandler(IReadOnlyChessboard chessboard)
         {
-            IMoveCalculatorStrategy allyPiecesStrategy = new IncludeAllyPieceStrategy();
-            IMoveCalculator moveCalculator = new MovesCalculator(chessboard, allyPiecesStrategy);
-
             _chessboard = chessboard;
-            _protectedPiecesCalculator = moveCalculator;
             _checkmateCalculator = new KingInCheckMovesCalculator(chessboard);
             _legalMovesCalculator = new LegalMovesCalculator(_chessboard);
         }
