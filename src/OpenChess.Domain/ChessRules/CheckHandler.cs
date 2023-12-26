@@ -4,12 +4,12 @@ namespace OpenChess.Domain
     {
         private Dictionary<IReadOnlyPiece, List<Coordinate>> _movesTowardsTheKing = new();
         private IReadOnlyChessboard _chessboard;
-        private IMoveCalculator _checkmateCalculator;
+        private IMoveCalculator _playerInCheckMovesCalculator;
         private LegalMovesCalculator _legalMovesCalculator;
         public CheckHandler(IReadOnlyChessboard chessboard)
         {
             _chessboard = chessboard;
-            _checkmateCalculator = new PlayerInCheckMovesCalculator(chessboard);
+            _playerInCheckMovesCalculator = new PlayerInCheckMovesCalculator(chessboard);
             _legalMovesCalculator = new LegalMovesCalculator(_chessboard);
         }
 
@@ -44,7 +44,7 @@ namespace OpenChess.Domain
         private bool CanSolveCheckByMovingTheKing(Color player)
         {
             IReadOnlyPiece king = _chessboard.FindPiece(player, typeof(King)).First();
-            List<MoveDirections> kingMoves = _checkmateCalculator.CalculateMoves(king);
+            List<MoveDirections> kingMoves = _playerInCheckMovesCalculator.CalculateMoves(king);
             bool canBeSolved = kingMoves.SelectMany(m => m.Coordinates).ToList().Any();
 
             return canBeSolved;
