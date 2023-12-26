@@ -1,12 +1,12 @@
 
 namespace OpenChess.Domain
 {
-    internal class KingInCheckMovesCalculator : IMoveCalculator
+    internal class PlayerInCheckMovesCalculator : IMoveCalculator
     {
         private IReadOnlyChessboard _chessboard;
         private IMoveCalculator _legalMoveCalculator;
         private IMoveCalculator _protectedPiecesCalculator;
-        public KingInCheckMovesCalculator(IReadOnlyChessboard chessboard)
+        public PlayerInCheckMovesCalculator(IReadOnlyChessboard chessboard)
         {
             _chessboard = chessboard;
             _legalMoveCalculator = new LegalMovesCalculator(_chessboard);

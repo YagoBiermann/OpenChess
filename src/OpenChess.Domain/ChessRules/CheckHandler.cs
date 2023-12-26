@@ -9,7 +9,7 @@ namespace OpenChess.Domain
         public CheckHandler(IReadOnlyChessboard chessboard)
         {
             _chessboard = chessboard;
-            _checkmateCalculator = new KingInCheckMovesCalculator(chessboard);
+            _checkmateCalculator = new PlayerInCheckMovesCalculator(chessboard);
             _legalMovesCalculator = new LegalMovesCalculator(_chessboard);
         }
 
