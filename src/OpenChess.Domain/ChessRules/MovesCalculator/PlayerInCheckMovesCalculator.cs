@@ -4,12 +4,12 @@ namespace OpenChess.Domain
     internal class PlayerInCheckMovesCalculator : IMoveCalculator
     {
         private IReadOnlyChessboard _chessboard;
-        private IMoveCalculator _legalMoveCalculator;
+        private LegalMovesCalculator _legalMovesCalculator;
         private IMoveCalculator _protectedPiecesCalculator;
         public PlayerInCheckMovesCalculator(IReadOnlyChessboard chessboard)
         {
             _chessboard = chessboard;
-            _legalMoveCalculator = new LegalMovesCalculator(_chessboard);
+            _legalMovesCalculator = new LegalMovesCalculator(_chessboard);
             IMoveCalculatorStrategy allyPiecesStrategy = new IncludeAllyPieceStrategy();
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard, allyPiecesStrategy);
             _protectedPiecesCalculator = moveCalculator;
@@ -18,8 +18,18 @@ namespace OpenChess.Domain
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
             if (piece is King king) return CalculateKingMoves(king);
+            return CalculatePieceMoves(piece);
+        }
 
-            return new();
+        private List<MoveDirections> CalculatePieceMoves(IReadOnlyPiece piece)
+        {
+            if (piece is King) throw new ChessboardException("This method cannot handle king moves");
+            List<Coordinate> enemyMoves = CalculateMoveTowardsTheKing(piece);
+            List<MoveDirections> legalMoves = _legalMovesCalculator.CalculateMoves(piece);
+            bool movesThatNotIntersectsTheEnemyMoves(MoveDirections moves) => moves.Coordinates.Except(enemyMoves).Any();
+            legalMoves.RemoveAll(movesThatNotIntersectsTheEnemyMoves);
+
+            return legalMoves;
         }
 
         private List<MoveDirections> CalculateKingMoves(King king)
@@ -29,7 +39,7 @@ namespace OpenChess.Domain
             List<Coordinate> enemyMoves = CalculateAllEnemyMoves(piecesPosition).SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
             enemyMoves.AddRange(protectedPiecesPosition);
 
-            List<MoveDirections> kingMoves = _legalMoveCalculator.CalculateMoves(king);
+            List<MoveDirections> kingMoves = _legalMovesCalculator.CalculateMoves(king);
             bool kingMovesHittenByEnemyPiece(MoveDirections p) => enemyMoves.Intersect(p.Coordinates).Any();
             kingMoves.RemoveAll(kingMovesHittenByEnemyPiece);
 
@@ -58,7 +68,7 @@ namespace OpenChess.Domain
                 return pawnMoves;
             }
 
-            List<MoveDirections> moves = _legalMoveCalculator.CalculateMoves(piece);
+            List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
             foreach (MoveDirections move in moves)
             {
                 if (!move.Coordinates.Any()) continue;
@@ -93,6 +103,28 @@ namespace OpenChess.Domain
             }
 
             return protectedPieces;
+        }
+
+        private List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
+        {
+            List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
+            List<Coordinate> movesTowardsTheKing = new();
+
+            foreach (MoveDirections move in moves)
+            {
+                if (!move.Coordinates.Any()) continue;
+                IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
+                if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color)
+                {
+                    Coordinate kingPosition = move.Coordinates.Last();
+                    movesTowardsTheKing.Add(piece.Origin);
+                    movesTowardsTheKing.AddRange(move.Coordinates);
+                    movesTowardsTheKing.Remove(kingPosition);
+                    break;
+                }
+            }
+
+            return movesTowardsTheKing;
         }
     }
 }

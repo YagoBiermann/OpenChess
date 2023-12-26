@@ -2,7 +2,6 @@ namespace OpenChess.Domain
 {
     internal class CheckHandler
     {
-        private Dictionary<IReadOnlyPiece, List<Coordinate>> _movesTowardsTheKing = new();
         private IReadOnlyChessboard _chessboard;
         private IMoveCalculator _playerInCheckMovesCalculator;
         private LegalMovesCalculator _legalMovesCalculator;
@@ -31,12 +30,15 @@ namespace OpenChess.Domain
 
         private bool CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(Color player)
         {
-            if (_movesTowardsTheKing.Count >= 2) return false;
-            List<Coordinate> opponentMovesTowardsTheKing = new(_movesTowardsTheKing.First().Value);
-            List<List<MoveDirections>> allLegalMovesFromPlayer = _legalMovesCalculator.CalculateAllMoves(player);
-            allLegalMovesFromPlayer.RemoveAll(m => m.Where(c => c.Piece is King).Any());
-            List<Coordinate> allMoves = allLegalMovesFromPlayer.SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
-            bool canBeSolved = allMoves.Intersect(opponentMovesTowardsTheKing).Any();
+            List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(player);
+            List<MoveDirections> moves = new();
+            foreach (Coordinate position in piecesPosition)
+            {
+                IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
+                if (piece is King) continue;
+                moves.AddRange(_playerInCheckMovesCalculator.CalculateMoves(piece));
+            }
+            bool canBeSolved = moves.Any();
 
             return canBeSolved;
         }
@@ -77,32 +79,19 @@ namespace OpenChess.Domain
 
         private bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
         {
-            List<Coordinate> movesTowardsTheKing = CalculateMoveTowardsTheKing(piece);
-            return movesTowardsTheKing.Any();
-        }
-
-        private List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
-        {
-            if (_movesTowardsTheKing.ContainsKey(piece)) { return _movesTowardsTheKing[piece]; };
+            if (piece is King) return false;
             List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
-            List<Coordinate> movesTowardsTheKing = new();
 
-            foreach (MoveDirections move in moves)
+            foreach (var move in moves)
             {
                 if (!move.Coordinates.Any()) continue;
-                IReadOnlySquare square = _chessboard.GetReadOnlySquare(move.Coordinates.Last());
-                if (square.HasPiece && square.ReadOnlyPiece is King && square.ReadOnlyPiece.Color != piece.Color)
-                {
-                    Coordinate kingPosition = move.Coordinates.Last();
-                    movesTowardsTheKing.Add(piece.Origin);
-                    movesTowardsTheKing.AddRange(move.Coordinates);
-                    movesTowardsTheKing.Remove(kingPosition);
-                    _movesTowardsTheKing.Add(piece, movesTowardsTheKing);
-                    break;
-                }
+                var lastPosition = move.Coordinates.Last();
+                var pieceAtLastPosition = _chessboard.GetReadOnlySquare(lastPosition).ReadOnlyPiece;
+
+                if (pieceAtLastPosition is King && pieceAtLastPosition.Color != piece.Color) { return true; }
             }
 
-            return movesTowardsTheKing;
+            return false;
         }
     }
 }
