@@ -14,7 +14,7 @@ namespace OpenChess.Domain
 
             _chessboard = chessboard;
             _protectedPiecesCalculator = moveCalculator;
-            _checkmateCalculator = new CheckmateCalculator(chessboard);
+            _checkmateCalculator = new KingInCheckMovesCalculator(chessboard);
             _legalMovesCalculator = new LegalMovesCalculator(_chessboard);
         }
 
