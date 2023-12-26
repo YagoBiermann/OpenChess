@@ -17,14 +17,19 @@ namespace OpenChess.Domain
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
-            if (piece is not King) throw new ChessboardException("A king piece should be provided in order to calculate the king moves");
+            if (piece is King king) return CalculateKingMoves(king);
 
-            List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(piece.Color));
+            return new();
+        }
+
+        private List<MoveDirections> CalculateKingMoves(King king)
+        {
+            List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(king.Color));
             List<Coordinate> protectedPiecesPosition = GetPositionOfProtectedPieces(piecesPosition);
             List<Coordinate> enemyMoves = CalculateAllEnemyMoves(piecesPosition).SelectMany(m => m.SelectMany(c => c.Coordinates)).ToList();
             enemyMoves.AddRange(protectedPiecesPosition);
 
-            List<MoveDirections> kingMoves = _legalMoveCalculator.CalculateMoves(piece);
+            List<MoveDirections> kingMoves = _legalMoveCalculator.CalculateMoves(king);
             bool kingMovesHittenByEnemyPiece(MoveDirections p) => enemyMoves.Intersect(p.Coordinates).Any();
             kingMoves.RemoveAll(kingMovesHittenByEnemyPiece);
 
