@@ -14,21 +14,6 @@ namespace OpenChess.Domain
             return new MovesCalculator(_chessboard, strategy).CalculateMoves(piece);
         }
 
-        public List<List<MoveDirections>> CalculateAllMoves(Color player)
-        {
-            List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(player);
-            List<List<MoveDirections>> allLegalMoves = new();
-
-            foreach (Coordinate position in piecesPosition)
-            {
-                IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece ?? throw new ChessboardException("Could not calculate all legal moves because piece was not found");
-                List<MoveDirections> moves = CalculateMoves(piece);
-                allLegalMoves.Add(moves);
-            }
-
-            return allLegalMoves;
-        }
-
         public bool IsLegalMove(Coordinate origin, Coordinate destination)
         {
             IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece ?? throw new ChessboardException("Piece not found!");
