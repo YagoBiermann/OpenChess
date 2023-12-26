@@ -34,7 +34,7 @@ namespace OpenChess.Domain
             return checkState != CheckState.NotInCheck;
         }
 
-        public bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
+        private bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
         {
             List<Coordinate> movesTowardsTheKing = CalculateMoveTowardsTheKing(piece);
             return movesTowardsTheKing.Any();
