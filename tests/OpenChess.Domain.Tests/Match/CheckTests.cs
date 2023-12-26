@@ -89,36 +89,6 @@ namespace OpenChess.Tests
             Assert.AreEqual(CheckState.NotInCheck, checkState);
         }
 
-        [DataRow("4k3/7R/4P3/2K1r3/8/8/8/8 b - - 0 1", "E5")]
-        [DataRow("4k3/7R/4P3/2K1q3/8/8/8/8 b - - 0 1", "E5")]
-        [DataRow("4k3/7R/3KP3/4b3/8/8/8/8 b - - 0 1", "E5")]
-        [DataRow("4k3/7R/4P3/4n3/2K5/8/8/8 b - - 0 1", "E5")]
-        [DataRow("4k3/7R/4P3/4p3/3K4/8/8/8 b - - 0 1", "E5")]
-        [TestMethod]
-        public void IsHittingTheEnemyKing_PieceHittingEnemyKing_ShouldReturnTrue(string fen, string coordinate)
-        {
-            Chessboard chessboard = new(fen);
-            Coordinate origin = Coordinate.GetInstance(coordinate);
-            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
-
-            Assert.IsTrue(new CheckHandler(chessboard).IsHittingTheEnemyKing(piece));
-        }
-
-        [DataRow("4k3/7R/4P3/4p3/4K3/8/8/8 b - - 0 1", "E5")]
-        [DataRow("4k3/7R/4P3/4b3/4K3/8/8/8 b - - 0 1", "E5")]
-        [DataRow("4k3/7R/4P3/4n3/4K3/8/8/8 b - - 0 1", "E5")]
-        [DataRow("4k3/7R/4P3/8/4K3/2q5/8/8 b - - 0 1", "C3")]
-        [DataRow("4k3/7R/4P3/8/4K3/2r5/8/8 b - - 0 1", "C3")]
-        [TestMethod]
-        public void IsHittingTheEnemyKing_PieceNotHittingEnemyKing_ShouldReturnFalse(string fen, string coordinate)
-        {
-            Chessboard chessboard = new(fen);
-            Coordinate origin = Coordinate.GetInstance(coordinate);
-            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
-
-            Assert.IsFalse(new CheckHandler(chessboard).IsHittingTheEnemyKing(piece));
-        }
-
         [DataRow("2N5/k7/8/2Q5/7p/8/8/4K3 b - - 0 1", "A7", "B7", "DoubleCheck")]
         [DataRow("8/k1R5/8/8/3B3p/8/8/4K3 b - - 0 1", "A7", "B8", "DoubleCheck")]
         [DataRow("8/8/kP6/8/8/3BK3/7p/8 b - - 0 1", "A6", "A5", "Check")]
