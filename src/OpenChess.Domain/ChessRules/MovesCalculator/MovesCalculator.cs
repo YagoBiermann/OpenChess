@@ -57,7 +57,7 @@ namespace OpenChess.Domain
             if (_preCalculatedMoves.Any()) return GetMoves(piece);
 
             List<PieceRangeOfAttack> legalMoves = new();
-            List<PieceRangeOfAttack> lineOfSight = piece.CalculateMoveRange();
+            List<PieceRangeOfAttack> lineOfSight = CalculateLineOfSight(piece);
 
             foreach (PieceRangeOfAttack move in lineOfSight)
             {
@@ -88,6 +88,24 @@ namespace OpenChess.Domain
             }
 
             return legalMoves;
+        }
+
+        public List<PieceRangeOfAttack> CalculateLineOfSight(IReadOnlyPiece piece)
+        {
+            List<PieceRangeOfAttack> lineOfSight = new();
+
+            foreach (Direction direction in piece.Directions)
+            {
+                int moveAmount = piece.MoveAmount;
+                if (piece is Pawn pawn && direction.Equals(pawn.ForwardDirection))
+                {
+                    moveAmount = pawn.ForwardMoveAmount;
+                }
+                List<Coordinate> positions = Coordinate.CalculateSequence(piece.Origin, direction, moveAmount);
+                lineOfSight.Add(new(piece, direction, positions, new(), new()));
+            }
+
+            return lineOfSight;
         }
 
         private PieceRangeOfAttack CreateMoveRange(IReadOnlyPiece piece, Direction currentDirection, List<Coordinate>? rangeOfAttack = null, List<Coordinate>? lineOfSight = null, bool isHittingTheEnemyKing = false)

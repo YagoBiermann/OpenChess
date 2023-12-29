@@ -8,5 +8,6 @@ namespace OpenChess.Domain
         public List<PieceRangeOfAttack> CalculateMovesHittingTheEnemyKing(Color player);
         public void CalculateAndCacheAllMoves();
         public List<PieceRangeOfAttack> CalculateMoves(IReadOnlyPiece piece);
+        public List<PieceRangeOfAttack> CalculateLineOfSight(IReadOnlyPiece piece);
     }
 }
