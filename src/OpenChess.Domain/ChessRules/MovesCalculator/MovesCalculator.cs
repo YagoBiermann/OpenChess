@@ -19,6 +19,10 @@ namespace OpenChess.Domain
             return legalMoves.Exists(m => m.RangeOfAttack!.Contains(destination));
         }
 
+        public bool PieceCanSolveTheCheck(IReadOnlyPiece piece)
+        {
+            return CalculateMovesThatSolvesTheCheck(piece).Any();
+        }
         public List<MoveDirections> CalculateMovesThatSolvesTheCheck(IReadOnlyPiece piece)
         {
             if (piece is King king) return CalculateKingMoves(king);
