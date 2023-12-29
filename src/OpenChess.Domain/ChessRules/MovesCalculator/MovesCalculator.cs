@@ -47,12 +47,8 @@ namespace OpenChess.Domain
             foreach (MoveDirections move in fullMoveRange)
             {
                 Direction currentDirection = move.Direction;
-                if (move.FullRange is null)
-                {
-                    MoveDirections pawnMoveRange = CreateMoveRange(piece, currentDirection);
-                    legalMoves.Add(pawnMoveRange);
-                    continue;
-                }
+                if (move.FullRange is null) continue;
+                
                 List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(move.FullRange!);
                 List<Coordinate> rangeOfAttack = RangeOfAttack(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
@@ -79,7 +75,7 @@ namespace OpenChess.Domain
             return legalMoves;
         }
 
-        private MoveDirections CreateMoveRange(IReadOnlyPiece piece, Direction currentDirection, List<Coordinate>? rangeOfAttack = null, List<Coordinate>? fullRange = null)
+        private MoveDirections CreateMoveRange(IReadOnlyPiece piece, Direction currentDirection, List<Coordinate>? rangeOfAttack = null, List<Coordinate>? fullRange = null, bool isHittingTheEnemyKing = false)
         {
             if (fullRange is null) return new(piece, currentDirection);
             if (rangeOfAttack is null) return new(piece, currentDirection, null, fullRange);
@@ -87,7 +83,8 @@ namespace OpenChess.Domain
             IReadOnlyPiece nearestPiece = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece!;
             List<Coordinate> piecesInFullMoveRange = _chessboard.GetPiecesPosition(fullRange);
             List<CoordinateDistances> pieceDistances = CoordinateDistances.CalculateDistance(piece.Origin, piecesInFullMoveRange);
-            MoveDirections moveRange = new(piece, currentDirection, fullRange, rangeOfAttack, pieceDistances, nearestPiece);
+            isHittingTheEnemyKing = nearestPiece is King && nearestPiece.Color != piece.Color;
+            MoveDirections moveRange = new(piece, currentDirection, fullRange, rangeOfAttack, pieceDistances, nearestPiece, isHittingTheEnemyKing);
 
             return moveRange;
         }

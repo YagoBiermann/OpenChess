@@ -8,8 +8,9 @@ namespace OpenChess.Domain
         public List<Coordinate>? RangeOfAttack { get; }
         public IReadOnlyPiece? NearestPiece { get; }
         public List<CoordinateDistances>? PiecesWithDistanceFromOrigin { get; }
+        public bool IsHittingTheEnemyKing { get; }
 
-        public MoveDirections(IReadOnlyPiece piece, Direction direction, List<Coordinate>? fullMoveRange = null, List<Coordinate>? attackingMoveRange = null, List<CoordinateDistances>? allPiecesInMoveRange = null, IReadOnlyPiece? nearestPiece = null)
+        public MoveDirections(IReadOnlyPiece piece, Direction direction, List<Coordinate>? fullMoveRange = null, List<Coordinate>? attackingMoveRange = null, List<CoordinateDistances>? allPiecesInMoveRange = null, IReadOnlyPiece? nearestPiece = null, bool isHittingTheEnemyKing = false)
         {
             Piece = piece;
             Direction = direction;
@@ -17,6 +18,7 @@ namespace OpenChess.Domain
             RangeOfAttack = attackingMoveRange;
             PiecesWithDistanceFromOrigin = allPiecesInMoveRange;
             NearestPiece = nearestPiece;
+            IsHittingTheEnemyKing = isHittingTheEnemyKing;
         }
     }
 }
