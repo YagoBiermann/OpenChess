@@ -124,10 +124,8 @@ namespace OpenChess.Domain
             if (piece is King) throw new ChessboardException("This method cannot handle king moves");
             List<Coordinate> moveTowardsTheKing = CalculateMoveTowardsTheKing(piece);
             List<MoveDirections> legalMoves = GetMoves(piece);
-            bool movesThatNotIntersectsTheEnemyMoves(MoveDirections moves) => moves.RangeOfAttack!.Except(moveTowardsTheKing).Any();
-            legalMoves.RemoveAll(movesThatNotIntersectsTheEnemyMoves);
 
-            return legalMoves;
+            return legalMoves.FindAll(m => m.RangeOfAttack!.Intersect(moveTowardsTheKing).Any());
         }
 
         private List<MoveDirections> CalculateKingMoves(King king)
