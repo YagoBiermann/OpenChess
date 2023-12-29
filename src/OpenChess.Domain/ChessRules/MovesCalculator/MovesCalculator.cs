@@ -109,7 +109,7 @@ namespace OpenChess.Domain
             if (!piecesPosition.Any()) return new(move.FullRange!);
             List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(piece.Origin, piecesPosition);
             CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
-            List<Coordinate> rangeOfAttack = move.FullRange!.Take(nearestPiece.DistanceBetween).ToList();
+            List<Coordinate> rangeOfAttack = move.FullRange!.Take(nearestPiece.DistanceFromOrigin).ToList();
 
             return rangeOfAttack;
         }

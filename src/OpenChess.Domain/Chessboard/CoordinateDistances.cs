@@ -2,11 +2,11 @@ namespace OpenChess.Domain
 {
     internal readonly struct CoordinateDistances
     {
-        public int DistanceBetween { get; }
+        public int DistanceFromOrigin { get; }
         public IReadOnlyPiece Piece { get; }
         public CoordinateDistances(int distanceBetween, IReadOnlyPiece piece)
         {
-            DistanceBetween = distanceBetween;
+            DistanceFromOrigin = distanceBetween;
             Piece = piece;
         }
 
@@ -30,8 +30,8 @@ namespace OpenChess.Domain
 
         public static CoordinateDistances CalculateNearestDistance(List<CoordinateDistances> distances)
         {
-            int minDistance = distances.Min(d => d.DistanceBetween);
-            CoordinateDistances nearestPiece = distances.Find(d => d.DistanceBetween == minDistance);
+            int minDistance = distances.Min(d => d.DistanceFromOrigin);
+            CoordinateDistances nearestPiece = distances.Find(d => d.DistanceFromOrigin == minDistance);
 
             return nearestPiece;
         }
