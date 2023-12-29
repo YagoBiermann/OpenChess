@@ -2,7 +2,7 @@ namespace OpenChess.Domain
 {
     internal class Chessboard : IReadOnlyChessboard
     {
-        private Dictionary<Color, List<Coordinate>> _piecesPositionCache { get; } = new();
+        private Dictionary<Color, List<IReadOnlyPiece>> _piecesCache { get; } = new();
         private List<List<Square>> _board;
         private PromotionHandler _promotionHandler;
         private EnPassantHandler _enPassantHandler;
@@ -42,7 +42,7 @@ namespace OpenChess.Domain
             Piece createdPiece = CreatePiece(piece, position, player);
             Piece? removedPiece = RemovePiece(position);
             GetSquare(position).Piece = createdPiece;
-            _piecesPositionCache.Clear();
+            _piecesCache.Clear();
 
             return removedPiece;
         }
@@ -53,7 +53,7 @@ namespace OpenChess.Domain
             if (!square.HasPiece) return null;
             Piece piece = square.Piece!;
             square.Piece = null;
-            _piecesPositionCache.Clear();
+            _piecesCache.Clear();
 
             return piece;
         }
@@ -95,44 +95,36 @@ namespace OpenChess.Domain
             _enPassantAvailability.SetVulnerablePawn(move.PieceMoved);
             _castlingAvailability.UpdateAvailability(origin, Turn);
             SwitchTurns();
-            _piecesPositionCache.Clear();
+            _piecesCache.Clear();
             MovesCalculator.CalculateAndCacheAllMoves();
 
             return move;
         }
 
-        public List<IReadOnlyPiece> FindPiece(Color player, Type piece)
+        public List<IReadOnlyPiece> GetPieces(List<Coordinate> range)
         {
-            List<IReadOnlyPiece> piecePosition = new();
-
-            List<Coordinate> positions = GetPiecesPosition(player);
-            positions.ForEach(position =>
+            List<IReadOnlyPiece> pieces = new();
+            range.FindAll(c => GetReadOnlySquare(c).HasPiece).ToList().ForEach(c =>
             {
-                IReadOnlyPiece currentPiece = GetSquare(position).ReadOnlyPiece!;
-                if (currentPiece.GetType() == piece) { piecePosition.Add(currentPiece); };
+                pieces.Add(GetReadOnlySquare(c).ReadOnlyPiece!);
             });
 
-            return piecePosition;
+            return pieces;
         }
 
-        public List<Coordinate> GetPiecesPosition(List<Coordinate> range)
+        public List<IReadOnlyPiece> GetPieces(Color player)
         {
-            return range.FindAll(c => GetReadOnlySquare(c).HasPiece).ToList();
-        }
-
-        public List<Coordinate> GetPiecesPosition(Color player)
-        {
-            if (_piecesPositionCache.ContainsKey(player)) { return _piecesPositionCache[player]; }
-            List<Coordinate> piecePosition = new();
+            if (_piecesCache.ContainsKey(player)) { return _piecesCache[player]; }
+            List<IReadOnlyPiece> pieces = new();
 
             _board.ForEach(action: r =>
             {
-                var squares = r.FindAll(c => c.ReadOnlyPiece?.Color == player);
-                squares.ForEach(s => piecePosition.Add(s.Coordinate));
+                var squares = r.FindAll(c => c.HasPiece && c.ReadOnlyPiece?.Color == player);
+                squares.ForEach(s => pieces.Add(s.ReadOnlyPiece!));
             });
-            _piecesPositionCache.Add(player, piecePosition);
+            _piecesCache.Add(player, pieces);
 
-            return piecePosition;
+            return pieces;
         }
 
         public override string ToString()
