@@ -98,24 +98,20 @@ namespace OpenChess.Domain
 
         private bool AnyPieceHittingTheCastlingSquares(List<Coordinate> castlingPositions)
         {
-            IMoveCalculator legalMoves = new LegalMovesCalculator(_chessboard);
             Color enemyPlayer = _chessboard.Opponent;
-            List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(enemyPlayer);
+            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(enemyPlayer);
             bool isHitting = false;
 
-            foreach (Coordinate position in piecePositions)
+            foreach (IReadOnlyPiece piece in pieces)
             {
-                IReadOnlyPiece currentPiece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-                List<MoveDirections> moves;
-                if (currentPiece is Pawn) { moves = currentPiece.CalculateMoveRange(); }
-                else { moves = legalMoves.CalculateMoves(currentPiece); };
-
-                foreach (MoveDirections move in moves)
+                if (piece is Pawn pawn)
                 {
-                    var lastPosition = move.Coordinates.LastOrDefault();
-                    if (lastPosition is null) { isHitting = false; break; }
-                    if (castlingPositions.Contains(lastPosition)) { isHitting = true; break; }
+                    var pawnMoves = _movesCalculator.CalculateMoves(piece).Where(m => m.Direction != pawn.ForwardDirection).SelectMany(p => p.FullRange).ToList();
+                    if (pawnMoves.Intersect(castlingPositions).Any()) isHitting = true; break;
                 }
+
+                var moves = _movesCalculator.CalculateMoves(piece);
+                isHitting = moves.SelectMany(m => m.RangeOfAttack ?? new()).ToList().Intersect(castlingPositions).Any();
 
                 if (isHitting) break;
             }
