@@ -66,22 +66,5 @@ namespace OpenChess.Domain
                 _ => throw new MatchException("The game could not compute the current check state")
             };
         }
-
-        private bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
-        {
-            if (piece is King) return false;
-            List<MoveDirections> moves = _legalMovesCalculator.CalculateMoves(piece);
-
-            foreach (var move in moves)
-            {
-                if (!move.Coordinates.Any()) continue;
-                var lastPosition = move.Coordinates.Last();
-                var pieceAtLastPosition = _chessboard.GetReadOnlySquare(lastPosition).ReadOnlyPiece;
-
-                if (pieceAtLastPosition is King && pieceAtLastPosition.Color != piece.Color) { return true; }
-            }
-
-            return false;
-        }
     }
 }
