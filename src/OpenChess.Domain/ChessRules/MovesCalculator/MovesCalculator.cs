@@ -64,7 +64,7 @@ namespace OpenChess.Domain
                 Direction currentDirection = move.Direction;
                 if (move.FullRange is null) continue;
 
-                List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(move.FullRange!);
+                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.FullRange!);
                 List<Coordinate> rangeOfAttack = RangeOfAttack(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
                 if (piece is not Pawn && lastPositionIsEmpty)
@@ -96,7 +96,7 @@ namespace OpenChess.Domain
             if (rangeOfAttack is null) return new(piece, currentDirection, null, fullRange);
 
             IReadOnlyPiece nearestPiece = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece!;
-            List<Coordinate> piecesInFullMoveRange = _chessboard.GetPiecesPosition(fullRange);
+            List<IReadOnlyPiece> piecesInFullMoveRange = _chessboard.GetPieces(fullRange);
             List<CoordinateDistances> pieceDistances = CoordinateDistances.CalculateDistance(piece.Origin, piecesInFullMoveRange);
             isHittingTheEnemyKing = nearestPiece is King && nearestPiece.Color != piece.Color;
             MoveDirections moveRange = new(piece, currentDirection, fullRange, rangeOfAttack, pieceDistances, nearestPiece, isHittingTheEnemyKing);
@@ -104,7 +104,7 @@ namespace OpenChess.Domain
             return moveRange;
         }
 
-        private static List<Coordinate> RangeOfAttack(IReadOnlyPiece piece, List<Coordinate> piecesPosition, MoveDirections move)
+        private static List<Coordinate> RangeOfAttack(IReadOnlyPiece piece, List<IReadOnlyPiece> piecesPosition, MoveDirections move)
         {
             if (!piecesPosition.Any()) return new(move.FullRange!);
             List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(piece.Origin, piecesPosition);
@@ -114,11 +114,11 @@ namespace OpenChess.Domain
             return rangeOfAttack;
         }
 
-        private bool SpecialPawnRuleApplies(MoveDirections move, Pawn pawn, List<Coordinate> piecesPosition, bool lastPositionIsEmpty)
+        private bool SpecialPawnRuleApplies(MoveDirections move, Pawn pawn, List<IReadOnlyPiece> pieces, bool lastPositionIsEmpty)
         {
             bool isNotEnPassantPosition = !move.FullRange!.Contains(_chessboard.EnPassantAvailability.EnPassantPosition!);
             bool isForwardMove = move.Direction.Equals(pawn.ForwardDirection);
-            bool isEmptyDiagonal = !piecesPosition.Any() && !isForwardMove;
+            bool isEmptyDiagonal = !pieces.Any() && !isForwardMove;
             bool isForwardMoveAndHasPiece = !lastPositionIsEmpty && isForwardMove;
 
             return isForwardMoveAndHasPiece || (isEmptyDiagonal && isNotEnPassantPosition);
@@ -135,8 +135,8 @@ namespace OpenChess.Domain
 
         private List<MoveDirections> CalculateKingMoves(King king)
         {
-            List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(king.Color));
-            List<Coordinate> positionsNotAllowedForTheKing = CalculatePositionsNotAllowedForTheKing(piecesPosition);
+            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(king.Color));
+            List<Coordinate> positionsNotAllowedForTheKing = CalculatePositionsNotAllowedForTheKing(pieces);
 
             List<MoveDirections> kingMoves = GetMoves(king);
             kingMoves.RemoveAll(m => m.RangeOfAttack is null);
@@ -146,12 +146,11 @@ namespace OpenChess.Domain
             return kingMoves;
         }
 
-        private List<Coordinate> CalculatePositionsNotAllowedForTheKing(List<Coordinate> piecesPosition)
+        private List<Coordinate> CalculatePositionsNotAllowedForTheKing(List<IReadOnlyPiece> piecesPosition)
         {
             List<List<MoveDirections>> allMoves = new();
-            foreach (Coordinate position in piecesPosition)
+            foreach (IReadOnlyPiece piece in piecesPosition)
             {
-                IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
                 List<MoveDirections> moves = GetMoves(piece);
                 if (piece is Pawn pawn)
                 {
