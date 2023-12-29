@@ -48,7 +48,7 @@ namespace OpenChess.Domain
             {
                 Direction currentDirection = move.Direction;
                 if (move.FullRange is null) continue;
-                
+
                 List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(move.FullRange!);
                 List<Coordinate> rangeOfAttack = RangeOfAttack(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
@@ -139,35 +139,31 @@ namespace OpenChess.Domain
             foreach (Coordinate position in piecesPosition)
             {
                 IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-                List<MoveDirections> move = CalculatePositionsHittenByEnemyPieces(piece);
-                allMoves.Add(move);
+                List<MoveDirections> moves = GetMoves(piece);
+                if (piece is Pawn pawn)
+                {
+                    moves.RemoveAll(m => m.Direction.Equals(pawn.ForwardDirection));
+                    allMoves.Add(moves);
+                    continue;
+                }
+
+                var movesHittingTheEnemyKing = moves.Where(m => m.IsHittingTheEnemyKing && m.Piece.IsLongRange).ToList();
+                if (!movesHittingTheEnemyKing.Any())
+                {
+                    allMoves.Add(moves);
+                    continue;
+                };
+
+                moves.FindAll(m => m.IsHittingTheEnemyKing && m.Piece.IsLongRange).ForEach(m =>
+                {
+                    Coordinate? positionBehindTheKing = Coordinate.CalculateNextPosition(m.Piece.Origin, m.Direction);
+                    if (positionBehindTheKing is null) return;
+                    m.RangeOfAttack!.Add(positionBehindTheKing);
+                });
             }
             List<Coordinate> positionsNotAllowedToMove = allMoves.SelectMany(m => m.SelectMany(c => c.RangeOfAttack!)).ToList();
 
             return positionsNotAllowedToMove;
-        }
-
-        private List<MoveDirections> CalculatePositionsHittenByEnemyPieces(IReadOnlyPiece piece)
-        {
-            List<MoveDirections> moves = GetMoves(piece);
-            if (piece is Pawn pawn)
-            {
-                moves.RemoveAll(m => m.Direction.Equals(pawn.ForwardDirection));
-                return moves;
-            }
-
-            foreach (MoveDirections move in moves)
-            {
-                if (move.RangeOfAttack is null) continue;
-                if (move.NearestPiece is null) continue;
-                if (!move.IsHittingTheEnemyKing) continue;
-
-                var newMove = new MoveDirections(move.Piece, move.Direction, move.FullRange, move.FullRange);
-                moves.Remove(move);
-                moves.Add(newMove);
-            }
-
-            return moves;
         }
 
         public List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
@@ -180,7 +176,7 @@ namespace OpenChess.Domain
                 if (move.RangeOfAttack is null) continue;
                 if (move.IsHittingTheEnemyKing)
                 {
-                    Coordinate kingPosition = move.NearestPiece.Origin;
+                    Coordinate kingPosition = move.NearestPiece!.Origin;
                     movesTowardsTheKing.Add(piece.Origin);
                     movesTowardsTheKing.AddRange(move.RangeOfAttack);
                     movesTowardsTheKing.Remove(kingPosition);
