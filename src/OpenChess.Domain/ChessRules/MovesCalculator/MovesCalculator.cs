@@ -57,9 +57,9 @@ namespace OpenChess.Domain
             if (_preCalculatedMoves.Any()) return GetMoves(piece);
 
             List<PieceRangeOfAttack> legalMoves = new();
-            List<PieceRangeOfAttack> fullMoveRange = piece.CalculateMoveRange();
+            List<PieceRangeOfAttack> lineOfSight = piece.CalculateMoveRange();
 
-            foreach (PieceRangeOfAttack move in fullMoveRange)
+            foreach (PieceRangeOfAttack move in lineOfSight)
             {
                 Direction currentDirection = move.Direction;
                 if (move.LineOfSight is null) continue;
@@ -90,16 +90,15 @@ namespace OpenChess.Domain
             return legalMoves;
         }
 
-        private PieceRangeOfAttack CreateMoveRange(IReadOnlyPiece piece, Direction currentDirection, List<Coordinate>? rangeOfAttack = null, List<Coordinate>? fullRange = null, bool isHittingTheEnemyKing = false)
+        private PieceRangeOfAttack CreateMoveRange(IReadOnlyPiece piece, Direction currentDirection, List<Coordinate>? rangeOfAttack = null, List<Coordinate>? lineOfSight = null, bool isHittingTheEnemyKing = false)
         {
-            if (fullRange is null) return new(piece, currentDirection);
-            if (rangeOfAttack is null) return new(piece, currentDirection, null, fullRange);
+            if (lineOfSight is null) return new(piece, currentDirection);
+            if (rangeOfAttack is null) return new(piece, currentDirection, null, lineOfSight);
 
             IReadOnlyPiece nearestPiece = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece!;
-            List<IReadOnlyPiece> piecesInFullMoveRange = _chessboard.GetPieces(fullRange);
-            List<PieceDistances> pieceDistances = PieceDistances.CalculateDistance(piece.Origin, piecesInFullMoveRange);
+            List<IReadOnlyPiece> piecesInLineOfSight = _chessboard.GetPieces(lineOfSight);
             isHittingTheEnemyKing = nearestPiece is King && nearestPiece.Color != piece.Color;
-            PieceRangeOfAttack moveRange = new(piece, currentDirection, fullRange, rangeOfAttack, pieceDistances, nearestPiece, isHittingTheEnemyKing);
+            PieceRangeOfAttack moveRange = new(piece, currentDirection, lineOfSight, rangeOfAttack, piecesInLineOfSight, nearestPiece, isHittingTheEnemyKing);
 
             return moveRange;
         }
