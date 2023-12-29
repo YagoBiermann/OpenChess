@@ -106,7 +106,7 @@ namespace OpenChess.Domain
             {
                 if (piece is Pawn pawn)
                 {
-                    var pawnMoves = _movesCalculator.CalculateMoves(piece).Where(m => m.Direction != pawn.ForwardDirection).SelectMany(p => p.FullRange).ToList();
+                    var pawnMoves = _movesCalculator.CalculateMoves(piece).Where(m => m.Direction != pawn.ForwardDirection).SelectMany(p => p.LineOfSight).ToList();
                     if (pawnMoves.Intersect(castlingPositions).Any()) isHitting = true; break;
                 }
 

@@ -62,14 +62,14 @@ namespace OpenChess.Domain
             foreach (PieceRangeOfAttack move in fullMoveRange)
             {
                 Direction currentDirection = move.Direction;
-                if (move.FullRange is null) continue;
+                if (move.LineOfSight is null) continue;
 
-                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.FullRange!);
+                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight!);
                 List<Coordinate> rangeOfAttack = RangeOfAttack(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
                 if (piece is not Pawn && lastPositionIsEmpty)
                 {
-                    PieceRangeOfAttack pawnMoveRange = CreateMoveRange(piece, currentDirection, move.FullRange);
+                    PieceRangeOfAttack pawnMoveRange = CreateMoveRange(piece, currentDirection, move.LineOfSight);
                     legalMoves.Add(pawnMoveRange);
                     continue;
                 }
@@ -77,12 +77,12 @@ namespace OpenChess.Domain
                 if (piece is Pawn pawn && SpecialPawnRuleApplies(move, pawn, piecesPosition, lastPositionIsEmpty))
                 {
                     rangeOfAttack.Remove(rangeOfAttack.Last());
-                    PieceRangeOfAttack pawnMoveRange = CreateMoveRange(piece, currentDirection, move.FullRange, rangeOfAttack);
+                    PieceRangeOfAttack pawnMoveRange = CreateMoveRange(piece, currentDirection, move.LineOfSight, rangeOfAttack);
                     legalMoves.Add(pawnMoveRange);
                     continue;
                 }
 
-                PieceRangeOfAttack moveRange = CreateMoveRange(piece, currentDirection, move.FullRange, rangeOfAttack);
+                PieceRangeOfAttack moveRange = CreateMoveRange(piece, currentDirection, move.LineOfSight, rangeOfAttack);
 
                 legalMoves.Add(moveRange);
             }
@@ -106,17 +106,17 @@ namespace OpenChess.Domain
 
         private static List<Coordinate> RangeOfAttack(IReadOnlyPiece piece, List<IReadOnlyPiece> piecesPosition, PieceRangeOfAttack move)
         {
-            if (!piecesPosition.Any()) return new(move.FullRange!);
+            if (!piecesPosition.Any()) return new(move.LineOfSight!);
             List<PieceDistances> distances = PieceDistances.CalculateDistance(piece.Origin, piecesPosition);
             PieceDistances nearestPiece = PieceDistances.CalculateNearestDistance(distances);
-            List<Coordinate> rangeOfAttack = move.FullRange!.Take(nearestPiece.DistanceFromOrigin).ToList();
+            List<Coordinate> rangeOfAttack = move.LineOfSight!.Take(nearestPiece.DistanceFromOrigin).ToList();
 
             return rangeOfAttack;
         }
 
         private bool SpecialPawnRuleApplies(PieceRangeOfAttack move, Pawn pawn, List<IReadOnlyPiece> pieces, bool lastPositionIsEmpty)
         {
-            bool isNotEnPassantPosition = !move.FullRange!.Contains(_chessboard.EnPassantAvailability.EnPassantPosition!);
+            bool isNotEnPassantPosition = !move.LineOfSight!.Contains(_chessboard.EnPassantAvailability.EnPassantPosition!);
             bool isForwardMove = move.Direction.Equals(pawn.ForwardDirection);
             bool isEmptyDiagonal = !pieces.Any() && !isForwardMove;
             bool isForwardMoveAndHasPiece = !lastPositionIsEmpty && isForwardMove;
@@ -174,7 +174,7 @@ namespace OpenChess.Domain
                 });
             }
             List<Coordinate> positionsNotAllowedToMove = new();
-            List<Coordinate> pawnDiagonalPositions = allMoves.SelectMany(m => m.FindAll(p => p.Piece is Pawn).SelectMany(m => m.FullRange!)).ToList();
+            List<Coordinate> pawnDiagonalPositions = allMoves.SelectMany(m => m.FindAll(p => p.Piece is Pawn).SelectMany(m => m.LineOfSight!)).ToList();
             List<Coordinate> rangeOfAttackOfPiecesExceptPawn = allMoves.SelectMany(m => m.FindAll(p => p.Piece is not Pawn).SelectMany(p => p.RangeOfAttack!)).ToList();
             positionsNotAllowedToMove.AddRange(pawnDiagonalPositions);
             positionsNotAllowedToMove.AddRange(rangeOfAttackOfPiecesExceptPawn);

@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         public IReadOnlyPiece Piece { get; }
         public Direction Direction { get; }
-        public List<Coordinate>? FullRange { get; }
+        public List<Coordinate>? LineOfSight { get; }
         public List<Coordinate>? RangeOfAttack { get; }
         public IReadOnlyPiece? NearestPiece { get; }
         public List<PieceDistances>? PiecesWithDistanceFromOrigin { get; }
@@ -14,7 +14,7 @@ namespace OpenChess.Domain
         {
             Piece = piece;
             Direction = direction;
-            FullRange = fullMoveRange;
+            LineOfSight = fullMoveRange;
             RangeOfAttack = attackingMoveRange;
             PiecesWithDistanceFromOrigin = allPiecesInMoveRange;
             NearestPiece = nearestPiece;
