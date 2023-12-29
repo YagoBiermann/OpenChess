@@ -174,23 +174,18 @@ namespace OpenChess.Domain
             return positionsNotAllowedToMove;
         }
 
-        public List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
+        private List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
         {
             List<MoveDirections> moves = GetMoves(piece);
             List<Coordinate> movesTowardsTheKing = new();
 
-            foreach (MoveDirections move in moves)
+            moves.FindAll(m => m.RangeOfAttack is not null && m.IsHittingTheEnemyKing).ForEach(m =>
             {
-                if (move.RangeOfAttack is null) continue;
-                if (move.IsHittingTheEnemyKing)
-                {
-                    Coordinate kingPosition = move.NearestPiece!.Origin;
-                    movesTowardsTheKing.Add(piece.Origin);
-                    movesTowardsTheKing.AddRange(move.RangeOfAttack);
-                    movesTowardsTheKing.Remove(kingPosition);
-                    break;
-                }
-            }
+                Coordinate kingPosition = m.NearestPiece!.Origin;
+                movesTowardsTheKing.Add(piece.Origin);
+                movesTowardsTheKing.AddRange(m.RangeOfAttack!);
+                movesTowardsTheKing.Remove(kingPosition);
+            });
 
             return movesTowardsTheKing;
         }
