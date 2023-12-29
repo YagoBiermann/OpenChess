@@ -97,7 +97,7 @@ namespace OpenChess.Domain
 
             IReadOnlyPiece nearestPiece = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece!;
             List<IReadOnlyPiece> piecesInFullMoveRange = _chessboard.GetPieces(fullRange);
-            List<CoordinateDistances> pieceDistances = CoordinateDistances.CalculateDistance(piece.Origin, piecesInFullMoveRange);
+            List<PieceDistances> pieceDistances = PieceDistances.CalculateDistance(piece.Origin, piecesInFullMoveRange);
             isHittingTheEnemyKing = nearestPiece is King && nearestPiece.Color != piece.Color;
             MoveDirections moveRange = new(piece, currentDirection, fullRange, rangeOfAttack, pieceDistances, nearestPiece, isHittingTheEnemyKing);
 
@@ -107,8 +107,8 @@ namespace OpenChess.Domain
         private static List<Coordinate> RangeOfAttack(IReadOnlyPiece piece, List<IReadOnlyPiece> piecesPosition, MoveDirections move)
         {
             if (!piecesPosition.Any()) return new(move.FullRange!);
-            List<CoordinateDistances> distances = CoordinateDistances.CalculateDistance(piece.Origin, piecesPosition);
-            CoordinateDistances nearestPiece = CoordinateDistances.CalculateNearestDistance(distances);
+            List<PieceDistances> distances = PieceDistances.CalculateDistance(piece.Origin, piecesPosition);
+            PieceDistances nearestPiece = PieceDistances.CalculateNearestDistance(distances);
             List<Coordinate> rangeOfAttack = move.FullRange!.Take(nearestPiece.DistanceFromOrigin).ToList();
 
             return rangeOfAttack;

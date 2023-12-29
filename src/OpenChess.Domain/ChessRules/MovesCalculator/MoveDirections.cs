@@ -7,10 +7,10 @@ namespace OpenChess.Domain
         public List<Coordinate>? FullRange { get; }
         public List<Coordinate>? RangeOfAttack { get; }
         public IReadOnlyPiece? NearestPiece { get; }
-        public List<CoordinateDistances>? PiecesWithDistanceFromOrigin { get; }
+        public List<PieceDistances>? PiecesWithDistanceFromOrigin { get; }
         public bool IsHittingTheEnemyKing { get; }
 
-        public MoveDirections(IReadOnlyPiece piece, Direction direction, List<Coordinate>? fullMoveRange = null, List<Coordinate>? attackingMoveRange = null, List<CoordinateDistances>? allPiecesInMoveRange = null, IReadOnlyPiece? nearestPiece = null, bool isHittingTheEnemyKing = false)
+        public MoveDirections(IReadOnlyPiece piece, Direction direction, List<Coordinate>? fullMoveRange = null, List<Coordinate>? attackingMoveRange = null, List<PieceDistances>? allPiecesInMoveRange = null, IReadOnlyPiece? nearestPiece = null, bool isHittingTheEnemyKing = false)
         {
             Piece = piece;
             Direction = direction;

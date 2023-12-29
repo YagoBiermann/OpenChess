@@ -1,10 +1,10 @@
 namespace OpenChess.Domain
 {
-    internal readonly struct CoordinateDistances
+    internal readonly struct PieceDistances
     {
         public int DistanceFromOrigin { get; }
         public IReadOnlyPiece Piece { get; }
-        public CoordinateDistances(int distanceBetween, IReadOnlyPiece piece)
+        public PieceDistances(int distanceBetween, IReadOnlyPiece piece)
         {
             DistanceFromOrigin = distanceBetween;
             Piece = piece;
@@ -17,9 +17,9 @@ namespace OpenChess.Domain
             return Math.Max(rowDifference, colDifference);
         }
 
-        public static List<CoordinateDistances> CalculateDistance(Coordinate origin, List<IReadOnlyPiece> pieces)
+        public static List<PieceDistances> CalculateDistance(Coordinate origin, List<IReadOnlyPiece> pieces)
         {
-            List<CoordinateDistances> distances = new();
+            List<PieceDistances> distances = new();
             foreach (IReadOnlyPiece piece in pieces)
             {
                 int distance = CalculateDistance(origin, piece.Origin);
@@ -28,10 +28,10 @@ namespace OpenChess.Domain
             return distances;
         }
 
-        public static CoordinateDistances CalculateNearestDistance(List<CoordinateDistances> distances)
+        public static PieceDistances CalculateNearestDistance(List<PieceDistances> distances)
         {
             int minDistance = distances.Min(d => d.DistanceFromOrigin);
-            CoordinateDistances nearestPiece = distances.Find(d => d.DistanceFromOrigin == minDistance);
+            PieceDistances nearestPiece = distances.Find(d => d.DistanceFromOrigin == minDistance);
 
             return nearestPiece;
         }
