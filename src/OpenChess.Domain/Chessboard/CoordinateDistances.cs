@@ -2,14 +2,12 @@ namespace OpenChess.Domain
 {
     internal readonly struct CoordinateDistances
     {
-        public Coordinate Origin { get; }
         public int DistanceBetween { get; }
-        public Coordinate Position { get; }
-        public CoordinateDistances(int distanceBetween, Coordinate origin, Coordinate position)
+        public IReadOnlyPiece Piece { get; }
+        public CoordinateDistances(int distanceBetween, IReadOnlyPiece piece)
         {
-            Origin = origin;
             DistanceBetween = distanceBetween;
-            Position = position;
+            Piece = piece;
         }
 
         public static int CalculateDistance(Coordinate origin, Coordinate position)
