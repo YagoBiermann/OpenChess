@@ -4,53 +4,52 @@ namespace OpenChess.Domain
     internal class MovesCalculator : IMoveCalculator
     {
         private IReadOnlyChessboard _chessboard;
-        private IMoveCalculatorStrategy _strategy;
-        public MovesCalculator(IReadOnlyChessboard chessboard, IMoveCalculatorStrategy? strategy = null)
+
+        public MovesCalculator(IReadOnlyChessboard chessboard)
         {
             _chessboard = chessboard;
-            if (strategy is null) { _strategy = new IncludeAllPiecesStrategy(); }
-            _strategy = strategy!;
+        }
+
         }
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
             List<MoveDirections> legalMoves = new();
-            List<MoveDirections> moveRange = piece.CalculateMoveRange();
+            List<MoveDirections> fullMoveRange = piece.CalculateMoveRange();
 
-            foreach (MoveDirections move in moveRange)
+            foreach (MoveDirections move in fullMoveRange)
             {
                 Direction currentDirection = move.Direction;
                 List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(move.Coordinates);
-                if (!move.Coordinates.Any()) { legalMoves.Add(new(move.Direction, new(), piece)); continue; }
+                if (move.FullRange is null)
+                {
+                    legalMoves.Add(pawnMoveRange);
+                    continue;
+                }
                 List<Coordinate> rangeOfAttack = RangeOfAttack(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
-                if (piece is not Pawn && lastPositionIsEmpty) { legalMoves.Add(new(move.Direction, rangeOfAttack, piece)); continue; }
+                if (piece is not Pawn && lastPositionIsEmpty)
+                {
+                    legalMoves.Add(pawnMoveRange);
+                    continue;
+                }
 
                 if (piece is Pawn pawn && SpecialPawnRuleApplies(move, pawn, piecesPosition, lastPositionIsEmpty))
                 {
                     rangeOfAttack.Remove(rangeOfAttack.Last());
-                    legalMoves.Add(new(currentDirection, rangeOfAttack, piece));
+                    legalMoves.Add(pawnMoveRange);
                     continue;
                 }
-                List<Coordinate> newRangeOfAttack = IncludeOrRemovePieceAtLastPosition(rangeOfAttack, piece);
-                legalMoves.Add(new(currentDirection, newRangeOfAttack, piece));
+
+
+                legalMoves.Add(moveRange);
             }
 
             return legalMoves;
         }
 
-        private List<Coordinate> IncludeOrRemovePieceAtLastPosition(List<Coordinate> rangeOfAttack, IReadOnlyPiece piece)
         {
-            List<Coordinate> newRangeOfAttack = new(rangeOfAttack);
-            IReadOnlyPiece? pieceAtLastPosition = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece;
-            if (pieceAtLastPosition is null) return newRangeOfAttack;
-            bool shouldIncludePiece = _strategy.ShouldIncludePiece(piece.Color, pieceAtLastPosition);
-            if (!shouldIncludePiece)
-            {
-                newRangeOfAttack.Remove(newRangeOfAttack.Last());
-            }
 
-            return newRangeOfAttack;
         }
 
         private static List<Coordinate> RangeOfAttack(IReadOnlyPiece piece, List<Coordinate> piecesPosition, MoveDirections move)
