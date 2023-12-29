@@ -9,7 +9,7 @@ namespace OpenChess.Domain
         public MovesCalculator(IReadOnlyChessboard chessboard)
         {
             _chessboard = chessboard;
-            CalculateAllMoves();
+            CalculateAndCacheAllMoves();
         }
 
         public bool CanMoveToPosition(IReadOnlyPiece piece, Coordinate destination)
@@ -35,7 +35,7 @@ namespace OpenChess.Domain
             return CalculateIntersectionWithEnemyMovesHittingTheKing(piece);
         }
 
-        public void CalculateAllMoves()
+        public void CalculateAndCacheAllMoves()
         {
             _preCalculatedMoves.Clear();
             List<IReadOnlyPiece> pieces = _chessboard.GetAllPieces();
