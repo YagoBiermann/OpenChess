@@ -3,13 +3,11 @@ namespace OpenChess.Domain
     internal class CheckHandler
     {
         private IReadOnlyChessboard _chessboard;
-        private IMoveCalculator _playerInCheckMovesCalculator;
-        private LegalMovesCalculator _legalMovesCalculator;
-        public CheckHandler(IReadOnlyChessboard chessboard)
+        private IMoveCalculator _movesCalculator;
+        public CheckHandler(IReadOnlyChessboard chessboard, IMoveCalculator movesCalculator)
         {
             _chessboard = chessboard;
-            _playerInCheckMovesCalculator = new PlayerInCheckMovesCalculator(chessboard);
-            _legalMovesCalculator = new LegalMovesCalculator(_chessboard);
+            _movesCalculator = movesCalculator;
         }
 
         public bool IsInCheckmate(Color player, out CheckState checkState)
@@ -30,38 +28,30 @@ namespace OpenChess.Domain
 
         private bool CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(Color player)
         {
-            List<Coordinate> piecesPosition = _chessboard.GetPiecesPosition(player);
-            List<MoveDirections> moves = new();
-            foreach (Coordinate position in piecesPosition)
+            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(player);
+            foreach (IReadOnlyPiece piece in pieces)
             {
-                IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
                 if (piece is King) continue;
-                moves.AddRange(_playerInCheckMovesCalculator.CalculateMoves(piece));
+                if (_movesCalculator.PieceCanSolveTheCheck(piece)) return true;
             }
-            bool canBeSolved = moves.Any();
 
-            return canBeSolved;
+            return false;
         }
 
         private bool CanSolveCheckByMovingTheKing(Color player)
         {
-            IReadOnlyPiece king = _chessboard.FindPiece(player, typeof(King)).First();
-            List<MoveDirections> kingMoves = _playerInCheckMovesCalculator.CalculateMoves(king);
-            bool canBeSolved = kingMoves.SelectMany(m => m.Coordinates).ToList().Any();
+            IReadOnlyPiece king = _chessboard.GetPieces(player).Find(p => p is King)!;
+            bool canBeSolved = _movesCalculator.PieceCanSolveTheCheck(king);
 
             return canBeSolved;
         }
 
         private int CalculateCheckAmount(Color player)
         {
-            List<Coordinate> piecePositions = _chessboard.GetPiecesPosition(ColorUtils.GetOppositeColor(player));
+            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(player));
             int checkAmount = 0;
 
-            foreach (Coordinate position in piecePositions)
-            {
-                IReadOnlyPiece piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-                if (IsHittingTheEnemyKing(piece)) { checkAmount++; };
-            }
+            foreach (IReadOnlyPiece piece in pieces) { if (_movesCalculator.IsHittingTheEnemyKing(piece)) { checkAmount++; }; }
 
             return checkAmount;
         }
