@@ -14,7 +14,7 @@ namespace OpenChess.Domain
 
         public bool CanMoveToPosition(IReadOnlyPiece piece, Coordinate destination)
         {
-            List<MoveDirections> legalMoves = CalculateMoves(piece);
+            List<MoveDirections> legalMoves = GetMoves(piece).Where(m => m.NearestPiece?.Color != piece.Color).ToList();
 
             return legalMoves.Exists(m => m.RangeOfAttack!.Contains(destination));
         }
