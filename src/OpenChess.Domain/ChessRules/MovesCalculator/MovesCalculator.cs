@@ -12,8 +12,12 @@ namespace OpenChess.Domain
             CalculateAllMoves();
         }
 
+        public bool CanMoveToPosition(IReadOnlyPiece piece, Coordinate destination)
         {
+            List<MoveDirections> legalMoves = CalculateMoves(piece);
 
+            return legalMoves.Exists(m => m.RangeOfAttack!.Contains(destination));
+        }
 
         public void CalculateAllMoves()
         {
