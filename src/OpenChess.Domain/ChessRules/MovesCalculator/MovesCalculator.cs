@@ -69,6 +69,12 @@ namespace OpenChess.Domain
             return legalMoves;
         }
 
+        private List<MoveDirections> GetPreCalculatedMoves(IReadOnlyPiece piece)
+        {
+            var moves = _preCalculatedMoves.Where(p => p.Equals(piece)).ToList();
+            return moves;
+        }
+
         private MoveDirections CreateMoveRange(IReadOnlyPiece piece, Direction currentDirection, List<Coordinate>? rangeOfAttack = null, List<Coordinate>? fullRange = null)
         {
             if (fullRange is null) return new(piece, currentDirection);
