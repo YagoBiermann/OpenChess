@@ -12,6 +12,7 @@ namespace OpenChess.Domain
         public ICastlingAvailability CastlingAvailability { get => _castlingAvailability; private set { _castlingAvailability = (CastlingAvailability)value; } }
         private EnPassantAvailability _enPassantAvailability;
         public IEnPassantAvailability EnPassantAvailability { get => _enPassantAvailability; private set { _enPassantAvailability = (EnPassantAvailability)value; } }
+        public IMoveCalculator MovesCalculator { get; }
         public Color Turn { get; private set; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
@@ -34,6 +35,7 @@ namespace OpenChess.Domain
             _promotionHandler = new(this);
             _castlingHandler = new(this);
             _moveHandler = SetupMoveHandlerChain();
+            MovesCalculator = new MovesCalculator(this);
         }
         public Piece? AddPiece(Coordinate position, char piece, Color player)
         {
