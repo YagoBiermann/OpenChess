@@ -41,7 +41,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4R3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
             Rook rook = (Rook)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
-            List<MoveDirections> expectedMoves = new()
+            List<PieceRangeOfAttack> expectedMoves = new()
             {
                 ExpectedMoves.GetMove(rook.Origin, new Up(), rook.MoveAmount, rook),
                 ExpectedMoves.GetMove(rook.Origin, new Down(), rook.MoveAmount, rook),
@@ -49,10 +49,10 @@ namespace OpenChess.Tests
                 ExpectedMoves.GetMove(rook.Origin, new Right(), rook.MoveAmount, rook)
             };
 
-            List<MoveDirections> moves = rook.CalculateMoveRange();
+            List<PieceRangeOfAttack> moves = rook.CalculateMoveRange();
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (MoveDirections move in moves)
+            foreach (PieceRangeOfAttack move in moves)
             {
                 int index = moves.IndexOf(move);
                 CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
@@ -74,7 +74,7 @@ namespace OpenChess.Tests
             };
 
             IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
+            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, leftMoves);
@@ -91,7 +91,7 @@ namespace OpenChess.Tests
             };
 
             IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
+            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, rightMoves);
@@ -110,7 +110,7 @@ namespace OpenChess.Tests
             };
 
             IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateMoves(rook);
+            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(rook);
             List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
 
             CollectionAssert.AreEqual(expectedMove, rightMoves);

@@ -45,7 +45,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("r1bqk1nr/pppp2p1/5p1p/1B2P1N1/4K1Q1/8/PPP2PPP/RN5R b KQkq - 0 1");
             King king = (King)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
-            List<MoveDirections> expectedMoves = new()
+            List<PieceRangeOfAttack> expectedMoves = new()
             {
                 ExpectedMoves.GetMove(king.Origin, new Up(), king.MoveAmount, king),
                 ExpectedMoves.GetMove(king.Origin, new Down(), king.MoveAmount, king),
@@ -57,10 +57,10 @@ namespace OpenChess.Tests
                 ExpectedMoves.GetMove(king.Origin, new LowerRight(), king.MoveAmount, king),
             };
 
-            List<MoveDirections> moves = king.CalculateMoveRange();
+            List<PieceRangeOfAttack> moves = king.CalculateMoveRange();
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (MoveDirections move in moves)
+            foreach (PieceRangeOfAttack move in moves)
             {
                 int index = moves.IndexOf(move);
                 CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
@@ -100,7 +100,7 @@ namespace OpenChess.Tests
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
             IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateMoves(king);
+            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(king);
             List<Coordinate> up = moves.Find(m => m.Direction.Equals(new Up())).Coordinates;
             List<Coordinate> left = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
             List<Coordinate> right = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;

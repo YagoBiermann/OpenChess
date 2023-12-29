@@ -18,14 +18,14 @@ namespace OpenChess.Domain
             get { return IsLongRange ? 8 : 1; }
         }
 
-        public virtual List<MoveDirections> CalculateMoveRange()
+        public virtual List<PieceRangeOfAttack> CalculateMoveRange()
         {
-            List<MoveDirections> moveRange = new();
+            List<PieceRangeOfAttack> moveRange = new();
 
             foreach (Direction direction in Directions)
             {
                 List<Coordinate> coordinates = Coordinate.CalculateSequence(Origin, direction, MoveAmount);
-                MoveDirections move = new(this, direction, coordinates);
+                PieceRangeOfAttack move = new(this, direction, coordinates);
                 moveRange.Add(move);
             }
 

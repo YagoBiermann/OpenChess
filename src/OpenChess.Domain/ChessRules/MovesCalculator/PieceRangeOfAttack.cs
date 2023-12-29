@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal readonly record struct MoveDirections
+    internal readonly record struct PieceRangeOfAttack
     {
         public IReadOnlyPiece Piece { get; }
         public Direction Direction { get; }
@@ -10,7 +10,7 @@ namespace OpenChess.Domain
         public List<PieceDistances>? PiecesWithDistanceFromOrigin { get; }
         public bool IsHittingTheEnemyKing { get; }
 
-        public MoveDirections(IReadOnlyPiece piece, Direction direction, List<Coordinate>? fullMoveRange = null, List<Coordinate>? attackingMoveRange = null, List<PieceDistances>? allPiecesInMoveRange = null, IReadOnlyPiece? nearestPiece = null, bool isHittingTheEnemyKing = false)
+        public PieceRangeOfAttack(IReadOnlyPiece piece, Direction direction, List<Coordinate>? fullMoveRange = null, List<Coordinate>? attackingMoveRange = null, List<PieceDistances>? allPiecesInMoveRange = null, IReadOnlyPiece? nearestPiece = null, bool isHittingTheEnemyKing = false)
         {
             Piece = piece;
             Direction = direction;

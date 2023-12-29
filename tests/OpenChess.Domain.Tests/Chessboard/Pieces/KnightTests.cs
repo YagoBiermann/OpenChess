@@ -46,7 +46,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4N3/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
             Knight knight = (Knight)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
-            List<MoveDirections> expectedMoves = new()
+            List<PieceRangeOfAttack> expectedMoves = new()
             {
                 ExpectedMoves.GetMove(knight.Origin, new Direction(1,2), knight.MoveAmount, knight),
                 ExpectedMoves.GetMove(knight.Origin, new Direction(-1,2), knight.MoveAmount, knight),
@@ -58,10 +58,10 @@ namespace OpenChess.Tests
                 ExpectedMoves.GetMove(knight.Origin, new Direction(-2,1), knight.MoveAmount, knight),
             };
 
-            List<MoveDirections> moves = knight.CalculateMoveRange();
+            List<PieceRangeOfAttack> moves = knight.CalculateMoveRange();
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (MoveDirections move in moves)
+            foreach (PieceRangeOfAttack move in moves)
             {
                 int index = moves.IndexOf(move);
                 CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
@@ -75,7 +75,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
             Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateMoves(knight);
+            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(knight);
 
             List<Coordinate> upperLeftMoves = moves.Find(m => m.Direction.Equals(new Direction(-1, 2))).Coordinates;
             List<Coordinate> upperLeftMoves2 = moves.Find(m => m.Direction.Equals(new Direction(-2, 1))).Coordinates;
@@ -93,7 +93,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
             Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateMoves(knight);
+            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(knight);
             List<Coordinate> lowerRightMove = moves.Find(m => m.Direction.Equals(new Direction(1, -2))).Coordinates;
 
             Assert.IsFalse(lowerRightMove.Any());
@@ -105,7 +105,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
             Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<MoveDirections> moves = legalMoves.CalculateMoves(knight);
+            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(knight);
             List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new Direction(-1, -2))).Coordinates;
             List<Coordinate> expectedLowerLeftMove = new() { Coordinate.GetInstance("F2") };
 

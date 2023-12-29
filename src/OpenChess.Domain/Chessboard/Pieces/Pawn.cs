@@ -36,9 +36,9 @@ namespace OpenChess.Domain
 
         public override bool IsLongRange => false;
 
-        public override List<MoveDirections> CalculateMoveRange()
+        public override List<PieceRangeOfAttack> CalculateMoveRange()
         {
-            List<MoveDirections> moves = new();
+            List<PieceRangeOfAttack> moves = new();
 
             foreach (Direction direction in Directions)
             {

@@ -8,6 +8,6 @@ namespace OpenChess.Domain
         public List<Direction> Directions { get; }
         public bool IsLongRange { get; }
         public int MoveAmount { get; }
-        public List<MoveDirections> CalculateMoveRange();
+        public List<PieceRangeOfAttack> CalculateMoveRange();
     }
 }
