@@ -28,14 +28,14 @@ namespace OpenChess.Domain
             _castlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
             Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
             _enPassantAvailability = new(enPassantPosition);
-            _enPassantHandler = new(this);
             HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
-            _promotionHandler = new(this);
-            _castlingHandler = new(this);
-            _moveHandler = SetupMoveHandlerChain();
             MovesCalculator = new MovesCalculator(this);
+            _enPassantHandler = new(this, MovesCalculator);
+            _promotionHandler = new(this, MovesCalculator);
+            _castlingHandler = new(this, MovesCalculator);
+            _moveHandler = SetupMoveHandlerChain();
         }
         public Piece? AddPiece(Coordinate position, char piece, Color player)
         {
@@ -164,7 +164,7 @@ namespace OpenChess.Domain
         {
             _promotionHandler.SetNext(_enPassantHandler);
             _enPassantHandler.SetNext(_castlingHandler);
-            _castlingHandler.SetNext(new DefaultMoveHandler(this));
+            _castlingHandler.SetNext(new DefaultMoveHandler(this, MovesCalculator));
             return _promotionHandler;
         }
 
