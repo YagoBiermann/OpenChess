@@ -17,13 +17,13 @@ namespace OpenChess.Domain
             return Math.Max(rowDifference, colDifference);
         }
 
-        public static List<CoordinateDistances> CalculateDistance(Coordinate origin, List<Coordinate> positions)
+        public static List<CoordinateDistances> CalculateDistance(Coordinate origin, List<IReadOnlyPiece> pieces)
         {
             List<CoordinateDistances> distances = new();
-            foreach (Coordinate position in positions)
+            foreach (IReadOnlyPiece piece in pieces)
             {
-                int distance = CalculateDistance(origin, position);
-                distances.Add(new(distance, origin, position));
+                int distance = CalculateDistance(origin, piece.Origin);
+                distances.Add(new(distance, piece));
             }
             return distances;
         }
