@@ -187,7 +187,7 @@ namespace OpenChess.Domain
             return movesTowardsTheKing;
         }
 
-        public List<MoveDirections> GetMoves(IReadOnlyPiece piece)
+        private List<MoveDirections> GetMoves(IReadOnlyPiece piece)
         {
             return _preCalculatedMoves.Where(m => m.Piece == piece).ToList();
         }
