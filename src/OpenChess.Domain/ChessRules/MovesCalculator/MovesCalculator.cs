@@ -113,13 +113,13 @@ namespace OpenChess.Domain
         }
 
 
-        public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
+        public List<MoveDirections> CalculateInCheckMoves(IReadOnlyPiece piece)
         {
             if (piece is King king) return CalculateKingMoves(king);
-            return CalculatePieceMoves(piece);
+            return CalculateIntersectionWithEnemyMovesTowardsTheKing(piece);
         }
 
-        private List<MoveDirections> CalculatePieceMoves(IReadOnlyPiece piece)
+        private List<MoveDirections> CalculateIntersectionWithEnemyMovesTowardsTheKing(IReadOnlyPiece piece)
         {
             if (piece is King) throw new ChessboardException("This method cannot handle king moves");
             List<Coordinate> enemyMoves = CalculateMoveTowardsTheKing(piece);
