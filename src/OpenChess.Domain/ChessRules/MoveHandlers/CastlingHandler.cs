@@ -111,7 +111,7 @@ namespace OpenChess.Domain
                 }
 
                 var moves = _movesCalculator.CalculateMoves(piece);
-                isHitting = moves.SelectMany(m => m.RangeOfAttack ?? new()).ToList().Intersect(castlingPositions).Any();
+                isHitting = moves.SelectMany(m => m.RangeOfAttack).ToList().Intersect(castlingPositions).Any();
 
                 if (isHitting) break;
             }

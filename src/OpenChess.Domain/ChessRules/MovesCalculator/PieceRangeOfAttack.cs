@@ -4,13 +4,13 @@ namespace OpenChess.Domain
     {
         public IReadOnlyPiece Piece { get; }
         public Direction Direction { get; }
-        public List<Coordinate>? LineOfSight { get; }
-        public List<Coordinate>? RangeOfAttack { get; }
+        public List<Coordinate> LineOfSight { get; }
+        public List<Coordinate> RangeOfAttack { get; }
         public IReadOnlyPiece? NearestPiece { get; }
-        public List<IReadOnlyPiece>? AllPiecesInLineOfSight { get; }
+        public List<IReadOnlyPiece> AllPiecesInLineOfSight { get; }
         public bool IsHittingTheEnemyKing { get; }
 
-        public PieceRangeOfAttack(IReadOnlyPiece piece, Direction direction, List<Coordinate>? lineOfSight = null, List<Coordinate>? rangeOfAttack = null, List<IReadOnlyPiece>? allPiecesInLineOfSight = null, IReadOnlyPiece? nearestPiece = null, bool isHittingTheEnemyKing = false)
+        public PieceRangeOfAttack(IReadOnlyPiece piece, Direction direction, List<Coordinate> lineOfSight, List<Coordinate> rangeOfAttack, List<IReadOnlyPiece> allPiecesInLineOfSight, IReadOnlyPiece? nearestPiece = null, bool isHittingTheEnemyKing = false)
         {
             Piece = piece;
             Direction = direction;

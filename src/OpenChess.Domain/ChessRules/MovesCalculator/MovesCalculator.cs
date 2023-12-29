@@ -16,7 +16,7 @@ namespace OpenChess.Domain
         {
             List<PieceRangeOfAttack> legalMoves = GetMoves(piece).Where(m => m.NearestPiece?.Color != piece.Color || m.NearestPiece is null).ToList();
 
-            return legalMoves.Exists(m => m.RangeOfAttack!.Contains(destination));
+            return legalMoves.Exists(m => m.RangeOfAttack.Contains(destination));
         }
 
         public bool PieceCanSolveTheCheck(IReadOnlyPiece piece)
@@ -62,9 +62,9 @@ namespace OpenChess.Domain
             foreach (PieceRangeOfAttack move in lineOfSight)
             {
                 Direction currentDirection = move.Direction;
-                if (move.LineOfSight is null) continue;
+                if (!move.LineOfSight.Any()) continue;
 
-                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight!);
+                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight);
                 List<Coordinate> rangeOfAttack = RangeOfAttack(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
                 if (piece is not Pawn && lastPositionIsEmpty)
@@ -92,8 +92,8 @@ namespace OpenChess.Domain
 
         private PieceRangeOfAttack CreateMoveRange(IReadOnlyPiece piece, Direction currentDirection, List<Coordinate>? rangeOfAttack = null, List<Coordinate>? lineOfSight = null, bool isHittingTheEnemyKing = false)
         {
-            if (lineOfSight is null) return new(piece, currentDirection);
-            if (rangeOfAttack is null) return new(piece, currentDirection, null, lineOfSight);
+            if (lineOfSight is null) return new(piece, currentDirection, new(), new(), new());
+            if (rangeOfAttack is null) return new(piece, currentDirection, lineOfSight, new(), new());
 
             IReadOnlyPiece nearestPiece = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece!;
             List<IReadOnlyPiece> piecesInLineOfSight = _chessboard.GetPieces(lineOfSight);
@@ -105,17 +105,17 @@ namespace OpenChess.Domain
 
         private static List<Coordinate> RangeOfAttack(IReadOnlyPiece piece, List<IReadOnlyPiece> piecesPosition, PieceRangeOfAttack move)
         {
-            if (!piecesPosition.Any()) return new(move.LineOfSight!);
+            if (!piecesPosition.Any()) return new(move.LineOfSight);
             List<PieceDistances> distances = PieceDistances.CalculateDistance(piece.Origin, piecesPosition);
             PieceDistances nearestPiece = PieceDistances.CalculateNearestDistance(distances);
-            List<Coordinate> rangeOfAttack = move.LineOfSight!.Take(nearestPiece.DistanceFromOrigin).ToList();
+            List<Coordinate> rangeOfAttack = move.LineOfSight.Take(nearestPiece.DistanceFromOrigin).ToList();
 
             return rangeOfAttack;
         }
 
         private bool SpecialPawnRuleApplies(PieceRangeOfAttack move, Pawn pawn, List<IReadOnlyPiece> pieces, bool lastPositionIsEmpty)
         {
-            bool isNotEnPassantPosition = !move.LineOfSight!.Contains(_chessboard.EnPassantAvailability.EnPassantPosition!);
+            bool isNotEnPassantPosition = !move.LineOfSight.Contains(_chessboard.EnPassantAvailability.EnPassantPosition!);
             bool isForwardMove = move.Direction.Equals(pawn.ForwardDirection);
             bool isEmptyDiagonal = !pieces.Any() && !isForwardMove;
             bool isForwardMoveAndHasPiece = !lastPositionIsEmpty && isForwardMove;
@@ -129,7 +129,7 @@ namespace OpenChess.Domain
             List<Coordinate> moveTowardsTheKing = CalculateMoveTowardsTheKing(piece);
             List<PieceRangeOfAttack> legalMoves = GetMoves(piece);
 
-            return legalMoves.FindAll(m => m.RangeOfAttack!.Intersect(moveTowardsTheKing).Any());
+            return legalMoves.FindAll(m => m.RangeOfAttack.Intersect(moveTowardsTheKing).Any());
         }
 
         private List<PieceRangeOfAttack> CalculateKingMoves(King king)
@@ -138,8 +138,8 @@ namespace OpenChess.Domain
             List<Coordinate> positionsNotAllowedForTheKing = CalculatePositionsNotAllowedForTheKing(pieces);
 
             List<PieceRangeOfAttack> kingMoves = GetMoves(king);
-            kingMoves.RemoveAll(m => m.RangeOfAttack is null);
-            bool kingMovesHittenByEnemyPiece(PieceRangeOfAttack k) => positionsNotAllowedForTheKing.Intersect(k.RangeOfAttack!).Any();
+            kingMoves.RemoveAll(m => !m.RangeOfAttack.Any());
+            bool kingMovesHittenByEnemyPiece(PieceRangeOfAttack k) => positionsNotAllowedForTheKing.Intersect(k.RangeOfAttack).Any();
             kingMoves.RemoveAll(kingMovesHittenByEnemyPiece);
 
             return kingMoves;
@@ -169,12 +169,12 @@ namespace OpenChess.Domain
                 {
                     Coordinate? positionBehindTheKing = Coordinate.CalculateNextPosition(m.Piece.Origin, m.Direction);
                     if (positionBehindTheKing is null) return;
-                    m.RangeOfAttack!.Add(positionBehindTheKing);
+                    m.RangeOfAttack.Add(positionBehindTheKing);
                 });
             }
             List<Coordinate> positionsNotAllowedToMove = new();
-            List<Coordinate> pawnDiagonalPositions = allMoves.SelectMany(m => m.FindAll(p => p.Piece is Pawn).SelectMany(m => m.LineOfSight!)).ToList();
-            List<Coordinate> rangeOfAttackOfPiecesExceptPawn = allMoves.SelectMany(m => m.FindAll(p => p.Piece is not Pawn).SelectMany(p => p.RangeOfAttack!)).ToList();
+            List<Coordinate> pawnDiagonalPositions = allMoves.SelectMany(m => m.FindAll(p => p.Piece is Pawn).SelectMany(m => m.LineOfSight)).ToList();
+            List<Coordinate> rangeOfAttackOfPiecesExceptPawn = allMoves.SelectMany(m => m.FindAll(p => p.Piece is not Pawn).SelectMany(p => p.RangeOfAttack)).ToList();
             positionsNotAllowedToMove.AddRange(pawnDiagonalPositions);
             positionsNotAllowedToMove.AddRange(rangeOfAttackOfPiecesExceptPawn);
 
@@ -186,11 +186,11 @@ namespace OpenChess.Domain
             List<PieceRangeOfAttack> moves = GetMoves(piece);
             List<Coordinate> movesTowardsTheKing = new();
 
-            moves.FindAll(m => m.RangeOfAttack is not null && m.IsHittingTheEnemyKing).ForEach(m =>
+            moves.FindAll(m => m.RangeOfAttack.Any() && m.IsHittingTheEnemyKing).ForEach(m =>
             {
                 Coordinate kingPosition = m.NearestPiece!.Origin;
                 movesTowardsTheKing.Add(piece.Origin);
-                movesTowardsTheKing.AddRange(m.RangeOfAttack!);
+                movesTowardsTheKing.AddRange(m.RangeOfAttack);
                 movesTowardsTheKing.Remove(kingPosition);
             });
 
