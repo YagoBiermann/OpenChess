@@ -10,7 +10,6 @@ namespace OpenChess.Domain
         public int FullMove { get; }
         public IReadOnlySquare GetReadOnlySquare(Coordinate coordinate);
         public IReadOnlySquare GetReadOnlySquare(string coordinate);
-        public List<IReadOnlyPiece> FindPiece(Color player, Type piece);
         public List<IReadOnlyPiece> GetPieces(List<Coordinate> range);
         public List<IReadOnlyPiece> GetPieces(Color player);
         public List<IReadOnlyPiece> GetAllPieces();
