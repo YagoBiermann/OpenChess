@@ -23,6 +23,12 @@ namespace OpenChess.Domain
         {
             return CalculateMovesThatSolvesTheCheck(piece).Any();
         }
+
+        public List<MoveDirections> CalculateMovesHittingTheEnemyKing(Color player)
+        {
+            return _preCalculatedMoves.Where(m => m.IsHittingTheEnemyKing && m.Piece.Color == player).ToList();
+        }
+
         public List<MoveDirections> CalculateMovesThatSolvesTheCheck(IReadOnlyPiece piece)
         {
             if (piece is King king) return CalculateKingMoves(king);
