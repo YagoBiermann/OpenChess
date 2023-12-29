@@ -96,6 +96,7 @@ namespace OpenChess.Domain
             _castlingAvailability.UpdateAvailability(origin, Turn);
             SwitchTurns();
             _piecesPositionCache.Clear();
+            MovesCalculator.CalculateAndCacheAllMoves();
 
             return move;
         }
