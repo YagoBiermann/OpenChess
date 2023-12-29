@@ -113,7 +113,7 @@ namespace OpenChess.Domain
         }
 
 
-        public List<MoveDirections> CalculateInCheckMoves(IReadOnlyPiece piece)
+        public List<MoveDirections> CalculateMovesThatSolvesTheCheck(IReadOnlyPiece piece)
         {
             if (piece is King king) return CalculateKingMoves(king);
             return CalculateIntersectionWithEnemyMovesTowardsTheKing(piece);
