@@ -39,7 +39,7 @@ namespace OpenChess.Domain
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
-            if (_preCalculatedMoves.Any()) return GetPreCalculatedMoves(piece);
+            if (_preCalculatedMoves.Any()) return GetMoves(piece);
 
             List<MoveDirections> legalMoves = new();
             List<MoveDirections> fullMoveRange = piece.CalculateMoveRange();
@@ -77,12 +77,6 @@ namespace OpenChess.Domain
             }
 
             return legalMoves;
-        }
-
-        private List<MoveDirections> GetPreCalculatedMoves(IReadOnlyPiece piece)
-        {
-            var moves = _preCalculatedMoves.Where(p => p.Equals(piece)).ToList();
-            return moves;
         }
 
         private MoveDirections CreateMoveRange(IReadOnlyPiece piece, Direction currentDirection, List<Coordinate>? rangeOfAttack = null, List<Coordinate>? fullRange = null)
@@ -198,6 +192,11 @@ namespace OpenChess.Domain
             }
 
             return movesTowardsTheKing;
+        }
+
+        public List<MoveDirections> GetMoves(IReadOnlyPiece piece)
+        {
+            return _preCalculatedMoves.Where(m => m.Piece == piece).ToList();
         }
     }
 }
