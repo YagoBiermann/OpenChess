@@ -87,8 +87,9 @@ namespace OpenChess.Domain
         public MovePlayed MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
-            if (GetReadOnlySquare(origin).ReadOnlyPiece!.Color != Turn) { throw new ChessboardException("It's not your turn"); }
-            MovePlayed move = _moveHandler.Handle(origin, destination, promotingPiece);
+            IReadOnlyPiece piece = GetReadOnlySquare(origin).ReadOnlyPiece!;
+            if (piece.Color != Turn) { throw new ChessboardException("It's not your turn"); }
+            MovePlayed move = _moveHandler.Handle(piece, destination, promotingPiece);
 
             HandleIllegalPosition();
             _enPassantAvailability.ClearEnPassant();

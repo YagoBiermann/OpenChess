@@ -4,14 +4,14 @@ namespace OpenChess.Domain
     {
         public CastlingHandler(Chessboard chessboard, IMoveCalculator moveCalculator) : base(chessboard, moveCalculator) { }
 
-        public override MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public override MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {
-            if (IsCastling(origin, destination))
+            if (piece is King && IsCastling(piece.Origin, destination))
             {
                 if (!CanCastle(destination, _chessboard.Turn)) { throw new ChessboardException("Cannot castle!"); }
-                return DoCastle(origin, destination, _chessboard.Turn);
+                return DoCastle(piece.Origin, destination, _chessboard.Turn);
             }
-            else { return base.Handle(origin, destination, promotingPiece); }
+            else { return base.Handle(piece, destination, promotingPiece); }
         }
 
         private bool IsCastling(Coordinate origin, Coordinate destination)

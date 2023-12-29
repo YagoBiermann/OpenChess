@@ -6,32 +6,30 @@ namespace OpenChess.Domain
     {
         public PromotionHandler(Chessboard chessboard, IMoveCalculator moveCalculator) : base(chessboard, moveCalculator) { }
 
-        public override MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public override MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {
-            if (IsPromoting(origin, destination))
+            if (IsPromoting(piece, destination))
             {
-                ThrowIfIllegalMove(origin, destination);
+                ThrowIfIllegalMove(piece, destination);
                 string promotingTo = promotingPiece ?? DefaultPiece;
 
                 if (!IsValidString(promotingTo)) throw new ChessboardException("Invalid promoting piece");
-                IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
                 if (piece is not Pawn) throw new ChessboardException("Cannot handle promotion because piece is not a pawn.");
-                IReadOnlyPiece? pieceCaptured = base.Handle(origin, destination).PieceCaptured;
+                IReadOnlyPiece? pieceCaptured = base.Handle(piece, destination).PieceCaptured;
 
                 _chessboard.AddPiece(destination, char.Parse(promotingTo), _chessboard.Turn);
                 IReadOnlyPiece pieceMoved = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
 
-                return new(origin, destination, pieceMoved, pieceCaptured, MoveType.PawnPromotionMove, promotingTo);
+                return new(piece.Origin, destination, pieceMoved, pieceCaptured, MoveType.PawnPromotionMove, promotingTo);
             }
-            else { return base.Handle(origin, destination, promotingPiece); }
+            else { return base.Handle(piece, destination, promotingPiece); }
         }
 
         public static string DefaultPiece { get { return "Q"; } }
 
-        private bool IsPromoting(Coordinate origin, Coordinate destination)
+        private bool IsPromoting(IReadOnlyPiece piece, Coordinate destination)
         {
-            IReadOnlySquare square = _chessboard.GetReadOnlySquare(origin);
-            if (square.ReadOnlyPiece is not Pawn pawn) return false;
+            if (piece is not Pawn pawn) return false;
 
             bool isWhitePromoting = pawn.ForwardDirection is Up && destination.Row == '8';
             bool isBlackPromoting = pawn.ForwardDirection is Down && destination.Row == '1';

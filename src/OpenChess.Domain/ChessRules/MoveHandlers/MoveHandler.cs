@@ -11,10 +11,10 @@ namespace OpenChess.Domain
             _movesCalculator = moveCalculator;
         }
 
-        public virtual MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public virtual MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {
-            if (_nextHandler is null) { return HandleDefaultMove(origin, destination); }
-            else { return _nextHandler.Handle(origin, destination, promotingPiece); }
+            if (_nextHandler is null) { return HandleDefaultMove(piece, destination); }
+            else { return _nextHandler.Handle(piece, destination, promotingPiece); }
         }
 
         public IMoveHandler SetNext(IMoveHandler handler)
@@ -28,15 +28,15 @@ namespace OpenChess.Domain
             if (!_movesCalculator.CanMoveToPosition(piece, destination)) throw new ChessboardException("Invalid move!");
         }
 
-        private MovePlayed HandleDefaultMove(Coordinate origin, Coordinate destination)
+        private MovePlayed HandleDefaultMove(IReadOnlyPiece piece, Coordinate destination)
         {
-            Piece? piece = _chessboard.RemovePiece(origin);
+            _chessboard.RemovePiece(piece.Origin);
             Piece? capturedPiece = _chessboard.RemovePiece(destination);
             _chessboard.AddPiece(destination, piece!.Name, piece.Color);
             Piece pieceMoved = _chessboard.GetSquare(destination).Piece!;
             MoveType movePlayed = piece is Pawn ? MoveType.PawnMove : MoveType.DefaultMove;
 
-            return new(origin, destination, pieceMoved, capturedPiece, movePlayed);
+            return new(piece.Origin, destination, pieceMoved, capturedPiece, movePlayed);
         }
     }
 }

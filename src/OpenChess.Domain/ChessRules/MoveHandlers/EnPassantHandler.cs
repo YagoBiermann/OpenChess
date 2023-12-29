@@ -4,22 +4,21 @@ namespace OpenChess.Domain
     {
         public EnPassantHandler(Chessboard chessboard, IMoveCalculator moveCalculator) : base(chessboard, moveCalculator) { }
 
-        public override MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public override MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {
-            if (IsEnPassantMove(origin, destination))
+            if (IsEnPassantMove(piece, destination))
             {
-                ThrowIfIllegalMove(origin, destination);
-                IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
-                var pawn = (Pawn)piece!;
+                ThrowIfIllegalMove(piece, destination);
+                var pawn = (Pawn)piece;
                 if (!CanCaptureByEnPassant(pawn)) throw new ChessboardException("This pawn cannot capture by en passant!");
 
-                var move = base.Handle(origin, destination);
+                var move = base.Handle(piece, destination);
                 Coordinate vulnerablePawnPosition = GetVulnerablePawn!.Origin;
                 IReadOnlyPiece? pieceCaptured = _chessboard.RemovePiece(vulnerablePawnPosition);
 
-                return new(origin, destination, move.PieceMoved, pieceCaptured, MoveType.EnPassantMove);
+                return new(piece.Origin, destination, move.PieceMoved, pieceCaptured, MoveType.EnPassantMove);
             }
-            else { return base.Handle(origin, destination, promotingPiece); }
+            else { return base.Handle(piece, destination, promotingPiece); }
         }
 
         private IReadOnlyPiece? GetVulnerablePawn
@@ -35,10 +34,8 @@ namespace OpenChess.Domain
             }
         }
 
-        private bool IsEnPassantMove(Coordinate origin, Coordinate destination)
+        private bool IsEnPassantMove(IReadOnlyPiece piece, Coordinate destination)
         {
-            IReadOnlyPiece? piece = _chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
-
             if (piece is not Pawn) return false;
             if (destination == _chessboard.EnPassantAvailability.EnPassantPosition) return true;
             return false;

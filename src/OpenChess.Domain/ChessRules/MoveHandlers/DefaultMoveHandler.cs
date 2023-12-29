@@ -4,10 +4,10 @@ namespace OpenChess.Domain
     {
         public DefaultMoveHandler(Chessboard chessboard, IMoveCalculator moveCalculator) : base(chessboard, moveCalculator) { }
 
-        public override MovePlayed Handle(Coordinate origin, Coordinate destination, string? promotingPiece = null)
+        public override MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {
-            ThrowIfIllegalMove(origin, destination);
-            return base.Handle(origin, destination, promotingPiece);
+            ThrowIfIllegalMove(piece, destination);
+            return base.Handle(piece, destination, promotingPiece);
         }
     }
 }
