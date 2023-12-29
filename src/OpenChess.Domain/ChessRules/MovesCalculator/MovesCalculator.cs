@@ -3,8 +3,7 @@ namespace OpenChess.Domain
 {
     internal class MovesCalculator : IMoveCalculator
     {
-        private List<MoveDirections> _whitePlayerMoves = new();
-        private List<MoveDirections> _blackPlayerMoves = new();
+        private List<MoveDirections> _preCalculatedMoves = new();
         private IReadOnlyChessboard _chessboard;
 
         public MovesCalculator(IReadOnlyChessboard chessboard)
@@ -13,32 +12,25 @@ namespace OpenChess.Domain
             CalculateAllMoves();
         }
 
+        {
+
+
         public void CalculateAllMoves()
         {
-            _whitePlayerMoves.Clear();
-            _blackPlayerMoves.Clear();
-            List<Coordinate> whitePieces = _chessboard.GetPiecesPosition(Color.White);
-            List<Coordinate> blackPieces = _chessboard.GetPiecesPosition(Color.Black);
+            _preCalculatedMoves.Clear();
+            List<IReadOnlyPiece> pieces = _chessboard.GetAllPieces();
 
-            foreach (var position in whitePieces)
+            foreach (var piece in pieces)
             {
-                var piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-
                 List<MoveDirections> moves = CalculateMoves(piece);
-                _whitePlayerMoves.AddRange(moves);
-            }
-
-            foreach (var position in blackPieces)
-            {
-                var piece = _chessboard.GetReadOnlySquare(position).ReadOnlyPiece!;
-
-                List<MoveDirections> moves = CalculateMoves(piece);
-                _whitePlayerMoves.AddRange(moves);
+                _preCalculatedMoves.AddRange(moves);
             }
         }
 
         public List<MoveDirections> CalculateMoves(IReadOnlyPiece piece)
         {
+            if (_preCalculatedMoves.Any()) return GetPreCalculatedMoves(piece);
+
             List<MoveDirections> legalMoves = new();
             List<MoveDirections> fullMoveRange = piece.CalculateMoveRange();
 
