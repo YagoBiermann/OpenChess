@@ -173,7 +173,11 @@ namespace OpenChess.Domain
                     m.RangeOfAttack!.Add(positionBehindTheKing);
                 });
             }
-            List<Coordinate> positionsNotAllowedToMove = allMoves.SelectMany(m => m.SelectMany(c => c.RangeOfAttack!)).ToList();
+            List<Coordinate> positionsNotAllowedToMove = new();
+            List<Coordinate> pawnDiagonalPositions = allMoves.SelectMany(m => m.FindAll(p => p.Piece is Pawn).SelectMany(m => m.FullRange!)).ToList();
+            List<Coordinate> rangeOfAttackOfPiecesExceptPawn = allMoves.SelectMany(m => m.FindAll(p => p.Piece is not Pawn).SelectMany(p => p.RangeOfAttack!)).ToList();
+            positionsNotAllowedToMove.AddRange(pawnDiagonalPositions);
+            positionsNotAllowedToMove.AddRange(rangeOfAttackOfPiecesExceptPawn);
 
             return positionsNotAllowedToMove;
         }
