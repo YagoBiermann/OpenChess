@@ -145,7 +145,7 @@ namespace OpenChess.Domain
 
         private void HandleIllegalPosition()
         {
-            CheckHandler checkHandler = new(this);
+            CheckHandler checkHandler = new(this, MovesCalculator);
             if (checkHandler.IsInCheck(Turn, out CheckState checkAmount)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
         }
 

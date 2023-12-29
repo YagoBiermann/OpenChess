@@ -20,7 +20,7 @@ namespace OpenChess.Domain
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
             _pgnMoveText = new();
-            _checkHandler = new CheckHandler(_chessboard);
+            _checkHandler = new CheckHandler(_chessboard, _chessboard.MovesCalculator);
             _currentPlayerCheckState = CheckState.NotInCheck;
         }
 
@@ -40,7 +40,7 @@ namespace OpenChess.Domain
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
-            _checkHandler = new CheckHandler(_chessboard);
+            _checkHandler = new CheckHandler(_chessboard, _chessboard.MovesCalculator);
             _currentPlayerCheckState = matchInfo.CurrentPlayerCheckState;
 
             if (winnerId is null) { _winner = null; return; }
