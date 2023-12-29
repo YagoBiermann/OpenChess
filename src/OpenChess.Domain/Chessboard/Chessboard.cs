@@ -57,7 +57,17 @@ namespace OpenChess.Domain
 
             return piece;
         }
+        public List<IReadOnlyPiece> GetAllPieces()
+        {
+            List<IReadOnlyPiece> allPieces = new();
+            _board.ForEach(action: r =>
+            {
+                var squares = r.FindAll(c => c.HasPiece);
+                squares.ForEach(s => allPieces.Add(s.ReadOnlyPiece!));
+            });
 
+            return allPieces;
+        }
         public IReadOnlySquare GetReadOnlySquare(string coordinate)
         {
             Coordinate origin = Coordinate.GetInstance(coordinate);
