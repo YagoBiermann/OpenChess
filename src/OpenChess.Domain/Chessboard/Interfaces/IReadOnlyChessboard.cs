@@ -11,8 +11,8 @@ namespace OpenChess.Domain
         public IReadOnlySquare GetReadOnlySquare(Coordinate coordinate);
         public IReadOnlySquare GetReadOnlySquare(string coordinate);
         public List<IReadOnlyPiece> FindPiece(Color player, Type piece);
-        public List<Coordinate> GetPiecesPosition(List<Coordinate> range);
-        public List<Coordinate> GetPiecesPosition(Color player);
+        public List<IReadOnlyPiece> GetPieces(List<Coordinate> range);
+        public List<IReadOnlyPiece> GetPieces(Color player);
         public List<IReadOnlyPiece> GetAllPieces();
         public string ToString();
     }
