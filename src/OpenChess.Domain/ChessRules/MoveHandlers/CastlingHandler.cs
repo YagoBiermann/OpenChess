@@ -57,7 +57,7 @@ namespace OpenChess.Domain
             return new(origin, destination, king, null, moveType);
         }
 
-        private MoveType GetMoveType(Coordinate destination, Color player)
+        private static MoveType GetMoveType(Coordinate destination, Color player)
         {
             return IsCastlingKingSide(destination, player) ? MoveType.KingSideCastlingMove : MoveType.QueenSideCastlingMove;
         }
@@ -100,31 +100,31 @@ namespace OpenChess.Domain
         {
             Color enemyPlayer = _chessboard.Opponent;
             List<IReadOnlyPiece> pieces = _chessboard.GetPieces(enemyPlayer);
-            bool isHitting = false;
 
             foreach (IReadOnlyPiece piece in pieces)
             {
                 if (piece is Pawn pawn)
                 {
                     var pawnMoves = _movesCalculator.CalculateMoves(piece).Where(m => m.Direction != pawn.ForwardDirection).SelectMany(p => p.LineOfSight).ToList();
-                    if (pawnMoves.Intersect(castlingPositions).Any()) isHitting = true; break;
+                    bool enemyPawnIsHittingCastlingPositions = pawnMoves.Intersect(castlingPositions).Any();
+                    if (enemyPawnIsHittingCastlingPositions) return true;
                 }
 
                 var moves = _movesCalculator.CalculateMoves(piece);
-                isHitting = moves.SelectMany(m => m.RangeOfAttack).ToList().Intersect(castlingPositions).Any();
+                bool enemyPieceIsHittingCastlingPositions = moves.SelectMany(m => m.RangeOfAttack).ToList().Intersect(castlingPositions).Any();
+                if (enemyPieceIsHittingCastlingPositions) return true;
 
-                if (isHitting) break;
             }
 
-            return isHitting;
+            return false;
         }
 
-        private bool IsCastlingKingSide(Coordinate destination, Color player)
+        private static bool IsCastlingKingSide(Coordinate destination, Color player)
         {
             return GetKingSidePositions(player).Contains(destination);
         }
 
-        private bool IsCastlingQueenSide(Coordinate destination, Color player)
+        private static bool IsCastlingQueenSide(Coordinate destination, Color player)
         {
             return GetQueenSidePositions(player).Contains(destination);
         }
