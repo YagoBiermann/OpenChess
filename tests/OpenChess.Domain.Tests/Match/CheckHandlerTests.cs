@@ -3,7 +3,7 @@ using OpenChess.Domain;
 namespace OpenChess.Tests
 {
     [TestClass]
-    public class CheckTests
+    public class CheckHandlerTests
     {
         [DataRow("r7/3R2k1/4P3/4K3/8/8/8/8 w - - 0 1", 'b')]
         [DataRow("rn1qkb1r/ppp2pp1/5n1p/1B1p2B1/3P2b1/4P1P1/PP3P1P/RN1QK1NR b KQkq - 0 1", 'b')]
