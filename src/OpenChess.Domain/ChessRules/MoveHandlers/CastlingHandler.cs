@@ -110,7 +110,7 @@ namespace OpenChess.Domain
                     if (enemyPawnIsHittingCastlingPositions) return true;
                 }
 
-                var moves = _movesCalculator.CalculateMoves(piece);
+                var moves = _movesCalculator.CalculateRangeOfAttack(piece);
                 bool enemyPieceIsHittingCastlingPositions = moves.SelectMany(m => m.RangeOfAttack).ToList().Intersect(castlingPositions).Any();
                 if (enemyPieceIsHittingCastlingPositions) return true;
 

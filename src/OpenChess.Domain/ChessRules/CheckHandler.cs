@@ -60,7 +60,7 @@ namespace OpenChess.Domain
             foreach (IReadOnlyPiece piece in allyPieces)
             {
                 if (piece is King) continue;
-                var moves = _movesCalculator.CalculateMoves(piece);
+                var moves = _movesCalculator.CalculateRangeOfAttack(piece);
                 var rangeOfAttackFromAllyPiece = moves.SelectMany(m => m.RangeOfAttack).ToList();
 
                 if (rangeOfAttackFromAllyPiece.Intersect(positionsAvailableToSolveTheCheck).Any()) return true;

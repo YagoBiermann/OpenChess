@@ -33,7 +33,7 @@ namespace OpenChess.Domain
             foreach (var piece in pieces)
             {
                 List<PieceLineOfSight> lineOfSight = CalculateLineOfSight(piece);
-                List<PieceRangeOfAttack> rangeOfAttack = CalculateMoves(piece);
+                List<PieceRangeOfAttack> rangeOfAttack = CalculateRangeOfAttack(piece);
                 _preCalculatedRangeOfAttack.AddRange(rangeOfAttack);
                 _preCalculatedLineOfSight.AddRange(lineOfSight);
             }
@@ -58,7 +58,7 @@ namespace OpenChess.Domain
             return kingMoves;
         }
 
-        public List<PieceRangeOfAttack> CalculateMoves(IReadOnlyPiece piece)
+        public List<PieceRangeOfAttack> CalculateRangeOfAttack(IReadOnlyPiece piece)
         {
             if (_preCalculatedRangeOfAttack.Any()) return GetRangeOfAttack(piece);
 
