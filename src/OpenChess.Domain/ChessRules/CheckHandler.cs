@@ -24,6 +24,26 @@ namespace OpenChess.Domain
             return checkState != CheckState.NotInCheck;
         }
 
+        private int CalculateCheckAmount(Color player)
+        {
+            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(player));
+            int checkAmount = 0;
+
+            foreach (IReadOnlyPiece piece in pieces) { if (_movesCalculator.IsHittingTheEnemyKing(piece)) { checkAmount++; }; }
+
+            return checkAmount;
+        }
+
+        private static CheckState GetCheckState(int checkAmount)
+        {
+            return checkAmount switch
+            {
+                0 => CheckState.NotInCheck,
+                1 => CheckState.Check,
+                2 => CheckState.DoubleCheck,
+                _ => throw new MatchException("The game could not compute the current check state")
+            };
+        }
 
         private bool CanCheckBeSolved(Color player, CheckState checkState)
         {
@@ -49,27 +69,6 @@ namespace OpenChess.Domain
             return false;
         }
 
-        private int CalculateCheckAmount(Color player)
-        {
-            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(player));
-            int checkAmount = 0;
-
-            foreach (IReadOnlyPiece piece in pieces) { if (_movesCalculator.IsHittingTheEnemyKing(piece)) { checkAmount++; }; }
-
-            return checkAmount;
-        }
-
-        private static CheckState GetCheckState(int checkAmount)
-        {
-            return checkAmount switch
-            {
-                0 => CheckState.NotInCheck,
-                1 => CheckState.Check,
-                2 => CheckState.DoubleCheck,
-                _ => throw new MatchException("The game could not compute the current check state")
-            };
-        }
-
         private static List<Coordinate> PositionsAvailableToSolveTheCheck(PieceRangeOfAttack rangeOfAttackFromEnemyPieceHittingTheKing)
         {
             List<Coordinate> positionsAvailable = new(rangeOfAttackFromEnemyPieceHittingTheKing.RangeOfAttack);
@@ -82,17 +81,9 @@ namespace OpenChess.Domain
             return positionsAvailable;
         }
 
-        private List<PieceRangeOfAttack> CalculateIntersectionWithEnemyMovesHittingTheKing(IReadOnlyPiece piece, List<Coordinate> movesTowardsTheKing)
+        private List<PieceRangeOfAttack> CalculateMovesHittingTheEnemyKing(Color player)
         {
-            if (piece is King) throw new ChessboardException("This method cannot handle king moves");
-            List<PieceRangeOfAttack> legalMoves = _movesCalculator.CalculateMoves(piece);
-
-            return legalMoves.FindAll(m => m.RangeOfAttack.Intersect(movesTowardsTheKing).Any());
-        }
-
-        public List<PieceRangeOfAttack> CalculateMovesHittingTheEnemyKing(Color player)
-        {
-            return _movesCalculator.CalculateAllMoves.Where(m => m.IsHittingTheEnemyKing && m.Piece.Color == player).ToList();
+            return _movesCalculator.CalculateAllMoves().Where(m => m.IsHittingTheEnemyKing && m.Piece.Color == player).ToList();
         }
 
     }
