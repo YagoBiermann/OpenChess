@@ -36,12 +36,12 @@ namespace OpenChess.Domain
             }
         }
 
-        public List<PieceRangeOfAttack> CalculateKingMoves(King king)
+        public List<PieceRangeOfAttack> CalculateKingMoves(Color player)
         {
-            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(king.Color));
+            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(player));
             List<Coordinate> positionsNotAllowedForTheKing = CalculatePositionsNotAllowedForTheKing(pieces);
 
-            List<PieceRangeOfAttack> kingMoves = GetMoves(king);
+            List<PieceRangeOfAttack> kingMoves = _preCalculatedMoves.Where(m => m.Piece is King && m.Piece.Color == player).ToList();
             kingMoves.RemoveAll(m => !m.RangeOfAttack.Any());
             bool kingMovesHittenByEnemyPiece(PieceRangeOfAttack k) => positionsNotAllowedForTheKing.Intersect(k.RangeOfAttack).Any();
             kingMoves.RemoveAll(kingMovesHittenByEnemyPiece);
