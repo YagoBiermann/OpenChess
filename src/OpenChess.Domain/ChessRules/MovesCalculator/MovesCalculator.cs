@@ -19,25 +19,9 @@ namespace OpenChess.Domain
             return legalMoves.Exists(m => m.RangeOfAttack.Contains(destination));
         }
 
-        public bool PieceCanSolveTheCheck(IReadOnlyPiece piece)
-        {
-            return CalculateMovesThatSolvesTheCheck(piece).Any();
-        }
-
         public bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
         {
             return GetMoves(piece).Where(m => m.IsHittingTheEnemyKing).ToList().Any();
-        }
-
-        public List<PieceRangeOfAttack> CalculateMovesHittingTheEnemyKing(Color player)
-        {
-            return _preCalculatedMoves.Where(m => m.IsHittingTheEnemyKing && m.Piece.Color == player).ToList();
-        }
-
-        public List<PieceRangeOfAttack> CalculateMovesThatSolvesTheCheck(IReadOnlyPiece piece)
-        {
-            if (piece is King king) return CalculateKingMoves(king);
-            return CalculateIntersectionWithEnemyMovesHittingTheKing(piece);
         }
 
         public void CalculateAndCacheAllMoves()
@@ -141,41 +125,20 @@ namespace OpenChess.Domain
             return isForwardMoveAndHasPiece || (isEmptyDiagonal && isNotEnPassantPosition);
         }
 
-        private List<PieceRangeOfAttack> CalculateIntersectionWithEnemyMovesHittingTheKing(IReadOnlyPiece piece)
-        {
-            if (piece is King) throw new ChessboardException("This method cannot handle king moves");
-            List<Coordinate> moveTowardsTheKing = CalculateMoveTowardsTheKing(piece);
-            List<PieceRangeOfAttack> legalMoves = GetMoves(piece);
-
-            return legalMoves.FindAll(m => m.RangeOfAttack.Intersect(moveTowardsTheKing).Any());
-        }
-
-        private List<PieceRangeOfAttack> CalculateKingMoves(King king)
-        {
-            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(king.Color));
-            List<Coordinate> positionsNotAllowedForTheKing = CalculatePositionsNotAllowedForTheKing(pieces);
-
-            List<PieceRangeOfAttack> kingMoves = GetMoves(king);
-            kingMoves.RemoveAll(m => !m.RangeOfAttack.Any());
-            bool kingMovesHittenByEnemyPiece(PieceRangeOfAttack k) => positionsNotAllowedForTheKing.Intersect(k.RangeOfAttack).Any();
-            kingMoves.RemoveAll(kingMovesHittenByEnemyPiece);
-
-            return kingMoves;
-        }
-
         private List<Coordinate> CalculatePositionsNotAllowedForTheKing(List<IReadOnlyPiece> piecesPosition)
         {
             List<List<PieceRangeOfAttack>> allMoves = new();
             foreach (IReadOnlyPiece piece in piecesPosition)
             {
-                List<PieceRangeOfAttack> moves = GetMoves(piece);
                 if (piece is Pawn pawn)
                 {
-                    moves.RemoveAll(m => m.Direction.Equals(pawn.ForwardDirection));
-                    allMoves.Add(moves);
+                    var pawnLineOfSight = CalculateLineOfSight(pawn);
+                    var pawnDiagonals = pawnLineOfSight.SkipWhile(m => m.Direction.Equals(pawn.ForwardDirection)).ToList();
+                    allMoves.Add(pawnDiagonals);
                     continue;
                 }
 
+                List<PieceRangeOfAttack> moves = GetMoves(piece);
                 var movesHittingTheEnemyKing = moves.Where(m => m.IsHittingTheEnemyKing && m.Piece.IsLongRange).ToList();
                 if (!movesHittingTheEnemyKing.Any())
                 {
@@ -190,29 +153,9 @@ namespace OpenChess.Domain
                     m.RangeOfAttack.Add(positionBehindTheKing);
                 });
             }
-            List<Coordinate> positionsNotAllowedToMove = new();
-            List<Coordinate> pawnDiagonalPositions = allMoves.SelectMany(m => m.FindAll(p => p.Piece is Pawn).SelectMany(m => m.LineOfSight)).ToList();
-            List<Coordinate> rangeOfAttackOfPiecesExceptPawn = allMoves.SelectMany(m => m.FindAll(p => p.Piece is not Pawn).SelectMany(p => p.RangeOfAttack)).ToList();
-            positionsNotAllowedToMove.AddRange(pawnDiagonalPositions);
-            positionsNotAllowedToMove.AddRange(rangeOfAttackOfPiecesExceptPawn);
+            List<Coordinate> positionsNotAllowedToMove = allMoves.SelectMany(m => m.SelectMany(m => m.RangeOfAttack)).ToList();
 
             return positionsNotAllowedToMove;
-        }
-
-        private List<Coordinate> CalculateMoveTowardsTheKing(IReadOnlyPiece piece)
-        {
-            List<PieceRangeOfAttack> moves = GetMoves(piece);
-            List<Coordinate> movesTowardsTheKing = new();
-
-            moves.FindAll(m => m.RangeOfAttack.Any() && m.IsHittingTheEnemyKing).ForEach(m =>
-            {
-                Coordinate kingPosition = m.NearestPiece!.Origin;
-                movesTowardsTheKing.Add(piece.Origin);
-                movesTowardsTheKing.AddRange(m.RangeOfAttack);
-                movesTowardsTheKing.Remove(kingPosition);
-            });
-
-            return movesTowardsTheKing;
         }
 
         private List<PieceRangeOfAttack> GetMoves(IReadOnlyPiece piece)
