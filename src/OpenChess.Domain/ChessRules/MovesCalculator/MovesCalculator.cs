@@ -36,6 +36,12 @@ namespace OpenChess.Domain
             }
         }
 
+        public List<PieceRangeOfAttack> CalculateAllMoves()
+        {
+            if (!_preCalculatedMoves.Any()) { CalculateAndCacheAllMoves(); }
+            return new(_preCalculatedMoves);
+        }
+
         public List<PieceRangeOfAttack> CalculateKingMoves(Color player)
         {
             List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(player));
