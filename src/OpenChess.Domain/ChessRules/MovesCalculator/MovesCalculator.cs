@@ -9,7 +9,6 @@ namespace OpenChess.Domain
         public MovesCalculator(IReadOnlyChessboard chessboard)
         {
             _chessboard = chessboard;
-            CalculateAndCacheAllMoves();
         }
 
         public bool CanMoveToPosition(IReadOnlyPiece piece, Coordinate destination)
