@@ -36,6 +36,19 @@ namespace OpenChess.Domain
             }
         }
 
+        public List<PieceRangeOfAttack> CalculateKingMoves(King king)
+        {
+            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(king.Color));
+            List<Coordinate> positionsNotAllowedForTheKing = CalculatePositionsNotAllowedForTheKing(pieces);
+
+            List<PieceRangeOfAttack> kingMoves = GetMoves(king);
+            kingMoves.RemoveAll(m => !m.RangeOfAttack.Any());
+            bool kingMovesHittenByEnemyPiece(PieceRangeOfAttack k) => positionsNotAllowedForTheKing.Intersect(k.RangeOfAttack).Any();
+            kingMoves.RemoveAll(kingMovesHittenByEnemyPiece);
+
+            return kingMoves;
+        }
+
         public List<PieceRangeOfAttack> CalculateMoves(IReadOnlyPiece piece)
         {
             if (_preCalculatedMoves.Any()) return GetMoves(piece);
