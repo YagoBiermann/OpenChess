@@ -68,7 +68,7 @@ namespace OpenChess.Domain
             foreach (PieceLineOfSight move in lineOfSight)
             {
                 Direction currentDirection = move.Direction;
-                if (!move.LineOfSight.Any()) continue;
+                if (!move.LineOfSight.Any()) { legalMoves.Add(new(move.Piece, move.Direction, new())); continue; }
 
                 List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight);
                 List<Coordinate> rangeOfAttack = CalculatePositionsUntilTheNearestPiece(piece, piecesPosition, move);
