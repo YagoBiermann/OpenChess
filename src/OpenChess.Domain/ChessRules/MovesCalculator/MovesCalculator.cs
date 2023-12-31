@@ -14,12 +14,7 @@ namespace OpenChess.Domain
 
         public bool CanMoveToPosition(IReadOnlyPiece piece, Coordinate destination)
         {
-            List<PieceRangeOfAttack> legalMoves = CalculateRangeOfAttack(piece);
-            legalMoves.Where(m => !m.IsHittingAnEnemyPiece).ToList().ForEach(m =>
-            {
-                m.RangeOfAttack.Remove(m.RangeOfAttack.Last()); // Remove ally piece position
-            });
-
+            List<PieceRangeOfAttack> legalMoves = CalculateLegalMoves(piece);
             return legalMoves.SelectMany(m => m.RangeOfAttack).Contains(destination);
         }
 
@@ -54,6 +49,17 @@ namespace OpenChess.Domain
             return new(_preCalculatedRangeOfAttack);
         }
 
+        public List<PieceRangeOfAttack> CalculateLegalMoves(IReadOnlyPiece piece)
+        {
+            if (piece is Pawn pawn) { return CalculatePawnMoves(pawn); }
+            List<PieceRangeOfAttack> legalMoves = CalculateRangeOfAttack(piece);
+            legalMoves.Where(m => !m.IsHittingAnEnemyPiece).ToList().ForEach(m =>
+            {
+                m.RangeOfAttack.Remove(m.RangeOfAttack.Last()); // Remove ally piece position
+            });
+
+            return legalMoves;
+        }
 
         public List<PieceRangeOfAttack> CalculatePawnMoves(Pawn pawn)
         {
