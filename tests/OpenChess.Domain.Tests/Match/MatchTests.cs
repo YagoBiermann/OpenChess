@@ -238,7 +238,7 @@ namespace OpenChess.Tests
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
-            Assert.AreEqual(match.Chessboard, fen);
+            Assert.AreEqual(match.Chessboard.ToString(), fen);
         }
 
         [TestMethod]
