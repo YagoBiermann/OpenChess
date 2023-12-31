@@ -120,7 +120,7 @@ namespace OpenChess.Domain
                 return moves;
             }
         }
-        public string Chessboard { get { return _chessboard.ToString(); } }
+        public IReadOnlyChessboard Chessboard { get { return _chessboard; } }
         public List<PlayerInfo> Players
         {
             get
