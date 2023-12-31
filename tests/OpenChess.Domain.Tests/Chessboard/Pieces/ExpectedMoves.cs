@@ -4,9 +4,11 @@ namespace OpenChess.Tests
 {
     internal static class ExpectedMoves
     {
-        internal static PieceRangeOfAttack GetMove(Coordinate origin, Direction direction, int amount, IReadOnlyPiece piece)
+        internal static PieceLineOfSight GetLineOfSight(IReadOnlyChessboard chessboard, IReadOnlyPiece piece, Direction direction, int amount)
         {
-            PieceRangeOfAttack move = new(direction, Coordinate.CalculateSequence(origin, direction, amount), piece);
+            var lineOfSight = Coordinate.CalculateSequence(piece.Origin, direction, amount);
+            var allPiecesInLineOfSight = chessboard.GetPieces(lineOfSight);
+            PieceLineOfSight move = new(piece, direction, lineOfSight, allPiecesInLineOfSight);
 
             return move;
         }

@@ -41,21 +41,22 @@ namespace OpenChess.Tests
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4R3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
             Rook rook = (Rook)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
-            List<PieceRangeOfAttack> expectedMoves = new()
+            List<PieceLineOfSight> expectedMoves = new()
             {
-                ExpectedMoves.GetMove(rook.Origin, new Up(), rook.MoveAmount, rook),
-                ExpectedMoves.GetMove(rook.Origin, new Down(), rook.MoveAmount, rook),
-                ExpectedMoves.GetMove(rook.Origin, new Left(), rook.MoveAmount, rook),
-                ExpectedMoves.GetMove(rook.Origin, new Right(), rook.MoveAmount, rook)
+                ExpectedMoves.GetLineOfSight(chessboard, rook, new Up(), rook.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, rook, new Down(), rook.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, rook, new Left(), rook.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, rook, new Right(), rook.MoveAmount)
             };
 
-            List<PieceRangeOfAttack> moves = rook.CalculateMoveRange();
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            List<PieceLineOfSight> moves = moveCalculator.CalculateLineOfSight(rook);
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (PieceRangeOfAttack move in moves)
+            foreach (PieceLineOfSight move in moves)
             {
                 int index = moves.IndexOf(move);
-                CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
+                CollectionAssert.AreEqual(expectedMoves[index].LineOfSight, move.LineOfSight);
                 Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
             }
 
@@ -73,11 +74,13 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("C4"),
             };
 
-            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(rook);
-            List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(rook);
+            var leftMoves = moves.Find(m => m.Direction is Left);
 
-            CollectionAssert.AreEqual(expectedMove, leftMoves);
+            CollectionAssert.AreEqual(expectedMove, leftMoves.RangeOfAttack);
+            Assert.IsNotNull(leftMoves.NearestPiece);
+            Assert.AreEqual(ColorUtils.GetOppositeColor(leftMoves.Piece.Color), leftMoves.NearestPiece.Color);
         }
 
         [TestMethod]
@@ -90,11 +93,12 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("G4"),
             };
 
-            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(rook);
-            List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(rook);
+            var rightMoves = moves.Find(m => m.Direction is Right);
 
-            CollectionAssert.AreEqual(expectedMove, rightMoves);
+            CollectionAssert.AreEqual(expectedMove, rightMoves.RangeOfAttack);
+            Assert.IsNull(rightMoves.NearestPiece);
         }
 
         [TestMethod]
@@ -109,11 +113,11 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance("H4"),
             };
 
-            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(rook);
-            List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(rook);
+            var rightMoves = moves.Find(m => m.Direction is Right);
 
-            CollectionAssert.AreEqual(expectedMove, rightMoves);
+            CollectionAssert.AreEqual(expectedMove, rightMoves.RangeOfAttack);
         }
     }
 }

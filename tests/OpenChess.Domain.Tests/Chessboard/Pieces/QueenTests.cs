@@ -40,84 +40,95 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateMoveRange_ShouldReturnAllMoves()
+        public void CalculateLineOfSight_ShouldReturnAllMoves()
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4Q3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
-            List<PieceRangeOfAttack> expectedMoves = new()
+            List<PieceLineOfSight> expectedMoves = new()
             {
-                ExpectedMoves.GetMove(queen.Origin, new Up(), queen.MoveAmount, queen),
-                ExpectedMoves.GetMove(queen.Origin, new Down(), queen.MoveAmount, queen),
-                ExpectedMoves.GetMove(queen.Origin, new Left(), queen.MoveAmount, queen),
-                ExpectedMoves.GetMove(queen.Origin, new Right(), queen.MoveAmount, queen),
-                ExpectedMoves.GetMove(queen.Origin, new UpperLeft(), queen.MoveAmount, queen),
-                ExpectedMoves.GetMove(queen.Origin, new UpperRight(), queen.MoveAmount, queen),
-                ExpectedMoves.GetMove(queen.Origin, new LowerLeft(), queen.MoveAmount, queen),
-                ExpectedMoves.GetMove(queen.Origin, new LowerRight(), queen.MoveAmount, queen),
+                ExpectedMoves.GetLineOfSight(chessboard, queen, new Up(), queen.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, queen, new Down(), queen.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, queen, new Left(), queen.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, queen, new Right(), queen.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, queen, new UpperLeft(), queen.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, queen, new UpperRight(), queen.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, queen, new LowerLeft(), queen.MoveAmount),
+                ExpectedMoves.GetLineOfSight(chessboard, queen, new LowerRight(), queen.MoveAmount),
             };
 
-            List<PieceRangeOfAttack> moves = queen.CalculateMoveRange();
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            List<PieceLineOfSight> moves = moveCalculator.CalculateLineOfSight(queen);
 
             Assert.AreEqual(moves.Count, expectedMoves.Count);
-            foreach (PieceRangeOfAttack move in moves)
+            foreach (PieceLineOfSight move in moves)
             {
                 int index = moves.IndexOf(move);
-                CollectionAssert.AreEqual(expectedMoves[index].Coordinates, move.Coordinates);
+                CollectionAssert.AreEqual(expectedMoves[index].LineOfSight, move.LineOfSight);
                 Assert.AreEqual(expectedMoves[index].Direction, move.Direction);
             }
         }
 
         [TestMethod]
-        public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
+        public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(queen);
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);
 
-            List<Coordinate> rightMoves = moves.Find(m => m.Direction.Equals(new Right())).Coordinates;
-            List<Coordinate> upperLeftMoves = moves.Find(m => m.Direction.Equals(new UpperLeft())).Coordinates;
-            List<Coordinate> lowerRightMoves = moves.Find(m => m.Direction.Equals(new LowerRight())).Coordinates;
+            var rightMoves = moves.Find(m => m.Direction is Right);
+            var upperLeftMoves = moves.Find(m => m.Direction is UpperLeft);
+            var lowerRightMoves = moves.Find(m => m.Direction is LowerRight);
 
             List<Coordinate> expectedRightMoves = new() { Coordinate.GetInstance("E4"), Coordinate.GetInstance("F4"), Coordinate.GetInstance("G4"), };
             List<Coordinate> expectedUpperLeftMoves = new() { Coordinate.GetInstance("C5"), Coordinate.GetInstance("B6"), };
             List<Coordinate> expectedLowerRightMoves = new() { Coordinate.GetInstance("E3"), };
 
-            CollectionAssert.AreEqual(expectedRightMoves, rightMoves);
-            CollectionAssert.AreEqual(expectedUpperLeftMoves, upperLeftMoves);
-            CollectionAssert.AreEqual(expectedLowerRightMoves, lowerRightMoves);
+            CollectionAssert.AreEqual(expectedRightMoves, rightMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedUpperLeftMoves, upperLeftMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedLowerRightMoves, lowerRightMoves.RangeOfAttack);
+
+            Assert.IsNotNull(rightMoves.NearestPiece);
+            Assert.IsNotNull(upperLeftMoves.NearestPiece);
+            Assert.IsNotNull(lowerRightMoves.NearestPiece);
+            Assert.AreEqual(ColorUtils.GetOppositeColor(rightMoves.Piece.Color), rightMoves.NearestPiece.Color);
+            Assert.AreEqual(ColorUtils.GetOppositeColor(rightMoves.Piece.Color), upperLeftMoves.NearestPiece.Color);
+            Assert.AreEqual(ColorUtils.GetOppositeColor(rightMoves.Piece.Color), lowerRightMoves.NearestPiece.Color);
         }
 
         [TestMethod]
-        public void CalculateLegalMoves_ShouldNotIncludeAllyPieces()
+        public void CalculateRangeOfAttack_ShouldNotIncludeAllyPieces()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(queen);
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);
 
-            List<Coordinate> leftMoves = moves.Find(m => m.Direction.Equals(new Left())).Coordinates;
-            List<Coordinate> upperRightMoves = moves.Find(m => m.Direction.Equals(new UpperRight())).Coordinates;
+            var leftMoves = moves.Find(m => m.Direction is Left);
+            var upperRightMoves = moves.Find(m => m.Direction is UpperRight);
 
             List<Coordinate> expectedLeftMovesMoves = new() { Coordinate.GetInstance("C4") };
             List<Coordinate> expectedUpperRightMoves = new() { Coordinate.GetInstance("E5") };
 
-            CollectionAssert.AreEqual(expectedLeftMovesMoves, leftMoves);
-            CollectionAssert.AreEqual(expectedUpperRightMoves, upperRightMoves);
+            CollectionAssert.AreEqual(expectedLeftMovesMoves, leftMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedUpperRightMoves, upperRightMoves.RangeOfAttack);
+            Assert.IsNull(leftMoves.NearestPiece);
+            Assert.IsNull(upperRightMoves.NearestPiece);
         }
 
         [TestMethod]
-        public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
+        public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            IMoveCalculator legalMoves = new LegalMovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = legalMoves.CalculateMoves(queen);
-            List<Coordinate> downMoves = moves.Find(m => m.Direction.Equals(new Down())).Coordinates;
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);
+            var downMoves = moves.Find(m => m.Direction is Down);
             List<Coordinate> expectedDownMoves = new() { Coordinate.GetInstance("D3"), Coordinate.GetInstance("D2"), Coordinate.GetInstance("D1"), };
 
-            CollectionAssert.AreEqual(expectedDownMoves, downMoves);
+            CollectionAssert.AreEqual(expectedDownMoves, downMoves.RangeOfAttack);
+            Assert.IsNull(downMoves.NearestPiece);
         }
     }
 }

@@ -18,8 +18,8 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
-
-            Assert.IsTrue(new CheckHandler(chessboard).IsInCheck(player, out CheckState checkAmount));
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            Assert.IsTrue(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkAmount));
         }
 
         [DataRow("r7/3R2k1/4P3/4K3/8/8/8/8 w - - 0 1", 'w')]
@@ -40,8 +40,8 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(fen);
             Color player = color == 'w' ? Color.White : Color.Black;
-
-            Assert.IsFalse(new CheckHandler(chessboard).IsInCheck(player, out CheckState checkAmount));
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            Assert.IsFalse(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkAmount));
         }
 
         [DataRow("3b4/8/4n3/5PK1/8/k4r2/8/3r4 w - - 0 1", 'w')]
@@ -53,7 +53,8 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
-            new CheckHandler(chessboard).IsInCheck(player, out CheckState checkState);
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
 
             Assert.AreEqual(CheckState.DoubleCheck, checkState);
         }
@@ -67,7 +68,8 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
-            new CheckHandler(chessboard).IsInCheck(player, out CheckState checkState);
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
 
             Assert.AreEqual(CheckState.Check, checkState);
         }
@@ -84,7 +86,8 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(fen);
             Color player = Utils.ColorFromChar(color);
-            new CheckHandler(chessboard).IsInCheck(player, out CheckState checkState);
+            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
+            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
 
             Assert.AreEqual(CheckState.NotInCheck, checkState);
         }

@@ -3,7 +3,7 @@ using OpenChess.Domain;
 namespace OpenChess.Tests
 {
     [TestClass]
-    public class CoordinateDistancesTests
+    public class PieceDistancesTests
     {
 
         [DataRow("E4", "B7", 3)]
@@ -31,16 +31,23 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateDistance_ShouldCalculateDistanceInRangeOfCoordinates()
+        public void CalculateDistance_ShouldCalculateDistancesFromAListOfPieces()
         {
-            Coordinate c1 = Coordinate.GetInstance("E5");
-            Coordinate c2 = Coordinate.GetInstance("E6");
-            Coordinate c3 = Coordinate.GetInstance("E7");
-            List<Coordinate> coordinates = new() { c1, c2, c3 };
-            Coordinate origin = Coordinate.GetInstance("E4");
-            List<PieceDistances> expectedDistances = new() { new CoordinateDistances(1, origin, c1), new CoordinateDistances(2, origin, c2), new CoordinateDistances(3, origin, c3), };
+            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
 
-            List<PieceDistances> distances = PieceDistances.CalculateDistance(origin, coordinates);
+            var pieceOfReference = chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
+            var pieceAtD4 = chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
+            var pieceAtD5 = chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
+            var pieceAtD8 = chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
+
+            List<IReadOnlyPiece> pieces = new()
+            {
+                pieceAtD4,
+                pieceAtD5,
+                pieceAtD8,
+            };
+            List<PieceDistances> expectedDistances = new() { new(3, pieceAtD4), new(4, pieceAtD5), new(7, pieceAtD8), };
+            List<PieceDistances> distances = PieceDistances.CalculateDistance(pieceOfReference, pieces);
 
             CollectionAssert.AreEqual(expectedDistances, distances);
         }
@@ -48,22 +55,21 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateDistance_UnsortedRange_ShouldCalculateDistancesCorrectly()
         {
-            Coordinate c1 = Coordinate.GetInstance("E7");
-            Coordinate c2 = Coordinate.GetInstance("E5");
-            Coordinate c3 = Coordinate.GetInstance("A8");
-            Coordinate c4 = Coordinate.GetInstance("H1");
-            List<Coordinate> coordinates = new() { c1, c2, c3, c4 };
-            Coordinate origin = Coordinate.GetInstance("E4");
+            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
 
-            List<PieceDistances> expectedDistances = new()
+            var pieceOfReference = chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
+            var pieceAtD4 = chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
+            var pieceAtD5 = chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
+            var pieceAtD8 = chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
+
+            List<IReadOnlyPiece> pieces = new()
             {
-                new CoordinateDistances(3,origin, c1),
-                new CoordinateDistances(1,origin, c2),
-                new CoordinateDistances(4,origin, c3),
-                new CoordinateDistances(3,origin, c4),
+                pieceAtD4,
+                pieceAtD8,
+                pieceAtD5,
             };
-
-            List<PieceDistances> distances = PieceDistances.CalculateDistance(origin, coordinates);
+            List<PieceDistances> expectedDistances = new() { new(3, pieceAtD4), new(7, pieceAtD8), new(4, pieceAtD5) };
+            List<PieceDistances> distances = PieceDistances.CalculateDistance(pieceOfReference, pieces);
 
             CollectionAssert.AreEqual(expectedDistances, distances);
         }
@@ -71,18 +77,29 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateNearestDistance_ShouldReturnNearestPieceFromOrigin()
         {
-            Coordinate origin = Coordinate.GetInstance("A1");
-            Coordinate c1 = Coordinate.GetInstance("A2");
-            Coordinate c2 = Coordinate.GetInstance("A3");
-            Coordinate c3 = Coordinate.GetInstance("A4");
-            Coordinate c4 = Coordinate.GetInstance("A5");
+            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
 
-            List<PieceDistances> distances = new() { new(1, origin, c1), new(2, origin, c2), new(3, origin, c3), new(4, origin, c4), };
+            var pieceOfReference = chessboard.GetReadOnlySquare("B2").ReadOnlyPiece!;
+            var pieceAtC3 = chessboard.GetReadOnlySquare("C3").ReadOnlyPiece!;
+            var pieceAtD4 = chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
+            var pieceAtE5 = chessboard.GetReadOnlySquare("E5").ReadOnlyPiece!;
+            var pieceAtF6 = chessboard.GetReadOnlySquare("F6").ReadOnlyPiece!;
+            var pieceAtG7 = chessboard.GetReadOnlySquare("G7").ReadOnlyPiece!;
+            var pieceAtH8 = chessboard.GetReadOnlySquare("H8").ReadOnlyPiece!;
 
-            PieceDistances expectedPiece = new(1, origin, c1);
-            PieceDistances nearestPiece = PieceDistances.CalculateNearestDistance(distances);
+            List<PieceDistances> pieceDistances = new()
+            {
+                new(5,pieceAtG7),
+                new(6,pieceAtH8),
+                new(1,pieceAtC3),
+                new(3,pieceAtE5),
+                new(2,pieceAtD4),
+                new(4,pieceAtF6),
+            };
+            PieceDistances nearestPiece = PieceDistances.CalculateNearestDistance(pieceDistances);
+            PieceDistances expectedDistance = new(1, pieceAtC3);
 
-            Assert.AreEqual(expectedPiece, nearestPiece);
+            Assert.AreEqual(expectedDistance, nearestPiece);
         }
     }
 }

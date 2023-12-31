@@ -187,51 +187,5 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
             Assert.AreEqual(currentPosition, chessboard.ToString());
         }
-
-        [DataRow('r', 'w', 2)]
-        [DataRow('n', 'w', 2)]
-        [DataRow('b', 'w', 2)]
-        [DataRow('k', 'w', 1)]
-        [DataRow('q', 'w', 1)]
-        [DataRow('p', 'w', 8)]
-        [DataRow('r', 'b', 2)]
-        [DataRow('n', 'b', 2)]
-        [DataRow('b', 'b', 2)]
-        [DataRow('k', 'b', 1)]
-        [DataRow('q', 'b', 1)]
-        [DataRow('p', 'b', 8)]
-        [TestMethod]
-        public void FindPiece_ShouldReturnAllPiecesOfGivenType(char type, char color, int expectedAmount)
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            Type pieceType = Utils.GetPieceType(type)!;
-            Color player = Utils.ColorFromChar(color);
-
-            List<IReadOnlyPiece> pieces = chessboard.FindPiece(player, pieceType);
-
-            Assert.AreEqual(expectedAmount, pieces.Count);
-            pieces.ForEach(p => Assert.AreEqual(player, p.Color));
-            CollectionAssert.AllItemsAreInstancesOfType(pieces, pieceType);
-        }
-
-        [DataRow('r', 'w')]
-        [DataRow('n', 'w')]
-        [DataRow('b', 'w')]
-        [DataRow('q', 'w')]
-        [DataRow('n', 'b')]
-        [DataRow('b', 'b')]
-        [DataRow('q', 'b')]
-        [DataRow('p', 'b')]
-        [TestMethod]
-        public void FindPiece_PieceNotFound_ShouldReturnEmptyList(char type, char color)
-        {
-            Chessboard chessboard = new("8/8/8/5PK1/8/k7/8/3r4 w - - 0 1");
-            Type pieceType = Utils.GetPieceType(type)!;
-            Color player = Utils.ColorFromChar(color);
-
-            List<IReadOnlyPiece> pieces = chessboard.FindPiece(player, pieceType);
-
-            Assert.IsFalse(pieces.Any());
-        }
     }
 }

@@ -120,7 +120,7 @@ namespace OpenChess.Domain
         private static List<Coordinate> CalculatePositionsUntilTheNearestPiece(IReadOnlyPiece piece, List<IReadOnlyPiece> piecesPosition, PieceLineOfSight move)
         {
             if (!piecesPosition.Any()) return new(move.LineOfSight);
-            List<PieceDistances> distances = PieceDistances.CalculateDistance(piece.Origin, piecesPosition);
+            List<PieceDistances> distances = PieceDistances.CalculateDistance(piece, piecesPosition);
             PieceDistances nearestPiece = PieceDistances.CalculateNearestDistance(distances);
             List<Coordinate> rangeOfAttack = move.LineOfSight.Take(nearestPiece.DistanceFromOrigin).ToList();
 
