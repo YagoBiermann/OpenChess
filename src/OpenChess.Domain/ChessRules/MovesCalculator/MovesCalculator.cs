@@ -14,9 +14,13 @@ namespace OpenChess.Domain
 
         public bool CanMoveToPosition(IReadOnlyPiece piece, Coordinate destination)
         {
-            List<PieceRangeOfAttack> legalMoves = CalculateRangeOfAttack(piece).Where(m => m.NearestPiece?.Color != piece.Color || m.NearestPiece is null).ToList();
+            List<PieceRangeOfAttack> legalMoves = CalculateRangeOfAttack(piece);
+            legalMoves.Where(m => !m.IsHittingAnEnemyPiece).ToList().ForEach(m =>
+            {
+                m.RangeOfAttack.Remove(m.RangeOfAttack.Last()); // Remove ally piece position
+            });
 
-            return legalMoves.Exists(m => m.RangeOfAttack.Contains(destination));
+            return legalMoves.SelectMany(m => m.RangeOfAttack).Contains(destination);
         }
 
         public bool IsHittingTheEnemyKing(IReadOnlyPiece piece)
@@ -39,7 +43,7 @@ namespace OpenChess.Domain
                 allRangeOfAttack.AddRange(rangeOfAttack);
                 allLineOfSight.AddRange(lineOfSight);
             }
-            
+
             _preCalculatedRangeOfAttack.AddRange(allRangeOfAttack);
             _preCalculatedLineOfSight.AddRange(allLineOfSight);
         }
