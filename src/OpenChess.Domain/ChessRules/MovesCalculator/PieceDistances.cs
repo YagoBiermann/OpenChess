@@ -25,6 +25,8 @@ namespace OpenChess.Domain
                 int distance = CalculateDistance(pieceOfReference.Origin, piece.Origin);
                 distances.Add(new(distance, piece));
             }
+            distances.Sort((d1, d2) => d1.DistanceFromOrigin.CompareTo(d2.DistanceFromOrigin));
+
             return distances;
         }
 
