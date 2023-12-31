@@ -188,7 +188,6 @@ namespace OpenChess.Tests
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
             var forwardMove = moves.Find(m => m.Direction.Equals(pawn.ForwardDirection));
 
-            Assert.IsFalse(chessboard.GetReadOnlySquare(forwardMove.RangeOfAttack.Last()).HasPiece);
             Assert.IsNull(forwardMove.NearestPiece);
         }
 
@@ -234,7 +233,7 @@ namespace OpenChess.Tests
             Pawn whitePawn = (Pawn)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             Pawn blackPawn = (Pawn)chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<Coordinate> whiteForwardMoves = moveCalculator.CalculateRangeOfAttack(whitePawn).Find(m => m.Direction.Equals(blackPawn.ForwardDirection)).RangeOfAttack;
+            List<Coordinate> whiteForwardMoves = moveCalculator.CalculateRangeOfAttack(whitePawn).Find(m => m.Direction.Equals(whitePawn.ForwardDirection)).RangeOfAttack;
             List<Coordinate> blackForwardMoves = moveCalculator.CalculateRangeOfAttack(blackPawn).Find(m => m.Direction.Equals(blackPawn.ForwardDirection)).RangeOfAttack;
 
             Assert.IsFalse(whiteForwardMoves.Any());
@@ -308,7 +307,7 @@ namespace OpenChess.Tests
         [DataRow("E2", "8/8/4p3/3q1r2/8/3R1Q2/4P3/8 b - - 0 1")]
         [DataRow("E6", "8/8/4p3/3q1r2/8/3R1Q2/4P3/8 b - - 0 1")]
         [TestMethod]
-        public void CalculateRangeOfAttack_Diagonals_ShouldNotIncludeAllyPieces(string origin, string fen)
+        public void CalculateRangeOfAttack_Diagonals_ShouldIncludeAllyPieces(string origin, string fen)
         {
             Chessboard chessboard = new(fen);
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
@@ -317,8 +316,8 @@ namespace OpenChess.Tests
             var pawnMoves = moves.FindAll(m => !m.Direction.Equals(pawn.ForwardDirection));
             pawnMoves.ForEach(move =>
             {
-                Assert.IsFalse(move.RangeOfAttack.Any());
-                Assert.IsNull(move.NearestPiece);
+                Assert.IsTrue(move.RangeOfAttack.Any());
+                Assert.IsNotNull(move.NearestPiece);
             });
         }
 

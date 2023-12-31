@@ -89,15 +89,16 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldNotIncludeAllyPieces()
+        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
             Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(knight);
-            List<Coordinate> lowerRightMove = moves.Find(m => m.Direction.Equals(new Direction(1, -2))).RangeOfAttack;
+            var lowerRightMove = moves.Find(m => m.Direction.Equals(new Direction(1, -2)));
 
-            Assert.IsFalse(lowerRightMove.Any());
+            Assert.IsTrue(lowerRightMove.RangeOfAttack.Any());
+            Assert.IsNotNull(lowerRightMove.NearestPiece);
         }
 
         [TestMethod]
@@ -117,7 +118,7 @@ namespace OpenChess.Tests
         public void CalculateRangeOfAttack_PositionOutOfChessboard_ShouldReturnEmptyList()
         {
             Chessboard chessboard = new("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1");
-            Knight knight = (Knight)chessboard.GetReadOnlySquare("F2").ReadOnlyPiece!;
+            Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(knight);
 

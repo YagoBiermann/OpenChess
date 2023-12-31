@@ -80,7 +80,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldNotIncludeAllyPieces()
+        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
             Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
@@ -88,10 +88,10 @@ namespace OpenChess.Tests
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(bishop);
 
             var lowerLeftMove = moves.Find(m => m.Direction is LowerLeft);
-            List<Coordinate> expectedLowerLeftMovesMove = new() { Coordinate.GetInstance("B4") };
+            List<Coordinate> expectedLowerLeftMovesMove = new() { Coordinate.GetInstance("B4"), Coordinate.GetInstance("A3") };
 
             CollectionAssert.AreEqual(expectedLowerLeftMovesMove, lowerLeftMove.RangeOfAttack);
-            Assert.IsNull(lowerLeftMove.NearestPiece);
+            Assert.IsNotNull(lowerLeftMove.NearestPiece);
         }
 
         [TestMethod]
@@ -103,9 +103,9 @@ namespace OpenChess.Tests
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(bishop);
 
             var upperRightMove = moves.Find(m => m.Direction is UpperRight);
-            List<Coordinate> expectedLowerLeftMovesMove = new() { Coordinate.GetInstance("B4"), Coordinate.GetInstance("E7") };
+            List<Coordinate> expectedUpperRightMoves = new() { Coordinate.GetInstance("D6"), Coordinate.GetInstance("E7") };
 
-            CollectionAssert.AreEqual(expectedLowerLeftMovesMove, upperRightMove.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedUpperRightMoves, upperRightMove.RangeOfAttack);
             Assert.IsNotNull(upperRightMove.NearestPiece);
             Assert.IsTrue(upperRightMove.NearestPiece is King);
             Assert.IsTrue(upperRightMove.IsHittingTheEnemyKing);

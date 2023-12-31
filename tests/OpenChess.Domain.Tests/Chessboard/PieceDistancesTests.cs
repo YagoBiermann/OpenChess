@@ -35,7 +35,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
 
-            var pieceOfReference = chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
+            var pieceOfReference = chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
             var pieceAtD4 = chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             var pieceAtD5 = chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
             var pieceAtD8 = chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
@@ -57,7 +57,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
 
-            var pieceOfReference = chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
+            var pieceOfReference = chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
             var pieceAtD4 = chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             var pieceAtD5 = chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
             var pieceAtD8 = chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
@@ -68,7 +68,7 @@ namespace OpenChess.Tests
                 pieceAtD8,
                 pieceAtD5,
             };
-            List<PieceDistances> expectedDistances = new() { new(3, pieceAtD4), new(7, pieceAtD8), new(4, pieceAtD5) };
+            List<PieceDistances> expectedDistances = new() { new(3, pieceAtD4), new(4, pieceAtD5), new(7, pieceAtD8) };
             List<PieceDistances> distances = PieceDistances.CalculateDistance(pieceOfReference, pieces);
 
             CollectionAssert.AreEqual(expectedDistances, distances);

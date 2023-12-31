@@ -36,7 +36,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateMoveRange_ShouldReturnAllMoves()
+        public void CalculateLineOfSight_ShouldReturnAllMoves()
         {
             Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4R3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
             Rook rook = (Rook)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
@@ -63,7 +63,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateLegalMoves_ShouldIncludeEnemyPieces()
+        public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
             Rook rook = (Rook)chessboard.GetReadOnlySquare("F4").ReadOnlyPiece!;
@@ -84,13 +84,14 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateLegalMoves_ShouldNotIncludeAllyPieces()
+        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
             Rook rook = (Rook)chessboard.GetReadOnlySquare("F4").ReadOnlyPiece!;
             List<Coordinate> expectedMove = new()
             {
                 Coordinate.GetInstance("G4"),
+                Coordinate.GetInstance("H4"),
             };
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
@@ -98,11 +99,11 @@ namespace OpenChess.Tests
             var rightMoves = moves.Find(m => m.Direction is Right);
 
             CollectionAssert.AreEqual(expectedMove, rightMoves.RangeOfAttack);
-            Assert.IsNull(rightMoves.NearestPiece);
+            Assert.IsNotNull(rightMoves.NearestPiece);
         }
 
         [TestMethod]
-        public void CalculateLegalMoves_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
+        public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new("8/8/4K3/8/1RR1r3/8/4k3/8 b - - 0 1");
             Rook rook = (Rook)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;

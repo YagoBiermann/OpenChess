@@ -98,7 +98,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldNotIncludeAllyPieces()
+        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
@@ -108,13 +108,13 @@ namespace OpenChess.Tests
             var leftMoves = moves.Find(m => m.Direction is Left);
             var upperRightMoves = moves.Find(m => m.Direction is UpperRight);
 
-            List<Coordinate> expectedLeftMovesMoves = new() { Coordinate.GetInstance("C4") };
-            List<Coordinate> expectedUpperRightMoves = new() { Coordinate.GetInstance("E5") };
+            List<Coordinate> expectedLeftMovesMoves = new() { Coordinate.GetInstance("C4"), Coordinate.GetInstance("B4") };
+            List<Coordinate> expectedUpperRightMoves = new() { Coordinate.GetInstance("E5"), Coordinate.GetInstance("F6") };
 
             CollectionAssert.AreEqual(expectedLeftMovesMoves, leftMoves.RangeOfAttack);
             CollectionAssert.AreEqual(expectedUpperRightMoves, upperRightMoves.RangeOfAttack);
-            Assert.IsNull(leftMoves.NearestPiece);
-            Assert.IsNull(upperRightMoves.NearestPiece);
+            Assert.IsNotNull(leftMoves.NearestPiece);
+            Assert.IsNotNull(upperRightMoves.NearestPiece);
         }
 
         [TestMethod]

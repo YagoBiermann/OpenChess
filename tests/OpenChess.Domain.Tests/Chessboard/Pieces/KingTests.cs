@@ -85,7 +85,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldNotIncludeAllyPieces()
+        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
@@ -93,8 +93,8 @@ namespace OpenChess.Tests
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             PieceRangeOfAttack move = moveCalculator.CalculateRangeOfAttack(king).Find(m => m.Direction is UpperLeft);
 
-            Assert.IsNull(move.NearestPiece);
-            Assert.IsFalse(move.RangeOfAttack.Any());
+            Assert.IsTrue(move.RangeOfAttack.Any());
+            Assert.IsNotNull(move.NearestPiece);
         }
 
         [TestMethod]
