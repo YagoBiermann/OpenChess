@@ -226,39 +226,19 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
 
+        [DataRow("8/8/1kr1QK2/7p/7P/8/8/2R5 b - - 0 1", "C6", "C1")]
+        [DataRow("8/8/3Q1K2/1k5p/7P/8/8/3r4 b - - 0 1", "B5", "C5")]
+        [DataRow("8/8/5K2/8/1k1pP2Q/8/8/8 b - E3 0 1", "D4", "E3")]
         [TestMethod]
-        public void Play_PlayerInSelfCheckAfterMove_ShouldThrowException()
+        public void Play_PlayerInSelfCheckAfterMove_ShouldThrowException(string fen, string origin, string destination)
         {
-            Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
-            match.Join(player1);
-            match.Join(player2);
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
+            Match match = new(matchInfo);
+            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.Turn).Id;
+            Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
-            List<Move> moves = new()
-            {
-                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
-                new(player2.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5")),
-                new(player1.Id, Coordinate.GetInstance("D1"), Coordinate.GetInstance("H5")),
-                new(player2.Id, Coordinate.GetInstance("F7"), Coordinate.GetInstance("F5")),
-            };
-            string lastPosition = match.Chessboard;
-
-            foreach (Move move in moves)
-            {
-                bool isLastMove = moves.Last() == move;
-                if (isLastMove)
-                {
-                    Assert.ThrowsException<ChessboardException>(() => match.Play(move));
-                }
-                else
-                {
-                    match.Play(move);
-                }
-            }
-            string currentPosition = match.Chessboard;
-
-            Assert.AreEqual(lastPosition, currentPosition);
+            Assert.ThrowsException<ChessboardException>(() => match.Play(move));
+            Assert.AreEqual(match.Chessboard, fen);
         }
 
         [TestMethod]
