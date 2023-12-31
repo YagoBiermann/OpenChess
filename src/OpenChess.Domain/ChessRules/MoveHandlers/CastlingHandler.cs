@@ -103,13 +103,6 @@ namespace OpenChess.Domain
 
             foreach (IReadOnlyPiece piece in pieces)
             {
-                if (piece is Pawn pawn)
-                {
-                    var pawnMoves = _movesCalculator.CalculateLineOfSight(piece).Where(m => m.Direction != pawn.ForwardDirection).SelectMany(p => p.LineOfSight).ToList();
-                    bool enemyPawnIsHittingCastlingPositions = pawnMoves.Intersect(castlingPositions).Any();
-                    if (enemyPawnIsHittingCastlingPositions) return true;
-                }
-
                 var moves = _movesCalculator.CalculateRangeOfAttack(piece);
                 bool enemyPieceIsHittingCastlingPositions = moves.SelectMany(m => m.RangeOfAttack).ToList().Intersect(castlingPositions).Any();
                 if (enemyPieceIsHittingCastlingPositions) return true;
