@@ -29,14 +29,19 @@ namespace OpenChess.Domain
             _preCalculatedRangeOfAttack.Clear();
             _preCalculatedLineOfSight.Clear();
             List<IReadOnlyPiece> pieces = _chessboard.GetAllPieces();
+            List<PieceRangeOfAttack> allRangeOfAttack = new();
+            List<PieceLineOfSight> allLineOfSight = new();
 
             foreach (var piece in pieces)
             {
                 List<PieceLineOfSight> lineOfSight = CalculateLineOfSight(piece);
                 List<PieceRangeOfAttack> rangeOfAttack = CalculateRangeOfAttack(piece);
-                _preCalculatedRangeOfAttack.AddRange(rangeOfAttack);
-                _preCalculatedLineOfSight.AddRange(lineOfSight);
+                allRangeOfAttack.AddRange(rangeOfAttack);
+                allLineOfSight.AddRange(lineOfSight);
             }
+            
+            _preCalculatedRangeOfAttack.AddRange(allRangeOfAttack);
+            _preCalculatedLineOfSight.AddRange(allLineOfSight);
         }
 
         public List<PieceRangeOfAttack> CalculateAllMoves()
