@@ -105,6 +105,7 @@ namespace OpenChess.Domain
         public List<IReadOnlyPiece> GetPieces(List<Coordinate> range)
         {
             List<IReadOnlyPiece> pieces = new();
+            if (!range.Any()) return pieces;
             range.FindAll(c => GetReadOnlySquare(c).HasPiece).ToList().ForEach(c =>
             {
                 pieces.Add(GetReadOnlySquare(c).ReadOnlyPiece!);
