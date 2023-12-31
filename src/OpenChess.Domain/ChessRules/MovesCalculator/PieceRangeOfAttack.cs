@@ -6,7 +6,7 @@ namespace OpenChess.Domain
         public Direction Direction { get; }
         public List<Coordinate> RangeOfAttack { get; }
         public IReadOnlyPiece? NearestPiece { get; }
-        public bool IsHittingTheEnemyKing { get => NearestPiece is King && NearestPiece.Color == Piece.Color; }
+        public bool IsHittingTheEnemyKing { get => NearestPiece is King && NearestPiece.Color != Piece.Color; }
 
         public PieceRangeOfAttack(IReadOnlyPiece piece, Direction direction, List<Coordinate> rangeOfAttack, IReadOnlyPiece? nearestPiece = null)
         {
