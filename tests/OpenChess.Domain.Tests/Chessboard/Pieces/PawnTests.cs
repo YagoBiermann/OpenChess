@@ -194,7 +194,7 @@ namespace OpenChess.Tests
         [DataRow("E2", "E3", "E4")]
         [DataRow("E7", "E6", "E5")]
         [TestMethod]
-        public void CalculateRangeOfAttack_ForwardMoves_FirstMove_ShouldReturnTwoCoordinates(string origin, string coordinate, string coordinate2)
+        public void CalculateLegalMoves_ForwardMoves_FirstMove_ShouldReturnTwoCoordinates(string origin, string coordinate, string coordinate2)
         {
             Chessboard chessboard = new(FenInfo.InitialPosition);
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
@@ -205,7 +205,7 @@ namespace OpenChess.Tests
                 Coordinate.GetInstance(coordinate2),
             };
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateLegalMoves(pawn);
             var forwardMove = moves.Find(m => m.Direction.Equals(pawn.ForwardDirection));
 
             CollectionAssert.AreEqual(expectedMoves, forwardMove.RangeOfAttack);
@@ -214,12 +214,12 @@ namespace OpenChess.Tests
         [DataRow("D4", "D5")]
         [DataRow("C6", "C5")]
         [TestMethod]
-        public void CalculateRangeOfAttack_ForwardMoves_NotFirstMove_ShouldReturnOneCoordinate(string origin, string expected)
+        public void CalculateLegalMoves_ForwardMoves_NotFirstMove_ShouldReturnOneCoordinate(string origin, string expected)
         {
             Chessboard chessboard = new("rn1qkbnr/pp2pppp/2p5/5b2/3PN3/8/PPP2PPP/R1BQKBNR w KQkq - 0 1");
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateLegalMoves(pawn);
             var forwardMove = moves.Find(m => m.Direction.Equals(pawn.ForwardDirection));
             List<Coordinate> expectedMoves = new() { Coordinate.GetInstance(expected) };
 
@@ -227,14 +227,14 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ForwardMoves_WithPieceInFront_ShouldBlockPawnFromMovingAhead()
+        public void CalculateLegalMoves_ForwardMoves_WithPieceInFront_ShouldBlockPawnFromMovingAhead()
         {
             Chessboard chessboard = new("rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b KQkq - 0 1");
             Pawn whitePawn = (Pawn)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             Pawn blackPawn = (Pawn)chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<Coordinate> whiteForwardMoves = moveCalculator.CalculateRangeOfAttack(whitePawn).Find(m => m.Direction.Equals(whitePawn.ForwardDirection)).RangeOfAttack;
-            List<Coordinate> blackForwardMoves = moveCalculator.CalculateRangeOfAttack(blackPawn).Find(m => m.Direction.Equals(blackPawn.ForwardDirection)).RangeOfAttack;
+            List<Coordinate> whiteForwardMoves = moveCalculator.CalculateLegalMoves(whitePawn).Find(m => m.Direction.Equals(whitePawn.ForwardDirection)).RangeOfAttack;
+            List<Coordinate> blackForwardMoves = moveCalculator.CalculateLegalMoves(blackPawn).Find(m => m.Direction.Equals(blackPawn.ForwardDirection)).RangeOfAttack;
 
             Assert.IsFalse(whiteForwardMoves.Any());
             Assert.IsFalse(blackForwardMoves.Any());
@@ -324,12 +324,12 @@ namespace OpenChess.Tests
         [DataRow("F2", "r1bqk1nr/pppp1ppp/2n5/2b5/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 0 1")]
         [DataRow("F7", "r1bqk1nr/pppp1ppp/2n5/2b5/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 0 1")]
         [TestMethod]
-        public void CalculateRangeOfAttack_EmptySquareInDiagonals_ShouldNotBeIncludedInRangeOfAttack(string origin, string fen)
+        public void CalculateLegalMoves_EmptySquareInDiagonals_ShouldNotBeIncludedInRangeOfAttack(string origin, string fen)
         {
             Chessboard chessboard = new(fen);
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
+            List<PieceRangeOfAttack> moves = moveCalculator.CalculateLegalMoves(pawn);
             var pawnMoves = moves.FindAll(m => !m.Direction.Equals(pawn.ForwardDirection));
 
             pawnMoves.ForEach(move =>
