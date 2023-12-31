@@ -54,6 +54,32 @@ namespace OpenChess.Domain
             return new(_preCalculatedRangeOfAttack);
         }
 
+
+        public List<PieceRangeOfAttack> CalculatePawnMoves(Pawn pawn)
+        {
+            List<PieceRangeOfAttack> legalMoves = new();
+            List<PieceLineOfSight> lineOfSight = CalculateLineOfSight(pawn);
+            foreach (PieceLineOfSight move in lineOfSight)
+            {
+                if (!move.LineOfSight.Any()) { legalMoves.Add(new(move.Piece, move.Direction, move.LineOfSight)); continue; }
+                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight);
+                List<Coordinate> rangeOfAttack = CalculatePositionsUntilTheNearestPiece(pawn, piecesPosition, move);
+                bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
+                if (SpecialPawnRuleApplies(move, pawn, piecesPosition, lastPositionIsEmpty))
+                {
+                    rangeOfAttack.Remove(rangeOfAttack.Last());
+                    PieceRangeOfAttack pawnMoves = new(pawn, move.Direction, rangeOfAttack);
+                    legalMoves.Add(pawnMoves);
+                    continue;
+                }
+
+                IReadOnlyPiece nearestPiece = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece!;
+                legalMoves.Add(new(pawn, move.Direction, rangeOfAttack, nearestPiece));
+            }
+
+            return legalMoves;
+        }
+
         public List<PieceRangeOfAttack> CalculateKingMoves(Color player)
         {
             List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(player));
@@ -76,24 +102,16 @@ namespace OpenChess.Domain
 
             foreach (PieceLineOfSight move in lineOfSight)
             {
+                if (piece is Pawn pawn && move.Direction.Equals(pawn.ForwardDirection)) { continue; }
                 Direction currentDirection = move.Direction;
                 if (!move.LineOfSight.Any()) { legalMoves.Add(new(move.Piece, move.Direction, new())); continue; }
 
                 List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight);
                 List<Coordinate> rangeOfAttack = CalculatePositionsUntilTheNearestPiece(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
-                if (piece is not Pawn && lastPositionIsEmpty)
+                if (lastPositionIsEmpty)
                 {
-                    PieceRangeOfAttack pawnMoveRange = new(piece, currentDirection, move.LineOfSight);
-                    legalMoves.Add(pawnMoveRange);
-                    continue;
-                }
-
-                if (piece is Pawn pawn && SpecialPawnRuleApplies(move, pawn, piecesPosition, lastPositionIsEmpty))
-                {
-                    rangeOfAttack.Remove(rangeOfAttack.Last());
-                    PieceRangeOfAttack pawnMoveRange = new(piece, currentDirection, rangeOfAttack);
-                    legalMoves.Add(pawnMoveRange);
+                    legalMoves.Add(new(piece, currentDirection, move.LineOfSight));
                     continue;
                 }
 
@@ -142,8 +160,9 @@ namespace OpenChess.Domain
             bool isForwardMove = move.Direction.Equals(pawn.ForwardDirection);
             bool isEmptyDiagonal = !pieces.Any() && !isForwardMove;
             bool isForwardMoveAndHasPiece = !lastPositionIsEmpty && isForwardMove;
+            bool isDiagonalAndHasAllyPiece = !isForwardMove && pieces.FirstOrDefault()?.Color == pawn.Color;
 
-            return isForwardMoveAndHasPiece || (isEmptyDiagonal && isNotEnPassantPosition);
+            return isForwardMoveAndHasPiece || (isEmptyDiagonal && isNotEnPassantPosition) || isDiagonalAndHasAllyPiece;
         }
 
         private List<Coordinate> CalculatePositionsNotAllowedForTheKing(List<IReadOnlyPiece> piecesPosition)
