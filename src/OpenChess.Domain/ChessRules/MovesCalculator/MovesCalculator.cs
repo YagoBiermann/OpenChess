@@ -176,16 +176,6 @@ namespace OpenChess.Domain
             List<List<PieceRangeOfAttack>> allMoves = new();
             foreach (IReadOnlyPiece piece in piecesPosition)
             {
-                if (piece is Pawn pawn)
-                {
-                    var pawnLineOfSight = CalculateLineOfSight(pawn);
-                    var pawnDiagonals = pawnLineOfSight.SkipWhile(m => m.Direction.Equals(pawn.ForwardDirection)).ToList();
-                    var pawnRangeOfAttack = pawnDiagonals.Select(p => new PieceRangeOfAttack(p.Piece, p.Direction, p.LineOfSight)).ToList();
-
-                    allMoves.Add(pawnRangeOfAttack);
-                    continue;
-                }
-
                 List<PieceRangeOfAttack> moves = CalculateRangeOfAttack(piece);
                 var movesHittingTheEnemyKing = moves.Where(m => m.IsHittingTheEnemyKing && m.Piece.IsLongRange).ToList();
                 if (!movesHittingTheEnemyKing.Any())
@@ -194,7 +184,7 @@ namespace OpenChess.Domain
                     continue;
                 };
 
-                moves.FindAll(m => m.IsHittingTheEnemyKing && m.Piece.IsLongRange).ForEach(m =>
+                movesHittingTheEnemyKing.ForEach(m =>
                 {
                     Coordinate? positionBehindTheKing = Coordinate.CalculateNextPosition(m.Piece.Origin, m.Direction);
                     if (positionBehindTheKing is null) return;
