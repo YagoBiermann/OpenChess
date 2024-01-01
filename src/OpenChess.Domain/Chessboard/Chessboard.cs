@@ -93,7 +93,7 @@ namespace OpenChess.Domain
 
             HandleIllegalPosition();
             _enPassantAvailability.ClearEnPassant();
-            _enPassantAvailability.SetVulnerablePawn(move.PieceMoved);
+            _enPassantAvailability.SetVulnerablePawn(move.PieceMoved, origin);
             _castlingAvailability.UpdateAvailability(origin, Turn);
             SwitchTurns();
             _piecesCache.Clear();
