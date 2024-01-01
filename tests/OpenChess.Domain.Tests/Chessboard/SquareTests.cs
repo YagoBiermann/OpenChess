@@ -61,51 +61,6 @@ namespace OpenChess.Tests
             Assert.IsFalse(square.HasPiece);
         }
 
-        [DataRow("A1", 'R')]
-        [DataRow("B1", 'N')]
-        [DataRow("C1", 'B')]
-        [DataRow("D1", 'Q')]
-        [DataRow("E1", 'K')]
-        [DataRow("F1", 'B')]
-        [DataRow("G1", 'N')]
-        [DataRow("H1", 'R')]
-        [DataRow("A2", 'P')]
-        [DataRow("A8", 'r')]
-        [DataRow("B8", 'n')]
-        [DataRow("C8", 'b')]
-        [DataRow("D8", 'q')]
-        [DataRow("E8", 'k')]
-        [DataRow("F8", 'b')]
-        [DataRow("G8", 'n')]
-        [DataRow("H8", 'r')]
-        [DataRow("A7", 'p')]
-        [TestMethod]
-        public void HasTypeOfPiece_HavingTypeOfPiece_ShouldReturnTrue(string origin, char type)
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            IReadOnlySquare square = chessboard.GetSquare(Coordinate.GetInstance(origin));
-
-            Type pieceType = Utils.GetPieceType(type);
-
-            Assert.IsTrue(square.HasTypeOfPiece(pieceType));
-        }
-
-        [DataRow("E4", 'p')]
-        [DataRow("E4", 'q')]
-        [DataRow("E4", 'r')]
-        [DataRow("E4", 'n')]
-        [DataRow("E4", 'b')]
-        [TestMethod]
-        public void HasTypeOfPiece_NotHavingTypeOfPiece_ShouldReturnFalse(string origin, char type)
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-            IReadOnlySquare square = chessboard.GetSquare(Coordinate.GetInstance(origin));
-
-            Type pieceType = Utils.GetPieceType(type);
-
-            Assert.IsFalse(square.HasTypeOfPiece(pieceType));
-        }
-
         [TestMethod]
         public void HasEnemyPiece_DifferentColor_ShouldReturnTrue()
         {

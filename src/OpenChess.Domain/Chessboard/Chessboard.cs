@@ -74,11 +74,6 @@ namespace OpenChess.Domain
             return GetSquare(origin);
         }
 
-        public IReadOnlySquare GetReadOnlySquare(Coordinate coordinate)
-        {
-            return GetSquare(coordinate);
-        }
-
         public Square GetSquare(Coordinate coordinate)
         {
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];

@@ -35,11 +35,5 @@ namespace OpenChess.Domain
             if (!HasPiece) return false;
             return ReadOnlyPiece?.Color != currentPlayer;
         }
-
-        public bool HasTypeOfPiece(Type piece)
-        {
-            if (!HasPiece) return false;
-            return ReadOnlyPiece?.GetType() == piece;
-        }
     }
 }
