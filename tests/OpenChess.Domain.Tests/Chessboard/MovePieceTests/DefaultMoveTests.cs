@@ -19,8 +19,8 @@ namespace OpenChess.Tests
 
             MovePlayed movePlayed = chessboard.MovePiece(origin, destination);
 
-            Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
+            Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
             Assert.IsInstanceOfType(movePlayed.PieceMoved, Utils.GetPieceType(moved));
             Assert.IsInstanceOfType(movePlayed.PieceCaptured, Utils.GetPieceType(captured));
         }
@@ -57,8 +57,8 @@ namespace OpenChess.Tests
 
             MovePlayed movePlayed = chessboard.MovePiece(origin, destination);
 
-            Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
+            Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
             Assert.IsInstanceOfType(movePlayed.PieceMoved, typeof(Rook));
             Assert.IsNull(movePlayed.PieceCaptured);
         }

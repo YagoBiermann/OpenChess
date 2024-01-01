@@ -18,7 +18,7 @@ namespace OpenChess.Domain
                 IReadOnlyPiece? pieceCaptured = base.Handle(piece, destination).PieceCaptured;
 
                 _chessboard.AddPiece(destination, char.Parse(promotingTo), _chessboard.CurrentPlayer);
-                IReadOnlyPiece pieceMoved = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
+                IReadOnlyPiece pieceMoved = _chessboard.GetPiece(destination)!;
 
                 return new(piece.Origin, destination, pieceMoved, pieceCaptured, MoveType.PawnPromotionMove, promotingTo);
             }

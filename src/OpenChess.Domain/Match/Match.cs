@@ -159,9 +159,9 @@ namespace OpenChess.Domain
 
             Player player = GetPlayerById(move.PlayerId, _players)!;
             if (!player.Color.Equals(_chessboard.CurrentPlayer)) { throw new MatchException("Its not your turn!"); };
-            if (!_chessboard.GetReadOnlySquare(move.Origin).HasPiece) { throw new ChessboardException("There is no piece in this position"); };
+            if (_chessboard.GetPiece(move.Origin) is null) { throw new ChessboardException("There is no piece in this position"); };
 
-            Color pieceColor = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.Color;
+            Color pieceColor = _chessboard.GetPiece(move.Origin)!.Color;
             Color playerColor = GetPlayerById(move.PlayerId, _players)!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }

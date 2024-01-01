@@ -26,7 +26,7 @@ namespace OpenChess.Tests
         public void IsHittingTheEnemyKing_ShouldReturnTrue(string fen, string origin)
         {
             Chessboard chessboard = new(fen);
-            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
+            IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
             Assert.IsTrue(chessboard.MovesCalculator.IsHittingTheEnemyKing(piece));
         }
 
@@ -37,7 +37,7 @@ namespace OpenChess.Tests
         public void IsHittingTheEnemyKing_ShouldReturnFalse(string fen, string origin)
         {
             Chessboard chessboard = new(fen);
-            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
+            IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
             Assert.IsFalse(chessboard.MovesCalculator.IsHittingTheEnemyKing(piece));
         }
 
@@ -48,7 +48,7 @@ namespace OpenChess.Tests
         public void IsPinned_ShouldReturnTrue(string fen, string origin)
         {
             Chessboard chessboard = new(fen);
-            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
+            IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
             Assert.IsTrue(chessboard.MovesCalculator.IsPinned(piece));
         }
 
@@ -62,7 +62,7 @@ namespace OpenChess.Tests
         public void IsPinned_ShouldReturnFalse(string fen, string origin)
         {
             Chessboard chessboard = new(fen);
-            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
+            IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
             Assert.IsFalse(chessboard.MovesCalculator.IsPinned(piece));
         }
 

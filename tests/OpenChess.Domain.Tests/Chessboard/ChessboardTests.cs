@@ -42,7 +42,7 @@ namespace OpenChess.Tests
             Coordinate coordinate = Coordinate.GetInstance(position);
             Type? pieceType = Utils.GetPieceType(name);
             Color pieceColor = Utils.ColorFromChar(color);
-            IReadOnlyPiece? piece = chessboard.GetReadOnlySquare(coordinate).ReadOnlyPiece;
+            IReadOnlyPiece? piece = chessboard.GetPiece(coordinate);
 
             Assert.IsInstanceOfType(piece, pieceType);
             Assert.AreEqual(pieceColor, piece.Color);
@@ -123,7 +123,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
             Coordinate origin = Coordinate.GetInstance(coordinate);
-            IReadOnlyPiece? piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
+            IReadOnlyPiece? piece = chessboard.GetPiece(origin);
             Type? pieceType = Utils.GetPieceType(type);
             Color color = Utils.ColorFromChar(c);
 
@@ -142,7 +142,7 @@ namespace OpenChess.Tests
                 for (int col = 0; col <= 7; col++)
                 {
 
-                    IReadOnlySquare square = chessboard.GetReadOnlySquare(Coordinate.GetInstance(col, row));
+                    IReadOnlySquare square = chessboard.GetSquare(Coordinate.GetInstance(col, row));
                     Assert.IsNull(square.ReadOnlyPiece);
                 }
             }

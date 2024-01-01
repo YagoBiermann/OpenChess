@@ -18,8 +18,8 @@ namespace OpenChess.Tests
 
             Assert.IsInstanceOfType(pieceCaptured, typeof(Pawn));
             Assert.AreEqual(pieceCaptured!.Color, Utils.ColorFromChar(color1));
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
-            Assert.AreEqual(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!.Color, Utils.ColorFromChar(color2));
+            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
+            Assert.AreEqual(chessboard.GetPiece(destination)!.Color, Utils.ColorFromChar(color2));
         }
 
         [DataRow("rnbqkbnr/pppp1ppp/8/8/3pP3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D4", "E3")]

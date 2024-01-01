@@ -27,7 +27,7 @@ namespace OpenChess.Tests
             Coordinate destination = Coordinate.GetInstance(position2);
             chessboard.MovePiece(origin, destination, promotingPiece);
 
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasTypeOfPiece(typeof(Queen)));
+            Assert.IsTrue(chessboard.GetPiece(destination) is Queen);
         }
 
         [DataRow("8/8/8/3r4/2KP4/8/2k2p2/8 b - - 0 1", "F2", "F1", 'q', "Q")]
@@ -43,8 +43,8 @@ namespace OpenChess.Tests
             chessboard.MovePiece(origin, destination, promotingPiece);
             Type? piece = Utils.GetPieceType(pieceType);
 
-            Assert.IsFalse(chessboard.GetReadOnlySquare(origin).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasTypeOfPiece(piece!));
+            Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
+            Assert.IsTrue(chessboard.GetPiece(destination).GetType().Equals(piece));
         }
     }
 }

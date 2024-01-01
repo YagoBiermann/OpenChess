@@ -8,8 +8,8 @@ namespace OpenChess.Domain
         public IEnPassantAvailability EnPassantAvailability { get; }
         public int HalfMove { get; }
         public int FullMove { get; }
-        public IReadOnlySquare GetReadOnlySquare(Coordinate coordinate);
         public IReadOnlySquare GetReadOnlySquare(string coordinate);
+        public IReadOnlyPiece? GetPiece(Coordinate position);
         public List<IReadOnlyPiece> GetPieces(List<Coordinate> range);
         public List<IReadOnlyPiece> GetPieces(Color player);
         public List<IReadOnlyPiece> GetAllPieces();

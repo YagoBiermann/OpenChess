@@ -30,7 +30,7 @@ namespace OpenChess.Domain
                 Direction direction = _chessboard.EnPassantAvailability.EnPassantPosition!.Row == '3' ? new Up() : new Down();
                 Coordinate pawnPosition = Coordinate.CalculateNextPosition(_chessboard.EnPassantAvailability.EnPassantPosition, direction)!;
 
-                return _chessboard.GetReadOnlySquare(pawnPosition).ReadOnlyPiece;
+                return _chessboard.GetPiece(pawnPosition);
             }
         }
 

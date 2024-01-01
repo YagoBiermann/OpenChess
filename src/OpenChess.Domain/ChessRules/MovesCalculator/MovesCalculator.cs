@@ -90,7 +90,7 @@ namespace OpenChess.Domain
                 if (!move.LineOfSight.Any()) { legalMoves.Add(new(move.Piece, move.Direction, move.LineOfSight)); continue; }
                 List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight);
                 List<Coordinate> rangeOfAttack = CalculatePositionsUntilTheNearestPiece(pawn, piecesPosition, move);
-                bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
+                bool lastPositionIsEmpty = _chessboard.GetPiece(rangeOfAttack.Last()) is null;
                 if (SpecialPawnRuleApplies(move, pawn, piecesPosition, lastPositionIsEmpty))
                 {
                     rangeOfAttack.Remove(rangeOfAttack.Last());
@@ -99,7 +99,7 @@ namespace OpenChess.Domain
                     continue;
                 }
 
-                IReadOnlyPiece nearestPiece = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece!;
+                IReadOnlyPiece nearestPiece = _chessboard.GetPiece(rangeOfAttack.Last())!;
                 legalMoves.Add(new(pawn, move.Direction, rangeOfAttack, nearestPiece));
             }
 
@@ -133,14 +133,14 @@ namespace OpenChess.Domain
 
                 List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight);
                 List<Coordinate> rangeOfAttack = CalculatePositionsUntilTheNearestPiece(piece, piecesPosition, move);
-                bool lastPositionIsEmpty = !_chessboard.GetReadOnlySquare(rangeOfAttack.Last()).HasPiece;
+                bool lastPositionIsEmpty = _chessboard.GetPiece(rangeOfAttack.Last()) is null;
                 if (lastPositionIsEmpty)
                 {
                     legalMoves.Add(new(piece, currentDirection, move.LineOfSight));
                     continue;
                 }
 
-                IReadOnlyPiece nearestPiece = _chessboard.GetReadOnlySquare(rangeOfAttack.Last()).ReadOnlyPiece!;
+                IReadOnlyPiece nearestPiece = _chessboard.GetPiece(rangeOfAttack.Last())!;
                 PieceRangeOfAttack moveRange = new(piece, currentDirection, rangeOfAttack, nearestPiece);
 
                 legalMoves.Add(moveRange);

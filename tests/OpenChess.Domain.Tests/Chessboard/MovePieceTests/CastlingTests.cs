@@ -100,11 +100,11 @@ namespace OpenChess.Tests
             Coordinate destination = Coordinate.GetInstance($"{column}{row}");
             Coordinate rookPosition = Coordinate.GetInstance($"F{row}");
 
-            Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"H{row}")).HasPiece);
-            Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"E{row}")).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
-            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(King));
-            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(rookPosition).ReadOnlyPiece, typeof(Rook));
+            Assert.IsFalse(chessboard.GetSquare(Coordinate.GetInstance($"H{row}")).HasPiece);
+            Assert.IsFalse(chessboard.GetSquare(Coordinate.GetInstance($"E{row}")).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
+            Assert.IsInstanceOfType(chessboard.GetPiece(destination), typeof(King));
+            Assert.IsInstanceOfType(chessboard.GetPiece(rookPosition), typeof(Rook));
         }
 
         [DataRow("r2qkbnr/pp1nppp1/2p4p/5bB1/3PN2Q/8/PPP2PPP/R3KBNR w KQkq - 0 1", 'w')]
@@ -123,12 +123,12 @@ namespace OpenChess.Tests
 
             Chessboard chessboard = MovePiece(position, color, false);
 
-            Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"A{row}")).HasPiece);
-            Assert.IsFalse(chessboard.GetReadOnlySquare(Coordinate.GetInstance($"E{row}")).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(rookPosition).HasPiece);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(destination).HasPiece);
-            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(destination).ReadOnlyPiece, typeof(King));
-            Assert.IsInstanceOfType(chessboard.GetReadOnlySquare(rookPosition).ReadOnlyPiece, typeof(Rook));
+            Assert.IsFalse(chessboard.GetSquare(Coordinate.GetInstance($"A{row}")).HasPiece);
+            Assert.IsFalse(chessboard.GetSquare(Coordinate.GetInstance($"E{row}")).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(rookPosition).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(destination).HasPiece);
+            Assert.IsInstanceOfType(chessboard.GetPiece(destination), typeof(King));
+            Assert.IsInstanceOfType(chessboard.GetPiece(rookPosition), typeof(Rook));
         }
 
         [DataRow("r3k2r/pppppppp/2N3N1/8/8/2n3n1/PPPPPPPP/R3K2R w KQkq - 0 1", 'w')]
@@ -165,7 +165,7 @@ namespace OpenChess.Tests
 
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
             Chessboard chessboard = MovePiece(position, color, true);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(kingSideDestination).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(kingSideDestination).HasPiece);
         }
 
         [DataRow("r3k1r1/pp5p/6p1/8/8/1P4P1/P6P/R3K1R1 w KQkq - 0 1", 'w')]
@@ -177,7 +177,7 @@ namespace OpenChess.Tests
 
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
             Chessboard chessboard = MovePiece(position, color, false);
-            Assert.IsTrue(chessboard.GetReadOnlySquare(queenSideDestination).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(queenSideDestination).HasPiece);
         }
 
         [DataRow("r3k2r/pp5p/6p1/8/8/1Pb3P1/P6P/R3K2R w KQkq - 0 1", 'w')]

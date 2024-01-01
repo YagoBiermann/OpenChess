@@ -86,8 +86,8 @@ namespace OpenChess.Domain
 
         public MovePlayed MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
-            if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
-            IReadOnlyPiece piece = GetReadOnlySquare(origin).ReadOnlyPiece!;
+            if (GetPiece(origin) is null) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
+            IReadOnlyPiece piece = GetPiece(origin)!;
             if (piece.Color != CurrentPlayer) { throw new ChessboardException("It's not your turn"); }
             MovePlayed move = _moveHandler.Handle(piece, destination, promotingPiece);
 
@@ -102,13 +102,18 @@ namespace OpenChess.Domain
             return move;
         }
 
+        public IReadOnlyPiece? GetPiece(Coordinate position)
+        {
+            return GetSquare(position).ReadOnlyPiece;
+        }
+
         public List<IReadOnlyPiece> GetPieces(List<Coordinate> range)
         {
             List<IReadOnlyPiece> pieces = new();
             if (!range.Any()) return pieces;
-            range.FindAll(c => GetReadOnlySquare(c).HasPiece).ToList().ForEach(c =>
+            range.FindAll(c => GetPiece(c) is not null).ToList().ForEach(c =>
             {
-                pieces.Add(GetReadOnlySquare(c).ReadOnlyPiece!);
+                pieces.Add(GetPiece(c)!);
             });
 
             return pieces;
