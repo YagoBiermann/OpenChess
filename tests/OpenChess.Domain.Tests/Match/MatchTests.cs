@@ -37,7 +37,7 @@ namespace OpenChess.Tests
             Assert.AreEqual(match.Id, matchInfo.MatchId);
             Assert.AreEqual(match.Time, Time.Five);
             Assert.AreEqual(match.Status, MatchStatus.InProgress);
-            Assert.AreEqual(match.CurrentPlayerCheckState, CheckState.NotInCheck);
+            Assert.IsNull(match.CurrentPlayerCheckState);
             Assert.AreEqual(match.Chessboard.ToString(), matchInfo.Fen);
             Assert.IsNull(match.Winner);
             CollectionAssert.AreEquivalent(match.Players, matchInfo.Players);

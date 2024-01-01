@@ -92,14 +92,14 @@ namespace OpenChess.Tests
             Assert.AreEqual(CheckState.NotInCheck, checkState);
         }
 
-        [DataRow("2N5/k7/8/2Q5/7p/8/8/4K3 b - - 0 1", "A7", "B7", "DoubleCheck")]
-        [DataRow("8/k1R5/8/8/3B3p/8/8/4K3 b - - 0 1", "A7", "B8", "DoubleCheck")]
-        [DataRow("8/8/kP6/8/8/3BK3/7p/8 b - - 0 1", "A6", "A5", "Check")]
-        [DataRow("8/8/kP6/8/8/3BK3/7p/8 b - - 0 1", "A6", "B7", "Check")]
+        [DataRow("2N5/k7/8/2Q5/7p/8/8/4K3 b - - 0 1", "A7", "B7")]
+        [DataRow("8/k1R5/8/8/3B3p/8/8/4K3 b - - 0 1", "A7", "B8")]
+        [DataRow("8/8/kP6/8/8/3BK3/7p/8 b - - 0 1", "A6", "A5")]
+        [DataRow("8/8/kP6/8/8/3BK3/7p/8 b - - 0 1", "A6", "B7")]
         [TestMethod]
-        public void Play_ShouldSolveCheckByMovingTheKing(string fen, string origin, string destination, string checkState)
+        public void Play_ShouldSolveCheckByMovingTheKing(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, checkState);
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
 
             Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
@@ -108,13 +108,13 @@ namespace OpenChess.Tests
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
         }
 
-        [DataRow("8/kR6/8/8/3B3p/8/8/4K3 b - - 0 1", "A7", "B7", "DoubleCheck")]
-        [DataRow("8/2k5/2R5/Q7/7p/8/8/4K3 b - - 0 1", "C7", "C6", "DoubleCheck")]
-        [DataRow("8/8/kP6/8/8/3BK3/7p/8 b - - 0 1", "A6", "B6", "DoubleCheck")]
+        [DataRow("8/kR6/8/8/3B3p/8/8/4K3 b - - 0 1", "A7", "B7")]
+        [DataRow("8/2k5/2R5/Q7/7p/8/8/4K3 b - - 0 1", "C7", "C6")]
+        [DataRow("8/8/kP6/8/8/3BK3/7p/8 b - - 0 1", "A6", "B6")]
         [TestMethod]
-        public void Play_ShouldSolveDoubleCheckByCapturingAPieceWithTheKing(string fen, string origin, string destination, string checkState)
+        public void Play_ShouldSolveDoubleCheckByCapturingAPieceWithTheKing(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, checkState);
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
 
             Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
@@ -123,15 +123,15 @@ namespace OpenChess.Tests
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
         }
 
-        [DataRow("8/8/2k1P3/8/q7/8/2Q4p/4K3 b - - 0 1", "A4", "C2", "Check")]
-        [DataRow("R6k/6pp/4P3/8/4b3/2K5/2Q4p/8 b - - 0 1", "E4", "A8", "Check")]
-        [DataRow("6k1/6pp/4P2N/8/8/2K1b3/2Q4p/5R2 b - - 0 1", "E3", "H6", "Check")]
-        [DataRow("8/5kpp/4P3/8/8/2K1b3/2Q4p/6R1 b - - 0 1", "F7", "E6", "Check")]
-        [DataRow("k7/1B4pp/1P6/8/8/2K1b1B1/2Q4p/8 b - - 0 1", "A8", "B7", "Check")]
+        [DataRow("8/8/2k1P3/8/q7/8/2Q4p/4K3 b - - 0 1", "A4", "C2")]
+        [DataRow("R6k/6pp/4P3/8/4b3/2K5/2Q4p/8 b - - 0 1", "E4", "A8")]
+        [DataRow("6k1/6pp/4P2N/8/8/2K1b3/2Q4p/5R2 b - - 0 1", "E3", "H6")]
+        [DataRow("8/5kpp/4P3/8/8/2K1b3/2Q4p/6R1 b - - 0 1", "F7", "E6")]
+        [DataRow("k7/1B4pp/1P6/8/8/2K1b1B1/2Q4p/8 b - - 0 1", "A8", "B7")]
         [TestMethod]
-        public void Play_ShouldSolveCheckByCapturingTheEnemyPiece(string fen, string origin, string destination, string checkState)
+        public void Play_ShouldSolveCheckByCapturingTheEnemyPiece(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, checkState);
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
 
             Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
@@ -144,9 +144,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveDoubleCheckByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, "DoubleCheck");
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Assert.AreEqual(CheckState.DoubleCheck, match.CurrentPlayerCheckState);
+            Assert.IsNull(match.CurrentPlayerCheckState);
             Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
@@ -156,22 +156,22 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveDoubleCheckByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, "DoubleCheck");
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Assert.AreEqual(CheckState.DoubleCheck, match.CurrentPlayerCheckState);
+            Assert.IsNull(match.CurrentPlayerCheckState);
             Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
 
-        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "C5", "DoubleCheck")]
-        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "D5", "DoubleCheck")]
-        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "C7", "DoubleCheck")]
-        [DataRow("8/8/2k1P3/8/8/2Q1K3/7p/8 b - - 0 1", "C6", "D7", "DoubleCheck")]
+        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "C5")]
+        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "D5")]
+        [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "C7")]
+        [DataRow("8/8/2k1P3/8/8/2Q1K3/7p/8 b - - 0 1", "C6", "D7")]
         [TestMethod]
-        public void Play_TryingToSolveCheckByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination, string checkState)
+        public void Play_TryingToSolveCheckByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, checkState);
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
             Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 

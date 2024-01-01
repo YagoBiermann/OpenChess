@@ -9,9 +9,8 @@ namespace OpenChess.Domain
         public MatchStatus Status { get; }
         public Time Time { get; }
         public Guid? WinnerId { get; } = null;
-        public CheckState CurrentPlayerCheckState { get; }
 
-        public MatchInfo(string matchId, List<PlayerInfo> players, string fen, Stack<string> pgnMoves, string status, int time, string currentPlayerCheckState, string? winnerId = null)
+        public MatchInfo(string matchId, List<PlayerInfo> players, string fen, Stack<string> pgnMoves, string status, int time, string? winnerId = null)
         {
             MatchId = Match.TryParseId(matchId);
             Players = players;
@@ -23,9 +22,6 @@ namespace OpenChess.Domain
 
             if (!Enum.IsDefined(typeof(Time), time)) { throw new MatchException($"The given time {time} is not valid"); }
             Time = (Time)time;
-
-            if (!Enum.TryParse(currentPlayerCheckState, out CheckState checkState)) throw new MatchException("Could not parse check state");
-            CurrentPlayerCheckState = checkState;
 
             if (winnerId is null) return;
             WinnerId = Match.TryParseId(winnerId!);

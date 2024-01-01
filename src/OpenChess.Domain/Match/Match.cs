@@ -7,7 +7,7 @@ namespace OpenChess.Domain
         private Chessboard _chessboard { get; set; }
         private Stack<string> _pgnMoveText { get; set; }
         private MatchStatus _matchStatus { get; set; }
-        private CheckState _currentPlayerCheckState { get; set; }
+        private CheckState? _currentPlayerCheckState { get; set; }
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
         private CheckHandler _checkHandler { get; }
@@ -41,7 +41,7 @@ namespace OpenChess.Domain
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
             _checkHandler = new CheckHandler(_chessboard, _chessboard.MovesCalculator);
-            _currentPlayerCheckState = matchInfo.CurrentPlayerCheckState;
+            _currentPlayerCheckState = null;
 
             if (winnerId is null) { _winner = null; return; }
             Player winner = GetPlayerById((Guid)winnerId, _players) ?? throw new MatchException("Couldn't determine the winner");
@@ -90,7 +90,7 @@ namespace OpenChess.Domain
         {
             return Status.Equals(MatchStatus.Finished);
         }
-        public CheckState CurrentPlayerCheckState { get { return _currentPlayerCheckState; } }
+        public CheckState? CurrentPlayerCheckState { get { return _currentPlayerCheckState; } }
         public MatchStatus Status { get { return _matchStatus; } }
         public PlayerInfo? CurrentPlayer
         {
