@@ -161,7 +161,8 @@ namespace OpenChess.Domain
                     moveAmount = pawn.ForwardMoveAmount;
                 }
                 List<Coordinate> positions = Coordinate.CalculateSequence(piece.Origin, direction, moveAmount);
-                List<IReadOnlyPiece> piecesInLineOfSight = _chessboard.GetPieces(positions);
+                List<PieceDistances> piecesInLineOfSight = PieceDistances.CalculateDistance(piece, _chessboard.GetPieces(positions));
+
                 lineOfSight.Add(new(piece, direction, positions, piecesInLineOfSight));
             }
 
