@@ -172,25 +172,24 @@ namespace OpenChess.Domain
 
         private List<Coordinate> CalculatePositionsNotAllowedForTheKing(List<IReadOnlyPiece> piecesPosition)
         {
-            List<List<PieceRangeOfAttack>> allMoves = new();
+            List<PieceRangeOfAttack> allMoves = new();
             foreach (IReadOnlyPiece piece in piecesPosition)
             {
                 List<PieceRangeOfAttack> moves = CalculateRangeOfAttack(piece);
-                var movesHittingTheEnemyKing = moves.Where(m => m.IsHittingTheEnemyKing && m.Piece.IsLongRange).ToList();
-                if (!movesHittingTheEnemyKing.Any())
-                {
-                    allMoves.Add(moves);
-                    continue;
-                };
 
-                movesHittingTheEnemyKing.ForEach(m =>
+                if (!piece.IsLongRange) { allMoves.AddRange(moves); continue; }
+                allMoves.AddRange(moves.FindAll(m => !m.IsHittingTheEnemyKing));
+                var movesHittingTheEnemyKing = moves.FindAll(m => m.IsHittingTheEnemyKing);
+
+                foreach (var move in movesHittingTheEnemyKing)
                 {
-                    Coordinate? positionBehindTheKing = Coordinate.CalculateNextPosition(m.Piece.Origin, m.Direction);
-                    if (positionBehindTheKing is null) return;
-                    m.RangeOfAttack.Add(positionBehindTheKing);
-                });
+                    Coordinate? positionBehindTheKing = Coordinate.CalculateNextPosition(move.NearestPiece!.Origin, move.Direction);
+                    if (positionBehindTheKing is null) continue;
+                    move.RangeOfAttack.Add(positionBehindTheKing);
+                }
+                allMoves.AddRange(movesHittingTheEnemyKing);
             }
-            List<Coordinate> positionsNotAllowedToMove = allMoves.SelectMany(m => m.SelectMany(m => m.RangeOfAttack)).ToList();
+            List<Coordinate> positionsNotAllowedToMove = allMoves.SelectMany(m => m.RangeOfAttack).ToList();
 
             return positionsNotAllowedToMove;
         }
