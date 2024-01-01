@@ -112,7 +112,7 @@ namespace OpenChess.Tests
         [DataRow("8/2k5/2R5/Q7/7p/8/8/4K3 b - - 0 1", "C7", "C6", "DoubleCheck")]
         [DataRow("8/8/kP6/8/8/3BK3/7p/8 b - - 0 1", "A6", "B6", "DoubleCheck")]
         [TestMethod]
-        public void Check_ShouldBeSolvedByCapturingAPieceWithTheKing(string fen, string origin, string destination, string checkState)
+        public void Play_ShouldSolveCheckByCapturingAPieceWithTheKing(string fen, string origin, string destination, string checkState)
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, checkState);
             Match match = new(matchInfo);
@@ -125,7 +125,7 @@ namespace OpenChess.Tests
 
         [DataRow("8/1r6/k1R5/8/8/3BK3/8/8 b - - 0 1", "B7", "B6")]
         [TestMethod]
-        public void DoubleCheck_TryingToSolveByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
+        public void Play_TryingToSolveDoubleCheckByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, "DoubleCheck");
             Match match = new(matchInfo);
@@ -137,7 +137,7 @@ namespace OpenChess.Tests
 
         [DataRow("3B4/8/kR6/8/8/3BK3/8/8 b - - 0 1", "A6", "B6")]
         [TestMethod]
-        public void DoubleCheck_TryingToSolveByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
+        public void Play_TryingToSolveDoubleCheckByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, "DoubleCheck");
             Match match = new(matchInfo);
@@ -152,7 +152,7 @@ namespace OpenChess.Tests
         [DataRow("8/8/2k5/7R/8/2Q1K3/7p/8 b - - 0 1", "C6", "C7", "DoubleCheck")]
         [DataRow("8/8/2k1P3/8/8/2Q1K3/7p/8 b - - 0 1", "C6", "D7", "DoubleCheck")]
         [TestMethod]
-        public void Check_TryingToSolveByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination, string checkState)
+        public void Play_TryingToSolveCheckByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination, string checkState)
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen, checkState);
             Match match = new(matchInfo);
@@ -162,6 +162,11 @@ namespace OpenChess.Tests
         }
 
         [DataRow("k7/1R6/1P6/p7/4BB2/8/5K2/8 w - - 0 1", "B7", "B8")]
+        [DataRow("6k1/6Pp/8/5N2/8/rnB5/P7/4KR2 w - - 0 1", "F5", "H6")]
+        [DataRow("7k/6pp/8/8/8/rnB5/P7/4KR2 w - - 0 1", "F1", "F8")]
+        [DataRow("7k/6pp/8/8/8/rnB5/P7/4KR2 w - - 0 1", "F1", "F8")]
+        [DataRow("rnbqkbnr/ppppp2p/8/5Pp1/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D1", "H5")]
+        [DataRow("k7/3P3R/8/8/p7/1p2K3/8/8 w - - 0 1", "D7", "D8")]
         [TestMethod]
         public void Play_MoveResultingInCheckmate_ShouldEndTheMatchAndDeclareWinner(string fen, string origin, string destination)
         {
@@ -172,6 +177,10 @@ namespace OpenChess.Tests
         }
 
         [DataRow("8/8/2k1P3/8/8/1Q2K3/7p/8 w - - 0 1", "B3", "C3")]
+        [DataRow("4k3/3b4/8/1B5R/8/8/8/4K3 w - - 0 1", "H5", "E5")]
+        [DataRow("r6k/6pp/8/3R4/8/1n6/P7/4K3 w - - 0 1", "D5", "D8")]
+        [DataRow("6k1/6Pp/8/5N2/8/rn6/P7/4KR2 w - - 0 1", "F5", "H6")]
+        [DataRow("rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D1", "H5")]
         [TestMethod]
         public void Play_MoveResultingInCheckWithSolution_ShouldKeepMatchInProgress(string fen, string origin, string destination)
         {
