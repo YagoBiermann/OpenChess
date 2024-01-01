@@ -12,7 +12,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
-            Assert.AreEqual(Color.White, chessboard.Turn);
+            Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
             Assert.IsTrue(chessboard.CastlingAvailability.IsWhiteKingSideAvailable);
             Assert.IsTrue(chessboard.CastlingAvailability.IsWhiteQueenSideAvailable);
@@ -57,7 +57,7 @@ namespace OpenChess.Tests
             Assert.IsFalse(chessboard.CastlingAvailability.IsWhiteQueenSideAvailable);
             Assert.IsFalse(chessboard.CastlingAvailability.IsBlackKingSideAvailable);
             Assert.IsFalse(chessboard.CastlingAvailability.IsBlackQueenSideAvailable);
-            Assert.AreEqual(Color.Black, chessboard.Turn);
+            Assert.AreEqual(Color.Black, chessboard.CurrentPlayer);
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
@@ -169,9 +169,9 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(FenInfo.InitialPosition);
 
-            Assert.AreEqual(Color.White, chessboard.Turn);
+            Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
-            Assert.AreEqual(Color.Black, chessboard.Turn);
+            Assert.AreEqual(Color.Black, chessboard.CurrentPlayer);
         }
 
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "D6", "B6")]

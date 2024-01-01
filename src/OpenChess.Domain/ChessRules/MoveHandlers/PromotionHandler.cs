@@ -17,7 +17,7 @@ namespace OpenChess.Domain
                 if (piece is not Pawn) throw new ChessboardException("Cannot handle promotion because piece is not a pawn.");
                 IReadOnlyPiece? pieceCaptured = base.Handle(piece, destination).PieceCaptured;
 
-                _chessboard.AddPiece(destination, char.Parse(promotingTo), _chessboard.Turn);
+                _chessboard.AddPiece(destination, char.Parse(promotingTo), _chessboard.CurrentPlayer);
                 IReadOnlyPiece pieceMoved = _chessboard.GetReadOnlySquare(destination).ReadOnlyPiece!;
 
                 return new(piece.Origin, destination, pieceMoved, pieceCaptured, MoveType.PawnPromotionMove, promotingTo);

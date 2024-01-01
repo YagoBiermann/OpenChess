@@ -13,18 +13,18 @@ namespace OpenChess.Domain
         private EnPassantAvailability _enPassantAvailability;
         public IEnPassantAvailability EnPassantAvailability { get => _enPassantAvailability; private set { _enPassantAvailability = (EnPassantAvailability)value; } }
         public IMoveCalculator MovesCalculator { get; }
-        public Color Turn { get; private set; }
+        public Color CurrentPlayer { get; private set; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
         public string LastPosition { get; private set; }
-        public Color Opponent { get => ColorUtils.GetOppositeColor(Turn); }
+        public Color Opponent { get => ColorUtils.GetOppositeColor(CurrentPlayer); }
 
         public Chessboard(string position)
         {
             FenInfo fenPosition = new(position);
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
-            Turn = fenPosition.ConvertTurn(fenPosition.Turn);
+            CurrentPlayer = fenPosition.ConvertTurn(fenPosition.Turn);
             _castlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
             Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
             _enPassantAvailability = new(enPassantPosition);
@@ -88,13 +88,13 @@ namespace OpenChess.Domain
         {
             if (!GetReadOnlySquare(origin).HasPiece) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
             IReadOnlyPiece piece = GetReadOnlySquare(origin).ReadOnlyPiece!;
-            if (piece.Color != Turn) { throw new ChessboardException("It's not your turn"); }
+            if (piece.Color != CurrentPlayer) { throw new ChessboardException("It's not your turn"); }
             MovePlayed move = _moveHandler.Handle(piece, destination, promotingPiece);
 
             HandleIllegalPosition();
             _enPassantAvailability.ClearEnPassant();
             _enPassantAvailability.SetVulnerablePawn(move.PieceMoved, origin);
-            _castlingAvailability.UpdateAvailability(origin, Turn);
+            _castlingAvailability.UpdateAvailability(origin, CurrentPlayer);
             SwitchTurns();
             _piecesCache.Clear();
             MovesCalculator.CalculateAndCacheAllMoves();
@@ -141,20 +141,20 @@ namespace OpenChess.Domain
 
         private void SwitchTurns()
         {
-            Turn = Opponent;
+            CurrentPlayer = Opponent;
         }
 
         private void HandleIllegalPosition()
         {
             CheckHandler checkHandler = new(this, MovesCalculator);
-            if (checkHandler.IsInCheck(Turn, out CheckState checkAmount)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
+            if (checkHandler.IsInCheck(CurrentPlayer, out CheckState checkAmount)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
         }
 
         private void RestoreToLastPosition()
         {
             Chessboard previous = new(LastPosition);
             _board = previous._board;
-            Turn = previous.Turn;
+            CurrentPlayer = previous.CurrentPlayer;
             _enPassantAvailability = (EnPassantAvailability)previous.EnPassantAvailability;
             _castlingAvailability = (CastlingAvailability)previous.CastlingAvailability;
             HalfMove = previous.HalfMove;
@@ -182,7 +182,7 @@ namespace OpenChess.Domain
 
         private string BuildTurnString()
         {
-            return Turn == Color.Black ? "b" : "w";
+            return CurrentPlayer == Color.Black ? "b" : "w";
         }
 
         private string BuildChessboardString()

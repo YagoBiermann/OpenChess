@@ -185,7 +185,7 @@ namespace OpenChess.Tests
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.Turn).Id;
+            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.CurrentPlayer).Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             match.Play(move);
@@ -209,7 +209,7 @@ namespace OpenChess.Tests
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.Turn).Id;
+            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.CurrentPlayer).Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting);
 
             match.Play(move);
@@ -338,7 +338,7 @@ namespace OpenChess.Tests
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.Turn).Id;
+            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.CurrentPlayer).Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));

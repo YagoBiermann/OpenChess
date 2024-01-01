@@ -74,7 +74,7 @@ namespace OpenChess.Tests
         public void CalculateKingMoves_ShouldReturnCorrectMoves(string fen, int testCase)
         {
             Chessboard chessboard = new(fen);
-            var kingMoves = chessboard.MovesCalculator.CalculateKingMoves(chessboard.Turn).SelectMany(m => m.RangeOfAttack).ToList();
+            var kingMoves = chessboard.MovesCalculator.CalculateKingMoves(chessboard.CurrentPlayer).SelectMany(m => m.RangeOfAttack).ToList();
 
             CollectionAssert.AreEquivalent(GetExpectedKingMoves(testCase), kingMoves);
         }

@@ -53,7 +53,7 @@ namespace OpenChess.Domain
             ValidateMove(move);
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
 
-            bool isInCheckmate = _checkHandler.IsInCheckmate(_chessboard.Turn, out CheckState checkState);
+            bool isInCheckmate = _checkHandler.IsInCheckmate(_chessboard.CurrentPlayer, out CheckState checkState);
             if (isInCheckmate) DeclareWinnerAndFinish();
             _currentPlayerCheckState = checkState;
             string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
@@ -97,7 +97,7 @@ namespace OpenChess.Domain
             get
             {
                 if (!HasStarted() || HasFinished()) return null;
-                return GetPlayerByColor(_chessboard.Turn);
+                return GetPlayerByColor(_chessboard.CurrentPlayer);
             }
         }
 
@@ -158,7 +158,7 @@ namespace OpenChess.Domain
             if (GetPlayerById(move.PlayerId, _players) is null) { throw new MatchException("You are not in this match"); }
 
             Player player = GetPlayerById(move.PlayerId, _players)!;
-            if (!player.Color.Equals(_chessboard.Turn)) { throw new MatchException("Its not your turn!"); };
+            if (!player.Color.Equals(_chessboard.CurrentPlayer)) { throw new MatchException("Its not your turn!"); };
             if (!_chessboard.GetReadOnlySquare(move.Origin).HasPiece) { throw new ChessboardException("There is no piece in this position"); };
 
             Color pieceColor = _chessboard.GetReadOnlySquare(move.Origin).ReadOnlyPiece!.Color;
