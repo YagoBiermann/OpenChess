@@ -23,6 +23,25 @@ namespace OpenChess.Domain
             return CalculateRangeOfAttack(piece).Where(m => m.IsHittingTheEnemyKing).ToList().Any();
         }
 
+        public bool IsPinned(IReadOnlyPiece piece)
+        {
+            List<IReadOnlyPiece> enemyPieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(piece.Color)).FindAll(p => p.IsLongRange);
+            if (!enemyPieces.Any()) return false;
+            foreach (IReadOnlyPiece enemyPiece in enemyPieces)
+            {
+                var piecesInLineOfSightOfEnemyPiece = CalculateLineOfSight(enemyPiece).FindAll(l => l.AnyPieceInLineOfSight && l.PiecesInLineOfSight.Count >= 2).Select(m => m.PiecesInLineOfSight).ToList();
+                if (!piecesInLineOfSightOfEnemyPiece.Any()) continue;
+
+                bool pieceAtSecondPositionIsTheAllyKing(List<PieceDistances> pieceDistances) => pieceDistances.ElementAtOrDefault(1).Piece.Color == piece.Color && pieceDistances.ElementAtOrDefault(1).Piece is King;
+                bool pieceAtFirstPositionIsTheSamePiece(List<PieceDistances> pieceDistances) => pieceDistances.ElementAtOrDefault(0).Piece.Equals(piece);
+                bool isPinnedByEnemyPiece(List<PieceDistances> pieceDistances) => pieceAtFirstPositionIsTheSamePiece(pieceDistances) && pieceAtSecondPositionIsTheAllyKing(pieceDistances);
+
+                if (piecesInLineOfSightOfEnemyPiece.Where(isPinnedByEnemyPiece).Any()) return true;
+            }
+
+            return false;
+        }
+
         public void CalculateAndCacheAllMoves()
         {
             _preCalculatedRangeOfAttack.Clear();
