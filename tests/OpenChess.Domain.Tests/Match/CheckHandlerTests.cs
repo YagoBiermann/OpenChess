@@ -184,6 +184,8 @@ namespace OpenChess.Tests
         [DataRow("7k/6pp/8/8/8/rnB5/P7/4KR2 w - - 0 1", "F1", "F8")]
         [DataRow("rnbqkbnr/ppppp2p/8/5Pp1/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D1", "H5")]
         [DataRow("k7/3P3R/8/8/p7/1p2K3/8/8 w - - 0 1", "D7", "D8")]
+        [DataRow("4k3/b7/1q6/8/8/5b2/6R1/7K b - - 0 1", "B6", "G1", DisplayName = "Pinned piece")]
+        [DataRow("6k1/5rp1/8/8/8/8/B5Q1/4K1R1 w - - 0 1", "G2", "G7", DisplayName = "Pinned piece")]
         [TestMethod]
         public void Play_MoveResultingInCheckmate_ShouldEndTheMatchAndDeclareWinner(string fen, string origin, string destination)
         {
@@ -201,6 +203,7 @@ namespace OpenChess.Tests
         [DataRow("k7/6pp/BP6/8/8/2K1b1B1/2Q4p/8 w - - 0 1", "A6", "B7")]
         [DataRow("6k1/5r2/8/8/8/8/6Q1/4K1R1 w - - 0 1", "G2", "G7")]
         [DataRow("6k1/p7/1p3Q2/8/7P/8/8/4K3 w - - 0 1", "F6", "G7")]
+        [DataRow("4k3/3b4/8/1B1R4/8/8/8/4K3 w - - 0 1", "D5", "E5", DisplayName = "Pinned piece")]
         [TestMethod]
         public void Play_MoveResultingInCheckWithSolution_ShouldKeepMatchInProgress(string fen, string origin, string destination)
         {
