@@ -28,5 +28,30 @@ namespace OpenChess.Tests
             Assert.IsFalse(chessboard.MovesCalculator.IsHittingTheEnemyKing(piece));
         }
 
+        [DataRow("4K3/4R3/2p5/8/7P/8/8/k3r3 w - - 0 1", "E7")]
+        [DataRow("4K3/4P3/8/2p5/7P/8/8/k3r3 w - - 0 1", "E7")]
+        [DataRow("8/4K3/4RQ2/6b1/7p/8/8/k3r3 w - - 0 1", "F6")]
+        [TestMethod]
+        public void IsPinned_ShouldReturnTrue(string fen, string origin)
+        {
+            Chessboard chessboard = new(fen);
+            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
+            Assert.IsTrue(chessboard.MovesCalculator.IsPinned(piece));
+        }
+
+        [DataRow("8/8/8/8/7P/1r2p1K1/8/k7 w - - 0 1", "E3")]
+        [DataRow("8/8/8/8/7P/1r2p1K1/8/k7 w - - 0 1", "G3")]
+        [DataRow("4K3/3R4/2p5/8/7P/8/8/k7 w - - 0 1", "D7")]
+        [DataRow("4K3/3R4/2p5/8/7P/8/8/k3r3 w - - 0 1", "D7")]
+        [DataRow("3K4/8/8/2p5/7P/8/8/kn2r3 w - - 0 1", "B1")]
+        [DataRow("8/8/8/2p5/7P/2K5/3R4/k3r3 w - - 0 1", "D2")]
+        [TestMethod]
+        public void IsPinned_ShouldReturnFalse(string fen, string origin)
+        {
+            Chessboard chessboard = new(fen);
+            IReadOnlyPiece piece = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
+            Assert.IsFalse(chessboard.MovesCalculator.IsPinned(piece));
+        }
+
     }
 }
