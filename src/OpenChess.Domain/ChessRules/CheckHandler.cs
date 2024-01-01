@@ -65,7 +65,7 @@ namespace OpenChess.Domain
             foreach (IReadOnlyPiece piece in allyPieces)
             {
                 if (piece is King) continue;
-
+                if (_movesCalculator.IsPinned(piece)) continue;
                 List<PieceRangeOfAttack> moves = new();
                 moves.AddRange(_movesCalculator.CalculateLegalMoves(piece));
                 var rangeOfAttackFromAllyPiece = moves.SelectMany(m => m.RangeOfAttack).ToList();
