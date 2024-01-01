@@ -13,7 +13,9 @@ namespace OpenChess.Domain
         public bool IsInCheckmate(Color player, out CheckState checkState)
         {
             if (!IsInCheck(player, out checkState)) return false;
-            return !CanCheckBeSolved(player, checkState);
+            if (CanCheckBeSolved(player, checkState)) return false;
+            checkState = CheckState.Checkmate;
+            return true;
         }
 
         public bool IsInCheck(Color player, out CheckState checkState)
