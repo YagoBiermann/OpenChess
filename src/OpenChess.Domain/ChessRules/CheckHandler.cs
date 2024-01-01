@@ -13,7 +13,7 @@ namespace OpenChess.Domain
         public bool IsInCheckmate(Color player, out CheckState checkState)
         {
             if (!IsInCheck(player, out checkState)) return false;
-            return CanCheckBeSolved(player, checkState);
+            return !CanCheckBeSolved(player, checkState);
         }
 
         public bool IsInCheck(Color player, out CheckState checkState)
@@ -47,8 +47,13 @@ namespace OpenChess.Domain
 
         private bool CanCheckBeSolved(Color player, CheckState checkState)
         {
-            if (checkState == CheckState.DoubleCheck) return _movesCalculator.CalculateKingMoves(player).Any();
-            return CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(player);
+            if (checkState == CheckState.DoubleCheck) return CanSolveByMovingTheKing(player);
+            return CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(player) || CanSolveByMovingTheKing(player);
+        }
+
+        private bool CanSolveByMovingTheKing(Color player)
+        {
+            return _movesCalculator.CalculateKingMoves(player).Any();
         }
 
         private bool CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(Color player)
