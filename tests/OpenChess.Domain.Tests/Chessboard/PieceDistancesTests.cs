@@ -53,7 +53,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateDistance_UnsortedRange_ShouldCalculateDistancesCorrectly()
+        public void CalculateDistance_UnsortedRange_ShouldReturnSortedList()
         {
             Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
 
