@@ -53,7 +53,7 @@ namespace OpenChess.Domain
         {
             if (piece is Pawn pawn) { return CalculatePawnMoves(pawn); }
             List<PieceRangeOfAttack> legalMoves = CalculateRangeOfAttack(piece);
-            legalMoves.Where(m => !m.IsHittingAnEnemyPiece).ToList().ForEach(m =>
+            legalMoves.Where(m => m.NearestPiece?.Color == piece.Color).ToList().ForEach(m =>
             {
                 m.RangeOfAttack.Remove(m.RangeOfAttack.Last()); // Remove ally piece position
             });
