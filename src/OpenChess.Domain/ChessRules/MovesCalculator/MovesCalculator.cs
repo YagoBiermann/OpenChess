@@ -25,6 +25,7 @@ namespace OpenChess.Domain
 
         public bool IsPinned(IReadOnlyPiece piece)
         {
+            if (piece is King) return false;
             List<IReadOnlyPiece> enemyPieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(piece.Color)).FindAll(p => p.IsLongRange);
             if (!enemyPieces.Any()) return false;
             foreach (IReadOnlyPiece enemyPiece in enemyPieces)
