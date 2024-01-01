@@ -186,6 +186,9 @@ namespace OpenChess.Tests
         [DataRow("k7/3P3R/8/8/p7/1p2K3/8/8 w - - 0 1", "D7", "D8")]
         [DataRow("4k3/b7/1q6/8/8/5b2/6R1/7K b - - 0 1", "B6", "G1", DisplayName = "Pinned piece")]
         [DataRow("6k1/5rp1/8/8/8/8/B5Q1/4K1R1 w - - 0 1", "G2", "G7", DisplayName = "Pinned piece")]
+        [DataRow("7k/n7/p5PP/1p6/8/8/Q1B5/1R2K3 w - - 0 1", "G6", "G7")]
+        [DataRow("7k/n5p1/p4P1P/1p6/8/8/Q1B5/1R2K3 w - - 0 1", "F6", "G7")]
+        [DataRow("k1r5/3P3R/8/8/p7/1p2K3/8/8 w - - 0 1", "D7", "C8")]
         [TestMethod]
         public void Play_MoveResultingInCheckmate_ShouldEndTheMatchAndDeclareWinner(string fen, string origin, string destination)
         {
