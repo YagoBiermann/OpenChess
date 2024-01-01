@@ -191,5 +191,13 @@ namespace OpenChess.Tests
             Assert.AreNotEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
             Assert.AreNotEqual(CheckState.Checkmate, match.CurrentPlayerCheckState);
         }
+
+        [DataRow("4k3/8/8/8/7b/2q3R1/8/4K3 w - - 0 1", "G3", "C3")]
+        [DataRow("4k3/3b4/8/1B2R3/8/8/8/4K3 b - - 0 1", "D7", "E6")]
+        [TestMethod]
+        public void Play_TryingToSolveCheckByMovingPinnedPiece_ShouldThrowException(string fen, string origin, string destination)
+        {
+            Assert.ThrowsException<ChessboardException>(() => FakeMatch.RestoreAndPlay(fen, origin, destination));
+        }
     }
 }
