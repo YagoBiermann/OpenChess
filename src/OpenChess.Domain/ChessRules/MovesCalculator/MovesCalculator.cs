@@ -173,7 +173,7 @@ namespace OpenChess.Domain
         {
             if (!piecesPosition.Any()) return new(move.LineOfSight);
             List<PieceDistances> distances = PieceDistances.CalculateDistance(piece, piecesPosition);
-            PieceDistances nearestPiece = PieceDistances.CalculateNearestDistance(distances);
+            PieceDistances nearestPiece = distances.FirstOrDefault();
             List<Coordinate> rangeOfAttack = move.LineOfSight.Take(nearestPiece.DistanceFromOrigin).ToList();
 
             return rangeOfAttack;

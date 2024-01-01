@@ -29,13 +29,5 @@ namespace OpenChess.Domain
 
             return distances;
         }
-
-        public static PieceDistances CalculateNearestDistance(List<PieceDistances> distances)
-        {
-            int minDistance = distances.Min(d => d.DistanceFromOrigin);
-            PieceDistances nearestPiece = distances.Find(d => d.DistanceFromOrigin == minDistance);
-
-            return nearestPiece;
-        }
     }
 }

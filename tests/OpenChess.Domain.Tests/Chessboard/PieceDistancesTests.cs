@@ -73,33 +73,5 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedDistances, distances);
         }
-
-        [TestMethod]
-        public void CalculateNearestDistance_ShouldReturnNearestPieceFromOrigin()
-        {
-            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
-
-            var pieceOfReference = chessboard.GetReadOnlySquare("B2").ReadOnlyPiece!;
-            var pieceAtC3 = chessboard.GetReadOnlySquare("C3").ReadOnlyPiece!;
-            var pieceAtD4 = chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
-            var pieceAtE5 = chessboard.GetReadOnlySquare("E5").ReadOnlyPiece!;
-            var pieceAtF6 = chessboard.GetReadOnlySquare("F6").ReadOnlyPiece!;
-            var pieceAtG7 = chessboard.GetReadOnlySquare("G7").ReadOnlyPiece!;
-            var pieceAtH8 = chessboard.GetReadOnlySquare("H8").ReadOnlyPiece!;
-
-            List<PieceDistances> pieceDistances = new()
-            {
-                new(5,pieceAtG7),
-                new(6,pieceAtH8),
-                new(1,pieceAtC3),
-                new(3,pieceAtE5),
-                new(2,pieceAtD4),
-                new(4,pieceAtF6),
-            };
-            PieceDistances nearestPiece = PieceDistances.CalculateNearestDistance(pieceDistances);
-            PieceDistances expectedDistance = new(1, pieceAtC3);
-
-            Assert.AreEqual(expectedDistance, nearestPiece);
-        }
     }
 }
