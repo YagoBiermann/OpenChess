@@ -5,15 +5,15 @@ namespace OpenChess.Domain
         public IReadOnlyPiece Piece { get; }
         public Direction Direction { get; }
         public List<Coordinate> LineOfSight { get; }
-        public List<IReadOnlyPiece> AllPiecesInLineOfSight { get; }
-        public bool AnyPieceInLineOfSight { get => AllPiecesInLineOfSight.Any(); }
+        public List<PieceDistances> PiecesInLineOfSight { get; }
+        public bool AnyPieceInLineOfSight { get => PiecesInLineOfSight.Any(); }
 
-        public PieceLineOfSight(IReadOnlyPiece piece, Direction direction, List<Coordinate> lineOfSight, List<IReadOnlyPiece> allPiecesInLineOfSight)
+        public PieceLineOfSight(IReadOnlyPiece piece, Direction direction, List<Coordinate> lineOfSight, List<PieceDistances> piecesInLineOfSight)
         {
             Piece = piece;
             Direction = direction;
             LineOfSight = lineOfSight;
-            AllPiecesInLineOfSight = allPiecesInLineOfSight;
+            PiecesInLineOfSight = piecesInLineOfSight;
         }
     }
 }
