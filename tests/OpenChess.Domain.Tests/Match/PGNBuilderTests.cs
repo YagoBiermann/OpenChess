@@ -130,13 +130,32 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "H1", "H8", "1. Rxh8+")]
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "C2", "G6", "1. Bxg6+")]
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "D5", "C7", "1. Nxc7+")]
-        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "E2", "E7", "1. Qxe7+")]
+        [DataRow("r3k2r/2p1q1b1/6b1/8/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "E2", "E7", "1. Qxe7+")]
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "A8", "A1", "1. Rxa1+")]
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "B4", "C2", "1. Nxc2+")]
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "G7", "C3", "1. Bxc3+")]
         [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "E7", "E2", "1. Qxe2+")]
         [TestMethod]
         public void PieceMove_CaptureWithCheck_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination, string expectedPGNMove)
+        {
+            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
+            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+        }
+
+        [DataRow("k7/1R6/1P6/p7/4BB2/8/5K2/8 w - - 0 1", "B7", "B8", "1. Rb8#")]
+        [DataRow("r3k2r/2p1q1b1/6b1/3N4/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "E2", "E7", "1. Qxe7#")]
+        [DataRow("6k1/6Pp/8/5N2/8/rnB5/P7/4KR2 w - - 0 1", "F5", "H6", "1. Nh6#")]
+        [DataRow("7k/6pp/8/8/8/rnB5/P7/4KR2 w - - 0 1", "F1", "F8", "1. Rf8#")]
+        [DataRow("7k/6pp/8/8/8/rnB5/P7/4KR2 w - - 0 1", "F1", "F8", "1. Rf8#")]
+        [DataRow("rnbqkbnr/ppppp2p/8/5Pp1/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D1", "H5", "1. Qh5#")]
+        [DataRow("k7/3P3R/8/8/p7/1p2K3/8/8 w - - 0 1", "D7", "D8", "1. d8=Q#")]
+        [DataRow("k1r5/3P3R/8/8/p7/1p2K3/8/8 w - - 0 1", "D7", "C8", "1. dxc8=Q#")]
+        [DataRow("4k3/b7/1q6/8/8/5b2/6R1/7K b - - 0 1", "B6", "G1", "1. Qg1#")]
+        [DataRow("6k1/5rp1/8/8/8/8/B5Q1/4K1R1 w - - 0 1", "G2", "G7", "1. Qxg7#")]
+        [DataRow("7k/n7/p5PP/1p6/8/8/Q1B5/1R2K3 w - - 0 1", "G6", "G7", "1. g7#")]
+        [DataRow("7k/n5p1/p4P1P/1p6/8/8/Q1B5/1R2K3 w - - 0 1", "F6", "G7", "1. fxg7#")]
+        [TestMethod]
+        public void Play_MoveResultingInCheckmate_ShouldAddCheckmateSign(string fen, string origin, string destination, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
             Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
