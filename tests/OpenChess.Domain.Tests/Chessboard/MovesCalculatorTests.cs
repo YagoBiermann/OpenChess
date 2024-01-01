@@ -5,6 +5,19 @@ namespace OpenChess.Tests
     [TestClass]
     public class MovesCalculatorTests
     {
+        private static List<Coordinate> GetExpectedKingMoves(int move)
+        {
+            Dictionary<int, List<Coordinate>> expectedKingMoves = new()
+            {
+                { 1, new() { Coordinate.GetInstance("C6") } },
+                { 2, new() { Coordinate.GetInstance("D4"), Coordinate.GetInstance("B5"), Coordinate.GetInstance("B6")} },
+                { 3, new() { Coordinate.GetInstance("D4"), Coordinate.GetInstance("B5"), Coordinate.GetInstance("B6"), Coordinate.GetInstance("D6")} },
+                { 4, new() { Coordinate.GetInstance("D4"), Coordinate.GetInstance("B5"), Coordinate.GetInstance("B6"), Coordinate.GetInstance("D6")} },
+                { 5, new() { Coordinate.GetInstance("B4"), Coordinate.GetInstance("B5"), Coordinate.GetInstance("D6"), Coordinate.GetInstance("D5")} },
+            };
+
+            return expectedKingMoves[move];
+        }
 
         [DataRow("r3k2r/2p3b1/6b1/8/1n6/2B5/2B1Q3/R3K2R w - - 0 1", "E2")]
         [DataRow("8/8/8/8/5p1P/6K1/1r6/k7 w - - 0 1", "F4")]
@@ -51,6 +64,19 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(fen);
             IReadOnlyPiece piece = chessboard.GetReadOnlySquare(Coordinate.GetInstance(origin)).ReadOnlyPiece!;
             Assert.IsFalse(chessboard.MovesCalculator.IsPinned(piece));
+        }
+
+        [DataRow("8/8/8/2k3b1/3R3p/8/KQ6/4r3 b - - 0 1", 1)]
+        [DataRow("8/8/8/2k3b1/3R3p/8/K1Q5/4r3 b - - 0 1", 2)]
+        [DataRow("8/8/8/2kp2b1/3R3p/8/K1Q5/4r3 b - - 0 1", 3)]
+        [DataRow("8/8/8/2kP2b1/3R3p/8/K1Q5/4r3 b - - 0 1", 4)]
+        [TestMethod]
+        public void CalculateKingMoves_ShouldReturnCorrectMoves(string fen, int testCase)
+        {
+            Chessboard chessboard = new(fen);
+            var kingMoves = chessboard.MovesCalculator.CalculateKingMoves(chessboard.Turn).SelectMany(m => m.RangeOfAttack).ToList();
+
+            CollectionAssert.AreEquivalent(GetExpectedKingMoves(testCase), kingMoves);
         }
 
     }
