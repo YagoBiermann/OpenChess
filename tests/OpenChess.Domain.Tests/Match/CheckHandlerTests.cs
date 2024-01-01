@@ -123,11 +123,11 @@ namespace OpenChess.Tests
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
         }
 
-        [DataRow("8/8/2k1P3/8/q7/8/2Q1K2p/8 b - - 0 1", "A4", "C2", "Check")]
-        [DataRow("R6k/6pp/4P3/8/4b3/2K5/2Q4p/8 w - - 0 1", "E4", "A8", "Check")]
+        [DataRow("8/8/2k1P3/8/q7/8/2Q4p/4K3 b - - 0 1", "A4", "C2", "Check")]
+        [DataRow("R6k/6pp/4P3/8/4b3/2K5/2Q4p/8 b - - 0 1", "E4", "A8", "Check")]
         [DataRow("6k1/6pp/4P2N/8/8/2K1b3/2Q4p/5R2 b - - 0 1", "E3", "H6", "Check")]
-        [DataRow("8/5kpp/4P3/8/8/2K1b3/2Q4p/6R1 w - - 0 1", "F7", "E6", "Check")]
-        [DataRow("k7/1B4pp/1P6/8/8/2K1b1B1/2Q4p/8 w - - 0 1", "A8", "B7", "Check")]
+        [DataRow("8/5kpp/4P3/8/8/2K1b3/2Q4p/6R1 b - - 0 1", "F7", "E6", "Check")]
+        [DataRow("k7/1B4pp/1P6/8/8/2K1b1B1/2Q4p/8 b - - 0 1", "A8", "B7", "Check")]
         [TestMethod]
         public void Play_ShouldSolveCheckByCapturingTheEnemyPiece(string fen, string origin, string destination, string checkState)
         {
@@ -199,6 +199,8 @@ namespace OpenChess.Tests
         [DataRow("6k1/6Pp/8/5N2/8/rn6/P7/4KR2 w - - 0 1", "F5", "H6")]
         [DataRow("rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D1", "H5")]
         [DataRow("k7/6pp/BP6/8/8/2K1b1B1/2Q4p/8 w - - 0 1", "A6", "B7")]
+        [DataRow("6k1/5r2/8/8/8/8/6Q1/4K1R1 w - - 0 1", "G2", "G7")]
+        [DataRow("6k1/p7/1p3Q2/8/7P/8/8/4K3 w - - 0 1", "F6", "G7")]
         [TestMethod]
         public void Play_MoveResultingInCheckWithSolution_ShouldKeepMatchInProgress(string fen, string origin, string destination)
         {
