@@ -86,14 +86,7 @@ namespace OpenChess.Domain
 
         private bool HasPiece(List<Coordinate> castlingPositions)
         {
-            bool hasPiece = false;
-            foreach (Coordinate position in castlingPositions)
-            {
-                hasPiece = _chessboard.GetReadOnlySquare(position).HasPiece;
-                if (hasPiece) break;
-            }
-
-            return hasPiece;
+            return castlingPositions.Where(p => _chessboard.GetPiece(p) is not null).Any();
         }
 
         private bool AnyPieceHittingTheCastlingSquares(List<Coordinate> castlingPositions)
