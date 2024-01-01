@@ -149,19 +149,75 @@ namespace OpenChess.Tests
             Assert.IsFalse(match.IsFull());
         }
 
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/R3K2R w KQkq - 0 1", "G2", "G3", "r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1NPP/PPP1QP2/R3K2R b KQkq - 0 1", DisplayName = "Pawn move")]
+        [DataRow("rnbqk1nr/p4pp1/8/2bp2Pp/pP1PPp2/5N2/4B2P/RNBQK2R b KQkq B3 0 1", "A4", "B3", "rnbqk1nr/p4pp1/8/2bp2Pp/3PPp2/1p3N2/4B2P/RNBQK2R w KQkq - 0 1", DisplayName = "Pawn enPassant capture")]
+        [DataRow("rnbqk1nr/p4pp1/8/2bp2Pp/3PPp2/p4N2/1P2B2P/RNBQK2R w KQkq H6 0 1", "G5", "H6", "rnbqk1nr/p4pp1/7P/2bp4/3PPp2/p4N2/1P2B2P/RNBQK2R b KQkq - 0 1", DisplayName = "Pawn enPassant capture")]
+        [DataRow("rnbqk1nr/p4pp1/7P/2bp4/3PPp2/p4N2/1P2B2P/RNBQK2R w KQkq - 0 1", "B2", "A3", "rnbqk1nr/p4pp1/7P/2bp4/3PPp2/P4N2/4B2P/RNBQK2R b KQkq - 0 1", DisplayName = "Pawn move with capture")]
+        [DataRow("rnbqk1nr/p4pp1/7P/2bp4/3PPp2/P4N2/4B2P/RNBQK2R b KQkq - 0 1", "G7", "H6", "rnbqk1nr/p4p2/7p/2bp4/3PPp2/P4N2/4B2P/RNBQK2R w KQkq - 0 1", DisplayName = "Pawn move with capture")]
+        [DataRow("rnbqkbnr/ppp2ppp/8/3p4/4Pp2/5N2/PPPP2PP/RNBQKB1R w KQkq - 0 1", "D2", "D4", "rnbqkbnr/ppp2ppp/8/3p4/3PPp2/5N2/PPP3PP/RNBQKB1R b KQkq D3 0 1", DisplayName = "Pawn forward move")]
+        [DataRow("rnbqkbnr/ppp2ppp/8/3p4/3PPp2/5N2/PPP3PP/RNBQKB1R b KQkq D3 0 1", "C7", "C5", "rnbqkbnr/pp3ppp/8/2pp4/3PPp2/5N2/PPP3PP/RNBQKB1R w KQkq C6 0 1", DisplayName = "Pawn forward move")]
+        [DataRow("rnbqkbnr/pp3ppp/8/2pp4/3PPp2/5N2/PPP3PP/RNBQKB1R w KQkq C6 0 1", "C2", "C3", "rnbqkbnr/pp3ppp/8/2pp4/3PPp2/2P2N2/PP4PP/RNBQKB1R b KQkq - 0 1", DisplayName = "Pawn forward move")]
+        [DataRow("rnbqkbnr/pp3ppp/8/2pp4/3PPp2/2P2N2/PP4PP/RNBQKB1R b KQkq - 0 1", "C5", "D4", "rnbqkbnr/pp3ppp/8/3p4/3pPp2/2P2N2/PP4PP/RNBQKB1R w KQkq - 0 1", DisplayName = "Pawn diagonal move")]
+        [DataRow("rnbqkbnr/pp3ppp/8/3p4/3pPp2/2P2N2/PP4PP/RNBQKB1R w KQkq - 0 1", "C3", "D4", "rnbqkbnr/pp3ppp/8/3p4/3PPp2/5N2/PP4PP/RNBQKB1R b KQkq - 0 1", DisplayName = "Pawn diagonal move")]
+        [DataRow("r1b1k1nr/ppp2pp1/2n4p/2bp3q/3NP3/2N2Q1P/PPP2PP1/R1B1KB1R w KQkq - 0 1", "F3", "H5", "r1b1k1nr/ppp2pp1/2n4p/2bp3Q/3NP3/2N4P/PPP2PP1/R1B1KB1R b KQkq - 0 1", DisplayName = "Queen Move with capture")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPbN1/P2P1B2/b1NB2PP/1PP1QP2/R3K2R w KQkq - 0 1", "A1", "A3", "r3k2r/pp3ppp/n1pqpn2/3pPbN1/P2P1B2/R1NB2PP/1PP1QP2/4K2R b Kkq - 0 1", DisplayName = "Rook Move with capture")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPbN1/1b1P1B2/2NB2PP/PPP1QP2/R3K2R b KQkq - 0 1", "F5", "D3", "r3k2r/pp3ppp/n1pqpn2/3pP1N1/1b1P1B2/2Nb2PP/PPP1QP2/R3K2R w KQkq - 0 1", DisplayName = "Bishop Move with capture")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPbN1/1b1PQB2/2NB2PP/PPP2P2/R3K2R b KQkq - 0 1", "F6", "E4", "r3k2r/pp3ppp/n1pqp3/3pPbN1/1b1PnB2/2NB2PP/PPP2P2/R3K2R w KQkq - 0 1", DisplayName = "Knight Move with capture")]
+        [DataRow("8/4k3/3q1R2/6np/7K/p7/8/8 w - - 0 1", "H4", "H5", "8/4k3/3q1R2/6nK/8/p7/8/8 b - - 0 1", DisplayName = "King Move with capture")]
+        [DataRow("8/4k3/3q1R2/6np/7K/p7/8/8 b - - 0 1", "E7", "F6", "8/8/3q1k2/6np/7K/p7/8/8 w - - 0 1", DisplayName = "King Move with capture")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPbN1/1b1P1B2/2NB2PP/PPP1QP2/R3K2R w KQkq - 0 1", "E2", "E4", "r3k2r/pp3ppp/n1pqpn2/3pPbN1/1b1PQB2/2NB2PP/PPP2P2/R3K2R b KQkq - 0 1", DisplayName = "Queen Move")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPbN1/1b1P1B2/2NB2PP/PPP1QP2/R3K2R b KQkq - 0 1", "A8", "C8", "2r1k2r/pp3ppp/n1pqpn2/3pPbN1/1b1P1B2/2NB2PP/PPP1QP2/R3K2R w KQk - 0 1", DisplayName = "Rook Move")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPbN1/1b1P1B2/2NB2PP/PPP1QP2/R3K2R b KQkq - 0 1", "B4", "A5", "r3k2r/pp3ppp/n1pqpn2/b2pPbN1/3P1B2/2NB2PP/PPP1QP2/R3K2R w KQkq - 0 1", DisplayName = "Bishop Move")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1NPP/PPP1QP2/R3K2R w KQkq - 0 1", "F3", "G5", "r3k2r/pp3ppp/n1pqpn2/3pPbN1/1b1P1B2/2NB2PP/PPP1QP2/R3K2R b KQkq - 0 1", DisplayName = "Knight Move")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1NPP/PPP1QP2/R3K2R w KQkq - 0 1", "E1", "D1", "r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1NPP/PPP1QP2/R2K3R b kq - 0 1", DisplayName = "King Move")]
+        [DataRow("8/4k3/4n3/q5R1/7K/8/8/4R3 w - - 0 1", "G5", "G7", "8/4k1R1/4n3/q7/7K/8/8/4R3 b - - 0 1", DisplayName = "Move resulting in check")]
+        [DataRow("8/4k3/4n3/q5R1/7K/8/8/4R3 b - - 0 1", "A5", "A4", "8/4k3/4n3/6R1/q6K/8/8/4R3 w - - 0 1", DisplayName = "Move resulting in check")]
+        [DataRow("r1b1k1nr/ppp2pp1/2n4p/2bp3q/3NP3/2N2Q1P/PPP2PP1/R1B1KB1R w KQkq - 0 1", "F3", "F7", "r1b1k1nr/ppp2Qp1/2n4p/2bp3q/3NP3/2N4P/PPP2PP1/R1B1KB1R b KQkq - 0 1", DisplayName = "Move resulting in capture with check")]
+        [DataRow("8/4k3/4n3/q5R1/7K/8/8/4R3 b - - 0 1", "A5", "G5", "8/4k3/4n3/6q1/7K/8/8/4R3 w - - 0 1", DisplayName = "Move resulting in capture with check")]
+        [DataRow("8/4k3/4n3/q5R1/7K/8/8/4R3 w - - 0 1", "E1", "E6", "8/4k3/4R3/q5R1/7K/8/8/8 b - - 0 1", DisplayName = "Move resulting in capture with check")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/R3K2R w KQkq - 0 1", "E1", "G1", "r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/R4RK1 b kq - 0 1", DisplayName = "white player castling kingside")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/R3K2R w KQkq - 0 1", "E1", "C1", "r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/2KR3R b kq - 0 1", DisplayName = "white player castling queenside")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/R3K2R b KQkq - 0 1", "E8", "G8", "r4rk1/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/R3K2R w KQ - 0 1", DisplayName = "black player castling kingside")]
+        [DataRow("r3k2r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/R3K2R b KQkq - 0 1", "E8", "C8", "2kr3r/pp3ppp/n1pqpn2/3pPb2/1b1P1B2/2NB1N1P/PPP1QPP1/R3K2R w KQ - 0 1", DisplayName = "black player castling queenside")]
         [TestMethod]
-        public void Play_ValidMove_ShouldBeHandled()
+        public void Play_ValidMove_ShouldBeHandled(string fen, string origin, string destination, string expectedFen)
         {
-            Match match = new(Time.Ten);
-            match.Join(new(Color.White));
-            match.Join(new(Color.Black));
-            string initialPosition = match.Chessboard.ToString();
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
+            Match match = new(matchInfo);
+            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.Turn).Id;
+            Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             match.Play(move);
 
-            Assert.AreNotEqual(match.Chessboard.ToString(), initialPosition);
             Assert.AreNotEqual(match.CurrentPlayer, move.PlayerId);
+            Assert.AreEqual(match.Chessboard.ToString(), expectedFen);
+            Assert.IsTrue(match.Moves.Any());
+        }
+
+        [DataRow("6b1/7P/8/6K1/8/k7/1p6/3r4 w - - 0 1", "H7", "G8", "6Q1/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "Q", DisplayName = "Pawn promotion with capture")]
+        [DataRow("8/7P/8/6K1/8/k7/1p6/3r4 w - - 0 1", "H7", "H8", "7Q/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "Q", DisplayName = "Pawn promotion to queen")]
+        [DataRow("7Q/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "B2", "B1", "7Q/8/8/6K1/8/k7/8/1q1r4 w - - 0 1", "Q", DisplayName = "Pawn promotion to queen")]
+        [DataRow("8/7P/8/6K1/8/k7/1p6/3r4 w - - 0 1", "H7", "H8", "7R/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "R", DisplayName = "Pawn promotion to rook")]
+        [DataRow("7Q/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "B2", "B1", "7Q/8/8/6K1/8/k7/8/1r1r4 w - - 0 1", "R", DisplayName = "Pawn promotion to rook")]
+        [DataRow("8/7P/8/6K1/8/k7/1p6/3r4 w - - 0 1", "H7", "H8", "7B/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "B", DisplayName = "Pawn promotion to bishop")]
+        [DataRow("7Q/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "B2", "B1", "7Q/8/8/6K1/8/k7/8/1b1r4 w - - 0 1", "B", DisplayName = "Pawn promotion to bishop")]
+        [DataRow("8/7P/8/6K1/8/k7/1p6/3r4 w - - 0 1", "H7", "H8", "7N/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "N", DisplayName = "Pawn promotion to knight")]
+        [DataRow("7Q/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "B2", "B1", "7Q/8/8/6K1/8/k7/8/1n1r4 w - - 0 1", "N", DisplayName = "Pawn promotion to knight")]
+        [TestMethod]
+        public void Play_PawnPromotion_ShouldBeHandledCorrectly(string fen, string origin, string destination, string expectedFen, string promoting)
+        {
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
+            Match match = new(matchInfo);
+            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.Turn).Id;
+            Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting);
+
+            match.Play(move);
+
+            Assert.AreNotEqual(match.CurrentPlayer, move.PlayerId);
+            Assert.AreEqual(match.Chessboard.ToString(), expectedFen);
+            Assert.IsTrue(match.Moves.Any());
+        }
+
         }
 
         [TestMethod]
@@ -254,29 +310,6 @@ namespace OpenChess.Tests
             match.Play(move);
 
             Assert.IsTrue(match.Moves.Any());
-        }
-
-        [TestMethod]
-        public void Play_ShouldHandleEnPassantMoves()
-        {
-            Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
-            match.Join(player1);
-            match.Join(player2);
-
-            List<Move> moves = new()
-            {
-                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
-                new(player2.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("D5")),
-                new(player1.Id, Coordinate.GetInstance("E4"), Coordinate.GetInstance("E5")),
-                new(player2.Id, Coordinate.GetInstance("F7"), Coordinate.GetInstance("F5")),
-                new(player1.Id, Coordinate.GetInstance("E5"), Coordinate.GetInstance("F6")),
-            };
-            foreach (Move move in moves)
-            {
-                match.Play(move);
-            }
         }
     }
 }
