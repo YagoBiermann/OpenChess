@@ -6,5 +6,6 @@ namespace OpenChess.Domain
         public bool IsWhiteQueenSideAvailable { get; }
         public bool IsBlackKingSideAvailable { get; }
         public bool IsBlackQueenSideAvailable { get; }
+        public void UpdateAvailability(Coordinate origin, Color player);
     }
 }
