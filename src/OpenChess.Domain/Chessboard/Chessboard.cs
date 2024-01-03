@@ -76,6 +76,15 @@ namespace OpenChess.Domain
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
         }
 
+        public IReadOnlyPiece? ChangePiecePosition(Coordinate origin, Coordinate destination)
+        {
+            IReadOnlyPiece? piece = RemovePiece(origin) ?? throw new ChessboardException($"Piece not found at origin: {origin}");
+            IReadOnlyPiece? capturedPiece = RemovePiece(destination);
+            AddPiece(destination, piece.Name, piece.Color);
+
+            return capturedPiece;
+        }
+
         public MovePlayed MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
         {
             if (GetPiece(origin) is null) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
