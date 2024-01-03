@@ -24,8 +24,7 @@ namespace OpenChess.Domain
             SetPiecesOnBoard(fenPosition.Board);
             CurrentPlayer = fenPosition.ConvertTurn(fenPosition.Turn);
             CastlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
-            Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
-            EnPassantAvailability = new EnPassantAvailability(enPassantPosition);
+            EnPassantAvailability = FenInfo.ConvertEnPassant(fenPosition.EnPassantAvailability);
             HalfMove = FenInfo.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;

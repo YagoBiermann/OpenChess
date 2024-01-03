@@ -83,10 +83,9 @@ namespace OpenChess.Domain
             return new CastlingAvailability(pairs['K'], pairs['Q'], pairs['k'], pairs['q']);
         }
 
-        public Coordinate? ConvertEnPassant(string field)
+        public static EnPassantAvailability ConvertEnPassant(string field)
         {
-            if (field == "-") return null;
-            return Coordinate.GetInstance(field);
+            return new EnPassantAvailability(field == "-" ? null : Coordinate.GetInstance(field));
         }
 
         public static int ConvertMoveAmount(string field)
