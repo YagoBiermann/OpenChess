@@ -23,7 +23,7 @@ namespace OpenChess.Domain
             _board = CreateBoard();
             SetPiecesOnBoard(fenPosition.Board);
             CurrentPlayer = fenPosition.ConvertTurn(fenPosition.Turn);
-            CastlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
+            CastlingAvailability = FenInfo.ConvertCastling(fenPosition.CastlingAvailability);
             EnPassantAvailability = FenInfo.ConvertEnPassant(fenPosition.EnPassantAvailability);
             HalfMove = FenInfo.ConvertMoveAmount(fenPosition.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(fenPosition.FullMove);
@@ -34,6 +34,25 @@ namespace OpenChess.Domain
             _castlingHandler = new(this, MovesCalculator);
             _moveHandler = SetupMoveHandlerChain();
         }
+
+        public Chessboard(FenInfo fenInfo)
+        {
+            _board = CreateBoard();
+            SetPiecesOnBoard(fenInfo.Board);
+            CastlingAvailability = FenInfo.ConvertCastling(fenInfo.CastlingAvailability);
+            EnPassantAvailability = FenInfo.ConvertEnPassant(fenInfo.EnPassantAvailability);
+            LastPosition = fenInfo.Position;
+            
+            MovesCalculator = new MovesCalculator(this);
+            _enPassantHandler = new(this, MovesCalculator);
+            _promotionHandler = new(this, MovesCalculator);
+            _castlingHandler = new(this, MovesCalculator);
+            _moveHandler = SetupMoveHandlerChain();
+            HalfMove = FenInfo.ConvertMoveAmount(fenInfo.HalfMove);
+            FullMove = FenInfo.ConvertMoveAmount(fenInfo.FullMove);
+            CurrentPlayer = fenInfo.ConvertTurn(fenInfo.Turn);
+        }
+
         public Piece? AddPiece(Coordinate position, char piece, Color player)
         {
             Piece createdPiece = CreatePiece(piece, position, player);
