@@ -66,7 +66,7 @@ namespace OpenChess.Domain
 
         public static CastlingAvailability ConvertCastling(string field)
         {
-            Dictionary<char, bool> pairs = new()
+            Dictionary<char, bool> castlingAvailability = new()
             {
                 {'K', false},
                 {'Q', false},
@@ -76,13 +76,13 @@ namespace OpenChess.Domain
 
             foreach (char letter in field)
             {
-                if (letter == 'K') pairs[letter] = true;
-                if (letter == 'Q') pairs[letter] = true;
-                if (letter == 'k') pairs[letter] = true;
-                if (letter == 'q') pairs[letter] = true;
+                if (letter == 'K') castlingAvailability[letter] = true;
+                if (letter == 'Q') castlingAvailability[letter] = true;
+                if (letter == 'k') castlingAvailability[letter] = true;
+                if (letter == 'q') castlingAvailability[letter] = true;
             }
 
-            return new CastlingAvailability(pairs['K'], pairs['Q'], pairs['k'], pairs['q']);
+            return new CastlingAvailability(castlingAvailability['K'], castlingAvailability['Q'], castlingAvailability['k'], castlingAvailability['q']);
         }
 
         public static EnPassantAvailability ConvertEnPassant(string field)
