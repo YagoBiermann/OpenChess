@@ -35,6 +35,7 @@ namespace OpenChess.Domain
         public void UpdateAvailability(Coordinate origin, Color player)
         {
             Dictionary<char, bool> newCastlingAvailability = IsAvailableAt;
+            if (!_castlingPiecesPosition.ContainsKey(origin.ToString())) return;
             _castlingPiecesPosition[origin.ToString()].ForEach(v => { newCastlingAvailability[v] = false; });
             IsAvailableAt = newCastlingAvailability;
         }
