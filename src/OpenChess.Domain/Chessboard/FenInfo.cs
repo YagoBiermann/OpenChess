@@ -102,16 +102,14 @@ namespace OpenChess.Domain
 
         private static string BuildCastlingString(IReadOnlyChessboard chessboard)
         {
-            bool isWhiteKingSideAvailable = chessboard.CastlingAvailability.IsWhiteKingSideAvailable;
-            bool IsWhiteQueenSideAvailable = chessboard.CastlingAvailability.IsWhiteQueenSideAvailable;
-            bool isBlackKingSideAvailable = chessboard.CastlingAvailability.IsBlackKingSideAvailable;
-            bool IsBlackQueenSideAvailable = chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
             string castlingAvailability = "";
-            if (isWhiteKingSideAvailable) castlingAvailability += "K";
-            if (IsWhiteQueenSideAvailable) castlingAvailability += "Q";
-            if (isBlackKingSideAvailable) castlingAvailability += "k";
-            if (IsBlackQueenSideAvailable) castlingAvailability += "q";
-            if (!isWhiteKingSideAvailable && !IsWhiteQueenSideAvailable && !isBlackKingSideAvailable && !IsBlackQueenSideAvailable) castlingAvailability += "-";
+
+            foreach (var kv in chessboard.CastlingAvailability.IsAvailableAt)
+            {
+                bool isAvailable = kv.Value;
+                char castling = kv.Key;
+                if (isAvailable) { castlingAvailability += castling; }
+            }
 
             return castlingAvailability;
         }

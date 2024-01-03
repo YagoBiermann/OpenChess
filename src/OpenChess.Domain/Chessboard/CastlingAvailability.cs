@@ -38,19 +38,5 @@ namespace OpenChess.Domain
             _castlingPiecesPosition[origin.ToString()].ForEach(v => { newCastlingAvailability[v] = false; });
             IsAvailableAt = newCastlingAvailability;
         }
-
-        public override readonly string ToString()
-        {
-            string castlingAvailability = "";
-
-            foreach (var kv in IsAvailableAt)
-            {
-                bool isAvailable = kv.Value;
-                char castling = kv.Key;
-                if (isAvailable) { castlingAvailability += castling; }
-            }
-
-            return castlingAvailability;
-        }
     }
 }
