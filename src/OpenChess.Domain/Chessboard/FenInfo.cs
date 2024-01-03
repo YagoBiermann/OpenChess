@@ -103,13 +103,13 @@ namespace OpenChess.Domain
         private static string BuildCastlingString(IReadOnlyChessboard chessboard)
         {
             string castlingAvailability = "";
-
             foreach (var kv in chessboard.CastlingAvailability.IsAvailableAt)
             {
                 bool isAvailable = kv.Value;
                 char castling = kv.Key;
                 if (isAvailable) { castlingAvailability += castling; }
             }
+            if (string.IsNullOrEmpty(castlingAvailability)) castlingAvailability = "-";
 
             return castlingAvailability;
         }
