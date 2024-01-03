@@ -192,12 +192,12 @@ namespace OpenChess.Domain
 
         private static Player? GetPlayerByColor(Color color, List<Player> players)
         {
-            return players.Where(p => p.Color == color).FirstOrDefault();
+            return players.Find(p => p.Color == color);
         }
 
         private static Player? GetPlayerById(Guid id, List<Player> players)
         {
-            return players.Where(p => p.Id == id).FirstOrDefault();
+            return players.Find(p => p.Id == id);
         }
 
         private void DeclareWinnerAndFinish()
