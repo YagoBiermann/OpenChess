@@ -25,7 +25,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsHittingTheEnemyKing_ShouldReturnTrue(string fen, string origin)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
             Assert.IsTrue(chessboard.MovesCalculator.IsHittingTheEnemyKing(piece));
         }
@@ -36,7 +36,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsHittingTheEnemyKing_ShouldReturnFalse(string fen, string origin)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
             Assert.IsFalse(chessboard.MovesCalculator.IsHittingTheEnemyKing(piece));
         }
@@ -47,7 +47,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsPinned_ShouldReturnTrue(string fen, string origin)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
             Assert.IsTrue(chessboard.MovesCalculator.IsPinned(piece));
         }
@@ -61,7 +61,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsPinned_ShouldReturnFalse(string fen, string origin)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
             Assert.IsFalse(chessboard.MovesCalculator.IsPinned(piece));
         }
@@ -73,7 +73,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateKingMoves_ShouldReturnCorrectMoves(string fen, int testCase)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             var kingMoves = chessboard.MovesCalculator.CalculateKingMoves(chessboard.CurrentPlayer).SelectMany(m => m.RangeOfAttack).ToList();
 
             CollectionAssert.AreEquivalent(GetExpectedKingMoves(testCase), kingMoves);

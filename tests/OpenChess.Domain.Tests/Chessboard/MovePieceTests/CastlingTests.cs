@@ -11,7 +11,7 @@ namespace OpenChess.Tests
             string column = GetColumn(castlingKingSide);
             Coordinate origin = Coordinate.GetInstance($"E{row}");
             Coordinate destination = Coordinate.GetInstance($"{column}{row}");
-            Chessboard chessboard = new(position);
+            Chessboard chessboard = new(new FenInfo(position));
 
             chessboard.MovePiece(origin, destination);
             return chessboard;
@@ -19,7 +19,7 @@ namespace OpenChess.Tests
 
         private static Chessboard MovePiece(string position, string origin, string destination)
         {
-            Chessboard chessboard = new(position);
+            Chessboard chessboard = new(new FenInfo(position));
             chessboard.MovePiece(Coordinate.GetInstance($"{origin}"), Coordinate.GetInstance($"{destination}"));
             return chessboard;
         }

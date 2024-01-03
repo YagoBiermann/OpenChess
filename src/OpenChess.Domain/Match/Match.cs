@@ -15,7 +15,7 @@ namespace OpenChess.Domain
         public Match(Time time)
         {
             Id = Guid.NewGuid();
-            _chessboard = new(FenInfo.InitialPosition);
+            _chessboard = new Chessboard(new FenInfo(FenInfo.InitialPosition));
             _matchStatus = MatchStatus.NotStarted;
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
@@ -36,7 +36,7 @@ namespace OpenChess.Domain
 
             Id = matchId;
             RestorePlayers(_players, players, matchId);
-            _chessboard = new Chessboard(fen);
+            _chessboard = new Chessboard(new FenInfo(fen));
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);

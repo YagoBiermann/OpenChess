@@ -16,7 +16,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsInCheck_PlayerInCheck_ShouldReturnTrue(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             Assert.IsTrue(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkAmount));
@@ -38,7 +38,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsInCheck_PlayerNotInCheck_ShouldReturnFalse(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = color == 'w' ? Color.White : Color.Black;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             Assert.IsFalse(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkAmount));
@@ -51,7 +51,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_DoubleCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
@@ -66,7 +66,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_Check_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
@@ -84,7 +84,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_NotInCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);

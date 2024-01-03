@@ -10,7 +10,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertFenStringCorrectly()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
 
             Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
@@ -37,7 +37,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertPiecesCorrectly(string position, char name, char color)
         {
-            Chessboard chessboard = new("8/2p2r2/4bkn1/2B2q2/1NKR4/2Q5/4P3/8 w - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/2p2r2/4bkn1/2B2q2/1NKR4/2Q5/4P3/8 w - - 0 1"));
 
             Coordinate coordinate = Coordinate.GetInstance(position);
             Type? pieceType = Utils.GetPieceType(name);
@@ -51,7 +51,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertCastlingCorrectly()
         {
-            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("6r1/8/P7/1P5k/8/8/7K/8 b - - 0 1"));
 
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['K']);
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['Q']);
@@ -66,7 +66,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertCastlingCorrectly_case2()
         {
-            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
+            Chessboard chessboard = new(new FenInfo("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1"));
 
             Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['K']);
             Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['k']);
@@ -75,13 +75,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertEnPassantCorrectly()
         {
-            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk E3 0 1");
+            Chessboard chessboard = new(new FenInfo("6r1/8/P7/1P5k/8/8/7K/8 b Kk E3 0 1"));
             Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassantAvailability.EnPassantPosition);
         }
         [TestMethod]
         public void NewInstance_NoEnPassant_ShouldBeNull()
         {
-            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
+            Chessboard chessboard = new(new FenInfo("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1"));
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
         }
 
@@ -120,7 +120,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_GivenFenString_ShouldAddWhitePiecesCorrectly(string coordinate, char type, char c)
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
 
             Coordinate origin = Coordinate.GetInstance(coordinate);
             IReadOnlyPiece? piece = chessboard.GetPiece(origin);
@@ -135,7 +135,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_InitialPosition_EmptySquares_ShouldReturnPieceAsNull()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
 
             for (int row = 2; row <= 5; row++)
             {
@@ -157,7 +157,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ToString_ShouldConvertChessboardToString(string fen)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             string fromChessboard = chessboard.ToString();
 
             Assert.IsTrue(FenInfo.IsValid(fromChessboard));
@@ -167,7 +167,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_ShouldSwitchTurns()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
 
             Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
@@ -178,7 +178,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_InvalidMove_ShouldThrowExceptionAndRestoreChessboardToLastPosition(string position, string orig, string dest)
         {
-            Chessboard chessboard = new(position);
+            Chessboard chessboard = new(new FenInfo(position));
             Coordinate origin = Coordinate.GetInstance(orig);
             Coordinate destination = Coordinate.GetInstance(dest);
 

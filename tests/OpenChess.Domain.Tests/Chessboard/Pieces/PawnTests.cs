@@ -9,7 +9,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeFalse()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("A2").ReadOnlyPiece!;
 
             Assert.IsFalse(pawn.IsLongRange);
@@ -18,7 +18,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_BlackDirections_ShouldBeDownwards()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("A7").ReadOnlyPiece!;
 
             Assert.IsTrue(pawn.Directions.Contains(new Down()));
@@ -35,7 +35,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_WhiteDirections_ShouldBeUpwards()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("A2").ReadOnlyPiece!;
 
             Assert.IsTrue(pawn.Directions.Contains(new UpperRight()));
@@ -52,7 +52,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsFirstMove_BlackPawn_InSeventhRow_ShouldReturnTrue()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             var blackPawn = (Pawn)chessboard.GetReadOnlySquare("E7").ReadOnlyPiece!;
             Assert.IsTrue(blackPawn.IsFirstMove);
         }
@@ -60,7 +60,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsFirstMove_WhitePawn_InSecondRow_ShouldReturnTrue()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             var whitePawn = (Pawn)chessboard.GetReadOnlySquare("E2").ReadOnlyPiece!;
             Assert.IsTrue(whitePawn.IsFirstMove);
         }
@@ -68,7 +68,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsFirstMove_BlackPawn_NotInSeventhRow_ShouldReturnFalse()
         {
-            Chessboard chessboard = new("rnbqk2r/pppp1ppp/4pn2/8/1bPPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("rnbqk2r/pppp1ppp/4pn2/8/1bPPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 0 1"));
             var blackPawn = (Pawn)chessboard.GetReadOnlySquare("E6").ReadOnlyPiece!;
             Assert.IsFalse(blackPawn.IsFirstMove);
         }
@@ -76,7 +76,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsFirstMove_WhitePawn_NotInSecondRow_ShouldReturnFalse()
         {
-            Chessboard chessboard = new("rnbqk2r/pppp1ppp/4pn2/8/1bPPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("rnbqk2r/pppp1ppp/4pn2/8/1bPPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 0 1"));
             var whitePawn = (Pawn)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
             Assert.IsFalse(whitePawn.IsFirstMove);
         }
@@ -84,7 +84,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ForwardDirection_ShouldReturnUpForWhite()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("A2").ReadOnlyPiece!;
             Assert.AreEqual(pawn.ForwardDirection, new Up());
         }
@@ -92,7 +92,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ForwardDirection_ShouldReturnDownForBlack()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("A7").ReadOnlyPiece!;
             Assert.AreEqual(pawn.ForwardDirection, new Down());
         }
@@ -108,7 +108,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLineOfSight_WhitePawn_ShouldReturnAllMoves(string origin)
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             List<PieceLineOfSight> expectedMoves = new()
             {
@@ -140,7 +140,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLineOfSight_BlackPawn_ShouldReturnAllMoves(string origin)
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
 
             List<PieceLineOfSight> expectedMoves = new()
@@ -165,7 +165,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_DiagonalsOutOfChessboard_ShouldReturnEmptyList()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("H7").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
@@ -182,7 +182,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ForwardMoves_ShouldNotIncludePieces(string origin)
         {
-            Chessboard chessboard = new("r1bqk2r/ppppbppp/2n2n2/1B2p3/3PP3/2N2N2/PPP2PPP/R1BQK2R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("r1bqk2r/ppppbppp/2n2n2/1B2p3/3PP3/2N2N2/PPP2PPP/R1BQK2R b KQkq - 0 1"));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
@@ -196,7 +196,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLegalMoves_ForwardMoves_FirstMove_ShouldReturnTwoCoordinates(string origin, string coordinate, string coordinate2)
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
 
             List<Coordinate> expectedMoves = new()
@@ -216,7 +216,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLegalMoves_ForwardMoves_NotFirstMove_ShouldReturnOneCoordinate(string origin, string expected)
         {
-            Chessboard chessboard = new("rn1qkbnr/pp2pppp/2p5/5b2/3PN3/8/PPP2PPP/R1BQKBNR w KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("rn1qkbnr/pp2pppp/2p5/5b2/3PN3/8/PPP2PPP/R1BQKBNR w KQkq - 0 1"));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateLegalMoves(pawn);
@@ -229,7 +229,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLegalMoves_ForwardMoves_WithPieceInFront_ShouldBlockPawnFromMovingAhead()
         {
-            Chessboard chessboard = new("rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b KQkq - 0 1"));
             Pawn whitePawn = (Pawn)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             Pawn blackPawn = (Pawn)chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
@@ -245,7 +245,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_WhitePawn_UpperLeftDiagonal_ShouldIncludeEnemyPieces(string origin, string expectedUpperLeft)
         {
-            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1"));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
@@ -261,7 +261,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_WhitePawn_UpperRightDiagonal_ShouldIncludeEnemyPieces(string origin, string expectedUpperRight)
         {
-            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1"));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
@@ -277,7 +277,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_BlackPawn_LowerLeftDiagonal_ShouldIncludeEnemyPieces(string origin, string expectedLowerLeft)
         {
-            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1"));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
@@ -293,7 +293,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_BlackPawn_LowerRightDiagonal_ShouldIncludeEnemyPieces(string origin, string expectedLowerRight)
         {
-            Chessboard chessboard = new("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("r2qk2r/1pp2pp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP2PP1/R2QK2R b KQkq - 0 1"));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
@@ -309,7 +309,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_Diagonals_ShouldIncludeAllyPieces(string origin, string fen)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);
@@ -326,7 +326,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLegalMoves_EmptySquareInDiagonals_ShouldNotBeIncludedInRangeOfAttack(string origin, string fen)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare(origin).ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateLegalMoves(pawn);
@@ -342,7 +342,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_BlackPawn_EnPassantAvailable_ShouldBeIncludedInRangeOfAttack()
         {
-            Chessboard chessboard = new("rnbqkb1r/ppp1pppp/5n2/6B1/2pP4/5N2/PPP1PPPP/RN1QKB1R b KQkq D3 0 1");
+            Chessboard chessboard = new(new FenInfo("rnbqkb1r/ppp1pppp/5n2/6B1/2pP4/5N2/PPP1PPPP/RN1QKB1R b KQkq D3 0 1"));
 
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("C4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
@@ -355,7 +355,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_WhitePawn_EnPassantAvailable_ShouldBeIncludedInRangeOfAttack()
         {
-            Chessboard chessboard = new("rnbqkb1r/pp2pppp/5n2/2pP2B1/8/5N2/PPP1PPPP/RN1QKB1R b KQkq C6 0 1");
+            Chessboard chessboard = new(new FenInfo("rnbqkb1r/pp2pppp/5n2/2pP2B1/8/5N2/PPP1PPPP/RN1QKB1R b KQkq C6 0 1"));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("D5").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(pawn);

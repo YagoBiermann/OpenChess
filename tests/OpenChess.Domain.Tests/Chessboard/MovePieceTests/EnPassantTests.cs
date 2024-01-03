@@ -10,7 +10,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_PawnVulnerable_ShouldBeCapturedByEnPassant(string fen, string position1, string position2, char color1, char color2)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             var origin = Coordinate.GetInstance(position1);
             var destination = Coordinate.GetInstance(position2);
 
@@ -27,7 +27,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_PawnNotVulnerable_ShouldNotBeCaptured(string fen, string position1, string position2)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             var origin = Coordinate.GetInstance(position1);
             var destination = Coordinate.GetInstance(position2);
 
@@ -39,7 +39,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_PawnOutOfRange_ShouldNotBeAbleToCapture(string fen, string position1, string position2)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             var origin = Coordinate.GetInstance(position1);
             var destination = Coordinate.GetInstance(position2);
 
@@ -49,7 +49,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_ShouldSetPawnAsVulnerableOnMovingTwoSquaresForward()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
 
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
@@ -59,7 +59,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_ShouldNotSetPawnAsVulnerableOnMovingOneSquaresForward()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
 
             chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E3"));
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);

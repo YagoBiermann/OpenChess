@@ -26,7 +26,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Getter_SquareNotEmpty_ShouldReturnPiece(string origin)
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             IReadOnlySquare square = chessboard.GetSquare(Coordinate.GetInstance(origin));
 
             Assert.IsNotNull(square.ReadOnlyPiece);
@@ -35,7 +35,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Getter_EmptySquare_ReturnsNull()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Square square = chessboard.GetSquare(Coordinate.GetInstance("E4"));
 
             Assert.IsNull(square.Piece);
@@ -44,7 +44,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasPiece_SquareWithPiece_ShouldReturnTrue()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Coordinate coordinate = Coordinate.GetInstance("A1");
             IReadOnlySquare square = chessboard.GetSquare(coordinate);
 
@@ -54,7 +54,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasPiece_EmptySquare_ShouldReturnFalse()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Coordinate coordinate = Coordinate.GetInstance("E4");
             IReadOnlySquare square = chessboard.GetSquare(coordinate);
 
@@ -64,7 +64,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasEnemyPiece_DifferentColor_ShouldReturnTrue()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Coordinate coordinate = Coordinate.GetInstance("E7");
             IReadOnlySquare square = chessboard.GetSquare(coordinate);
 
@@ -74,7 +74,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void HasEnemyPiece_SameColor_ShouldReturnFalse()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Coordinate coordinate = Coordinate.GetInstance("E7");
             IReadOnlySquare square = chessboard.GetSquare(coordinate);
 

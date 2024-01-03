@@ -10,7 +10,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_PromotingPawnToAnInvalidPiece_ShouldThrowException(string fen, string position1, string position2, string promotingPiece)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
 
@@ -22,7 +22,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_PromotingPawn_NullString_ShouldPromotePawnToQueen(string fen, string position1, string position2, string promotingPiece)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
             chessboard.MovePiece(origin, destination, promotingPiece);
@@ -37,7 +37,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_ShouldHandlePawnPromotion(string fen, string position1, string position2, char pieceType, string promotingPiece)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
             chessboard.MovePiece(origin, destination, promotingPiece);

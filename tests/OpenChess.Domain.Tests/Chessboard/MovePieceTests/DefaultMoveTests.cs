@@ -13,7 +13,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_ShouldBeAbleToCaptureEnemyPiece(string fen, string position1, string position2, char moved, char captured)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
 
@@ -31,7 +31,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_ShouldNotBeAbleToCaptureAllyPiece(string fen, string position1, string position2)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Coordinate origin = Coordinate.GetInstance(position1);
             Coordinate destination = Coordinate.GetInstance(position2);
 
@@ -41,7 +41,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_OriginWithEmptySquare_ShouldThrowException()
         {
-            Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
+            Chessboard chessboard = new(new FenInfo("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1"));
             Coordinate origin = Coordinate.GetInstance("A1");
             Coordinate destination = Coordinate.GetInstance("A2");
 
@@ -51,7 +51,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_GivenOriginAndDestinationWithEmptySquare_ShouldChangePiecePosition()
         {
-            Chessboard chessboard = new("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1");
+            Chessboard chessboard = new(new FenInfo("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1"));
             Coordinate origin = Coordinate.GetInstance("B7");
             Coordinate destination = Coordinate.GetInstance("B8");
 

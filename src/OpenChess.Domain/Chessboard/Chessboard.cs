@@ -17,24 +17,6 @@ namespace OpenChess.Domain
         public string LastPosition { get; private set; }
         public Color Opponent { get => ColorUtils.GetOppositeColor(CurrentPlayer); }
 
-        public Chessboard(string position)
-        {
-            FenInfo fenPosition = new(position);
-            _board = CreateBoard();
-            SetPiecesOnBoard(fenPosition.Board);
-            CurrentPlayer = fenPosition.ConvertTurn(fenPosition.Turn);
-            CastlingAvailability = FenInfo.ConvertCastling(fenPosition.CastlingAvailability);
-            EnPassantAvailability = FenInfo.ConvertEnPassant(fenPosition.EnPassantAvailability);
-            HalfMove = FenInfo.ConvertMoveAmount(fenPosition.HalfMove);
-            FullMove = FenInfo.ConvertMoveAmount(fenPosition.FullMove);
-            LastPosition = position;
-            MovesCalculator = new MovesCalculator(this);
-            _enPassantHandler = new(this, MovesCalculator);
-            _promotionHandler = new(this, MovesCalculator);
-            _castlingHandler = new(this, MovesCalculator);
-            _moveHandler = SetupMoveHandlerChain();
-        }
-
         public Chessboard(FenInfo fenInfo)
         {
             _board = CreateBoard();
@@ -42,7 +24,6 @@ namespace OpenChess.Domain
             CastlingAvailability = FenInfo.ConvertCastling(fenInfo.CastlingAvailability);
             EnPassantAvailability = FenInfo.ConvertEnPassant(fenInfo.EnPassantAvailability);
             LastPosition = fenInfo.Position;
-            
             MovesCalculator = new MovesCalculator(this);
             _enPassantHandler = new(this, MovesCalculator);
             _promotionHandler = new(this, MovesCalculator);
@@ -163,7 +144,7 @@ namespace OpenChess.Domain
 
         private void RestoreToLastPosition()
         {
-            Chessboard previous = new(LastPosition);
+            Chessboard previous = new(new FenInfo(LastPosition));
             _board = previous._board;
             CurrentPlayer = previous.CurrentPlayer;
             EnPassantAvailability = (EnPassantAvailability)previous.EnPassantAvailability;
