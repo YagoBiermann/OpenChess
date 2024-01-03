@@ -131,5 +131,19 @@ namespace OpenChess.Tests
         {
             Assert.IsFalse(FenInfo.IsValid(position));
         }
+
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1")]
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b Qkq - 0 1")]
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b kq - 0 1")]
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b q - 0 1")]
+        [DataRow("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq E3 0 1")]
+        [DataRow("rnbqk2r/pppp1ppp/5n2/2b1p1B1/4P3/3P1N2/PPP2PPP/RN1QKB1R w KQkq - 0 1")]
+        [TestMethod]
+        public void BuildFenString_ShouldBeInCorrectFormat(string fen)
+        {
+            Chessboard chessboard = new(fen);
+            Assert.AreEqual(fen, FenInfo.BuildFenString(chessboard));
+        }
     }
 }
