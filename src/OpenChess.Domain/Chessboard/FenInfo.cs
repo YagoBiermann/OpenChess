@@ -59,7 +59,7 @@ namespace OpenChess.Domain
             return $"{chessboardString} {turn} {castling} {enPassant} {chessboard.HalfMove} {chessboard.FullMove}";
         }
 
-        public Color ConvertTurn(string field)
+        public static Color ConvertTurn(string field)
         {
             return char.Parse(field) == 'w' ? Color.White : Color.Black;
         }
