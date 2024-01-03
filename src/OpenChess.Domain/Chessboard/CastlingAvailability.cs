@@ -7,12 +7,30 @@ namespace OpenChess.Domain
         public bool IsBlackKingSideAvailable { get; private set; }
         public bool IsBlackQueenSideAvailable { get; private set; }
 
+        public Dictionary<char, bool> IsAvailableAt { get; private set; }
+        public static char WhiteKingSide = 'K';
+        public static char WhiteQueenSide = 'Q';
+        public static char BlackKingSide = 'k';
+        public static char BlackQueenSide = 'q';
         public CastlingAvailability()
         {
+            IsAvailableAt = new()
+            {
+                {'K', true},
+                {'Q', true},
+                {'k', true},
+                {'q', true},
+            };
+
             IsWhiteKingSideAvailable = true;
             IsWhiteQueenSideAvailable = true;
             IsBlackKingSideAvailable = true;
             IsBlackQueenSideAvailable = true;
+        }
+
+        public CastlingAvailability(Dictionary<char, bool> castlingAvailability)
+        {
+            IsAvailableAt = castlingAvailability;
         }
 
         public CastlingAvailability(bool whiteKingSide, bool whiteQueenSide, bool blackKingSide, bool blackQueenSide)
