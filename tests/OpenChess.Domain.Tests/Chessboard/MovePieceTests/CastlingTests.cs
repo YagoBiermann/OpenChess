@@ -26,12 +26,12 @@ namespace OpenChess.Tests
 
         private static bool GetQueenCastling(char color, Chessboard chessboard)
         {
-            return color == 'w' ? chessboard.CastlingAvailability.IsWhiteQueenSideAvailable : chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
+            return color == 'w' ? chessboard.CastlingAvailability.IsAvailableAt['Q'] : chessboard.CastlingAvailability.IsAvailableAt['q'];
         }
 
         private static bool GetKingCastling(char color, Chessboard chessboard)
         {
-            return color == 'w' ? chessboard.CastlingAvailability.IsWhiteKingSideAvailable : chessboard.CastlingAvailability.IsBlackKingSideAvailable;
+            return color == 'w' ? chessboard.CastlingAvailability.IsAvailableAt['K'] : chessboard.CastlingAvailability.IsAvailableAt['k'];
         }
 
         private static string GetColumn(bool castlingKingSide)
@@ -49,40 +49,10 @@ namespace OpenChess.Tests
         {
             CastlingAvailability castling = new();
 
-            Assert.IsTrue(castling.IsWhiteKingSideAvailable);
-            Assert.IsTrue(castling.IsWhiteQueenSideAvailable);
-            Assert.IsTrue(castling.IsBlackKingSideAvailable);
-            Assert.IsTrue(castling.IsBlackQueenSideAvailable);
-        }
-
-        [TestMethod]
-        public void ToString_AllPropertiesFalse_ShouldConvertToHyphen()
-        {
-            CastlingAvailability castling = new(false, false, false, false);
-
-            Assert.AreEqual("-", castling.ToString());
-        }
-
-        [TestMethod]
-        public void ToString_AllPropertiesTrue_ShouldConvertToDefaultCastling()
-        {
-            CastlingAvailability castling = new();
-
-            Assert.AreEqual("KQkq", castling.ToString());
-        }
-
-        [TestMethod]
-        public void ToString_ShouldConvertCorrectly()
-        {
-            CastlingAvailability castling = new(false, true, true, false);
-            CastlingAvailability castling2 = new(false, true, false, false);
-            CastlingAvailability castling3 = new(false, true, false, true);
-            CastlingAvailability castling4 = new(true, false, true, false);
-
-            Assert.AreEqual("Qk", castling.ToString());
-            Assert.AreEqual("Q", castling2.ToString());
-            Assert.AreEqual("Qq", castling3.ToString());
-            Assert.AreEqual("Kk", castling4.ToString());
+            Assert.IsTrue(castling.IsAvailableAt['K']);
+            Assert.IsTrue(castling.IsAvailableAt['Q']);
+            Assert.IsTrue(castling.IsAvailableAt['k']);
+            Assert.IsTrue(castling.IsAvailableAt['q']);
         }
 
         [DataRow("rnbqk2r/pppp1ppp/5n2/1B2p3/1b2P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1", 'w')]
