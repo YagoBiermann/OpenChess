@@ -31,7 +31,7 @@ namespace OpenChess.Domain
             _moveHandler = SetupMoveHandlerChain();
             HalfMove = FenInfo.ConvertMoveAmount(fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(fenInfo.FullMove);
-            CurrentPlayer = fenInfo.ConvertTurn(fenInfo.Turn);
+            CurrentPlayer = FenInfo.ConvertTurn(fenInfo.Turn);
         }
 
         public Piece? AddPiece(Coordinate position, char piece, Color player)
