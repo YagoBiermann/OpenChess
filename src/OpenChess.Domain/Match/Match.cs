@@ -11,11 +11,13 @@ namespace OpenChess.Domain
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
         private CheckHandler _checkHandler { get; }
+        private FenInfo _fenInfo { get; }
 
         public Match(Time time)
         {
             Id = Guid.NewGuid();
-            _chessboard = new Chessboard(new FenInfo(FenInfo.InitialPosition));
+            _fenInfo = new(FenInfo.InitialPosition);
+            _chessboard = new Chessboard(_fenInfo);
             _matchStatus = MatchStatus.NotStarted;
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
@@ -35,8 +37,10 @@ namespace OpenChess.Domain
             var winnerId = matchInfo.WinnerId;
 
             Id = matchId;
+            _fenInfo = new(fen);
             RestorePlayers(_players, players, matchId);
-            _chessboard = new Chessboard(new FenInfo(fen));
+            SetCurrentPlayer();
+            _chessboard = new Chessboard(_fenInfo);
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
@@ -67,7 +71,7 @@ namespace OpenChess.Domain
             player.Join(Id);
             _players.Add(player);
             if (!IsFull()) { return; };
-
+            SetCurrentPlayer();
             _matchStatus = MatchStatus.InProgress;
         }
 
@@ -150,7 +154,10 @@ namespace OpenChess.Domain
         {
             return new Player(info);
         }
-
+        public void SetCurrentPlayer()
+        {
+            if (IsFull()) { GetPlayerByColor(FenInfo.ConvertTurn(_fenInfo.Turn), _players)!.IsCurrentPlayer = true; };
+        }
         private void ValidateMove(Move move)
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
