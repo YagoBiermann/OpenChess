@@ -14,10 +14,10 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsWhiteKingSideAvailable);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsWhiteQueenSideAvailable);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsBlackKingSideAvailable);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsBlackQueenSideAvailable);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['K']);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['Q']);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['k']);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['q']);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
         }
@@ -53,10 +53,10 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b - - 0 1");
 
-            Assert.IsFalse(chessboard.CastlingAvailability.IsWhiteKingSideAvailable);
-            Assert.IsFalse(chessboard.CastlingAvailability.IsWhiteQueenSideAvailable);
-            Assert.IsFalse(chessboard.CastlingAvailability.IsBlackKingSideAvailable);
-            Assert.IsFalse(chessboard.CastlingAvailability.IsBlackQueenSideAvailable);
+            Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['K']);
+            Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['Q']);
+            Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['k']);
+            Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['q']);
             Assert.AreEqual(Color.Black, chessboard.CurrentPlayer);
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
             Assert.AreEqual(0, chessboard.HalfMove);
@@ -68,8 +68,8 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
 
-            Assert.IsTrue(chessboard.CastlingAvailability.IsWhiteKingSideAvailable);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsBlackKingSideAvailable);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['K']);
+            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['k']);
         }
 
         [TestMethod]
