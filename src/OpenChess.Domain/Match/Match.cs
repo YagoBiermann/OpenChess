@@ -101,7 +101,7 @@ namespace OpenChess.Domain
             get
             {
                 if (!HasStarted() || HasFinished()) return null;
-                return GetPlayerByColor(_chessboard.CurrentPlayer);
+                return GetPlayerByColor(_chessboard.CurrentPlayer, _players)?.Info;
             }
         }
 
@@ -110,7 +110,7 @@ namespace OpenChess.Domain
             get
             {
                 if (!IsFull()) return null;
-                return GetPlayerByColor(_chessboard.Opponent);
+                return GetPlayerByColor(_chessboard.Opponent, _players)?.Info;
             }
         }
 
