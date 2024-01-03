@@ -187,5 +187,31 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
             Assert.AreEqual(currentPosition, chessboard.ToString());
         }
+
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "E2", "E4")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "F6", "D5")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "D8", "D5")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "F1", "B5")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "G1", "F3")]
+        [TestMethod]
+        public void ChangePiecePosition_ShouldChangePiecesPosition(string fen, string origin, string destination)
+        {
+            Chessboard chessboard = new(new FenInfo(fen));
+            bool hasPieceAtDestination = chessboard.GetSquare(Coordinate.GetInstance(destination)).HasPiece;
+            IReadOnlyPiece? capturedPiece = chessboard.ChangePiecePosition(Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+
+            Assert.IsFalse(chessboard.GetSquare(Coordinate.GetInstance(origin)).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(Coordinate.GetInstance(destination)).HasPiece);
+            if (hasPieceAtDestination) Assert.IsNotNull(capturedPiece);
+        }
+
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "E4", "E5")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "D2", "D5")]
+        [TestMethod]
+        public void ChangePiecePosition_OriginWithoutPiece_ShouldThrowException(string fen, string origin, string destination)
+        {
+            Chessboard chessboard = new(new FenInfo(fen));
+            Assert.ThrowsException<ChessboardException>(() => chessboard.ChangePiecePosition(Coordinate.GetInstance(origin), Coordinate.GetInstance(destination)));
+        }
     }
 }
