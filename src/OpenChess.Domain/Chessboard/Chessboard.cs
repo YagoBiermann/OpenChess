@@ -26,8 +26,8 @@ namespace OpenChess.Domain
             CastlingAvailability = fenPosition.ConvertCastling(fenPosition.CastlingAvailability);
             Coordinate? enPassantPosition = fenPosition.ConvertEnPassant(fenPosition.EnPassantAvailability);
             EnPassantAvailability = new EnPassantAvailability(enPassantPosition);
-            HalfMove = fenPosition.ConvertMoveAmount(fenPosition.HalfMove);
-            FullMove = fenPosition.ConvertMoveAmount(fenPosition.FullMove);
+            HalfMove = FenInfo.ConvertMoveAmount(fenPosition.HalfMove);
+            FullMove = FenInfo.ConvertMoveAmount(fenPosition.FullMove);
             LastPosition = position;
             MovesCalculator = new MovesCalculator(this);
             _enPassantHandler = new(this, MovesCalculator);
@@ -129,12 +129,7 @@ namespace OpenChess.Domain
 
         public override string ToString()
         {
-            string chessboard = BuildChessboardString();
-            string turn = BuildTurnString();
-            string castling = BuildCastlingString();
-            string enPassant = BuildEnPassantString();
-
-            return $"{chessboard} {turn} {castling} {enPassant} {HalfMove} {FullMove}";
+            return FenInfo.BuildFenString(this);
         }
 
         private void SwitchTurns()
@@ -166,59 +161,6 @@ namespace OpenChess.Domain
             _enPassantHandler.SetNext(_castlingHandler);
             _castlingHandler.SetNext(new DefaultMoveHandler(this, MovesCalculator));
             return _promotionHandler;
-        }
-
-        private string BuildEnPassantString()
-        {
-            return EnPassantAvailability.EnPassantPosition is null ? "-" : EnPassantAvailability.EnPassantPosition.ToString();
-        }
-
-        private string BuildCastlingString()
-        {
-            return CastlingAvailability.ToString();
-        }
-
-        private string BuildTurnString()
-        {
-            return CurrentPlayer == Color.Black ? "b" : "w";
-        }
-
-        private string BuildChessboardString()
-        {
-            string chessboard = "";
-
-            for (int row = 7; row >= 0; row--)
-            {
-                string currentRow = "";
-                currentRow += BuildRowString(row);
-                chessboard += currentRow;
-
-                if (row == 0) { continue; }
-                chessboard += "/";
-            }
-
-            return chessboard;
-        }
-
-        private string BuildRowString(int row)
-        {
-            string builtRow = "";
-            int amount = 0;
-            for (int col = 0; col <= 7; col++)
-            {
-                Square currentSquare = GetSquare(Coordinate.GetInstance(col, row));
-                if (amount > 7) return amount.ToString();
-                if (currentSquare.HasPiece)
-                {
-                    string emptySquares = amount > 0 ? amount.ToString() : string.Empty;
-                    builtRow += $"{emptySquares}{currentSquare.ReadOnlyPiece!.Name}";
-                    amount = 0;
-                    continue;
-                }
-                amount += 1;
-                if (col >= 7) { builtRow += amount; break; }
-            }
-            return builtRow;
         }
 
         private static List<List<Square>> CreateBoard()

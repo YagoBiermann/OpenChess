@@ -47,6 +47,16 @@ namespace OpenChess.Domain
             return isValidActiveColor && isValidCastling && isValidEnPassant && isValidHalfMove && isValidFullMove;
         }
 
+        public static string BuildFenString(IReadOnlyChessboard chessboard)
+        {
+            string chessboardString = BuildChessboardString(chessboard);
+            string turn = BuildTurnString(chessboard);
+            string castling = BuildCastlingString(chessboard);
+            string enPassant = BuildEnPassantString(chessboard);
+
+            return $"{chessboardString} {turn} {castling} {enPassant} {chessboard.HalfMove} {chessboard.FullMove}";
+        }
+
         public Color ConvertTurn(string field)
         {
             return char.Parse(field) == 'w' ? Color.White : Color.Black;
@@ -79,9 +89,73 @@ namespace OpenChess.Domain
             return Coordinate.GetInstance(field);
         }
 
-        public int ConvertMoveAmount(string field)
+        public static int ConvertMoveAmount(string field)
         {
             return int.Parse(field);
+        }
+
+        private static string BuildEnPassantString(IReadOnlyChessboard chessboard)
+        {
+            return chessboard.EnPassantAvailability.EnPassantPosition?.ToString() ?? "-";
+        }
+
+        private static string BuildCastlingString(IReadOnlyChessboard chessboard)
+        {
+            bool isWhiteKingSideAvailable = chessboard.CastlingAvailability.IsWhiteKingSideAvailable;
+            bool IsWhiteQueenSideAvailable = chessboard.CastlingAvailability.IsWhiteQueenSideAvailable;
+            bool isBlackKingSideAvailable = chessboard.CastlingAvailability.IsBlackKingSideAvailable;
+            bool IsBlackQueenSideAvailable = chessboard.CastlingAvailability.IsBlackQueenSideAvailable;
+            string castlingAvailability = "";
+            if (isWhiteKingSideAvailable) castlingAvailability += "K";
+            if (IsWhiteQueenSideAvailable) castlingAvailability += "Q";
+            if (isBlackKingSideAvailable) castlingAvailability += "k";
+            if (IsBlackQueenSideAvailable) castlingAvailability += "q";
+            if (!isWhiteKingSideAvailable && !IsWhiteQueenSideAvailable && !isBlackKingSideAvailable && !IsBlackQueenSideAvailable) castlingAvailability += "-";
+
+            return castlingAvailability;
+        }
+
+        private static string BuildTurnString(IReadOnlyChessboard chessboard)
+        {
+            return chessboard.CurrentPlayer == Color.Black ? "b" : "w";
+        }
+
+        private static string BuildChessboardString(IReadOnlyChessboard chessboard)
+        {
+            string chessboardString = "";
+
+            for (int row = 7; row >= 0; row--)
+            {
+                string currentRow = "";
+                currentRow += BuildRowString(row, chessboard);
+                chessboardString += currentRow;
+
+                if (row == 0) { continue; }
+                chessboardString += "/";
+            }
+
+            return chessboardString;
+        }
+
+        private static string BuildRowString(int row, IReadOnlyChessboard chessboard)
+        {
+            string builtRow = "";
+            int amount = 0;
+            for (int col = 0; col <= 7; col++)
+            {
+                IReadOnlySquare currentSquare = chessboard.GetReadOnlySquare(Coordinate.GetInstance(col, row).ToString());
+                if (amount > 7) return amount.ToString();
+                if (currentSquare.HasPiece)
+                {
+                    string emptySquares = amount > 0 ? amount.ToString() : string.Empty;
+                    builtRow += $"{emptySquares}{currentSquare.ReadOnlyPiece!.Name}";
+                    amount = 0;
+                    continue;
+                }
+                amount += 1;
+                if (col >= 7) { builtRow += amount; break; }
+            }
+            return builtRow;
         }
 
         private static bool HasSixFields(string value)

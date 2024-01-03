@@ -3,7 +3,7 @@ namespace OpenChess.Domain
     internal class EnPassantAvailability : IEnPassantAvailability
     {
         public Coordinate? EnPassantPosition { get; private set; }
-        public bool IsAvailable { get => EnPassantPosition is null; }
+        public bool IsAvailable { get => EnPassantPosition is not null; }
 
         public EnPassantAvailability(Coordinate? position)
         {
