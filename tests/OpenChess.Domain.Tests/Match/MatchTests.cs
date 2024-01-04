@@ -373,5 +373,16 @@ namespace OpenChess.Tests
             Match match = new(FakeMatch.RestoreMatch(fen));
             Assert.AreEqual(match.FenString, fen);
         }
+
+        [TestMethod]
+        public void MovePiece_ShouldSwitchTurns()
+        {
+            Match match = new(FakeMatch.RestoreMatch(FenInfo.InitialPosition));
+
+            Assert.AreEqual(Color.White, match.CurrentPlayerColor);
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            match.Play(move);
+            Assert.AreEqual(Color.Black, match.CurrentPlayerColor);
+        }
     }
 }

@@ -131,16 +131,6 @@ namespace OpenChess.Tests
             }
         }
 
-        [TestMethod]
-        public void MovePiece_ShouldSwitchTurns()
-        {
-            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
-
-            Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
-            chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
-            Assert.AreEqual(Color.Black, chessboard.CurrentPlayer);
-        }
-
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "D6", "B6")]
         [TestMethod]
         public void MovePiece_InvalidMove_ShouldThrowExceptionAndRestoreChessboardToLastPosition(string position, string orig, string dest)
