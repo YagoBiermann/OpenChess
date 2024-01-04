@@ -22,7 +22,7 @@ namespace OpenChess.Tests
             return matchInfo;
         }
 
-        public static MatchInfo RestoreMatch(string fen)
+        public static Match RestoreMatch(string fen)
         {
             string matchId = Guid.NewGuid().ToString();
             string player1Id = Guid.NewGuid().ToString();
@@ -35,8 +35,9 @@ namespace OpenChess.Tests
             var time = 5;
             var pgnStack = new Stack<string>();
             MatchInfo matchInfo = new(matchId, players, fen, pgnStack, status, time);
+            Match match = new(matchInfo);
 
-            return matchInfo;
+            return match;
         }
 
         public static Match RestoreAndPlay(string fen, string origin, string destination, string? promoting = null)
