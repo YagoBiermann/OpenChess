@@ -95,6 +95,8 @@ namespace OpenChess.Domain
         public MatchStatus Status => _matchStatus;
         public PlayerInfo? CurrentPlayerInfo => CurrentPlayer?.Info;
         public PlayerInfo? OpponentPlayerInfo => OpponentPlayer?.Info;
+        public Color? CurrentPlayerColor => CurrentPlayer?.Color;
+        public Color? OpponentPlayerColor => OpponentPlayer?.Color;
         public Time Time => (Time)_time.Minutes;
         public Guid? Winner => _winner?.Id;
         public Stack<string> Moves => new(_pgnMoveText.Reverse());
