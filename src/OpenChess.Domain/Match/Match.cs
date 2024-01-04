@@ -57,7 +57,7 @@ namespace OpenChess.Domain
             ValidateMove(move);
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
 
-            bool isInCheckmate = _checkHandler.IsInCheckmate(_chessboard.CurrentPlayer, out CheckState checkState);
+            bool isInCheckmate = _checkHandler.IsInCheckmate(OpponentPlayerInfo!.Value.Color, out CheckState checkState);
             if (isInCheckmate) DeclareWinnerAndFinish();
             _currentPlayerCheckState = checkState;
             string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
