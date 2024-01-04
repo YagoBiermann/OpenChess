@@ -185,7 +185,7 @@ namespace OpenChess.Tests
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.CurrentPlayer).Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             match.Play(move);
@@ -209,7 +209,7 @@ namespace OpenChess.Tests
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.CurrentPlayer).Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting);
 
             match.Play(move);
@@ -338,7 +338,7 @@ namespace OpenChess.Tests
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Guid currentPlayer = matchInfo.Players.Find(p => p.Color == match.Chessboard.CurrentPlayer).Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
@@ -359,7 +359,6 @@ namespace OpenChess.Tests
 
             Assert.IsTrue(match.Moves.Any());
         }
-
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
         [DataRow("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1")]
