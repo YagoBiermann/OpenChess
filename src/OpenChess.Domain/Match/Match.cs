@@ -12,6 +12,7 @@ namespace OpenChess.Domain
         private Player? _winner { get; set; }
         private CheckHandler _checkHandler { get; }
         private FenInfo _fenInfo { get; set; }
+        private IMoveCalculator _movesCalculator;
 
         public Match(Time time)
         {
@@ -22,7 +23,8 @@ namespace OpenChess.Domain
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
             _pgnMoveText = new();
-            _checkHandler = new CheckHandler(_chessboard, _chessboard.MovesCalculator);
+            _movesCalculator = new MovesCalculator(_chessboard);
+            _checkHandler = new CheckHandler(_chessboard, _movesCalculator);
             _currentPlayerCheckState = CheckState.NotInCheck;
         }
 
@@ -55,10 +57,13 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             ValidateMove(move);
-            MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
+            var moveHandlers = SetupMoveHandlerChain();
+            IReadOnlyPiece piece = _chessboard.GetPiece(move.Origin) ?? throw new MatchException("Piece not found!");
+            MovePlayed movePlayed = moveHandlers.Handle(piece, move.Destination, move.Promoting);
             HandleIllegalPosition();
             UpdateEnPassantAndCastlingAvailability(move.Origin, movePlayed.PieceMoved);
 
+            _movesCalculator.CalculateAndCacheAllMoves();
             bool isInCheckmate = _checkHandler.IsInCheckmate(OpponentPlayerInfo!.Value.Color, out CheckState checkState);
             if (isInCheckmate) DeclareWinnerAndFinish();
             _currentPlayerCheckState = checkState;
@@ -238,5 +243,18 @@ namespace OpenChess.Domain
             string fenString = FenInfo.BuildFenString(_chessboard, CurrentPlayer!);
             _fenInfo = new(fenString);
         }
+
+        private IMoveHandler SetupMoveHandlerChain()
+        {
+            var enPassantHandler = new EnPassantHandler(this, _chessboard, _movesCalculator);
+            var promotionHandler = new PromotionHandler(this, _chessboard, _movesCalculator);
+            var castlingHandler = new CastlingHandler(this, _chessboard, _movesCalculator);
+
+            promotionHandler.SetNext(enPassantHandler);
+            enPassantHandler.SetNext(castlingHandler);
+            castlingHandler.SetNext(new DefaultMoveHandler(this, _chessboard, _movesCalculator));
+            return promotionHandler;
+        }
+
     }
 }
