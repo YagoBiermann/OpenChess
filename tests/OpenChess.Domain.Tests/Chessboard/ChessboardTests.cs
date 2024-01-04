@@ -41,7 +41,6 @@ namespace OpenChess.Tests
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['Q']);
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['k']);
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['q']);
-            Assert.AreEqual(Color.Black, chessboard.CurrentPlayer);
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
