@@ -13,6 +13,5 @@ namespace OpenChess.Domain
         public List<IReadOnlyPiece> GetPieces(List<Coordinate> range);
         public List<IReadOnlyPiece> GetPieces(Color player);
         public List<IReadOnlyPiece> GetAllPieces();
-        public string ToString();
     }
 }
