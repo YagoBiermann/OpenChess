@@ -134,17 +134,7 @@ namespace OpenChess.Domain
 
             return pieces;
         }
-
-        public override string ToString()
-        {
-            return FenInfo.BuildFenString(this);
-        }
-
-        private void SwitchTurns()
-        {
-            CurrentPlayer = Opponent;
-        }
-
+        
         private void HandleIllegalPosition()
         {
             CheckHandler checkHandler = new(this, MovesCalculator);
