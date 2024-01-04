@@ -64,8 +64,7 @@ namespace OpenChess.Domain
             _currentPlayerCheckState = checkState;
             ConvertMoveToPGN(movePlayed, checkState);
             SwitchTurns();
-            string fenString = FenInfo.BuildFenString(_chessboard, CurrentPlayer!);
-            _fenInfo = new(fenString);
+            UpdateFenInfo();
         }
 
         public void Join(PlayerInfo playerInfo)
@@ -232,6 +231,12 @@ namespace OpenChess.Domain
             _chessboard.EnPassantAvailability.ClearEnPassant();
             _chessboard.EnPassantAvailability.SetVulnerablePawn(pieceMoved, origin);
             _chessboard.CastlingAvailability.UpdateAvailability(origin, CurrentPlayer!.Color);
+        }
+
+        private void UpdateFenInfo()
+        {
+            string fenString = FenInfo.BuildFenString(_chessboard, CurrentPlayer!);
+            _fenInfo = new(fenString);
         }
     }
 }
