@@ -62,6 +62,7 @@ namespace OpenChess.Domain
             _currentPlayerCheckState = checkState;
             string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
             _pgnMoveText.Push(convertedMove);
+            SwitchTurns();
         }
 
         public void Join(PlayerInfo playerInfo)

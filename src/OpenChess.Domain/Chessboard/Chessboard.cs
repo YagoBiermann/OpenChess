@@ -96,7 +96,6 @@ namespace OpenChess.Domain
             EnPassantAvailability.ClearEnPassant();
             EnPassantAvailability.SetVulnerablePawn(move.PieceMoved, origin);
             CastlingAvailability.UpdateAvailability(origin, CurrentPlayer);
-            SwitchTurns();
             _piecesCache.Clear();
             MovesCalculator.CalculateAndCacheAllMoves();
 
