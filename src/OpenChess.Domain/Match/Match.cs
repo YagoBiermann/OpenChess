@@ -63,6 +63,8 @@ namespace OpenChess.Domain
             string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
             _pgnMoveText.Push(convertedMove);
             SwitchTurns();
+            string fenString = FenInfo.BuildFenString(_chessboard, CurrentPlayer!);
+            _fenInfo = new(fenString);
         }
 
         public void Join(PlayerInfo playerInfo)
