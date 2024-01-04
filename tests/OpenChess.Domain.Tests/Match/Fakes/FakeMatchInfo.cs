@@ -47,7 +47,7 @@ namespace OpenChess.Tests
             List<PlayerInfo> players = new() { player1, player2 };
             MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), 5);
             Match match = new(matchInfo);
-            Guid currentPlayer = match.CurrentPlayer!.Value.Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
             match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting));
 
             return match;

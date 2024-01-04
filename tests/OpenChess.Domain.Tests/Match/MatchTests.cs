@@ -21,9 +21,9 @@ namespace OpenChess.Tests
 
             Assert.IsNotNull(match.Id);
             Assert.IsFalse(match.IsFull());
-            Assert.IsNull(match.CurrentPlayer);
+            Assert.IsNull(match.CurrentPlayerInfo);
             Assert.IsNull(match.Winner);
-            Assert.AreEqual(match.Chessboard.ToString(), FenInfo.InitialPosition);
+            Assert.AreEqual(match.FenString, FenInfo.InitialPosition);
             Assert.AreEqual(match.CurrentPlayerCheckState, CheckState.NotInCheck);
             Assert.AreEqual(time, (int)match.Time);
         }
@@ -38,7 +38,7 @@ namespace OpenChess.Tests
             Assert.AreEqual(match.Time, Time.Five);
             Assert.AreEqual(match.Status, MatchStatus.InProgress);
             Assert.IsNull(match.CurrentPlayerCheckState);
-            Assert.AreEqual(match.Chessboard.ToString(), matchInfo.Fen);
+            Assert.AreEqual(match.FenString, matchInfo.Fen);
             Assert.IsNull(match.Winner);
             CollectionAssert.AreEquivalent(match.Players, matchInfo.Players);
             CollectionAssert.AreEqual(match.Moves, matchInfo.PgnMoves);
@@ -69,7 +69,7 @@ namespace OpenChess.Tests
             Assert.IsTrue(match.HasPlayer());
             Assert.AreEqual(MatchStatus.NotStarted, match.Status);
             Assert.IsFalse(match.IsFull());
-            Assert.IsNull(match.CurrentPlayer);
+            Assert.IsNull(match.CurrentPlayerInfo);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace OpenChess.Tests
             match.Join(blackPlayer);
 
             Assert.AreEqual(MatchStatus.InProgress, match.Status);
-            Assert.AreEqual(whitePlayer.Id, match.CurrentPlayer!.Value.Id);
+            Assert.AreEqual(whitePlayer.Id, match.CurrentPlayerInfo!.Value.Id);
         }
 
         [TestMethod]
@@ -190,8 +190,8 @@ namespace OpenChess.Tests
 
             match.Play(move);
 
-            Assert.AreNotEqual(match.CurrentPlayer, move.PlayerId);
-            Assert.AreEqual(match.Chessboard.ToString(), expectedFen);
+            Assert.AreNotEqual(match.CurrentPlayerInfo, move.PlayerId);
+            Assert.AreEqual(match.FenString, expectedFen);
             Assert.IsTrue(match.Moves.Any());
         }
 
@@ -214,8 +214,8 @@ namespace OpenChess.Tests
 
             match.Play(move);
 
-            Assert.AreNotEqual(match.CurrentPlayer, move.PlayerId);
-            Assert.AreEqual(match.Chessboard.ToString(), expectedFen);
+            Assert.AreNotEqual(match.CurrentPlayerInfo, move.PlayerId);
+            Assert.AreEqual(match.FenString, expectedFen);
             Assert.IsTrue(match.Moves.Any());
         }
 
@@ -342,7 +342,7 @@ namespace OpenChess.Tests
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
-            Assert.AreEqual(match.Chessboard.ToString(), fen);
+            Assert.AreEqual(match.FenString, fen);
         }
 
         [TestMethod]

@@ -162,14 +162,15 @@ namespace OpenChess.Tests
         [TestMethod]
         public void MovePiece_InvalidMove_ShouldThrowExceptionAndRestoreChessboardToLastPosition(string position, string orig, string dest)
         {
-            Chessboard chessboard = new(new FenInfo(position));
             Coordinate origin = Coordinate.GetInstance(orig);
             Coordinate destination = Coordinate.GetInstance(dest);
+            Match match = new(FakeMatch.RestoreMatch(position));
 
-            string currentPosition = chessboard.ToString();
+            string currentPosition = match.FenString;
 
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
-            Assert.AreEqual(currentPosition, chessboard.ToString());
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, origin, destination);
+            Assert.ThrowsException<MatchException>(() => match.Play(move));
+            Assert.AreEqual(currentPosition, match.FenString);
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "E2", "E4")]
