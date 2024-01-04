@@ -56,7 +56,7 @@ namespace OpenChess.Domain
         {
             ValidateMove(move);
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
-
+            HandleIllegalPosition();
             bool isInCheckmate = _checkHandler.IsInCheckmate(OpponentPlayerInfo!.Value.Color, out CheckState checkState);
             if (isInCheckmate) DeclareWinnerAndFinish();
             _currentPlayerCheckState = checkState;
@@ -209,5 +209,17 @@ namespace OpenChess.Domain
             _currentPlayerCheckState = CheckState.Checkmate;
             _matchStatus = MatchStatus.Finished;
         }
+
+        private void HandleIllegalPosition()
+        {
+            if (_checkHandler.IsInCheck(CurrentPlayerColor!.Value, out CheckState checkAmount)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
+        }
+
+        private void RestoreToLastChessboard()
+        {
+            Chessboard previousChessboard = new(new FenInfo(_fenInfo.Position));
+            _chessboard = previousChessboard;
+        }
+
     }
 }

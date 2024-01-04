@@ -86,7 +86,6 @@ namespace OpenChess.Domain
         {
             if (GetPiece(origin) is null) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
             IReadOnlyPiece piece = GetPiece(origin)!;
-            if (piece.Color != CurrentPlayer) { throw new ChessboardException("It's not your turn"); }
             MovePlayed move = _moveHandler.Handle(piece, destination, promotingPiece);
 
             HandleIllegalPosition();
@@ -129,24 +128,6 @@ namespace OpenChess.Domain
             _piecesCache.Add(player, pieces);
 
             return pieces;
-        }
-
-        private void HandleIllegalPosition()
-        {
-            CheckHandler checkHandler = new(this, MovesCalculator);
-            if (checkHandler.IsInCheck(CurrentPlayer, out CheckState checkAmount)) { RestoreToLastPosition(); throw new ChessboardException("Invalid move!"); }
-        }
-
-        private void RestoreToLastPosition()
-        {
-            Chessboard previous = new(new FenInfo(LastPosition));
-            _board = previous._board;
-            CurrentPlayer = previous.CurrentPlayer;
-            EnPassantAvailability = (EnPassantAvailability)previous.EnPassantAvailability;
-            CastlingAvailability = (CastlingAvailability)previous.CastlingAvailability;
-            HalfMove = previous.HalfMove;
-            FullMove = previous.FullMove;
-            LastPosition = previous.LastPosition;
         }
 
         private IMoveHandler SetupMoveHandlerChain()
