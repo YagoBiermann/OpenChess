@@ -2,7 +2,7 @@ namespace OpenChess.Domain
 {
     internal class EnPassantHandler : MoveHandler
     {
-        public EnPassantHandler(Chessboard chessboard, IMoveCalculator moveCalculator) : base(chessboard, moveCalculator) { }
+        public EnPassantHandler(Match match, Chessboard chessboard, IMoveCalculator moveCalculator) : base(match, chessboard, moveCalculator) { }
 
         public override MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {

@@ -2,7 +2,7 @@ namespace OpenChess.Domain
 {
     internal class DefaultMoveHandler : MoveHandler
     {
-        public DefaultMoveHandler(Chessboard chessboard, IMoveCalculator moveCalculator) : base(chessboard, moveCalculator) { }
+        public DefaultMoveHandler(Match match, Chessboard chessboard, IMoveCalculator moveCalculator) : base(match, chessboard, moveCalculator) { }
 
         public override MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {

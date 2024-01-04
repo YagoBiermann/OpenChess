@@ -4,7 +4,7 @@ namespace OpenChess.Domain
 {
     internal class PromotionHandler : MoveHandler
     {
-        public PromotionHandler(Chessboard chessboard, IMoveCalculator moveCalculator) : base(chessboard, moveCalculator) { }
+        public PromotionHandler(Match match, Chessboard chessboard, IMoveCalculator moveCalculator) : base(match, chessboard, moveCalculator) { }
 
         public override MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {
