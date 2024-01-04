@@ -82,20 +82,8 @@ namespace OpenChess.Domain
             return capturedPiece;
         }
 
-        public MovePlayed MovePiece(Coordinate origin, Coordinate destination, string? promotingPiece = null)
-        {
-            if (GetPiece(origin) is null) { throw new ChessboardException($"No piece was found in coordinate {origin}!"); }
-            IReadOnlyPiece piece = GetPiece(origin)!;
-            MovePlayed move = _moveHandler.Handle(piece, destination, promotingPiece);
-
-            HandleIllegalPosition();
-            EnPassantAvailability.ClearEnPassant();
-            EnPassantAvailability.SetVulnerablePawn(move.PieceMoved, origin);
-            CastlingAvailability.UpdateAvailability(origin, CurrentPlayer);
             _piecesCache.Clear();
-            MovesCalculator.CalculateAndCacheAllMoves();
 
-            return move;
         }
 
         public IReadOnlyPiece? GetPiece(Coordinate position)
