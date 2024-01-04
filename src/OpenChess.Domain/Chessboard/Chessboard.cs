@@ -57,7 +57,10 @@ namespace OpenChess.Domain
             Coordinate origin = Coordinate.GetInstance(coordinate);
             return GetSquare(origin);
         }
-
+        public IReadOnlySquare GetReadOnlySquare(Coordinate position)
+        {
+            return GetSquare(position);
+        }
         public Square GetSquare(Coordinate coordinate)
         {
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
