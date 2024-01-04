@@ -66,9 +66,10 @@ namespace OpenChess.Domain
 
             _movesCalculator.CalculateAndCacheAllMoves();
             bool isInCheckmate = _checkHandler.IsInCheckmate(OpponentPlayerInfo!.Value.Color, out CheckState checkState);
-            if (isInCheckmate) DeclareWinnerAndFinish();
             _currentPlayerCheckState = checkState;
             ConvertMoveToPGN(movePlayed, checkState);
+
+            if (isInCheckmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
             SwitchTurns();
             UpdateFenInfo();
         }
