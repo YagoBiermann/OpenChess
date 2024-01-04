@@ -11,7 +11,7 @@ namespace OpenChess.Domain
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
         private CheckHandler _checkHandler { get; }
-        private FenInfo _fenInfo { get; }
+        private FenInfo _fenInfo { get; set; }
 
         public Match(Time time)
         {
