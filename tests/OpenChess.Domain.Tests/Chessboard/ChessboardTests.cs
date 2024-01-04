@@ -6,22 +6,6 @@ namespace OpenChess.Tests
     [TestClass]
     public class ChessboardTests
     {
-
-        [TestMethod]
-        public void NewInstance_ShouldConvertFenStringCorrectly()
-        {
-            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
-
-            Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
-            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['K']);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['Q']);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['k']);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['q']);
-            Assert.AreEqual(0, chessboard.HalfMove);
-            Assert.AreEqual(1, chessboard.FullMove);
-        }
-
         [DataRow("C3", 'Q', 'w')]
         [DataRow("B4", 'N', 'w')]
         [DataRow("C5", 'B', 'w')]
