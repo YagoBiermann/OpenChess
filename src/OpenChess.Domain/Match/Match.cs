@@ -87,22 +87,15 @@ namespace OpenChess.Domain
 
         public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
         public bool HasFinished() => Status.Equals(MatchStatus.Finished);
+        public string FenString => _fenInfo.Position;
         public CheckState? CurrentPlayerCheckState => _currentPlayerCheckState;
         public MatchStatus Status => _matchStatus;
         public PlayerInfo? CurrentPlayerInfo => CurrentPlayer?.Info;
         public PlayerInfo? OpponentPlayerInfo => OpponentPlayer?.Info;
-
-        public Time Time { get { return (Time)_time.Minutes; } }
-        public Guid? Winner { get { return _winner?.Id; } }
-        public Stack<string> Moves
-        {
-            get
-            {
-                Stack<string> moves = new(_pgnMoveText.Reverse());
-                return moves;
-            }
-        }
-        public IReadOnlyChessboard Chessboard { get { return _chessboard; } }
+        public Time Time => (Time)_time.Minutes;
+        public Guid? Winner => _winner?.Id;
+        public Stack<string> Moves => new(_pgnMoveText.Reverse());
+        public IReadOnlyChessboard Chessboard => _chessboard;
         public List<PlayerInfo> Players
         {
             get
