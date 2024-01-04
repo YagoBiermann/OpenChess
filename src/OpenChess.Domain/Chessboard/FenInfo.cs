@@ -49,12 +49,12 @@ namespace OpenChess.Domain
             return isValidActiveColor && isValidCastling && isValidEnPassant && isValidHalfMove && isValidFullMove;
         }
 
-        public static string BuildFenString(IReadOnlyChessboard chessboard)
+        public static string BuildFenString(IReadOnlyChessboard chessboard, Player player)
         {
             string chessboardString = BuildChessboardString(chessboard);
-            string turn = BuildTurnString(chessboard);
-            string castling = BuildCastlingString(chessboard);
-            string enPassant = BuildEnPassantString(chessboard);
+            string turn = BuildTurnString(player);
+            string castling = BuildCastlingString(chessboard.CastlingAvailability);
+            string enPassant = BuildEnPassantString(chessboard.EnPassantAvailability);
 
             return $"{chessboardString} {turn} {castling} {enPassant} {chessboard.HalfMove} {chessboard.FullMove}";
         }
@@ -95,28 +95,28 @@ namespace OpenChess.Domain
             return int.Parse(field);
         }
 
-        private static string BuildEnPassantString(IReadOnlyChessboard chessboard)
+        private static string BuildEnPassantString(IEnPassantAvailability enPassantAvailability)
         {
-            return chessboard.EnPassantAvailability.EnPassantPosition?.ToString() ?? "-";
+            return enPassantAvailability.EnPassantPosition?.ToString() ?? "-";
         }
 
-        private static string BuildCastlingString(IReadOnlyChessboard chessboard)
+        private static string BuildCastlingString(ICastlingAvailability castlingAvailability)
         {
-            string castlingAvailability = "";
-            foreach (var kv in chessboard.CastlingAvailability.IsAvailableAt)
+            string castlingAvailabilityString = "";
+            foreach (var kv in castlingAvailability.IsAvailableAt)
             {
                 bool isAvailable = kv.Value;
                 char castling = kv.Key;
-                if (isAvailable) { castlingAvailability += castling; }
+                if (isAvailable) { castlingAvailabilityString += castling; }
             }
-            if (string.IsNullOrEmpty(castlingAvailability)) castlingAvailability = "-";
+            if (string.IsNullOrEmpty(castlingAvailabilityString)) castlingAvailabilityString = "-";
 
-            return castlingAvailability;
+            return castlingAvailabilityString;
         }
 
-        private static string BuildTurnString(IReadOnlyChessboard chessboard)
+        private static string BuildTurnString(Player player)
         {
-            return chessboard.CurrentPlayer == Color.Black ? "b" : "w";
+            return player.Color == Color.Black ? "b" : "w";
         }
 
         private static string BuildChessboardString(IReadOnlyChessboard chessboard)
@@ -159,7 +159,7 @@ namespace OpenChess.Domain
 
         private static bool HasSixFields(string value)
         {
-            int fields = value.Split(" ").Count();
+            int fields = value.Split(" ").Length;
             bool hasValidFields = fields == 6;
             return hasValidFields;
         }
