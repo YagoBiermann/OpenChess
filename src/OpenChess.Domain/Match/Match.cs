@@ -57,6 +57,8 @@ namespace OpenChess.Domain
             ValidateMove(move);
             MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
             HandleIllegalPosition();
+            UpdateEnPassantAndCastlingAvailability(move.Origin, movePlayed.PieceMoved);
+
             bool isInCheckmate = _checkHandler.IsInCheckmate(OpponentPlayerInfo!.Value.Color, out CheckState checkState);
             if (isInCheckmate) DeclareWinnerAndFinish();
             _currentPlayerCheckState = checkState;
@@ -220,6 +222,11 @@ namespace OpenChess.Domain
             Chessboard previousChessboard = new(new FenInfo(_fenInfo.Position));
             _chessboard = previousChessboard;
         }
-
+        private void UpdateEnPassantAndCastlingAvailability(Coordinate origin, IReadOnlyPiece pieceMoved)
+        {
+            _chessboard.EnPassantAvailability.ClearEnPassant();
+            _chessboard.EnPassantAvailability.SetVulnerablePawn(pieceMoved, origin);
+            _chessboard.CastlingAvailability.UpdateAvailability(origin, CurrentPlayer!.Color);
+        }
     }
 }
