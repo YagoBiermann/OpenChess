@@ -62,7 +62,7 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R b KQkq - 0 1", 'b')]
         [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_CastlingToKingSide_ShouldBeHandledCorrectly(string position, char color)
+        public void Play_CastlingToKingSide_ShouldBeHandledCorrectly(string position, char color)
         {
             Chessboard chessboard = MovePiece(position, color, true);
             string row = GetRow(color);
@@ -84,7 +84,7 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R b KQkq - 0 1", 'b')]
         [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_CastlingToQueenSide_ShouldBeHandledCorrectly(string position, char color)
+        public void Play_CastlingToQueenSide_ShouldBeHandledCorrectly(string position, char color)
         {
             string row = GetRow(color);
             string column = GetColumn(false);
@@ -110,7 +110,7 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/ppp1p1pp/3pNp2/8/8/3PnP2/PPP1P1PP/R3K2R b KQkq - 0 1", 'b')]
         [DataRow("r3k2r/ppP1p1Pp/3p1p2/8/8/3P1P2/PPp1P1pP/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_AnyEnemyPieceHittingSquaresWhereKingPassThroughDuringTheCastling_ShouldNotBeAbleToCastle(string position, char color)
+        public void Play_AnyEnemyPieceHittingSquaresWhereKingPassThroughDuringTheCastling_ShouldNotBeAbleToCastle(string position, char color)
         {
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
@@ -121,7 +121,7 @@ namespace OpenChess.Tests
         [DataRow("r6r/pp2k2p/6p1/8/8/1P4P1/P3K2P/R6R b KQkq - 0 1", 'b', false)]
         [DataRow("r6r/pp2k2p/6p1/8/8/1P4P1/P3K2P/R6R w KQkq - 0 1", 'w', false)]
         [TestMethod]
-        public void MovePiece_KingMoved_ShouldNotBeAbleToCastle(string position, char color, bool isCastlingKingSide)
+        public void Play_KingMoved_ShouldNotBeAbleToCastle(string position, char color, bool isCastlingKingSide)
         {
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, isCastlingKingSide));
         }
@@ -129,7 +129,7 @@ namespace OpenChess.Tests
         [DataRow("1r2k2r/pp5p/6p1/8/8/1P4P1/P6P/1R2K2R w KQkq - 0 1", 'w')]
         [DataRow("1r2k2r/pp5p/6p1/8/8/1P4P1/P6P/1R2K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_QueenSideRookMoved_ShouldBeAbleToCastleOnlyInQueenSide(string position, char color)
+        public void Play_QueenSideRookMoved_ShouldBeAbleToCastleOnlyInQueenSide(string position, char color)
         {
             Coordinate kingSideDestination = Coordinate.GetInstance($"G{GetRow(color)}");
 
@@ -141,7 +141,7 @@ namespace OpenChess.Tests
         [DataRow("r3k1r1/pp5p/6p1/8/8/1P4P1/P6P/R3K1R1 w KQkq - 0 1", 'w')]
         [DataRow("r3k1r1/pp5p/6p1/8/8/1P4P1/P6P/R3K1R1 b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_KingSideRookMoved_ShouldBeAbleToCastleOnlyInKingSide(string position, char color)
+        public void Play_KingSideRookMoved_ShouldBeAbleToCastleOnlyInKingSide(string position, char color)
         {
             Coordinate queenSideDestination = Coordinate.GetInstance($"C{GetRow(color)}");
 
@@ -153,7 +153,7 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/pp5p/6p1/8/8/1Pb3P1/P6P/R3K2R w KQkq - 0 1", 'w')]
         [DataRow("r3k2r/pp5p/2B3p1/8/8/1P4P1/P6P/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_KingInCheck_ShouldNotBeAbleToCastle(string position, char color)
+        public void Play_KingInCheck_ShouldNotBeAbleToCastle(string position, char color)
         {
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
@@ -162,7 +162,7 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", 'w')]
         [DataRow("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R b - - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_CastlingNotAvailable_ShouldNotBeAbleToCastle(string position, char color)
+        public void Play_CastlingNotAvailable_ShouldNotBeAbleToCastle(string position, char color)
         {
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
@@ -173,7 +173,7 @@ namespace OpenChess.Tests
         [DataRow("r1b1kb1r/ppp1pppp/2nq1n2/3p4/3P4/2NQ1N2/PPP1PPPP/R1B1KB1R w KQkq - 0 1", 'w')]
         [DataRow("r1b1kb1r/ppp1pppp/2nq1n2/3p4/3P4/2NQ1N2/PPP1PPPP/R1B1KB1R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_AnyPiecesInBetweenKingAndRook_ShouldNotBeAbleToCastle(string position, char color)
+        public void Play_AnyPiecesInBetweenKingAndRook_ShouldNotBeAbleToCastle(string position, char color)
         {
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, true));
             Assert.ThrowsException<ChessboardException>(() => MovePiece(position, color, false));
@@ -182,7 +182,7 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_MovingQueenSideRook_ShouldLoseQueenSideCastling(string position, char color)
+        public void Play_MovingQueenSideRook_ShouldLoseQueenSideCastling(string position, char color)
         {
             Chessboard chessboard = MovePiece(position, $"E{GetRow(color)}", $"C{GetRow(color)}");
             bool isAvailable = GetQueenCastling(color, chessboard);
@@ -192,7 +192,7 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_MovingKingSideRook_ShouldLoseKingSideCastling(string position, char color)
+        public void Play_MovingKingSideRook_ShouldLoseKingSideCastling(string position, char color)
         {
             Chessboard chessboard = MovePiece(position, $"E{GetRow(color)}", $"G{GetRow(color)}");
             bool isAvailable = GetKingCastling(color, chessboard);
@@ -202,7 +202,7 @@ namespace OpenChess.Tests
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", 'w')]
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void MovePiece_MovingKing_ShouldLoseCastling(string position, char color)
+        public void Play_MovingKing_ShouldLoseCastling(string position, char color)
         {
             Chessboard chessboard = MovePiece(position, $"E{GetRow(color)}", $"F{GetRow(color)}");
             bool isKingSideAvailable = GetKingCastling(color, chessboard);
