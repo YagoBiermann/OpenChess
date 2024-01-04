@@ -99,9 +99,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldSolveCheckByMovingTheKing(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
-
+            Match match = FakeMatch.RestoreMatch(fen);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
@@ -114,9 +112,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldSolveDoubleCheckByCapturingAPieceWithTheKing(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
-
+            Match match = FakeMatch.RestoreMatch(fen);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
@@ -131,9 +127,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldSolveCheckByCapturingTheEnemyPiece(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
-
+            Match match = FakeMatch.RestoreMatch(fen);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
@@ -144,8 +138,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveDoubleCheckByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
+            Match match = FakeMatch.RestoreMatch(fen);
             Assert.IsNull(match.CurrentPlayerCheckState);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
@@ -156,8 +149,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveDoubleCheckByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
+            Match match = FakeMatch.RestoreMatch(fen);
             Assert.IsNull(match.CurrentPlayerCheckState);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
@@ -171,8 +163,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveCheckByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
+            Match match = FakeMatch.RestoreMatch(fen);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));

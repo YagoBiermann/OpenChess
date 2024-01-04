@@ -183,8 +183,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ValidMove_ShouldBeHandled(string fen, string origin, string destination, string expectedFen)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
+            Match match = FakeMatch.RestoreMatch(fen);
             Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
@@ -207,8 +206,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_PawnPromotion_ShouldBeHandledCorrectly(string fen, string origin, string destination, string expectedFen, string promoting)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
+            Match match = FakeMatch.RestoreMatch(fen);
             Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting);
 
@@ -281,12 +279,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_PlayerNotInMatch_ShouldThrowException()
         {
-            Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
-            match.Join(player1);
-            match.Join(player2);
-
+            Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
             Move move = new(Guid.NewGuid(), Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             Assert.ThrowsException<MatchException>(() => match.Play(move));
         }
@@ -294,13 +287,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_PlayerMakingMoveWhenItsNotTheTurn_ShouldThrowException()
         {
-            Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
-            match.Join(player1);
-            match.Join(player2);
+            Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
-            Move move = new(player2.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Move move = new(match.OpponentPlayerInfo!.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             Assert.ThrowsException<MatchException>(() => match.Play(move));
         }
 
@@ -320,13 +309,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_PlayerTryingToMoveOpponentPiece_ShouldThrowException()
         {
-            Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
-            match.Join(player1);
-            match.Join(player2);
+            Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
-            Move move = new(player1.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5"));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5"));
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
 
@@ -336,8 +321,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_PlayerInSelfCheckAfterMove_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
+            Match match = FakeMatch.RestoreMatch(fen);
             Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
@@ -369,14 +353,14 @@ namespace OpenChess.Tests
         [TestMethod]
         public void FenString_ShouldReturnCorrectFenString(string fen)
         {
-            Match match = new(FakeMatch.RestoreMatch(fen));
+            Match match = FakeMatch.RestoreMatch(fen);
             Assert.AreEqual(match.FenString, fen);
         }
 
         [TestMethod]
         public void MovePiece_ShouldSwitchTurns()
         {
-            Match match = new(FakeMatch.RestoreMatch(FenInfo.InitialPosition));
+            Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
             Assert.AreEqual(Color.White, match.CurrentPlayerColor);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
