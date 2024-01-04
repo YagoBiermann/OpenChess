@@ -142,8 +142,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void BuildFenString_ShouldBeInCorrectFormat(string fen)
         {
-            Chessboard chessboard = new(new FenInfo(fen));
-            Assert.AreEqual(fen, FenInfo.BuildFenString(chessboard));
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
+            Match match = new(matchInfo);
+            Assert.AreEqual(fen, match.FenString);
         }
     }
 }
