@@ -125,10 +125,7 @@ namespace OpenChess.Domain
         {
             return new Player(info);
         }
-        public void SetCurrentPlayer()
-        {
-            if (IsFull()) { GetPlayerByColor(FenInfo.ConvertTurn(_fenInfo.Turn), _players)!.IsCurrentPlayer = true; };
-        }
+
         private void ValidateMove(Move move)
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
@@ -176,6 +173,11 @@ namespace OpenChess.Domain
         private static Player? GetPlayerById(Guid id, List<Player> players)
         {
             return players.Find(p => p.Id == id);
+        }
+
+        private void SetCurrentPlayer()
+        {
+            if (IsFull()) { GetPlayerByColor(FenInfo.ConvertTurn(_fenInfo.Turn), _players)!.IsCurrentPlayer = true; };
         }
 
         private void DeclareWinnerAndFinish()
