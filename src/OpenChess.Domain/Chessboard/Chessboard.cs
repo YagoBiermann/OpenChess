@@ -4,10 +4,6 @@ namespace OpenChess.Domain
     {
         private Dictionary<Color, List<IReadOnlyPiece>> _piecesCache { get; } = new();
         private List<List<Square>> _board;
-        private PromotionHandler _promotionHandler;
-        private EnPassantHandler _enPassantHandler;
-        private CastlingHandler _castlingHandler;
-        private IMoveHandler _moveHandler;
         public ICastlingAvailability CastlingAvailability { get; private set; }
         public IEnPassantAvailability EnPassantAvailability { get; private set; }
         public IMoveCalculator MovesCalculator { get; }
@@ -23,10 +19,6 @@ namespace OpenChess.Domain
             EnPassantAvailability = FenInfo.ConvertEnPassant(fenInfo.EnPassantAvailability);
             LastPosition = fenInfo.Position;
             MovesCalculator = new MovesCalculator(this);
-            _enPassantHandler = new(this, MovesCalculator);
-            _promotionHandler = new(this, MovesCalculator);
-            _castlingHandler = new(this, MovesCalculator);
-            _moveHandler = SetupMoveHandlerChain();
             HalfMove = FenInfo.ConvertMoveAmount(fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(fenInfo.FullMove);
         }
@@ -78,12 +70,9 @@ namespace OpenChess.Domain
             IReadOnlyPiece? piece = RemovePiece(origin) ?? throw new ChessboardException($"Piece not found at origin: {origin}");
             IReadOnlyPiece? capturedPiece = RemovePiece(destination);
             AddPiece(destination, piece.Name, piece.Color);
-
-            return capturedPiece;
-        }
-
             _piecesCache.Clear();
 
+            return capturedPiece;
         }
 
         public IReadOnlyPiece? GetPiece(Coordinate position)
@@ -116,14 +105,6 @@ namespace OpenChess.Domain
             _piecesCache.Add(player, pieces);
 
             return pieces;
-        }
-
-        private IMoveHandler SetupMoveHandlerChain()
-        {
-            _promotionHandler.SetNext(_enPassantHandler);
-            _enPassantHandler.SetNext(_castlingHandler);
-            _castlingHandler.SetNext(new DefaultMoveHandler(this, MovesCalculator));
-            return _promotionHandler;
         }
 
         private static List<List<Square>> CreateBoard()
