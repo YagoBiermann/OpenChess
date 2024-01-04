@@ -102,7 +102,7 @@ namespace OpenChess.Tests
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
 
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
@@ -117,7 +117,7 @@ namespace OpenChess.Tests
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
 
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
@@ -134,7 +134,7 @@ namespace OpenChess.Tests
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
 
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
@@ -147,7 +147,7 @@ namespace OpenChess.Tests
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
             Assert.IsNull(match.CurrentPlayerCheckState);
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -159,7 +159,7 @@ namespace OpenChess.Tests
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
             Assert.IsNull(match.CurrentPlayerCheckState);
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -173,7 +173,7 @@ namespace OpenChess.Tests
         {
             MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
             Match match = new(matchInfo);
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -195,7 +195,7 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
 
             Assert.IsTrue(match.HasFinished());
-            Assert.AreEqual(match.Winner.GetValueOrDefault(), match.OpponentPlayer.GetValueOrDefault().Id);
+            Assert.AreEqual(match.Winner.GetValueOrDefault(), match.OpponentPlayerInfo.GetValueOrDefault().Id);
         }
 
         [DataRow("8/8/2k1P3/8/8/1Q2K3/7p/8 w - - 0 1", "B3", "C3")]
