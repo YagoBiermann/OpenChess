@@ -11,11 +11,9 @@ namespace OpenChess.Domain
         public ICastlingAvailability CastlingAvailability { get; private set; }
         public IEnPassantAvailability EnPassantAvailability { get; private set; }
         public IMoveCalculator MovesCalculator { get; }
-        public Color CurrentPlayer { get; private set; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
         public string LastPosition { get; private set; }
-        public Color Opponent { get => ColorUtils.GetOppositeColor(CurrentPlayer); }
 
         public Chessboard(FenInfo fenInfo)
         {
@@ -31,7 +29,6 @@ namespace OpenChess.Domain
             _moveHandler = SetupMoveHandlerChain();
             HalfMove = FenInfo.ConvertMoveAmount(fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(fenInfo.FullMove);
-            CurrentPlayer = FenInfo.ConvertTurn(fenInfo.Turn);
         }
 
         public Piece? AddPiece(Coordinate position, char piece, Color player)
@@ -133,7 +130,7 @@ namespace OpenChess.Domain
 
             return pieces;
         }
-        
+
         private void HandleIllegalPosition()
         {
             CheckHandler checkHandler = new(this, MovesCalculator);
