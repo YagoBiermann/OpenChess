@@ -10,41 +10,20 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_PromotingPawnToAnInvalidPiece_ShouldThrowException(string fen, string position1, string position2, string promotingPiece)
         {
-            Chessboard chessboard = new(new FenInfo(fen));
-            Coordinate origin = Coordinate.GetInstance(position1);
-            Coordinate destination = Coordinate.GetInstance(position2);
-
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination, promotingPiece));
+            Assert.ThrowsException<ChessboardException>(() => FakeMatch.RestoreAndPlay(fen, position1, position2, promotingPiece));
         }
 
-        [DataRow("8/8/8/3r4/2KP4/8/2k2p2/4R3 b - - 0 1", "F2", "E1", null)]
-        [DataRow("4r3/5P2/8/8/2K5/8/2kR4/8 w - - 0 1", "F7", "E8", null)]
+        [DataRow("8/8/8/3r4/2KP4/8/2k2p2/4R3 b - - 0 1", "F2", "E1", "8/8/8/3r4/2KP4/8/2k5/4q3 w - - 0 1")]
+        [DataRow("4r3/5P2/8/8/2K5/8/2kR4/8 w - - 0 1", "F7", "E8", "4Q3/8/8/8/2K5/8/2kR4/8 b - - 0 1")]
+        [DataRow("8/8/8/3r4/2KP4/8/2k2p2/8 b - - 0 1", "F2", "F1", "Q", "8/8/8/3r4/2KP4/8/2k5/5q2 w - - 0 1")]
+        [DataRow("8/8/8/3r4/2KP4/8/2k2p2/4R3 b - - 0 1", "F2", "E1", "N", "8/8/8/3r4/2KP4/8/2k5/4n3 w - - 0 1")]
+        [DataRow("4r3/5P2/8/8/2K5/8/2kR4/8 w - - 0 1", "F7", "F8", "B", "4rB2/8/8/8/2K5/8/2kR4/8 b - - 0 1")]
+        [DataRow("4r3/5P2/8/8/2K5/8/2kR4/8 w - - 0 1", "F7", "F8", "R", "4rR2/8/8/8/2K5/8/2kR4/8 b - - 0 1")]
         [TestMethod]
-        public void Play_PromotingPawn_NullString_ShouldPromotePawnToQueen(string fen, string position1, string position2, string promotingPiece)
+        public void Play_ShouldHandlePawnPromotion(string fen, string origin, string destination, string promotingPiece, string expectedFen)
         {
-            Chessboard chessboard = new(new FenInfo(fen));
-            Coordinate origin = Coordinate.GetInstance(position1);
-            Coordinate destination = Coordinate.GetInstance(position2);
-            chessboard.MovePiece(origin, destination, promotingPiece);
-
-            Assert.IsTrue(chessboard.GetPiece(destination) is Queen);
-        }
-
-        [DataRow("8/8/8/3r4/2KP4/8/2k2p2/8 b - - 0 1", "F2", "F1", 'q', "Q")]
-        [DataRow("8/8/8/3r4/2KP4/8/2k2p2/4R3 b - - 0 1", "F2", "E1", 'n', "N")]
-        [DataRow("4r3/5P2/8/8/2K5/8/2kR4/8 w - - 0 1", "F7", "E8", 'b', "B")]
-        [DataRow("4r3/5P2/8/8/2K5/8/2kR4/8 w - - 0 1", "F7", "F8", 'r', "R")]
-        [TestMethod]
-        public void Play_ShouldHandlePawnPromotion(string fen, string position1, string position2, char pieceType, string promotingPiece)
-        {
-            Chessboard chessboard = new(new FenInfo(fen));
-            Coordinate origin = Coordinate.GetInstance(position1);
-            Coordinate destination = Coordinate.GetInstance(position2);
-            chessboard.MovePiece(origin, destination, promotingPiece);
-            Type? piece = Utils.GetPieceType(pieceType);
-
-            Assert.IsFalse(chessboard.GetSquare(origin).HasPiece);
-            Assert.IsTrue(chessboard.GetPiece(destination).GetType().Equals(piece));
+            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination, string.IsNullOrEmpty(promotingPiece) ? null : promotingPiece);
+            Assert.AreEqual(expectedFen, match.FenString);
         }
     }
 }
