@@ -9,7 +9,6 @@ namespace OpenChess.Domain
         public IMoveCalculator MovesCalculator { get; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
-        public string LastPosition { get; private set; }
 
         public Chessboard(FenInfo fenInfo)
         {
@@ -17,7 +16,6 @@ namespace OpenChess.Domain
             SetPiecesOnBoard(fenInfo.Board);
             CastlingAvailability = FenInfo.ConvertCastling(fenInfo.CastlingAvailability);
             EnPassantAvailability = FenInfo.ConvertEnPassant(fenInfo.EnPassantAvailability);
-            LastPosition = fenInfo.Position;
             MovesCalculator = new MovesCalculator(this);
             HalfMove = FenInfo.ConvertMoveAmount(fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(fenInfo.FullMove);
