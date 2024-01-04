@@ -175,6 +175,23 @@ namespace OpenChess.Domain
             return players.Find(p => p.Id == id);
         }
 
+        private Player? CurrentPlayer
+        {
+            get
+            {
+                if (!HasStarted() || HasFinished()) return null;
+                return _players.Find(p => p.IsCurrentPlayer);
+            }
+        }
+
+        private Player? OpponentPlayer
+        {
+            get
+            {
+                if (!IsFull()) return null;
+                return _players.Find(p => !p.IsCurrentPlayer);
+            }
+        }
         private void SetCurrentPlayer()
         {
             if (IsFull()) { GetPlayerByColor(FenInfo.ConvertTurn(_fenInfo.Turn), _players)!.IsCurrentPlayer = true; };
