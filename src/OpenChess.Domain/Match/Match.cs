@@ -191,7 +191,7 @@ namespace OpenChess.Domain
         {
             get
             {
-                if (!IsFull()) return null;
+                if (!HasStarted() || HasFinished()) return null;
                 return _players.Find(p => !p.IsCurrentPlayer);
             }
         }
