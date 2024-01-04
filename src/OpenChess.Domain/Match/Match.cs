@@ -43,10 +43,11 @@ namespace OpenChess.Domain
             RestorePlayers(players, matchId);
             SetCurrentPlayer();
             _chessboard = new Chessboard(_fenInfo);
+            _movesCalculator = new MovesCalculator(_chessboard);
+            _checkHandler = new CheckHandler(_chessboard, _movesCalculator);
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
-            _checkHandler = new CheckHandler(_chessboard, _chessboard.MovesCalculator);
             _currentPlayerCheckState = null;
 
             if (winnerId is null) { _winner = null; return; }
