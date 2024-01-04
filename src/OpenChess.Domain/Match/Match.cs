@@ -38,7 +38,7 @@ namespace OpenChess.Domain
 
             Id = matchId;
             _fenInfo = new(fen);
-            RestorePlayers(_players, players, matchId);
+            RestorePlayers(players, matchId);
             SetCurrentPlayer();
             _chessboard = new Chessboard(_fenInfo);
             _pgnMoveText = pgnMoves;
@@ -48,7 +48,7 @@ namespace OpenChess.Domain
             _currentPlayerCheckState = null;
 
             if (winnerId is null) { _winner = null; return; }
-            Player winner = GetPlayerById((Guid)winnerId, _players) ?? throw new MatchException("Couldn't determine the winner");
+            Player winner = GetPlayerById((Guid)winnerId) ?? throw new MatchException("Couldn't determine the winner");
             _winner = winner;
         }
 
@@ -66,7 +66,7 @@ namespace OpenChess.Domain
 
         public void Join(PlayerInfo playerInfo)
         {
-            CanJoinMatch(playerInfo, _players, Id);
+            CanJoinMatch(playerInfo, Id);
             Player player = CreateNewPlayer(playerInfo);
             player.Join(Id);
             _players.Add(player);
@@ -123,34 +123,32 @@ namespace OpenChess.Domain
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
             if (HasFinished()) { throw new MatchException("Match already finished"); }
-            if (GetPlayerById(move.PlayerId, _players) is null) { throw new MatchException("You are not in this match"); }
-
-            Player player = GetPlayerById(move.PlayerId, _players)!;
-            if (!player.Color.Equals(_chessboard.CurrentPlayer)) { throw new MatchException("Its not your turn!"); };
+            Player? player = GetPlayerById(move.PlayerId) ?? throw new MatchException("You are not in this match");
+            if (!player.IsCurrentPlayer) throw new MatchException("Its not your turn!");
             if (_chessboard.GetPiece(move.Origin) is null) { throw new ChessboardException("There is no piece in this position"); };
 
             Color pieceColor = _chessboard.GetPiece(move.Origin)!.Color;
-            Color playerColor = GetPlayerById(move.PlayerId, _players)!.Color;
+            Color playerColor = GetPlayerById(move.PlayerId)!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private static void RestorePlayers(List<Player> players, List<PlayerInfo> playersInfo, Guid matchId)
+        private void RestorePlayers(List<PlayerInfo> playersInfo, Guid matchId)
         {
             foreach (PlayerInfo playerInfo in playersInfo)
             {
                 Player restoredPlayer = new(playerInfo);
                 if (playerInfo.CurrentMatch is null) throw new MatchException("Player is not in a match!");
-                CanJoinMatch(playerInfo, players, matchId);
-                players.Add(restoredPlayer);
+                CanJoinMatch(playerInfo, matchId);
+                _players.Add(restoredPlayer);
             }
         }
 
-        private static void CanJoinMatch(PlayerInfo playerInfo, List<Player> players, Guid matchId)
+        private void CanJoinMatch(PlayerInfo playerInfo, Guid matchId)
         {
-            if (players.Count == 2) throw new MatchException("Match is full!");
+            if (_players.Count == 2) throw new MatchException("Match is full!");
 
-            bool sameColor = GetPlayerByColor(playerInfo.Color, players) is not null;
-            bool sameId = GetPlayerById(playerInfo.Id, players) is not null;
+            bool sameColor = GetPlayerByColor(playerInfo.Color) is not null;
+            bool sameId = GetPlayerById(playerInfo.Id) is not null;
             if (sameColor) throw new MatchException($"Match already contains a player of same color!");
             if (sameId) throw new MatchException($"Player is already in the match!");
 
@@ -185,14 +183,24 @@ namespace OpenChess.Domain
                 return _players.Find(p => !p.IsCurrentPlayer);
             }
         }
+
+        private void SwitchTurns()
+        {
+            var currentPlayer = CurrentPlayer;
+            var opponentPlayer = OpponentPlayer;
+            currentPlayer!.IsCurrentPlayer = false;
+            opponentPlayer!.IsCurrentPlayer = true;
+        }
+
         private void SetCurrentPlayer()
         {
-            if (IsFull()) { GetPlayerByColor(FenInfo.ConvertTurn(_fenInfo.Turn), _players)!.IsCurrentPlayer = true; };
+            Color currentPlayer = FenInfo.ConvertTurn(_fenInfo.Turn);
+            if (IsFull()) { GetPlayerByColor(currentPlayer)!.IsCurrentPlayer = true; };
         }
 
         private void DeclareWinnerAndFinish()
         {
-            _winner = GetPlayerByColor(_chessboard.Opponent, _players);
+            _winner = GetPlayerByColor(OpponentPlayer!.Color);
             _currentPlayerCheckState = CheckState.Checkmate;
             _matchStatus = MatchStatus.Finished;
         }
