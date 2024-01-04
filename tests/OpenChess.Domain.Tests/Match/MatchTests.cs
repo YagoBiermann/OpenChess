@@ -379,7 +379,7 @@ namespace OpenChess.Tests
             string currentPosition = match.FenString;
 
             Move move = new(match.CurrentPlayerInfo!.Value.Id, origin, destination);
-            Assert.ThrowsException<MatchException>(() => match.Play(move));
+            Assert.ThrowsException<ChessboardException>(() => match.Play(move));
             Assert.AreEqual(currentPosition, match.FenString);
         }
     }

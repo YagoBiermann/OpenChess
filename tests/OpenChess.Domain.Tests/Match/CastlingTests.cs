@@ -20,8 +20,8 @@ namespace OpenChess.Tests
         [DataRow("rnbqk2r/pppp1ppp/5n2/1B2p3/1b2P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1", "E1", "G1", "rnbqk2r/pppp1ppp/5n2/1B2p3/1b2P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 0 1")]
         [DataRow("1nb1k1n1/ppp2p1r/8/2bp4/1r1pP3/3NBN2/P3QP2/R3K2R w KQ - 0 1", "E1", "G1", "1nb1k1n1/ppp2p1r/8/2bp4/1r1pP3/3NBN2/P3QP2/R4RK1 b - - 0 1")]
         [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R w KQkq - 0 1", "E1", "G1", "r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R4RK1 b kq - 0 1")]
-        [DataRow("r3k2r/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R b KQkq - 0 1", 'b')]
-        [DataRow("r3k2r/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R b KQkq - 0 1", "E8", "G8", "r4rk1/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R w KQ - 0 1")]
+        [DataRow("r3k2r/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R b KQkq - 0 1", "E8", "G8", "r4rk1/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R w KQ - 0 1")]
+        [DataRow("r3k2r/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R b KQkq - 0 1", "E8", "G8", "r4rk1/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R w KQ - 0 1")]
         [DataRow("rnbqk2r/pppp1ppp/5n2/4p3/1b1PP3/2P2N2/PP3PPP/RNBQKB1R b KQkq - 0 1", "E8", "G8", "rnbq1rk1/pppp1ppp/5n2/4p3/1b1PP3/2P2N2/PP3PPP/RNBQKB1R w KQ - 0 1")]
         [TestMethod]
         public void Play_CastlingToKingSide_ShouldBeHandledCorrectly(string fen, string origin, string destination, string expectedFen)
@@ -32,7 +32,7 @@ namespace OpenChess.Tests
 
         [DataRow("r2qkbnr/pp1nppp1/2p4p/5bB1/3PN2Q/8/PPP2PPP/R3KBNR w KQkq - 0 1", "E1", "C1", "r2qkbnr/pp1nppp1/2p4p/5bB1/3PN2Q/8/PPP2PPP/2KR1BNR b kq - 0 1")]
         [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R w KQkq - 0 1", "E1", "C1", "r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/2KR3R b kq - 0 1")]
-        [DataRow("1nb1k1n1/ppp2p1r/8/2bp4/1r1pP3/3NBN2/P3QP2/R3K2R w KQ - 0 1", "E1", "C1", "1nb1k1n1/ppp2p1r/8/2bp4/1r1pP3/3NBN2/P3QP2/2KR3R w - - 0 1")]
+        [DataRow("1nb1k1n1/ppp2p1r/8/2bp4/1r1pP3/3NBN2/P3QP2/R3K2R w KQ - 0 1", "E1", "C1", "1nb1k1n1/ppp2p1r/8/2bp4/1r1pP3/3NBN2/P3QP2/2KR3R b - - 0 1")]
         [DataRow("r3k2r/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R b KQkq - 0 1", "E8", "C8", "2kr3r/ppp2pp1/2n2n1p/2bppbq1/2BPP3/2N1BN1P/PPP1QPP1/R3K2R w KQ - 0 1")]
         [DataRow("r3k2r/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R b KQkq - 0 1", "E8", "C8", "2kr3r/p1pp1pp1/5n2/5q2/1R1PP3/2N2N1Q/PPP2P2/R3K2R w KQ - 0 1")]
         [DataRow("r3k2r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R b KQkq - 0 1", "E8", "C8", "2kr3r/pppppppp/4B3/8/8/4b3/PPPPPPPP/R3K2R w KQ - 0 1")]
@@ -74,11 +74,11 @@ namespace OpenChess.Tests
         }
 
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "H1", "G1", "r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K1R1 b Qkq - 0 1")]
-        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "A1", "B1", "r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K1R1 b Kkq - 0 1")]
-        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "E1", "D1", "r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K1R1 b kq - 0 1")]
-        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", "E8", "D8", "r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K1R1 w KQ - 0 1")]
-        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "H8", "G8", "r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K1R1 w KQq - 0 1")]
-        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "A8", "B8", "r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K1R1 w KQk - 0 1")]
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "A1", "B1", "r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/1R2K2R b Kkq - 0 1")]
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "E1", "D1", "r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R2K3R b kq - 0 1")]
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", "E8", "D8", "r2k3r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQ - 0 1")]
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", "H8", "G8", "r3k1r1/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQq - 0 1")]
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R b KQkq - 0 1", "A8", "B8", "1r2k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQk - 0 1")]
         [TestMethod]
         public void Play_MovingKingOrRook_ShouldLoseQueenSideCastling(string fen, string origin, string destination, string expectedFen)
         {

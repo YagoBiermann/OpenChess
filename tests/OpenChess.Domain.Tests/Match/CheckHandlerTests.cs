@@ -183,10 +183,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_MoveResultingInCheckmate_ShouldEndTheMatchAndDeclareWinner(string fen, string origin, string destination)
         {
-            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
+            Match match = FakeMatch.RestoreMatch(fen);
+            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
+            Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            match.Play(move);
 
             Assert.IsTrue(match.HasFinished());
-            Assert.AreEqual(match.Winner.GetValueOrDefault(), match.OpponentPlayerInfo.GetValueOrDefault().Id);
+            Assert.AreEqual(match.Winner.GetValueOrDefault(), currentPlayer);
         }
 
         [DataRow("8/8/2k1P3/8/8/1Q2K3/7p/8 w - - 0 1", "B3", "C3")]
