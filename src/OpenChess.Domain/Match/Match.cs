@@ -85,34 +85,12 @@ namespace OpenChess.Domain
             return _players.Any();
         }
 
-        public bool HasStarted()
-        {
-            return Status.Equals(MatchStatus.InProgress);
-        }
-
-        public bool HasFinished()
-        {
-            return Status.Equals(MatchStatus.Finished);
-        }
-        public CheckState? CurrentPlayerCheckState { get { return _currentPlayerCheckState; } }
-        public MatchStatus Status { get { return _matchStatus; } }
-        public PlayerInfo? CurrentPlayer
-        {
-            get
-            {
-                if (!HasStarted() || HasFinished()) return null;
-                return GetPlayerByColor(_chessboard.CurrentPlayer, _players)?.Info;
-            }
-        }
-
-        public PlayerInfo? OpponentPlayer
-        {
-            get
-            {
-                if (!IsFull()) return null;
-                return GetPlayerByColor(_chessboard.Opponent, _players)?.Info;
-            }
-        }
+        public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
+        public bool HasFinished() => Status.Equals(MatchStatus.Finished);
+        public CheckState? CurrentPlayerCheckState => _currentPlayerCheckState;
+        public MatchStatus Status => _matchStatus;
+        public PlayerInfo? CurrentPlayerInfo => CurrentPlayer?.Info;
+        public PlayerInfo? OpponentPlayerInfo => OpponentPlayer?.Info;
 
         public Time Time { get { return (Time)_time.Minutes; } }
         public Guid? Winner { get { return _winner?.Id; } }
