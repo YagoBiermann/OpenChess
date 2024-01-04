@@ -8,8 +8,8 @@ namespace OpenChess.Domain
         {
             if (piece is King && IsCastling(piece.Origin, destination))
             {
-                if (!CanCastle(destination, _chessboard.CurrentPlayer)) { throw new ChessboardException("Cannot castle!"); }
-                return DoCastle(piece.Origin, destination, _chessboard.CurrentPlayer);
+                if (!CanCastle(destination, _match.CurrentPlayerColor!.Value)) { throw new ChessboardException("Cannot castle!"); }
+                return DoCastle(piece.Origin, destination, _match.CurrentPlayerColor!.Value);
             }
             else { return base.Handle(piece, destination, promotingPiece); }
         }
@@ -91,7 +91,7 @@ namespace OpenChess.Domain
 
         private bool AnyPieceHittingTheCastlingSquares(List<Coordinate> castlingPositions)
         {
-            Color enemyPlayer = _chessboard.Opponent;
+            Color enemyPlayer = _match.OpponentPlayerColor!.Value;
             List<IReadOnlyPiece> pieces = _chessboard.GetPieces(enemyPlayer);
 
             foreach (IReadOnlyPiece piece in pieces)
