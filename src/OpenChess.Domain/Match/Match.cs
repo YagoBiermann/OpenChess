@@ -62,8 +62,7 @@ namespace OpenChess.Domain
             bool isInCheckmate = _checkHandler.IsInCheckmate(OpponentPlayerInfo!.Value.Color, out CheckState checkState);
             if (isInCheckmate) DeclareWinnerAndFinish();
             _currentPlayerCheckState = checkState;
-            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
-            _pgnMoveText.Push(convertedMove);
+            ConvertMoveToPGN(movePlayed, checkState);
             SwitchTurns();
             string fenString = FenInfo.BuildFenString(_chessboard, CurrentPlayer!);
             _fenInfo = new(fenString);
@@ -203,6 +202,12 @@ namespace OpenChess.Domain
         {
             Color currentPlayer = FenInfo.ConvertTurn(_fenInfo.Turn);
             if (IsFull()) { GetPlayerByColor(currentPlayer)!.IsCurrentPlayer = true; };
+        }
+
+        private void ConvertMoveToPGN(MovePlayed movePlayed, CheckState checkState)
+        {
+            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
+            _pgnMoveText.Push(convertedMove);
         }
 
         private void DeclareWinnerAndFinish()
