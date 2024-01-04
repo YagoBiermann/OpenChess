@@ -358,7 +358,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void MovePiece_ShouldSwitchTurns()
+        public void Play_ShouldSwitchTurns()
         {
             Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
