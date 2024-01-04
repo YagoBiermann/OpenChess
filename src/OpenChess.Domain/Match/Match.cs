@@ -218,7 +218,7 @@ namespace OpenChess.Domain
 
         private void DeclareWinnerAndFinish()
         {
-            _winner = GetPlayerByColor(OpponentPlayer!.Color);
+            _winner = CurrentPlayer;
             _currentPlayerCheckState = CheckState.Checkmate;
             _matchStatus = MatchStatus.Finished;
         }
