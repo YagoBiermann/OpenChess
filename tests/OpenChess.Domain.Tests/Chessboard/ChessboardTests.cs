@@ -131,21 +131,6 @@ namespace OpenChess.Tests
             }
         }
 
-        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "D6", "B6")]
-        [TestMethod]
-        public void MovePiece_InvalidMove_ShouldThrowExceptionAndRestoreChessboardToLastPosition(string position, string orig, string dest)
-        {
-            Coordinate origin = Coordinate.GetInstance(orig);
-            Coordinate destination = Coordinate.GetInstance(dest);
-            Match match = new(FakeMatch.RestoreMatch(position));
-
-            string currentPosition = match.FenString;
-
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, origin, destination);
-            Assert.ThrowsException<MatchException>(() => match.Play(move));
-            Assert.AreEqual(currentPosition, match.FenString);
-        }
-
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "E2", "E4")]
         [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "F6", "D5")]
         [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "D8", "D5")]

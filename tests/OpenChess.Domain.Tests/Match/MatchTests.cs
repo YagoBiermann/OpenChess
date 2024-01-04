@@ -367,5 +367,20 @@ namespace OpenChess.Tests
             match.Play(move);
             Assert.AreEqual(Color.Black, match.CurrentPlayerColor);
         }
+
+        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "D6", "B6")]
+        [TestMethod]
+        public void Play_InvalidMove_ShouldThrowExceptionAndRestoreChessboardToLastPosition(string position, string orig, string dest)
+        {
+            Coordinate origin = Coordinate.GetInstance(orig);
+            Coordinate destination = Coordinate.GetInstance(dest);
+            Match match = FakeMatch.RestoreMatch(position);
+
+            string currentPosition = match.FenString;
+
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, origin, destination);
+            Assert.ThrowsException<MatchException>(() => match.Play(move));
+            Assert.AreEqual(currentPosition, match.FenString);
+        }
     }
 }
