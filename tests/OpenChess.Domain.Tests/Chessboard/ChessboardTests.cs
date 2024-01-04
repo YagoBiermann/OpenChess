@@ -6,22 +6,6 @@ namespace OpenChess.Tests
     [TestClass]
     public class ChessboardTests
     {
-
-        [TestMethod]
-        public void NewInstance_ShouldConvertFenStringCorrectly()
-        {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-
-            Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
-            Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['K']);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['Q']);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['k']);
-            Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['q']);
-            Assert.AreEqual(0, chessboard.HalfMove);
-            Assert.AreEqual(1, chessboard.FullMove);
-        }
-
         [DataRow("C3", 'Q', 'w')]
         [DataRow("B4", 'N', 'w')]
         [DataRow("C5", 'B', 'w')]
@@ -37,7 +21,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertPiecesCorrectly(string position, char name, char color)
         {
-            Chessboard chessboard = new("8/2p2r2/4bkn1/2B2q2/1NKR4/2Q5/4P3/8 w - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/2p2r2/4bkn1/2B2q2/1NKR4/2Q5/4P3/8 w - - 0 1"));
 
             Coordinate coordinate = Coordinate.GetInstance(position);
             Type? pieceType = Utils.GetPieceType(name);
@@ -51,13 +35,12 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertCastlingCorrectly()
         {
-            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("6r1/8/P7/1P5k/8/8/7K/8 b - - 0 1"));
 
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['K']);
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['Q']);
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['k']);
             Assert.IsFalse(chessboard.CastlingAvailability.IsAvailableAt['q']);
-            Assert.AreEqual(Color.Black, chessboard.CurrentPlayer);
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
             Assert.AreEqual(0, chessboard.HalfMove);
             Assert.AreEqual(1, chessboard.FullMove);
@@ -66,7 +49,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertCastlingCorrectly_case2()
         {
-            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
+            Chessboard chessboard = new(new FenInfo("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1"));
 
             Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['K']);
             Assert.IsTrue(chessboard.CastlingAvailability.IsAvailableAt['k']);
@@ -75,13 +58,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_ShouldConvertEnPassantCorrectly()
         {
-            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk E3 0 1");
+            Chessboard chessboard = new(new FenInfo("6r1/8/P7/1P5k/8/8/7K/8 b Kk E3 0 1"));
             Assert.AreEqual(Coordinate.GetInstance("E3"), chessboard.EnPassantAvailability.EnPassantPosition);
         }
         [TestMethod]
         public void NewInstance_NoEnPassant_ShouldBeNull()
         {
-            Chessboard chessboard = new("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1");
+            Chessboard chessboard = new(new FenInfo("6r1/8/P7/1P5k/8/8/7K/8 b Kk - 0 1"));
             Assert.IsNull(chessboard.EnPassantAvailability.EnPassantPosition);
         }
 
@@ -120,7 +103,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_GivenFenString_ShouldAddWhitePiecesCorrectly(string coordinate, char type, char c)
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
 
             Coordinate origin = Coordinate.GetInstance(coordinate);
             IReadOnlyPiece? piece = chessboard.GetPiece(origin);
@@ -135,7 +118,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_InitialPosition_EmptySquares_ShouldReturnPieceAsNull()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
 
             for (int row = 2; row <= 5; row++)
             {
@@ -148,44 +131,30 @@ namespace OpenChess.Tests
             }
         }
 
-        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
-        [DataRow("7k/1R6/7K/8/8/1b6/8/8 w - - 0 1")]
-        [DataRow("rnbqkb1r/pppppp1p/5np1/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 1")]
-        [DataRow("8/5P2/3K4/8/8/1k6/8/q7 w - - 0 1")]
-        [DataRow("3k4/1K6/2PbP3/3B4/8/8/8/8 w - - 0 1")]
-        [DataRow("r1bqk2r/p2p1ppp/1pnbpn2/2p5/2PP4/3BPN1P/PP3PP1/RNBQ1RK1 b kq - 0 1")]
+        [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "E2", "E4")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "F6", "D5")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "D8", "D5")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "F1", "B5")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "G1", "F3")]
         [TestMethod]
-        public void ToString_ShouldConvertChessboardToString(string fen)
+        public void ChangePiecePosition_ShouldChangePiecesPosition(string fen, string origin, string destination)
         {
-            Chessboard chessboard = new(fen);
-            string fromChessboard = chessboard.ToString();
+            Chessboard chessboard = new(new FenInfo(fen));
+            bool hasPieceAtDestination = chessboard.GetSquare(Coordinate.GetInstance(destination)).HasPiece;
+            IReadOnlyPiece? capturedPiece = chessboard.ChangePiecePosition(Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
-            Assert.IsTrue(FenInfo.IsValid(fromChessboard));
-            Assert.AreEqual(chessboard.ToString(), fen);
+            Assert.IsFalse(chessboard.GetSquare(Coordinate.GetInstance(origin)).HasPiece);
+            Assert.IsTrue(chessboard.GetSquare(Coordinate.GetInstance(destination)).HasPiece);
+            if (hasPieceAtDestination) Assert.IsNotNull(capturedPiece);
         }
 
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "E4", "E5")]
+        [DataRow("rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1", "D2", "D5")]
         [TestMethod]
-        public void MovePiece_ShouldSwitchTurns()
+        public void ChangePiecePosition_OriginWithoutPiece_ShouldThrowException(string fen, string origin, string destination)
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
-
-            Assert.AreEqual(Color.White, chessboard.CurrentPlayer);
-            chessboard.MovePiece(Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
-            Assert.AreEqual(Color.Black, chessboard.CurrentPlayer);
-        }
-
-        [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "D6", "B6")]
-        [TestMethod]
-        public void MovePiece_InvalidMove_ShouldThrowExceptionAndRestoreChessboardToLastPosition(string position, string orig, string dest)
-        {
-            Chessboard chessboard = new(position);
-            Coordinate origin = Coordinate.GetInstance(orig);
-            Coordinate destination = Coordinate.GetInstance(dest);
-
-            string currentPosition = chessboard.ToString();
-
-            Assert.ThrowsException<ChessboardException>(() => chessboard.MovePiece(origin, destination));
-            Assert.AreEqual(currentPosition, chessboard.ToString());
+            Chessboard chessboard = new(new FenInfo(fen));
+            Assert.ThrowsException<ChessboardException>(() => chessboard.ChangePiecePosition(Coordinate.GetInstance(origin), Coordinate.GetInstance(destination)));
         }
     }
 }

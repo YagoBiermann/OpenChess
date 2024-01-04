@@ -20,7 +20,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Name_ShouldBeInCorrectFormat(string origin, char name)
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             IReadOnlyPiece piece = chessboard.GetReadOnlySquare(origin).ReadOnlyPiece;
 
             Assert.AreEqual(name, piece.Name);
@@ -29,7 +29,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Equals_SameObject_ShouldReturnTrue()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("A7").ReadOnlyPiece!;
             Pawn pawn2 = (Pawn)chessboard.GetReadOnlySquare("A7").ReadOnlyPiece!;
 
@@ -39,7 +39,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Equals_DifferentPieces_ShouldReturnFalse()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("A1").ReadOnlyPiece!;
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
 
@@ -49,7 +49,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Equals_SamePieceDifferentColors_ShouldReturnFalse()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
             King king2 = (King)chessboard.GetReadOnlySquare("E8").ReadOnlyPiece!;
 
@@ -59,7 +59,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Equals_SamePieceDifferentOrigin_ShouldReturnFalse()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Pawn pawn = (Pawn)chessboard.GetReadOnlySquare("A7").ReadOnlyPiece!;
             Pawn pawn2 = (Pawn)chessboard.GetReadOnlySquare("B7").ReadOnlyPiece!;
 

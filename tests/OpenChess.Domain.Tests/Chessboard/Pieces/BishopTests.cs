@@ -8,7 +8,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeTrue()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Bishop whiteBishop = (Bishop)chessboard.GetReadOnlySquare("C1").ReadOnlyPiece!;
             Bishop blackBishop = (Bishop)chessboard.GetReadOnlySquare("C8").ReadOnlyPiece!;
 
@@ -19,7 +19,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void DirectionsProperty_ShouldReturnDiagonalDirections()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Bishop whiteBishop = (Bishop)chessboard.GetReadOnlySquare("C1").ReadOnlyPiece!;
             Bishop blackBishop = (Bishop)chessboard.GetReadOnlySquare("C8").ReadOnlyPiece!;
 
@@ -38,7 +38,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLineOfSight_ShouldReturnAllMoves()
         {
-            Chessboard chessboard = new("r1bqk1nr/pppp2p1/5p1p/4P1N1/4B1Q1/8/PPP2PPP/RN2K2R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("r1bqk1nr/pppp2p1/5p1p/4P1N1/4B1Q1/8/PPP2PPP/RN2K2R b KQkq - 0 1"));
             Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
             List<PieceLineOfSight> expectedMoves = new()
@@ -64,7 +64,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
         {
-            Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1"));
             Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
@@ -82,7 +82,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
-            Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1"));
             Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(bishop);
@@ -97,7 +97,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeEnemyKing()
         {
-            Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1"));
             Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(bishop);
@@ -114,7 +114,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
-            Chessboard chessboard = new("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("2b5/2P1k3/8/2B1p3/4K3/P7/5p2/8 b - - 0 1"));
             Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("C5").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(bishop);
@@ -129,7 +129,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_PositionOutOfChessboard_ShouldReturnEmptyList()
         {
-            Chessboard chessboard = new("2b5/B1P1k3/8/4p3/4K3/P7/5p2/8 w - - 0 1");
+            Chessboard chessboard = new(new FenInfo("2b5/B1P1k3/8/4p3/4K3/P7/5p2/8 w - - 0 1"));
             Bishop bishop = (Bishop)chessboard.GetReadOnlySquare("A7").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(bishop);

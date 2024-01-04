@@ -4,11 +4,13 @@ namespace OpenChess.Domain
     {
         protected IMoveHandler? _nextHandler = null;
         protected Chessboard _chessboard;
+        protected Match _match;
         protected IMoveCalculator _movesCalculator;
-        public MoveHandler(Chessboard chessboard, IMoveCalculator moveCalculator)
+        public MoveHandler(Match match, Chessboard chessboard, IMoveCalculator moveCalculator)
         {
             _chessboard = chessboard;
             _movesCalculator = moveCalculator;
+            _match = match;
         }
 
         public virtual MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)

@@ -25,9 +25,11 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsHittingTheEnemyKing_ShouldReturnTrue(string fen, string origin)
         {
-            Chessboard chessboard = new(fen);
-            IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
-            Assert.IsTrue(chessboard.MovesCalculator.IsHittingTheEnemyKing(piece));
+            Match match = FakeMatch.RestoreMatch(fen);
+            IMoveCalculator movesCalculator = new MovesCalculator(match.Chessboard);
+            IReadOnlyPiece piece = match.Chessboard.GetPiece(Coordinate.GetInstance(origin))!;
+
+            Assert.IsTrue(movesCalculator.IsHittingTheEnemyKing(piece));
         }
 
         [DataRow("r3k2r/2p1q1b1/6b1/8/1n6/2B5/2B1Q3/R3K2R b - - 0 1", "E2")]
@@ -36,9 +38,11 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsHittingTheEnemyKing_ShouldReturnFalse(string fen, string origin)
         {
-            Chessboard chessboard = new(fen);
-            IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
-            Assert.IsFalse(chessboard.MovesCalculator.IsHittingTheEnemyKing(piece));
+            Match match = FakeMatch.RestoreMatch(fen);
+            IMoveCalculator movesCalculator = new MovesCalculator(match.Chessboard);
+            IReadOnlyPiece piece = match.Chessboard.GetPiece(Coordinate.GetInstance(origin))!;
+
+            Assert.IsFalse(movesCalculator.IsHittingTheEnemyKing(piece));
         }
 
         [DataRow("4K3/4R3/2p5/8/7P/8/8/k3r3 w - - 0 1", "E7")]
@@ -47,9 +51,11 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsPinned_ShouldReturnTrue(string fen, string origin)
         {
-            Chessboard chessboard = new(fen);
-            IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
-            Assert.IsTrue(chessboard.MovesCalculator.IsPinned(piece));
+            Match match = FakeMatch.RestoreMatch(fen);
+            IMoveCalculator movesCalculator = new MovesCalculator(match.Chessboard);
+            IReadOnlyPiece piece = match.Chessboard.GetPiece(Coordinate.GetInstance(origin))!;
+
+            Assert.IsTrue(movesCalculator.IsPinned(piece));
         }
 
         [DataRow("8/8/8/8/7P/1r2p1K1/8/k7 w - - 0 1", "E3")]
@@ -61,9 +67,11 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsPinned_ShouldReturnFalse(string fen, string origin)
         {
-            Chessboard chessboard = new(fen);
-            IReadOnlyPiece piece = chessboard.GetPiece(Coordinate.GetInstance(origin))!;
-            Assert.IsFalse(chessboard.MovesCalculator.IsPinned(piece));
+            Match match = FakeMatch.RestoreMatch(fen);
+            IMoveCalculator movesCalculator = new MovesCalculator(match.Chessboard);
+            IReadOnlyPiece piece = match.Chessboard.GetPiece(Coordinate.GetInstance(origin))!;
+
+            Assert.IsFalse(movesCalculator.IsPinned(piece));
         }
 
         [DataRow("8/8/8/2k3b1/3R3p/8/KQ6/4r3 b - - 0 1", 1)]
@@ -73,8 +81,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateKingMoves_ShouldReturnCorrectMoves(string fen, int testCase)
         {
-            Chessboard chessboard = new(fen);
-            var kingMoves = chessboard.MovesCalculator.CalculateKingMoves(chessboard.CurrentPlayer).SelectMany(m => m.RangeOfAttack).ToList();
+            Match match = FakeMatch.RestoreMatch(fen);
+            IMoveCalculator movesCalculator = new MovesCalculator(match.Chessboard);
+            var kingMoves = movesCalculator.CalculateKingMoves(match.CurrentPlayerColor!.Value).SelectMany(m => m.RangeOfAttack).ToList();
 
             CollectionAssert.AreEquivalent(GetExpectedKingMoves(testCase), kingMoves);
         }

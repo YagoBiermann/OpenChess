@@ -8,7 +8,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeTrue()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
             Queen queen2 = (Queen)chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
 
@@ -19,7 +19,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void DirectionsProperty_ShouldReturnAllDirections()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D1").ReadOnlyPiece!;
             Queen queen2 = (Queen)chessboard.GetReadOnlySquare("D8").ReadOnlyPiece!;
 
@@ -42,7 +42,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLineOfSight_ShouldReturnAllMoves()
         {
-            Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4Q3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("rnbqkbnr/pppppppp/8/8/4Q3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1"));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
             List<PieceLineOfSight> expectedMoves = new()
@@ -72,7 +72,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
         {
-            Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1"));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);
@@ -100,7 +100,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
-            Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1"));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);
@@ -120,7 +120,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
-            Chessboard chessboard = new("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1"));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);

@@ -16,7 +16,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsInCheck_PlayerInCheck_ShouldReturnTrue(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             Assert.IsTrue(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkAmount));
@@ -38,7 +38,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsInCheck_PlayerNotInCheck_ShouldReturnFalse(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = color == 'w' ? Color.White : Color.Black;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             Assert.IsFalse(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkAmount));
@@ -51,7 +51,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_DoubleCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
@@ -66,7 +66,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_Check_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
@@ -84,7 +84,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_NotInCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(fen);
+            Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
             new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
@@ -99,10 +99,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldSolveCheckByMovingTheKing(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
-
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Match match = FakeMatch.RestoreMatch(fen);
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
@@ -114,10 +112,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldSolveDoubleCheckByCapturingAPieceWithTheKing(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
-
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Match match = FakeMatch.RestoreMatch(fen);
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
@@ -131,10 +127,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldSolveCheckByCapturingTheEnemyPiece(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
-
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Match match = FakeMatch.RestoreMatch(fen);
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
@@ -144,10 +138,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveDoubleCheckByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
+            Match match = FakeMatch.RestoreMatch(fen);
             Assert.IsNull(match.CurrentPlayerCheckState);
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -156,10 +149,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveDoubleCheckByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
+            Match match = FakeMatch.RestoreMatch(fen);
             Assert.IsNull(match.CurrentPlayerCheckState);
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -171,9 +163,8 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveCheckByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination)
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(fen);
-            Match match = new(matchInfo);
-            Move move = new(match.CurrentPlayer!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Match match = FakeMatch.RestoreMatch(fen);
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -192,10 +183,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_MoveResultingInCheckmate_ShouldEndTheMatchAndDeclareWinner(string fen, string origin, string destination)
         {
-            Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
+            Match match = FakeMatch.RestoreMatch(fen);
+            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
+            Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            match.Play(move);
 
             Assert.IsTrue(match.HasFinished());
-            Assert.AreEqual(match.Winner.GetValueOrDefault(), match.OpponentPlayer.GetValueOrDefault().Id);
+            Assert.AreEqual(match.Winner.GetValueOrDefault(), currentPlayer);
         }
 
         [DataRow("8/8/2k1P3/8/8/1Q2K3/7p/8 w - - 0 1", "B3", "C3")]

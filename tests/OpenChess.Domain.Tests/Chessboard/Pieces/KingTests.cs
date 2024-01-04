@@ -8,7 +8,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeFalse()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             King whiteKing = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
             King blackKing = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
@@ -19,7 +19,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void DirectionsProperty_ShouldReturnAllDirections()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             King whiteKing = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
             King blackKing = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
@@ -42,7 +42,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLineOfSight_ShouldReturnAllMoves()
         {
-            Chessboard chessboard = new("r1bqk1nr/pppp2p1/5p1p/1B2P1N1/4K1Q1/8/PPP2PPP/RN5R b KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("r1bqk1nr/pppp2p1/5p1p/1B2P1N1/4K1Q1/8/PPP2PPP/RN5R b KQkq - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
             List<PieceLineOfSight> expectedMoves = new()
@@ -72,7 +72,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
         {
-            Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
@@ -87,7 +87,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
-            Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
@@ -100,7 +100,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllPositionsFromCurrentDirection()
         {
-            Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/8/4k3 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/4R3/5KB1/4p3/8/8/8/4k3 b - - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
@@ -127,7 +127,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_PositionOutOfChessboard_ShouldReturnEmptyList()
         {
-            Chessboard chessboard = new("8/4R3/5KB1/4p3/8/8/8/k7 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/4R3/5KB1/4p3/8/8/8/k7 b - - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("A1").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);

@@ -8,7 +8,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsLongRangeProperty_ShouldBeTrue()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("A1").ReadOnlyPiece!;
             Rook rook2 = (Rook)chessboard.GetReadOnlySquare("A8").ReadOnlyPiece!;
 
@@ -19,7 +19,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void DirectionsProperty_ShouldReturnUpDownLeftRight()
         {
-            Chessboard chessboard = new(FenInfo.InitialPosition);
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("A1").ReadOnlyPiece!;
             Rook rook2 = (Rook)chessboard.GetReadOnlySquare("A8").ReadOnlyPiece!;
 
@@ -38,7 +38,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateLineOfSight_ShouldReturnAllMoves()
         {
-            Chessboard chessboard = new("rnbqkbnr/pppppppp/8/8/4R3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1");
+            Chessboard chessboard = new(new FenInfo("rnbqkbnr/pppppppp/8/8/4R3/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1"));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
 
             List<PieceLineOfSight> expectedMoves = new()
@@ -65,7 +65,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
         {
-            Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1"));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("F4").ReadOnlyPiece!;
             List<Coordinate> expectedMove = new()
             {
@@ -86,7 +86,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
         {
-            Chessboard chessboard = new("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1"));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("F4").ReadOnlyPiece!;
             List<Coordinate> expectedMove = new()
             {
@@ -105,7 +105,7 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
-            Chessboard chessboard = new("8/8/4K3/8/1RR1r3/8/4k3/8 b - - 0 1");
+            Chessboard chessboard = new(new FenInfo("8/8/4K3/8/1RR1r3/8/4k3/8 b - - 0 1"));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
             List<Coordinate> expectedMove = new()
             {

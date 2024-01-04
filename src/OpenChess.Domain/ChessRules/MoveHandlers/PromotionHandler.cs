@@ -4,7 +4,7 @@ namespace OpenChess.Domain
 {
     internal class PromotionHandler : MoveHandler
     {
-        public PromotionHandler(Chessboard chessboard, IMoveCalculator moveCalculator) : base(chessboard, moveCalculator) { }
+        public PromotionHandler(Match match, Chessboard chessboard, IMoveCalculator moveCalculator) : base(match, chessboard, moveCalculator) { }
 
         public override MovePlayed Handle(IReadOnlyPiece piece, Coordinate destination, string? promotingPiece = null)
         {
@@ -17,7 +17,7 @@ namespace OpenChess.Domain
                 if (piece is not Pawn) throw new ChessboardException("Cannot handle promotion because piece is not a pawn.");
                 IReadOnlyPiece? pieceCaptured = base.Handle(piece, destination).PieceCaptured;
 
-                _chessboard.AddPiece(destination, char.Parse(promotingTo), _chessboard.CurrentPlayer);
+                _chessboard.AddPiece(destination, char.Parse(promotingTo), _match.CurrentPlayerColor!.Value);
                 IReadOnlyPiece pieceMoved = _chessboard.GetPiece(destination)!;
 
                 return new(piece.Origin, destination, pieceMoved, pieceCaptured, MoveType.PawnPromotionMove, promotingTo);

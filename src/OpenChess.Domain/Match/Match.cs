@@ -11,16 +11,20 @@ namespace OpenChess.Domain
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
         private CheckHandler _checkHandler { get; }
+        private FenInfo _fenInfo { get; set; }
+        private IMoveCalculator _movesCalculator;
 
         public Match(Time time)
         {
             Id = Guid.NewGuid();
-            _chessboard = new(FenInfo.InitialPosition);
+            _fenInfo = new(FenInfo.InitialPosition);
+            _chessboard = new Chessboard(_fenInfo);
             _matchStatus = MatchStatus.NotStarted;
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
             _pgnMoveText = new();
-            _checkHandler = new CheckHandler(_chessboard, _chessboard.MovesCalculator);
+            _movesCalculator = new MovesCalculator(_chessboard);
+            _checkHandler = new CheckHandler(_chessboard, _movesCalculator);
             _currentPlayerCheckState = CheckState.NotInCheck;
         }
 
@@ -35,39 +39,49 @@ namespace OpenChess.Domain
             var winnerId = matchInfo.WinnerId;
 
             Id = matchId;
-            RestorePlayers(_players, players, matchId);
-            _chessboard = new Chessboard(fen);
+            _fenInfo = new(fen);
+            RestorePlayers(players, matchId);
+            SetCurrentPlayer();
+            _chessboard = new Chessboard(_fenInfo);
+            _movesCalculator = new MovesCalculator(_chessboard);
+            _checkHandler = new CheckHandler(_chessboard, _movesCalculator);
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
-            _checkHandler = new CheckHandler(_chessboard, _chessboard.MovesCalculator);
             _currentPlayerCheckState = null;
 
             if (winnerId is null) { _winner = null; return; }
-            Player winner = GetPlayerById((Guid)winnerId, _players) ?? throw new MatchException("Couldn't determine the winner");
+            Player winner = GetPlayerById((Guid)winnerId) ?? throw new MatchException("Couldn't determine the winner");
             _winner = winner;
         }
 
         public void Play(Move move)
         {
             ValidateMove(move);
-            MovePlayed movePlayed = _chessboard.MovePiece(move.Origin, move.Destination, move.Promoting);
+            var moveHandlers = SetupMoveHandlerChain();
+            IReadOnlyPiece piece = _chessboard.GetPiece(move.Origin) ?? throw new MatchException("Piece not found!");
+            MovePlayed movePlayed = moveHandlers.Handle(piece, move.Destination, move.Promoting);
+            HandleIllegalPosition();
+            UpdateEnPassantAndCastlingAvailability(move.Origin, movePlayed.PieceMoved);
 
-            bool isInCheckmate = _checkHandler.IsInCheckmate(_chessboard.CurrentPlayer, out CheckState checkState);
-            if (isInCheckmate) DeclareWinnerAndFinish();
+            _movesCalculator.CalculateAndCacheAllMoves();
+            bool isInCheckmate = _checkHandler.IsInCheckmate(OpponentPlayerInfo!.Value.Color, out CheckState checkState);
             _currentPlayerCheckState = checkState;
-            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
-            _pgnMoveText.Push(convertedMove);
+            ConvertMoveToPGN(movePlayed, checkState);
+
+            if (isInCheckmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
+            SwitchTurns();
+            UpdateFenInfo();
         }
 
         public void Join(PlayerInfo playerInfo)
         {
-            CanJoinMatch(playerInfo, _players, Id);
+            CanJoinMatch(playerInfo, Id);
             Player player = CreateNewPlayer(playerInfo);
             player.Join(Id);
             _players.Add(player);
             if (!IsFull()) { return; };
-
+            SetCurrentPlayer();
             _matchStatus = MatchStatus.InProgress;
         }
 
@@ -81,46 +95,19 @@ namespace OpenChess.Domain
             return _players.Any();
         }
 
-        public bool HasStarted()
-        {
-            return Status.Equals(MatchStatus.InProgress);
-        }
-
-        public bool HasFinished()
-        {
-            return Status.Equals(MatchStatus.Finished);
-        }
-        public CheckState? CurrentPlayerCheckState { get { return _currentPlayerCheckState; } }
-        public MatchStatus Status { get { return _matchStatus; } }
-        public PlayerInfo? CurrentPlayer
-        {
-            get
-            {
-                if (!HasStarted() || HasFinished()) return null;
-                return GetPlayerByColor(_chessboard.CurrentPlayer);
-            }
-        }
-
-        public PlayerInfo? OpponentPlayer
-        {
-            get
-            {
-                if (!IsFull()) return null;
-                return GetPlayerByColor(_chessboard.Opponent);
-            }
-        }
-
-        public Time Time { get { return (Time)_time.Minutes; } }
-        public Guid? Winner { get { return _winner?.Id; } }
-        public Stack<string> Moves
-        {
-            get
-            {
-                Stack<string> moves = new(_pgnMoveText.Reverse());
-                return moves;
-            }
-        }
-        public IReadOnlyChessboard Chessboard { get { return _chessboard; } }
+        public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
+        public bool HasFinished() => Status.Equals(MatchStatus.Finished);
+        public string FenString => _fenInfo.Position;
+        public CheckState? CurrentPlayerCheckState => _currentPlayerCheckState;
+        public MatchStatus Status => _matchStatus;
+        public PlayerInfo? CurrentPlayerInfo => CurrentPlayer?.Info;
+        public PlayerInfo? OpponentPlayerInfo => OpponentPlayer?.Info;
+        public Color? CurrentPlayerColor => CurrentPlayer?.Color;
+        public Color? OpponentPlayerColor => OpponentPlayer?.Color;
+        public Time Time => (Time)_time.Minutes;
+        public Guid? Winner => _winner?.Id;
+        public Stack<string> Moves => new(_pgnMoveText.Reverse());
+        public IReadOnlyChessboard Chessboard => _chessboard;
         public List<PlayerInfo> Players
         {
             get
@@ -130,13 +117,6 @@ namespace OpenChess.Domain
 
                 return players;
             }
-        }
-
-        public PlayerInfo GetPlayerByColor(Color color)
-        {
-            PlayerInfo player = (_players.Find(p => p.Color == color)?.Info) ?? throw new MatchException("player not found");
-
-            return player;
         }
 
         public static Guid TryParseId(string id)
@@ -155,34 +135,32 @@ namespace OpenChess.Domain
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
             if (HasFinished()) { throw new MatchException("Match already finished"); }
-            if (GetPlayerById(move.PlayerId, _players) is null) { throw new MatchException("You are not in this match"); }
-
-            Player player = GetPlayerById(move.PlayerId, _players)!;
-            if (!player.Color.Equals(_chessboard.CurrentPlayer)) { throw new MatchException("Its not your turn!"); };
+            Player? player = GetPlayerById(move.PlayerId) ?? throw new MatchException("You are not in this match");
+            if (!player.IsCurrentPlayer) throw new MatchException("Its not your turn!");
             if (_chessboard.GetPiece(move.Origin) is null) { throw new ChessboardException("There is no piece in this position"); };
 
             Color pieceColor = _chessboard.GetPiece(move.Origin)!.Color;
-            Color playerColor = GetPlayerById(move.PlayerId, _players)!.Color;
+            Color playerColor = GetPlayerById(move.PlayerId)!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private static void RestorePlayers(List<Player> players, List<PlayerInfo> playersInfo, Guid matchId)
+        private void RestorePlayers(List<PlayerInfo> playersInfo, Guid matchId)
         {
             foreach (PlayerInfo playerInfo in playersInfo)
             {
                 Player restoredPlayer = new(playerInfo);
                 if (playerInfo.CurrentMatch is null) throw new MatchException("Player is not in a match!");
-                CanJoinMatch(playerInfo, players, matchId);
-                players.Add(restoredPlayer);
+                CanJoinMatch(playerInfo, matchId);
+                _players.Add(restoredPlayer);
             }
         }
 
-        private static void CanJoinMatch(PlayerInfo playerInfo, List<Player> players, Guid matchId)
+        private void CanJoinMatch(PlayerInfo playerInfo, Guid matchId)
         {
-            if (players.Count == 2) throw new MatchException("Match is full!");
+            if (_players.Count == 2) throw new MatchException("Match is full!");
 
-            bool sameColor = GetPlayerByColor(playerInfo.Color, players) is not null;
-            bool sameId = GetPlayerById(playerInfo.Id, players) is not null;
+            bool sameColor = GetPlayerByColor(playerInfo.Color) is not null;
+            bool sameId = GetPlayerById(playerInfo.Id) is not null;
             if (sameColor) throw new MatchException($"Match already contains a player of same color!");
             if (sameId) throw new MatchException($"Player is already in the match!");
 
@@ -190,21 +168,95 @@ namespace OpenChess.Domain
             if (currentMatch is not null && currentMatch != matchId) { throw new MatchException("Player already assigned to another match!"); }
         }
 
-        private static Player? GetPlayerByColor(Color color, List<Player> players)
+        private Player? GetPlayerByColor(Color color)
         {
-            return players.Where(p => p.Color == color).FirstOrDefault();
+            return _players.Find(p => p.Color == color);
         }
 
-        private static Player? GetPlayerById(Guid id, List<Player> players)
+        private Player? GetPlayerById(Guid id)
         {
-            return players.Where(p => p.Id == id).FirstOrDefault();
+            return _players.Find(p => p.Id == id);
+        }
+
+        private Player? CurrentPlayer
+        {
+            get
+            {
+                if (!HasStarted() || HasFinished()) return null;
+                return _players.Find(p => p.IsCurrentPlayer);
+            }
+        }
+
+        private Player? OpponentPlayer
+        {
+            get
+            {
+                if (!HasStarted() || HasFinished()) return null;
+                return _players.Find(p => !p.IsCurrentPlayer);
+            }
+        }
+
+        private void SwitchTurns()
+        {
+            var currentPlayer = CurrentPlayer;
+            var opponentPlayer = OpponentPlayer;
+            currentPlayer!.IsCurrentPlayer = false;
+            opponentPlayer!.IsCurrentPlayer = true;
+        }
+
+        private void SetCurrentPlayer()
+        {
+            Color currentPlayer = FenInfo.ConvertTurn(_fenInfo.Turn);
+            if (IsFull()) { GetPlayerByColor(currentPlayer)!.IsCurrentPlayer = true; };
+        }
+
+        private void ConvertMoveToPGN(MovePlayed movePlayed, CheckState checkState)
+        {
+            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
+            _pgnMoveText.Push(convertedMove);
         }
 
         private void DeclareWinnerAndFinish()
         {
-            _winner = GetPlayerByColor(_chessboard.Opponent, _players);
+            _winner = CurrentPlayer;
             _currentPlayerCheckState = CheckState.Checkmate;
             _matchStatus = MatchStatus.Finished;
         }
+
+        private void HandleIllegalPosition()
+        {
+            if (_checkHandler.IsInCheck(CurrentPlayerColor!.Value, out CheckState checkAmount)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
+        }
+
+        private void RestoreToLastChessboard()
+        {
+            Chessboard previousChessboard = new(new FenInfo(_fenInfo.Position));
+            _chessboard = previousChessboard;
+        }
+        private void UpdateEnPassantAndCastlingAvailability(Coordinate origin, IReadOnlyPiece pieceMoved)
+        {
+            _chessboard.EnPassantAvailability.ClearEnPassant();
+            _chessboard.EnPassantAvailability.SetVulnerablePawn(pieceMoved, origin);
+            _chessboard.CastlingAvailability.UpdateAvailability(origin, CurrentPlayer!.Color);
+        }
+
+        private void UpdateFenInfo()
+        {
+            string fenString = FenInfo.BuildFenString(_chessboard, CurrentPlayer!);
+            _fenInfo = new(fenString);
+        }
+
+        private IMoveHandler SetupMoveHandlerChain()
+        {
+            var enPassantHandler = new EnPassantHandler(this, _chessboard, _movesCalculator);
+            var promotionHandler = new PromotionHandler(this, _chessboard, _movesCalculator);
+            var castlingHandler = new CastlingHandler(this, _chessboard, _movesCalculator);
+
+            promotionHandler.SetNext(enPassantHandler);
+            enPassantHandler.SetNext(castlingHandler);
+            castlingHandler.SetNext(new DefaultMoveHandler(this, _chessboard, _movesCalculator));
+            return promotionHandler;
+        }
+
     }
 }
