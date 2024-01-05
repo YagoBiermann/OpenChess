@@ -45,8 +45,7 @@ namespace OpenChess.Domain
 
         public void CalculateAndCacheAllMoves()
         {
-            _preCalculatedRangeOfAttack.Clear();
-            _preCalculatedLineOfSight.Clear();
+            ClearCache();
             List<IReadOnlyPiece> pieces = _chessboard.GetAllPieces();
             List<PieceRangeOfAttack> allRangeOfAttack = new();
             List<PieceLineOfSight> allLineOfSight = new();
@@ -61,6 +60,12 @@ namespace OpenChess.Domain
 
             _preCalculatedRangeOfAttack.AddRange(allRangeOfAttack);
             _preCalculatedLineOfSight.AddRange(allLineOfSight);
+        }
+
+        public void ClearCache()
+        {
+            _preCalculatedLineOfSight.Clear();
+            _preCalculatedRangeOfAttack.Clear();
         }
 
         public List<PieceRangeOfAttack> CalculateAllMoves()

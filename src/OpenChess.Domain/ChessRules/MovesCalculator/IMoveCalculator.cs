@@ -6,6 +6,7 @@ namespace OpenChess.Domain
         public bool IsHittingTheEnemyKing(IReadOnlyPiece piece);
         public bool IsPinned(IReadOnlyPiece piece);
         public void CalculateAndCacheAllMoves();
+        public void ClearCache();
         public List<PieceRangeOfAttack> CalculateRangeOfAttack(IReadOnlyPiece piece);
         public List<PieceLineOfSight> CalculateLineOfSight(IReadOnlyPiece piece);
         public List<PieceRangeOfAttack> CalculateKingMoves(Color player);
