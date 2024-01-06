@@ -139,7 +139,7 @@ namespace OpenChess.Domain
                 Direction currentDirection = move.Direction;
                 if (!move.LineOfSight.Any()) { legalMoves.Add(new(move.Piece, move.Direction, new())); continue; }
 
-                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight); //Todo: use piecesInLineOfSight
+                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight);
                 List<Coordinate> rangeOfAttack = CalculatePositionsUntilTheNearestPiece(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = _chessboard.GetPiece(rangeOfAttack.Last()) is null;
                 if (lastPositionIsEmpty)
