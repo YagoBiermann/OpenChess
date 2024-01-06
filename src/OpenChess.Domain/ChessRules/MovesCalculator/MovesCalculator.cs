@@ -5,6 +5,8 @@ namespace OpenChess.Domain
     {
         private List<PieceRangeOfAttack> _preCalculatedRangeOfAttack = new();
         private List<PieceLineOfSight> _preCalculatedLineOfSight = new();
+        private List<PieceLineOfSight> _preCalculatedPinMoves = new();
+
         private IReadOnlyChessboard _chessboard;
 
         public MovesCalculator(IReadOnlyChessboard chessboard)
@@ -23,24 +25,19 @@ namespace OpenChess.Domain
             return CalculateRangeOfAttack(piece).Where(m => m.IsHittingTheEnemyKing).ToList().Any();
         }
 
-        public bool IsPinned(IReadOnlyPiece piece)
+        public bool IsPinned(IReadOnlyPiece piece, out bool canMove)
         {
+            canMove = false;
             if (piece is King) return false;
-            List<IReadOnlyPiece> enemyPieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(piece.Color)).FindAll(p => p.IsLongRange);
-            if (!enemyPieces.Any()) return false;
-            foreach (IReadOnlyPiece enemyPiece in enemyPieces)
-            {
-                var piecesInLineOfSightOfEnemyPiece = CalculateLineOfSight(enemyPiece).FindAll(l => l.AnyPieceInLineOfSight && l.PiecesInLineOfSight.Count >= 2).Select(m => m.PiecesInLineOfSight).ToList();
-                if (!piecesInLineOfSightOfEnemyPiece.Any()) continue;
+            var allEnemyMovesPinningAPiece = CalculatePinMovesFromPlayer(ColorUtils.GetOppositeColor(piece.Color));
+            if (!allEnemyMovesPinningAPiece.Any()) return false;
+            var enemyMovePinningCurrentPiece = allEnemyMovesPinningAPiece.Where(m => m.PiecesInLineOfSight.First().Piece.Equals(piece)).ToList();
+            bool isPinned = enemyMovePinningCurrentPiece.Any();
+            if (!isPinned) return false;
+            var canMoveTowardsTheEnemyPiece = CanMoveWhenPinnedByEnemyPiece(piece, enemyMovePinningCurrentPiece.First());
+            canMove = canMoveTowardsTheEnemyPiece;
 
-                bool pieceAtSecondPositionIsTheAllyKing(List<PieceDistances> pieceDistances) => pieceDistances.ElementAtOrDefault(1).Piece.Color == piece.Color && pieceDistances.ElementAtOrDefault(1).Piece is King;
-                bool pieceAtFirstPositionIsTheSamePiece(List<PieceDistances> pieceDistances) => pieceDistances.ElementAtOrDefault(0).Piece.Equals(piece);
-                bool isPinnedByEnemyPiece(List<PieceDistances> pieceDistances) => pieceAtFirstPositionIsTheSamePiece(pieceDistances) && pieceAtSecondPositionIsTheAllyKing(pieceDistances);
-
-                if (piecesInLineOfSightOfEnemyPiece.Where(isPinnedByEnemyPiece).Any()) return true;
-            }
-
-            return false;
+            return isPinned;
         }
 
         public void CalculateAndCacheAllMoves()
@@ -49,6 +46,7 @@ namespace OpenChess.Domain
             List<IReadOnlyPiece> pieces = _chessboard.GetAllPieces();
             List<PieceRangeOfAttack> allRangeOfAttack = new();
             List<PieceLineOfSight> allLineOfSight = new();
+            List<PieceLineOfSight> allPinMoves = new();
 
             foreach (var piece in pieces)
             {
@@ -60,12 +58,17 @@ namespace OpenChess.Domain
 
             _preCalculatedRangeOfAttack.AddRange(allRangeOfAttack);
             _preCalculatedLineOfSight.AddRange(allLineOfSight);
+
+            allPinMoves.AddRange(CalculatePinMovesFromPlayer(Color.White));
+            allPinMoves.AddRange(CalculatePinMovesFromPlayer(Color.Black));
+            _preCalculatedPinMoves.AddRange(allPinMoves);
         }
 
         public void ClearCache()
         {
             _preCalculatedLineOfSight.Clear();
             _preCalculatedRangeOfAttack.Clear();
+            _preCalculatedPinMoves.Clear();
         }
 
         public List<PieceRangeOfAttack> CalculateAllMoves()
@@ -136,7 +139,7 @@ namespace OpenChess.Domain
                 Direction currentDirection = move.Direction;
                 if (!move.LineOfSight.Any()) { legalMoves.Add(new(move.Piece, move.Direction, new())); continue; }
 
-                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight);
+                List<IReadOnlyPiece> piecesPosition = _chessboard.GetPieces(move.LineOfSight); //Todo: use piecesInLineOfSight
                 List<Coordinate> rangeOfAttack = CalculatePositionsUntilTheNearestPiece(piece, piecesPosition, move);
                 bool lastPositionIsEmpty = _chessboard.GetPiece(rangeOfAttack.Last()) is null;
                 if (lastPositionIsEmpty)
@@ -228,6 +231,44 @@ namespace OpenChess.Domain
         private List<PieceLineOfSight> GetLineOfSightFromCache(IReadOnlyPiece piece)
         {
             return _preCalculatedLineOfSight.Where(m => m.Piece == piece).ToList();
+        }
+
+        private List<PieceLineOfSight> CalculatePinMovesFromPlayer(Color player)
+        {
+            if (_preCalculatedPinMoves.Any()) return _preCalculatedPinMoves.Where(m => m.Piece.Color == player).ToList();
+
+            List<PieceLineOfSight> movesPinningAPiece = new();
+            List<IReadOnlyPiece> longRangePieces = _chessboard.GetPieces(player).FindAll(p => p.IsLongRange);
+            if (!longRangePieces.Any()) return new();
+
+            foreach (var piece in longRangePieces)
+            {
+                var lineOfSightOfAllyPiece = CalculateLineOfSight(piece).FindAll(l => l.AnyPieceInLineOfSight && l.PiecesInLineOfSight.Count >= 2);
+                bool doesntHavePiecesInLineOfSight = !lineOfSightOfAllyPiece.Select(m => m.PiecesInLineOfSight).Any();
+                if (doesntHavePiecesInLineOfSight) continue;
+
+                bool pieceAtFirstPositionIsAnEnemyPiece(PieceLineOfSight lineOfSight) => lineOfSight.PiecesInLineOfSight.FirstOrDefault().Piece.Color != player && lineOfSight.PiecesInLineOfSight.FirstOrDefault().Piece is not King;
+                bool pieceAtSecondPositionIsTheEnemyKing(PieceLineOfSight lineOfSight) => lineOfSight.PiecesInLineOfSight.ElementAtOrDefault(1).Piece.Color != player && lineOfSight.PiecesInLineOfSight.ElementAtOrDefault(1).Piece is King;
+                bool isPinningTheEnemyPiece(PieceLineOfSight lineOfSight) => pieceAtFirstPositionIsAnEnemyPiece(lineOfSight) && pieceAtSecondPositionIsTheEnemyKing(lineOfSight);
+
+                var pinnedPieces = lineOfSightOfAllyPiece.Where(isPinningTheEnemyPiece).ToList();
+                if (!pinnedPieces.Any()) continue;
+
+                movesPinningAPiece.Add(lineOfSightOfAllyPiece.First());
+            }
+
+            return movesPinningAPiece;
+        }
+
+        private bool CanMoveWhenPinnedByEnemyPiece(IReadOnlyPiece piece, PieceLineOfSight enemyMove)
+        {
+            List<PieceLineOfSight> pieceLineOfSight = CalculateLineOfSight(piece);
+            if (!pieceLineOfSight.Any()) return false;
+            List<Coordinate> enemyPositions = enemyMove.LineOfSight;
+            enemyPositions.Add(enemyMove.Piece.Origin);
+            List<PieceRangeOfAttack> legalMoves = CalculateLegalMoves(piece);
+            bool canMove = legalMoves.Exists(m => m.RangeOfAttack.Intersect(enemyMove.LineOfSight).Any());
+            return canMove;
         }
     }
 }
