@@ -6,5 +6,6 @@ namespace OpenChess.Domain
         Check,
         DoubleCheck,
         Checkmate,
+        Draw,
     }
 }
