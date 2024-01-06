@@ -12,7 +12,7 @@ namespace OpenChess.Domain
 
         public bool IsInCheckmate(Color player, out CheckState checkState)
         {
-            if (!IsInCheck(player, out checkState)) return false;
+            if (!IsInCheck(player, out checkState)) return false; //remove this
             if (CanCheckBeSolved(player, checkState)) return false;
             checkState = CheckState.Checkmate;
             return true;
@@ -67,7 +67,7 @@ namespace OpenChess.Domain
             foreach (IReadOnlyPiece piece in allyPieces)
             {
                 if (piece is King) continue;
-                if (_movesCalculator.IsPinned(piece)) continue;
+                if (_movesCalculator.IsPinned(piece, out bool canCaptureTheEnemyPiece)) continue;
                 List<PieceRangeOfAttack> moves = new();
                 moves.AddRange(_movesCalculator.CalculateLegalMoves(piece));
                 var rangeOfAttackFromAllyPiece = moves.SelectMany(m => m.RangeOfAttack).ToList();

@@ -55,7 +55,7 @@ namespace OpenChess.Tests
             IMoveCalculator movesCalculator = new MovesCalculator(match.Chessboard);
             IReadOnlyPiece piece = match.Chessboard.GetPiece(Coordinate.GetInstance(origin))!;
 
-            Assert.IsTrue(movesCalculator.IsPinned(piece));
+            Assert.IsTrue(movesCalculator.IsPinned(piece, out bool canCaptureTheEnemyPiece));
         }
 
         [DataRow("8/8/8/8/7P/1r2p1K1/8/k7 w - - 0 1", "E3")]
@@ -71,7 +71,7 @@ namespace OpenChess.Tests
             IMoveCalculator movesCalculator = new MovesCalculator(match.Chessboard);
             IReadOnlyPiece piece = match.Chessboard.GetPiece(Coordinate.GetInstance(origin))!;
 
-            Assert.IsFalse(movesCalculator.IsPinned(piece));
+            Assert.IsFalse(movesCalculator.IsPinned(piece, out bool canCaptureTheEnemyPiece));
         }
 
         [DataRow("8/8/8/2k3b1/3R3p/8/KQ6/4r3 b - - 0 1", 1)]
