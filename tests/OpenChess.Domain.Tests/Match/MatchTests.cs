@@ -24,7 +24,7 @@ namespace OpenChess.Tests
             Assert.IsNull(match.CurrentPlayerInfo);
             Assert.IsNull(match.Winner);
             Assert.AreEqual(match.FenString, FenInfo.InitialPosition);
-            Assert.AreEqual(match.CurrentPlayerCheckState, CurrentPositionStatus.NotInCheck);
+            Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.NotInCheck);
             Assert.AreEqual(time, (int)match.Time);
         }
 
@@ -37,7 +37,7 @@ namespace OpenChess.Tests
             Assert.AreEqual(match.Id, matchInfo.MatchId);
             Assert.AreEqual(match.Time, Time.Five);
             Assert.AreEqual(match.Status, MatchStatus.InProgress);
-            Assert.IsNull(match.CurrentPlayerCheckState);
+            Assert.IsNull(match.CurrentPositionStatus);
             Assert.AreEqual(match.FenString, matchInfo.Fen);
             Assert.IsNull(match.Winner);
             CollectionAssert.AreEquivalent(match.Players, matchInfo.Players);

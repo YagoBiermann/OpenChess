@@ -26,7 +26,7 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
 
             Assert.IsNull(match.Winner);
-            Assert.AreEqual(CurrentPositionStatus.Draw, match.CurrentPlayerCheckState);
+            Assert.AreEqual(CurrentPositionStatus.Draw, match.CurrentPositionStatus);
             Assert.IsTrue(match.HasFinished());
         }
 

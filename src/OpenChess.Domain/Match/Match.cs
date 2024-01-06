@@ -7,7 +7,7 @@ namespace OpenChess.Domain
         private Chessboard _chessboard { get; set; }
         private Stack<string> _pgnMoveText { get; set; }
         private MatchStatus _matchStatus { get; set; }
-        private CurrentPositionStatus? _currentPlayerCheckState { get; set; }
+        private CurrentPositionStatus? _currentPositionStatus { get; set; }
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
         private CheckHandler _checkHandler { get; }
@@ -25,7 +25,7 @@ namespace OpenChess.Domain
             _pgnMoveText = new();
             _movesCalculator = new MovesCalculator(_chessboard);
             _checkHandler = new CheckHandler(_chessboard, _movesCalculator);
-            _currentPlayerCheckState = CurrentPositionStatus.NotInCheck;
+            _currentPositionStatus = Domain.CurrentPositionStatus.NotInCheck;
         }
 
         public Match(MatchInfo matchInfo)
@@ -48,7 +48,7 @@ namespace OpenChess.Domain
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
-            _currentPlayerCheckState = null;
+            _currentPositionStatus = null;
 
             if (winnerId is null) { _winner = null; return; }
             Player winner = GetPlayerById((Guid)winnerId) ?? throw new MatchException("Couldn't determine the winner");
@@ -93,7 +93,7 @@ namespace OpenChess.Domain
         public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
         public bool HasFinished() => Status.Equals(MatchStatus.Finished);
         public string FenString => _fenInfo.Position;
-        public CurrentPositionStatus? CurrentPlayerCheckState => _currentPlayerCheckState;
+        public CurrentPositionStatus? CurrentPositionStatus => _currentPositionStatus;
         public MatchStatus Status => _matchStatus;
         public PlayerInfo? CurrentPlayerInfo => CurrentPlayer?.Info;
         public PlayerInfo? OpponentPlayerInfo => OpponentPlayer?.Info;
@@ -214,14 +214,14 @@ namespace OpenChess.Domain
         private void DeclareWinnerAndFinish()
         {
             _winner = CurrentPlayer;
-            _currentPlayerCheckState = CurrentPositionStatus.Checkmate;
+            _currentPositionStatus = Domain.CurrentPositionStatus.Checkmate;
             _matchStatus = MatchStatus.Finished;
         }
 
         private void DeclareDrawAndFinish()
         {
             _winner = null;
-            _currentPlayerCheckState = CurrentPositionStatus.Draw;
+            _currentPositionStatus = Domain.CurrentPositionStatus.Draw;
             _matchStatus = MatchStatus.Finished;
         }
 
@@ -244,10 +244,10 @@ namespace OpenChess.Domain
 
         private void UpdateMatchStatus(CurrentPositionStatus currentPositionStatus)
         {
-            _currentPlayerCheckState = currentPositionStatus;
-            if (currentPositionStatus != CurrentPositionStatus.Draw && currentPositionStatus != CurrentPositionStatus.Checkmate) { SwitchTurns(); UpdateFenInfo(); return; }
-            if (currentPositionStatus == CurrentPositionStatus.Checkmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
-            if (currentPositionStatus == CurrentPositionStatus.Draw) { UpdateFenInfo(); DeclareDrawAndFinish(); return; }
+            _currentPositionStatus = currentPositionStatus;
+            if (currentPositionStatus != Domain.CurrentPositionStatus.Draw && currentPositionStatus != Domain.CurrentPositionStatus.Checkmate) { SwitchTurns(); UpdateFenInfo(); return; }
+            if (currentPositionStatus == Domain.CurrentPositionStatus.Checkmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
+            if (currentPositionStatus == Domain.CurrentPositionStatus.Draw) { UpdateFenInfo(); DeclareDrawAndFinish(); return; }
         }
 
         private void UpdateFenInfo()

@@ -103,7 +103,7 @@ namespace OpenChess.Tests
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPlayerCheckState);
+            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
         }
 
         [DataRow("8/kR6/8/8/3B3p/8/8/4K3 b - - 0 1", "A7", "B7")]
@@ -116,7 +116,7 @@ namespace OpenChess.Tests
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPlayerCheckState);
+            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
         }
 
         [DataRow("8/8/2k1P3/8/q7/8/2Q4p/4K3 b - - 0 1", "A4", "C2")]
@@ -131,7 +131,7 @@ namespace OpenChess.Tests
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPlayerCheckState);
+            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
         }
 
         [DataRow("8/1r6/k1R5/8/8/3BK3/8/8 b - - 0 1", "B7", "B6")]
@@ -139,7 +139,7 @@ namespace OpenChess.Tests
         public void Play_TryingToSolveDoubleCheckByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Assert.IsNull(match.CurrentPlayerCheckState);
+            Assert.IsNull(match.CurrentPositionStatus);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
@@ -150,7 +150,7 @@ namespace OpenChess.Tests
         public void Play_TryingToSolveDoubleCheckByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Assert.IsNull(match.CurrentPlayerCheckState);
+            Assert.IsNull(match.CurrentPositionStatus);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
@@ -208,8 +208,8 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(match.HasFinished());
             Assert.IsNull(match.Winner);
-            Assert.AreNotEqual(CurrentPositionStatus.NotInCheck, match.CurrentPlayerCheckState);
-            Assert.AreNotEqual(CurrentPositionStatus.Checkmate, match.CurrentPlayerCheckState);
+            Assert.AreNotEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
+            Assert.AreNotEqual(CurrentPositionStatus.Checkmate, match.CurrentPositionStatus);
         }
 
         [DataRow("4k3/8/8/8/7b/2q3R1/8/4K3 w - - 0 1", "G3", "C3")]
