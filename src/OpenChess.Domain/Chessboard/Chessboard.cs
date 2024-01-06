@@ -59,6 +59,16 @@ namespace OpenChess.Domain
         {
             return GetSquare(position);
         }
+
+        public List<IReadOnlySquare> GetReadOnlySquares()
+        {
+            List<IReadOnlySquare> readOnlySquares = new();
+            var squares = _board.SelectMany(c => c).ToList();
+            readOnlySquares.AddRange(squares);
+
+            return readOnlySquares;
+        }
+        
         public Square GetSquare(Coordinate coordinate)
         {
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
