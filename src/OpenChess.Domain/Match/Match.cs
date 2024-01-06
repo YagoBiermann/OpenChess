@@ -63,15 +63,10 @@ namespace OpenChess.Domain
             MovePlayed movePlayed = moveHandlers.Handle(piece, move.Destination, move.Promoting);
             HandleIllegalPosition();
             UpdateEnPassantAndCastlingAvailability(move.Origin, movePlayed.PieceMoved);
-
-            _movesCalculator.CalculateAndCacheAllMoves();
-            bool isInCheckmate = _checkHandler.IsInCheckmate(OpponentPlayerInfo!.Value.Color, out CheckState checkState);
-            _currentPlayerCheckState = checkState;
-            ConvertMoveToPGN(movePlayed, checkState);
-
-            if (isInCheckmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
-            SwitchTurns();
-            UpdateFenInfo();
+            CheckState currentPositionStatus = SetupPositionValidationChain().ValidatePosition();
+            ConvertMoveToPGN(movePlayed, currentPositionStatus);
+            UpdateMatchStatus(currentPositionStatus);
+            _movesCalculator.ClearCache();
         }
 
         public void Join(PlayerInfo playerInfo)
