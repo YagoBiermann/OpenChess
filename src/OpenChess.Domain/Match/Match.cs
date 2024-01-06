@@ -3,6 +3,8 @@ namespace OpenChess.Domain
     internal class Match
     {
         public Guid Id { get; }
+        public int HalfMove { get; private set; }
+        public int FullMove { get; private set; }
         private List<Player> _players = new(2);
         private Chessboard _chessboard { get; set; }
         private Stack<string> _pgnMoveText { get; set; }
@@ -24,6 +26,8 @@ namespace OpenChess.Domain
             _pgnMoveText = new();
             _movesCalculator = new MovesCalculator(_chessboard);
             _currentPositionStatus = Domain.CurrentPositionStatus.NotInCheck;
+            HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
+            FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
         }
 
         public Match(MatchInfo matchInfo)
@@ -46,6 +50,8 @@ namespace OpenChess.Domain
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
             _currentPositionStatus = null;
+            HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
+            FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
 
             if (winnerId is null) { _winner = null; return; }
             Player winner = GetPlayerById((Guid)winnerId) ?? throw new MatchException("Couldn't determine the winner");
@@ -250,7 +256,7 @@ namespace OpenChess.Domain
 
         private void UpdateFenInfo()
         {
-            string fenString = FenInfo.BuildFenString(_chessboard, CurrentPlayer!);
+            string fenString = FenInfo.BuildFenString(this, CurrentPlayer!);
             _fenInfo = new(fenString);
         }
 

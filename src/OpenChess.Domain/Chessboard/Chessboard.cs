@@ -6,8 +6,6 @@ namespace OpenChess.Domain
         private List<List<Square>> _board;
         public ICastlingAvailability CastlingAvailability { get; private set; }
         public IEnPassantAvailability EnPassantAvailability { get; private set; }
-        public int HalfMove { get; private set; }
-        public int FullMove { get; private set; }
 
         public Chessboard(FenInfo fenInfo)
         {
@@ -15,8 +13,6 @@ namespace OpenChess.Domain
             SetPiecesOnBoard(fenInfo.Board);
             CastlingAvailability = FenInfo.ConvertCastling(fenInfo.CastlingAvailability);
             EnPassantAvailability = FenInfo.ConvertEnPassant(fenInfo.EnPassantAvailability);
-            HalfMove = FenInfo.ConvertMoveAmount(fenInfo.HalfMove);
-            FullMove = FenInfo.ConvertMoveAmount(fenInfo.FullMove);
         }
 
         public Piece? AddPiece(Coordinate position, char piece, Color player)
