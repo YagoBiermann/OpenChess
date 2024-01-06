@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         public bool CanMoveToPosition(IReadOnlyPiece piece, Coordinate destination);
         public bool IsHittingTheEnemyKing(IReadOnlyPiece piece);
-        public bool IsPinned(IReadOnlyPiece piece);
+        public bool IsPinned(IReadOnlyPiece piece, out bool canMove);
         public void CalculateAndCacheAllMoves();
         public void ClearCache();
         public List<PieceRangeOfAttack> CalculateRangeOfAttack(IReadOnlyPiece piece);
