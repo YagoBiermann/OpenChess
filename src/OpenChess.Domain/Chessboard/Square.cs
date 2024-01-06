@@ -4,6 +4,7 @@ namespace OpenChess.Domain
     {
         public Coordinate Coordinate { get; }
         private Piece? _piece;
+        public Color Color => (Coordinate.ColumnToInt + Coordinate.RowToInt) % 2 == 0 ? Color.Black : Color.White;
         public bool HasPiece { get => ReadOnlyPiece is not null; }
 
         public Square(Coordinate coordinate, Piece? piece = null)
@@ -16,7 +17,7 @@ namespace OpenChess.Domain
         {
             get { return _piece; }
         }
-        
+
         public Piece? Piece
         {
             get { return _piece; }
