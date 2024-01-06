@@ -223,6 +223,13 @@ namespace OpenChess.Domain
             _matchStatus = MatchStatus.Finished;
         }
 
+        private void DeclareDrawAndFinish()
+        {
+            _winner = null;
+            _currentPlayerCheckState = CheckState.Draw;
+            _matchStatus = MatchStatus.Finished;
+        }
+
         private void HandleIllegalPosition()
         {
             if (_checkHandler.IsInCheck(CurrentPlayerColor!.Value, out CheckState checkAmount)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
