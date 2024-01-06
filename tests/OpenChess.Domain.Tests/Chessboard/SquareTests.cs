@@ -80,5 +80,23 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(square.HasEnemyPiece(Color.Black));
         }
+
+        [DataRow("A1", 'b')]
+        [DataRow("B1", 'w')]
+        [DataRow("A2", 'w')]
+        [DataRow("A3", 'b')]
+        [DataRow("A4", 'w')]
+        [DataRow("E4", 'w')]
+        [DataRow("D4", 'b')]
+        [TestMethod]
+        public void Color_ShouldReturnCorrectColor(string position, char color)
+        {
+            Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
+            Coordinate coordinate = Coordinate.GetInstance(position);
+            Color expectedColor = Utils.ColorFromChar(color);
+            IReadOnlySquare square = chessboard.GetSquare(coordinate);
+
+            Assert.AreEqual(expectedColor, square.Color);
+        }
     }
 }
