@@ -49,14 +49,14 @@ namespace OpenChess.Domain
             return isValidActiveColor && isValidCastling && isValidEnPassant && isValidHalfMove && isValidFullMove;
         }
 
-        public static string BuildFenString(IReadOnlyChessboard chessboard, Player player)
+        public static string BuildFenString(Match match, Player player)
         {
-            string chessboardString = BuildChessboardString(chessboard);
+            string chessboardString = BuildChessboardString(match.Chessboard);
             string turn = BuildTurnString(player);
-            string castling = BuildCastlingString(chessboard.CastlingAvailability);
-            string enPassant = BuildEnPassantString(chessboard.EnPassantAvailability);
+            string castling = BuildCastlingString(match.Chessboard.CastlingAvailability);
+            string enPassant = BuildEnPassantString(match.Chessboard.EnPassantAvailability);
 
-            return $"{chessboardString} {turn} {castling} {enPassant} {chessboard.HalfMove} {chessboard.FullMove}";
+            return $"{chessboardString} {turn} {castling} {enPassant} {match.HalfMove} {match.FullMove}";
         }
 
         public static Color ConvertTurn(string field)
