@@ -247,6 +247,14 @@ namespace OpenChess.Domain
             _chessboard.CastlingAvailability.UpdateAvailability(origin, CurrentPlayer!.Color);
         }
 
+        private void UpdateMatchStatus(CheckState currentPositionStatus)
+        {
+            _currentPlayerCheckState = currentPositionStatus;
+            if (currentPositionStatus != CheckState.Draw && currentPositionStatus != CheckState.Checkmate) { SwitchTurns(); UpdateFenInfo(); return; }
+            if (currentPositionStatus == CheckState.Checkmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
+            if (currentPositionStatus == CheckState.Draw) { UpdateFenInfo(); DeclareDrawAndFinish(); return; }
+        }
+
         private void UpdateFenInfo()
         {
             string fenString = FenInfo.BuildFenString(_chessboard, CurrentPlayer!);
