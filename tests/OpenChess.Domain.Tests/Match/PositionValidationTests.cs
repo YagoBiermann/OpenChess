@@ -10,6 +10,7 @@ namespace OpenChess.Tests
         [DataRow("8/8/8/8/8/8/3Kp1pp/5brk w - - 0 1", "D2", "E1", DisplayName = "Stalemate")]
         [DataRow("k7/P7/K7/8/8/8/8/4B3 w - - 0 1", "E1", "G3", DisplayName = "Stalemate")]
         [DataRow("8/8/8/8/2k5/rRn5/p7/K7 b - - 0 1", "C4", "B3", DisplayName = "Stalemate")]
+        [DataRow("5r2/8/8/8/8/3kb3/3R4/3K4 b - - 0 1", "E3", "D2", DisplayName = "Stalemate")]
         [DataRow("8/8/3k4/3P4/8/4K3/8/8 b - - 0 1", "D6", "D5", DisplayName = "Dead Position/Only kings left")]
         [DataRow("8/8/3k4/3Q4/8/4K3/8/8 b - - 0 1", "D6", "D5", DisplayName = "Dead Position/Only kings left")]
         [DataRow("8/8/3k4/3B4/8/4K3/3B4/8 b - - 0 1", "D6", "D5", DisplayName = "Dead Position/king + bishop left")]
