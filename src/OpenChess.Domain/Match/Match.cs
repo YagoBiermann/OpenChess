@@ -273,5 +273,19 @@ namespace OpenChess.Domain
             return promotionHandler;
         }
 
+        private IPositionValidation SetupPositionValidationChain()
+        {
+            _movesCalculator.CalculateAndCacheAllMoves();
+            var checkValidation = new CheckValidation(this, _movesCalculator);
+            var checkmateValidation = new CheckmateValidation(this, _movesCalculator);
+            var stalemateValidation = new StalemateValidation(this, _movesCalculator);
+            var deadPositionValidation = new DeadPositionValidation(this, _movesCalculator);
+            checkValidation.SetNext(checkmateValidation);
+            checkmateValidation.SetNext(stalemateValidation);
+            stalemateValidation.SetNext(deadPositionValidation);
+
+            return checkValidation;
+        }
+
     }
 }
