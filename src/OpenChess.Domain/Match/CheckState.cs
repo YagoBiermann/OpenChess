@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    enum CheckState
+    enum CurrentPositionStatus
     {
         NotInCheck,
         Check,

@@ -6,9 +6,9 @@ namespace OpenChess.Domain
         {
         }
 
-        public override CheckState ValidatePosition(CheckState? checkState = null)
+        public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
         {
-            if (checkState != CheckState.NotInCheck) return base.ValidatePosition(checkState);
+            if (checkState != CurrentPositionStatus.NotInCheck) return base.ValidatePosition(checkState);
             Color opponentPlayer = _match.OpponentPlayerColor!.Value;
             var opponentPieces = _match.Chessboard.GetPieces(opponentPlayer);
             List<Coordinate> moves = new();
@@ -24,7 +24,7 @@ namespace OpenChess.Domain
                 moves.AddRange(_movesCalculator.CalculateLegalMoves(piece).SelectMany(m => m.RangeOfAttack));
             }
 
-            if (!moves.Any()) return CheckState.Draw;
+            if (!moves.Any()) return CurrentPositionStatus.Draw;
             else return base.ValidatePosition(checkState);
         }
     }

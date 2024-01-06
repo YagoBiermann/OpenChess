@@ -18,9 +18,9 @@ namespace OpenChess.Domain
             return _next;
         }
 
-        public virtual CheckState ValidatePosition(CheckState? checkState = null)
+        public virtual CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
         {
-            if (_next is null) { return checkState ?? CheckState.NotInCheck; }
+            if (_next is null) { return checkState ?? CurrentPositionStatus.NotInCheck; }
             else { return _next.ValidatePosition(checkState); }
         }
     }

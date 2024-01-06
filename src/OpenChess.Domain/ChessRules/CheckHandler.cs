@@ -10,20 +10,20 @@ namespace OpenChess.Domain
             _movesCalculator = movesCalculator;
         }
 
-        public bool IsInCheckmate(Color player, out CheckState checkState)
+        public bool IsInCheckmate(Color player, out CurrentPositionStatus checkState)
         {
             if (!IsInCheck(player, out checkState)) return false; //remove this
             if (CanCheckBeSolved(player, checkState)) return false;
-            checkState = CheckState.Checkmate;
+            checkState = CurrentPositionStatus.Checkmate;
             return true;
         }
 
-        public bool IsInCheck(Color player, out CheckState checkState)
+        public bool IsInCheck(Color player, out CurrentPositionStatus checkState)
         {
             int checkAmount = CalculateCheckAmount(player);
             checkState = GetCheckState(checkAmount);
 
-            return checkState != CheckState.NotInCheck;
+            return checkState != CurrentPositionStatus.NotInCheck;
         }
 
         private int CalculateCheckAmount(Color player)
@@ -36,20 +36,20 @@ namespace OpenChess.Domain
             return checkAmount;
         }
 
-        private static CheckState GetCheckState(int checkAmount)
+        private static CurrentPositionStatus GetCheckState(int checkAmount)
         {
             return checkAmount switch
             {
-                0 => CheckState.NotInCheck,
-                1 => CheckState.Check,
-                2 => CheckState.DoubleCheck,
+                0 => CurrentPositionStatus.NotInCheck,
+                1 => CurrentPositionStatus.Check,
+                2 => CurrentPositionStatus.DoubleCheck,
                 _ => throw new MatchException("The game could not compute the current check state")
             };
         }
 
-        private bool CanCheckBeSolved(Color player, CheckState checkState)
+        private bool CanCheckBeSolved(Color player, CurrentPositionStatus checkState)
         {
-            if (checkState == CheckState.DoubleCheck) return CanSolveByMovingTheKing(player);
+            if (checkState == CurrentPositionStatus.DoubleCheck) return CanSolveByMovingTheKing(player);
             return CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(player) || CanSolveByMovingTheKing(player);
         }
 

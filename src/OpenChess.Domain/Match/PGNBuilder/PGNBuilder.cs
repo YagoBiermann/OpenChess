@@ -30,7 +30,7 @@ namespace OpenChess.Domain
         }
         public abstract PGNBuilder Build();
 
-        public static string ConvertMoveToPGN(int moveCount, MovePlayed movePlayed, CheckState checkState)
+        public static string ConvertMoveToPGN(int moveCount, MovePlayed movePlayed, CurrentPositionStatus checkState)
         {
             int count = moveCount + 1;
             string moveConvertedToPgn;
@@ -43,7 +43,7 @@ namespace OpenChess.Domain
             return moveConvertedToPgn;
         }
 
-        private static string BuildPawnPGN(int count, MovePlayed move, CheckState checkState)
+        private static string BuildPawnPGN(int count, MovePlayed move, CurrentPositionStatus checkState)
         {
             int moveCount = count;
             var builder = new PawnTextMoveBuilder(moveCount, move);
@@ -52,7 +52,7 @@ namespace OpenChess.Domain
             return builder.Build().Result;
         }
 
-        private static string BuildDefaultPGN(int count, MovePlayed move, CheckState checkState)
+        private static string BuildDefaultPGN(int count, MovePlayed move, CurrentPositionStatus checkState)
         {
             int moveCount = count;
             var builder = new DefaultTextMoveBuilder(moveCount, move);
@@ -61,12 +61,12 @@ namespace OpenChess.Domain
             return builder.Build().Result;
         }
 
-        private static void SetBuilderSign(PGNBuilder builder, MovePlayed move, CheckState checkState)
+        private static void SetBuilderSign(PGNBuilder builder, MovePlayed move, CurrentPositionStatus checkState)
         {
             if (move.PieceCaptured is not null) builder.AppendCaptureSign = true;
-            bool IsInCheck = checkState == CheckState.Check || checkState == CheckState.DoubleCheck;
+            bool IsInCheck = checkState == CurrentPositionStatus.Check || checkState == CurrentPositionStatus.DoubleCheck;
             if (IsInCheck) builder.AppendCheckSign = true;
-            else if (checkState == CheckState.Checkmate) builder.AppendCheckMateSign = true;
+            else if (checkState == CurrentPositionStatus.Checkmate) builder.AppendCheckMateSign = true;
         }
     }
 }

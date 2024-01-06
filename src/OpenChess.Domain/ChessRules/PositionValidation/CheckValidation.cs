@@ -5,10 +5,10 @@ namespace OpenChess.Domain
         public CheckValidation(Match match, IMoveCalculator movesCalculator) : base(match, movesCalculator)
         {
         }
-        public override CheckState ValidatePosition(CheckState? checkState = null)
+        public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
         {
             CheckHandler checkHandler = new(_match.Chessboard, _movesCalculator);
-            checkHandler.IsInCheck(_match.OpponentPlayerColor!.Value, out CheckState status);
+            checkHandler.IsInCheck(_match.OpponentPlayerColor!.Value, out CurrentPositionStatus status);
             return base.ValidatePosition(status);
         }
     }

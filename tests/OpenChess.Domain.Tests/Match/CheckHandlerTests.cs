@@ -19,7 +19,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            Assert.IsTrue(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkAmount));
+            Assert.IsTrue(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkAmount));
         }
 
         [DataRow("r7/3R2k1/4P3/4K3/8/8/8/8 w - - 0 1", 'w')]
@@ -41,7 +41,7 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(new FenInfo(fen));
             Color player = color == 'w' ? Color.White : Color.Black;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            Assert.IsFalse(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkAmount));
+            Assert.IsFalse(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkAmount));
         }
 
         [DataRow("3b4/8/4n3/5PK1/8/k4r2/8/3r4 w - - 0 1", 'w')]
@@ -54,9 +54,9 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
+            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkState);
 
-            Assert.AreEqual(CheckState.DoubleCheck, checkState);
+            Assert.AreEqual(CurrentPositionStatus.DoubleCheck, checkState);
         }
 
         [DataRow("rn1qkb1r/ppp2pp1/5n1p/1B1p2B1/3P2b1/4P1P1/PP3P1P/RN1QK1NR b KQkq - 0 1", 'b')]
@@ -69,9 +69,9 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
+            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkState);
 
-            Assert.AreEqual(CheckState.Check, checkState);
+            Assert.AreEqual(CurrentPositionStatus.Check, checkState);
         }
 
         [DataRow("3bk3/5P2/4P3/4K3/8/8/4B3/8 w - - 0 1", 'w')]
@@ -87,9 +87,9 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(new FenInfo(fen));
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CheckState checkState);
+            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkState);
 
-            Assert.AreEqual(CheckState.NotInCheck, checkState);
+            Assert.AreEqual(CurrentPositionStatus.NotInCheck, checkState);
         }
 
         [DataRow("2N5/k7/8/2Q5/7p/8/8/4K3 b - - 0 1", "A7", "B7")]
@@ -103,7 +103,7 @@ namespace OpenChess.Tests
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
+            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPlayerCheckState);
         }
 
         [DataRow("8/kR6/8/8/3B3p/8/8/4K3 b - - 0 1", "A7", "B7")]
@@ -116,7 +116,7 @@ namespace OpenChess.Tests
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
+            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPlayerCheckState);
         }
 
         [DataRow("8/8/2k1P3/8/q7/8/2Q4p/4K3 b - - 0 1", "A4", "C2")]
@@ -131,7 +131,7 @@ namespace OpenChess.Tests
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
+            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPlayerCheckState);
         }
 
         [DataRow("8/1r6/k1R5/8/8/3BK3/8/8 b - - 0 1", "B7", "B6")]
@@ -208,8 +208,8 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(match.HasFinished());
             Assert.IsNull(match.Winner);
-            Assert.AreNotEqual(CheckState.NotInCheck, match.CurrentPlayerCheckState);
-            Assert.AreNotEqual(CheckState.Checkmate, match.CurrentPlayerCheckState);
+            Assert.AreNotEqual(CurrentPositionStatus.NotInCheck, match.CurrentPlayerCheckState);
+            Assert.AreNotEqual(CurrentPositionStatus.Checkmate, match.CurrentPlayerCheckState);
         }
 
         [DataRow("4k3/8/8/8/7b/2q3R1/8/4K3 w - - 0 1", "G3", "C3")]

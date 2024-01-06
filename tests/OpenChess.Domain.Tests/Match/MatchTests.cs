@@ -24,7 +24,7 @@ namespace OpenChess.Tests
             Assert.IsNull(match.CurrentPlayerInfo);
             Assert.IsNull(match.Winner);
             Assert.AreEqual(match.FenString, FenInfo.InitialPosition);
-            Assert.AreEqual(match.CurrentPlayerCheckState, CheckState.NotInCheck);
+            Assert.AreEqual(match.CurrentPlayerCheckState, CurrentPositionStatus.NotInCheck);
             Assert.AreEqual(time, (int)match.Time);
         }
 
