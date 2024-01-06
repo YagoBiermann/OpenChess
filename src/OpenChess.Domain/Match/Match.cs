@@ -10,7 +10,6 @@ namespace OpenChess.Domain
         private CurrentPositionStatus? _currentPositionStatus { get; set; }
         private TimeSpan _time { get; }
         private Player? _winner { get; set; }
-        private CheckHandler _checkHandler { get; }
         private FenInfo _fenInfo { get; set; }
         private IMoveCalculator _movesCalculator;
 
@@ -24,7 +23,6 @@ namespace OpenChess.Domain
             _time = TimeSpan.FromMinutes((int)time);
             _pgnMoveText = new();
             _movesCalculator = new MovesCalculator(_chessboard);
-            _checkHandler = new CheckHandler(_chessboard, _movesCalculator);
             _currentPositionStatus = Domain.CurrentPositionStatus.NotInCheck;
         }
 
@@ -44,7 +42,6 @@ namespace OpenChess.Domain
             SetCurrentPlayer();
             _chessboard = new Chessboard(_fenInfo);
             _movesCalculator = new MovesCalculator(_chessboard);
-            _checkHandler = new CheckHandler(_chessboard, _movesCalculator);
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
@@ -227,7 +224,8 @@ namespace OpenChess.Domain
 
         private void HandleIllegalPosition()
         {
-            if (_checkHandler.IsInCheck(CurrentPlayerColor!.Value, out CurrentPositionStatus checkAmount)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
+            CheckValidation checkValidation = new(this, _movesCalculator);
+            if (checkValidation.IsInCheck(CurrentPlayerColor!.Value, out CurrentPositionStatus checkAmount)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
         }
 
         private void RestoreToLastChessboard()

@@ -16,10 +16,12 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsInCheck_PlayerInCheck_ShouldReturnTrue(string fen, char color)
         {
-            Chessboard chessboard = new(new FenInfo(fen));
+            Match match = FakeMatch.RestoreMatch(fen);
             Color player = Utils.ColorFromChar(color);
-            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            Assert.IsTrue(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkAmount));
+            IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
+            CheckValidation checkValidation = new(match, moveCalculator);
+
+            Assert.IsTrue(checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus));
         }
 
         [DataRow("r7/3R2k1/4P3/4K3/8/8/8/8 w - - 0 1", 'w')]
@@ -38,10 +40,12 @@ namespace OpenChess.Tests
         [TestMethod]
         public void IsInCheck_PlayerNotInCheck_ShouldReturnFalse(string fen, char color)
         {
-            Chessboard chessboard = new(new FenInfo(fen));
-            Color player = color == 'w' ? Color.White : Color.Black;
-            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            Assert.IsFalse(new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkAmount));
+            Match match = FakeMatch.RestoreMatch(fen);
+            Color player = Utils.ColorFromChar(color);
+            IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
+            CheckValidation checkValidation = new(match, moveCalculator);
+
+            Assert.IsFalse(checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus));
         }
 
         [DataRow("3b4/8/4n3/5PK1/8/k4r2/8/3r4 w - - 0 1", 'w')]
@@ -51,12 +55,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_DoubleCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(new FenInfo(fen));
+            Match match = FakeMatch.RestoreMatch(fen);
             Color player = Utils.ColorFromChar(color);
-            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkState);
+            IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
+            CheckValidation checkValidation = new(match, moveCalculator);
+            checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus);
 
-            Assert.AreEqual(CurrentPositionStatus.DoubleCheck, checkState);
+            Assert.AreEqual(CurrentPositionStatus.DoubleCheck, checkStatus);
         }
 
         [DataRow("rn1qkb1r/ppp2pp1/5n1p/1B1p2B1/3P2b1/4P1P1/PP3P1P/RN1QK1NR b KQkq - 0 1", 'b')]
@@ -66,12 +71,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_Check_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(new FenInfo(fen));
+            Match match = FakeMatch.RestoreMatch(fen);
             Color player = Utils.ColorFromChar(color);
-            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkState);
+            IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
+            CheckValidation checkValidation = new(match, moveCalculator);
+            checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus);
 
-            Assert.AreEqual(CurrentPositionStatus.Check, checkState);
+            Assert.AreEqual(CurrentPositionStatus.Check, checkStatus);
         }
 
         [DataRow("3bk3/5P2/4P3/4K3/8/8/4B3/8 w - - 0 1", 'w')]
@@ -84,12 +90,13 @@ namespace OpenChess.Tests
         [TestMethod]
         public void CheckState_NotInCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
-            Chessboard chessboard = new(new FenInfo(fen));
+            Match match = FakeMatch.RestoreMatch(fen);
             Color player = Utils.ColorFromChar(color);
-            IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            new CheckHandler(chessboard, moveCalculator).IsInCheck(player, out CurrentPositionStatus checkState);
+            IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
+            CheckValidation checkValidation = new(match, moveCalculator);
+            checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus);
 
-            Assert.AreEqual(CurrentPositionStatus.NotInCheck, checkState);
+            Assert.AreEqual(CurrentPositionStatus.NotInCheck, checkStatus);
         }
 
         [DataRow("2N5/k7/8/2Q5/7p/8/8/4K3 b - - 0 1", "A7", "B7")]
