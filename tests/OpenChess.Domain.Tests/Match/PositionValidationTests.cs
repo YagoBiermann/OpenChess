@@ -21,6 +21,7 @@ namespace OpenChess.Tests
         [DataRow("8/1B1B1b2/3k4/1B6/2b5/5p2/2b2K2/8 w - - 0 1", "F2", "F3", DisplayName = "Dead Position/bishops in same tile")]
         [DataRow("8/8/2k1n3/2P5/8/4K3/8/8 b - - 0 1", "C6", "C5", DisplayName = "Dead Position/king + knight left")]
         [DataRow("8/8/2k2N2/2P5/8/4K3/8/8 b - - 0 1", "C6", "C5", DisplayName = "Dead Position/king + knight left")]
+        [DataRow("8/8/8/1k5p/7P/1PK5/8/8 w - - 99 1", "C3", "C2", DisplayName = "Move counter hitting 100")]
         [TestMethod]
         public void Play_MoveResultingInDraw_ShouldFinishMatchWithoutWinner(string fen, string origin, string destination)
         {
