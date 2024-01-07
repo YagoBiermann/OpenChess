@@ -283,15 +283,18 @@ namespace OpenChess.Domain
         private IPositionValidation SetupPositionValidationChain()
         {
             _movesCalculator.CalculateAndCacheAllMoves();
+            var moveCounterValidation = new MoveCounterValidation(this);
             var checkValidation = new CheckValidation(this, _movesCalculator);
             var checkmateValidation = new CheckmateValidation(this, _movesCalculator);
             var stalemateValidation = new StalemateValidation(this, _movesCalculator);
             var deadPositionValidation = new DeadPositionValidation(this, _movesCalculator);
+
+            moveCounterValidation.SetNext(checkValidation);
             checkValidation.SetNext(checkmateValidation);
             checkmateValidation.SetNext(stalemateValidation);
             stalemateValidation.SetNext(deadPositionValidation);
 
-            return checkValidation;
+            return moveCounterValidation;
         }
 
     }
