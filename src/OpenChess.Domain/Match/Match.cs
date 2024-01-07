@@ -65,6 +65,7 @@ namespace OpenChess.Domain
             IReadOnlyPiece piece = _chessboard.GetPiece(move.Origin) ?? throw new MatchException("Piece not found!");
             MovePlayed movePlayed = moveHandlers.Handle(piece, move.Destination, move.Promoting);
             HandleIllegalPosition();
+            UpdateMoveCounter(movePlayed);
             UpdateEnPassantAndCastlingAvailability(move.Origin, movePlayed.PieceMoved);
             CurrentPositionStatus currentPositionStatus = SetupPositionValidationChain().ValidatePosition();
             ConvertMoveToPGN(movePlayed, currentPositionStatus);
@@ -258,6 +259,13 @@ namespace OpenChess.Domain
         {
             string fenString = FenInfo.BuildFenString(this, CurrentPlayer!);
             _fenInfo = new(fenString);
+        }
+
+        private void UpdateMoveCounter(MovePlayed lastMovePlayed)
+        {
+            bool noCaptureAndNoPawnMoved = lastMovePlayed.PieceCaptured is null && !lastMovePlayed.MoveType.Equals(MoveType.PawnMove);
+            if (noCaptureAndNoPawnMoved) HalfMove++; else HalfMove = 0;
+            if (CurrentPlayerColor == Color.Black) FullMove++;
         }
 
         private IMoveHandler SetupMoveHandlerChain()
