@@ -382,5 +382,19 @@ namespace OpenChess.Tests
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
             Assert.AreEqual(currentPosition, match.FenString);
         }
+
+        [TestMethod]
+        public void Play_NonCaptureOrNonPawnMove_ShouldIncrementHalfMoveCounter()
+        {
+            Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
+
+            Assert.AreEqual(0, match.HalfMove);
+            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("G1"), Coordinate.GetInstance("F3"));
+            match.Play(move);
+            Assert.AreEqual(1, match.HalfMove);
+            Move move2 = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("B8"), Coordinate.GetInstance("C6"));
+            match.Play(move2);
+            Assert.AreEqual(2, match.HalfMove);
+        }
     }
 }
