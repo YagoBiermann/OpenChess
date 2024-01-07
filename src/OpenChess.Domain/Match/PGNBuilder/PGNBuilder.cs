@@ -34,7 +34,7 @@ namespace OpenChess.Domain
         {
             int count = moveCount + 1;
             string moveConvertedToPgn;
-            bool isPawnMove = movePlayed.MoveType == MoveType.PawnMove || movePlayed.MoveType == MoveType.PawnPromotionMove || movePlayed.MoveType == MoveType.EnPassantMove;
+            bool isPawnMove = movePlayed.MoveType == MoveType.PawnMove;
             if (isPawnMove) moveConvertedToPgn = BuildPawnPGN(count, movePlayed, checkState);
             else if (movePlayed.MoveType == MoveType.QueenSideCastlingMove) moveConvertedToPgn = BuildQueenSideCastlingString();
             else if (movePlayed.MoveType == MoveType.KingSideCastlingMove) moveConvertedToPgn = BuildKingSideCastlingString();

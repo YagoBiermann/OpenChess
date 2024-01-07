@@ -20,7 +20,7 @@ namespace OpenChess.Domain
                 _chessboard.AddPiece(destination, char.Parse(promotingTo), _match.CurrentPlayerColor!.Value);
                 IReadOnlyPiece pieceMoved = _chessboard.GetPiece(destination)!;
 
-                return new(piece.Origin, destination, pieceMoved, pieceCaptured, MoveType.PawnPromotionMove, promotingTo);
+                return new(piece.Origin, destination, pieceMoved, pieceCaptured, MoveType.PawnMove, promotingTo);
             }
             else { return base.Handle(piece, destination, promotingPiece); }
         }

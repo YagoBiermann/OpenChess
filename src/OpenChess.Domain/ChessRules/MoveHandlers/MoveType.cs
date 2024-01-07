@@ -5,8 +5,6 @@ namespace OpenChess.Domain
         DefaultMove,
         QueenSideCastlingMove,
         KingSideCastlingMove,
-        PawnPromotionMove,
-        EnPassantMove,
         PawnMove,
     }
 }
