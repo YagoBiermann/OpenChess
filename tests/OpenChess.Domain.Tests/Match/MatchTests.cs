@@ -396,5 +396,14 @@ namespace OpenChess.Tests
             match.Play(move2);
             Assert.AreEqual(2, match.HalfMove);
         }
+
+        [DataRow("r1bqkbnr/1ppp1ppp/p1B5/4p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 8 1", "D7", "D6")]
+        [DataRow("r1bqkbnr/1ppp1ppp/p1B5/4p3/4P3/N4N2/PPPP1PPP/R1BQK2R b KQkq - 8 1", "F8", "A3")]
+        [TestMethod]
+        public void Play_CaptureOrPawnMove_ShouldResetHalfMoveCounter(string position, string origin, string destination)
+        {
+            Match match = FakeMatch.RestoreAndPlay(position, origin, destination);
+            Assert.AreEqual(0, match.HalfMove);
+        }
     }
 }
