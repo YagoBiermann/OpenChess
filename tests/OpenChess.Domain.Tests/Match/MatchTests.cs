@@ -414,5 +414,13 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreAndPlay(position, origin, destination);
             Assert.AreEqual(5, match.FullMove);
         }
+
+        [DataRow("r1bqkbnr/1ppp1ppp/p1B5/4p3/4P3/N4N2/PPPP1PPP/R1BQK2R w KQkq - 0 1", "F3", "E5")]
+        [TestMethod]
+        public void Play_WhiteMoves_ShouldNotIncrementFullMoveCounter(string position, string origin, string destination)
+        {
+            Match match = FakeMatch.RestoreAndPlay(position, origin, destination);
+            Assert.AreEqual(1, match.FullMove);
+        }
     }
 }
