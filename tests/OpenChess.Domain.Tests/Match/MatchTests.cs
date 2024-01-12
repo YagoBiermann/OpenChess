@@ -422,5 +422,21 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreAndPlay(position, origin, destination);
             Assert.AreEqual(1, match.FullMove);
         }
+
+        [TestMethod]
+        public void Play_PlayerWithoutTimeEnough_ShouldFinishTheMatch()
+        {
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(FenInfo.InitialPosition, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), TimeSpan.Zero.Ticks, TimeSpan.FromMinutes(4).Ticks, DateTime.UtcNow.ToString(), 5);
+            Match match = new(matchInfo);
+            Assert.IsFalse(match.HasFinished());
+            Assert.AreEqual(match.CurrentPlayerInfo.Value.Color, Color.White);
+
+            Move move = new(match.CurrentPlayerInfo.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            match.Play(move);
+
+            Assert.IsTrue(match.HasFinished());
+            Assert.AreEqual(match.Winner.Value, match.Players.Where(p => p.Color == Color.Black).First().Id);
+            Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
+        }
     }
 }
