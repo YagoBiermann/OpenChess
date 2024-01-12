@@ -465,5 +465,41 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(opponentPlayerTime, match.CurrentPlayerInfo.Value.TimeRemaining.Ticks);
         }
+
+        [TestMethod]
+        public void Play_TimeRemaining_ShouldNotBeGreaterThanBefore()
+        {
+            Match match = new(Time.Ten);
+            PlayerInfo player1 = new(Color.White, Time.Ten);
+            PlayerInfo player2 = new(Color.Black, Time.Ten);
+            match.Join(player1);
+            match.Join(player2);
+
+            List<Move> moves = new()
+            {
+                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
+                new(player2.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("D5")),
+                new(player1.Id, Coordinate.GetInstance("E4"), Coordinate.GetInstance("D5")),
+                new(player2.Id, Coordinate.GetInstance("D8"), Coordinate.GetInstance("D5")),
+                new(player1.Id, Coordinate.GetInstance("F1"), Coordinate.GetInstance("C4")),
+                new(player2.Id, Coordinate.GetInstance("D5"), Coordinate.GetInstance("C4")),
+                new(player1.Id, Coordinate.GetInstance("D2"), Coordinate.GetInstance("D3")),
+                new(player2.Id, Coordinate.GetInstance("C4"), Coordinate.GetInstance("D3")),
+                new(player1.Id, Coordinate.GetInstance("C2"), Coordinate.GetInstance("D3")),
+            };
+
+            foreach (Move move in moves)
+            {
+                var currentPlayerTimeRemainingBeforePlayingMove = match.CurrentPlayerInfo.Value.TimeRemaining;
+                var opponentPlayerTimeRemainingBeforePlayingMove = match.OpponentPlayerInfo.Value.TimeRemaining;
+                match.Play(move);
+                Thread.Sleep(100);
+                var currentPlayerTimeRemainingAfterPlayingMove = match.CurrentPlayerInfo.Value.TimeRemaining;
+                var opponentPlayerTimeRemainingAfterPlayingMove = match.OpponentPlayerInfo.Value.TimeRemaining;
+
+                Assert.IsTrue(opponentPlayerTimeRemainingAfterPlayingMove <= opponentPlayerTimeRemainingBeforePlayingMove);
+                Assert.IsTrue(currentPlayerTimeRemainingAfterPlayingMove <= currentPlayerTimeRemainingBeforePlayingMove);
+            }
+        }
     }
 }
