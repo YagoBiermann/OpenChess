@@ -91,6 +91,12 @@ namespace OpenChess.Domain
             if (IsFull()) { StartNewMatch(); };
         }
 
+        public PlayerInfo CreateNewPlayer(Color color)
+        {
+            PlayerInfo player = new(color, _duration);
+            return player;
+        }
+
         public PlayerInfo CreateNewPlayer()
         {
             int randomNumber = new Random().Next(2);
