@@ -498,6 +498,7 @@ namespace OpenChess.Tests
             {
                 var currentPlayerTimeRemainingBeforePlayingMove = match.CurrentPlayerInfo.Value.TimeRemaining;
                 var opponentPlayerTimeRemainingBeforePlayingMove = match.OpponentPlayerInfo.Value.TimeRemaining;
+                Thread.Sleep(100);
                 match.Play(move);
                 Thread.Sleep(100);
                 var currentPlayerTimeRemainingAfterPlayingMove = match.CurrentPlayerInfo.Value.TimeRemaining;
