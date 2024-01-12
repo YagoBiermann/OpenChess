@@ -438,5 +438,19 @@ namespace OpenChess.Tests
             Assert.AreEqual(match.Winner.Value, match.Players.Where(p => p.Color == Color.Black).First().Id);
             Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
         }
+
+        [TestMethod]
+        public void Play_ShouldDecreaseTheTimeOfCurrentPlayer()
+        {
+            Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
+            TimeSpan expectedTime = TimeSpan.FromMinutes((int)match.Duration) - TimeSpan.FromMilliseconds(100);
+            Move move = new(match.CurrentPlayerInfo.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Thread.Sleep(110);
+
+            match.Play(move);
+
+            Assert.IsTrue(match.OpponentPlayerInfo.Value.TimeRemaining <= expectedTime);
+            Assert.AreEqual(TimeSpan.FromMinutes((int)match.Duration), match.CurrentPlayerInfo.Value.TimeRemaining);
+        }
     }
 }
