@@ -87,12 +87,9 @@ namespace OpenChess.Domain
         public void Join(PlayerInfo playerInfo)
         {
             CanJoinMatch(playerInfo, Id);
-            Player player = CreateNewPlayer(playerInfo);
-            player.Join(Id);
-            _players.Add(player);
-            if (!IsFull()) { return; };
-            SetCurrentPlayer();
-            _matchStatus = MatchStatus.InProgress;
+            AddPlayerToMatch(playerInfo);
+            if (IsFull()) { StartNewMatch(); };
+        }
         }
 
         public bool IsFull()
@@ -206,6 +203,12 @@ namespace OpenChess.Domain
             }
         }
 
+        private void AddPlayerToMatch(PlayerInfo playerInfo)
+        {
+            Player player = CreateNewPlayer(playerInfo);
+            player.Join(Id);
+            _players.Add(player);
+        }
 
         private void StartNewTurn()
         {
@@ -220,6 +223,13 @@ namespace OpenChess.Domain
             var opponentPlayer = OpponentPlayer;
             currentPlayer!.IsCurrentPlayer = false;
             opponentPlayer!.IsCurrentPlayer = true;
+        }
+
+        private void StartNewMatch()
+        {
+            SetCurrentPlayer();
+            _matchStatus = MatchStatus.InProgress;
+            StartNewTurn();
         }
 
         private void SetCurrentPlayer()
