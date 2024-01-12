@@ -9,8 +9,10 @@ namespace OpenChess.Domain
         public MatchStatus Status { get; }
         public Time Time { get; }
         public Guid? WinnerId { get; } = null;
+        public DateTime CurrentTurnStartedAt { get; }
+        public DateTime CreatedAt { get; }
 
-        public MatchInfo(string matchId, List<PlayerInfo> players, string fen, Stack<string> pgnMoves, string status, int time, string? winnerId = null)
+        public MatchInfo(string matchId, List<PlayerInfo> players, string fen, Stack<string> pgnMoves, string status, int time, string currentTurnStartedAt, string createdAt, string? winnerId = null)
         {
             MatchId = Match.TryParseId(matchId);
             Players = players;
@@ -22,7 +24,8 @@ namespace OpenChess.Domain
 
             if (!Enum.IsDefined(typeof(Time), time)) { throw new MatchException($"The given time {time} is not valid"); }
             Time = (Time)time;
-
+            CurrentTurnStartedAt = DateTime.Parse(currentTurnStartedAt);
+            CreatedAt = DateTime.Parse(createdAt);
             if (winnerId is null) return;
             WinnerId = Match.TryParseId(winnerId!);
         }
