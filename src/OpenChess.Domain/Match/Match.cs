@@ -90,6 +90,14 @@ namespace OpenChess.Domain
             AddPlayerToMatch(playerInfo);
             if (IsFull()) { StartNewMatch(); };
         }
+
+        public PlayerInfo CreateNewPlayer()
+        {
+            int randomNumber = new Random().Next(2);
+            Color randomColor = (Color)randomNumber;
+            PlayerInfo player = new(randomColor, _duration);
+
+            return player;
         }
 
         public bool IsFull()
