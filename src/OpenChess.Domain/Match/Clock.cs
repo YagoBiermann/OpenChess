@@ -13,6 +13,12 @@ namespace OpenChess.Domain
             CurrentMovePlayedAt = DateTime.UtcNow;
         }
 
+        public bool HasTimeEnough()
+        {
+            var timeRemaining = CalculateTimeRemainingForCurrentPlayer();
+            return timeRemaining > TimeSpan.Zero;
+        }
+
         public TimeSpan CalculateTimeRemainingForCurrentPlayer()
         {
             var turnDuration = CurrentMovePlayedAt - CurrentTurnStartedAt;
