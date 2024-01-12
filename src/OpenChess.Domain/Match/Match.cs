@@ -3,6 +3,7 @@ namespace OpenChess.Domain
     internal class Match
     {
         public Guid Id { get; }
+        public DateTime CreatedAt { get; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
         private List<Player> _players = new(2);
@@ -11,6 +12,7 @@ namespace OpenChess.Domain
         private MatchStatus _matchStatus { get; set; }
         private CurrentPositionStatus? _currentPositionStatus { get; set; }
         private TimeSpan _time { get; }
+        private DateTime? _currentTurnStartedAt { get; set; }
         private Player? _winner { get; set; }
         private FenInfo _fenInfo { get; set; }
         private IMoveCalculator _movesCalculator;
@@ -23,11 +25,13 @@ namespace OpenChess.Domain
             _matchStatus = MatchStatus.NotStarted;
             _winner = null;
             _time = TimeSpan.FromMinutes((int)time);
+            _currentTurnStartedAt = null;
             _pgnMoveText = new();
             _movesCalculator = new MovesCalculator(_chessboard);
             _currentPositionStatus = Domain.CurrentPositionStatus.NotInCheck;
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
+            CreatedAt = DateTime.UtcNow;
         }
 
         public Match(MatchInfo matchInfo)
@@ -39,6 +43,8 @@ namespace OpenChess.Domain
             var status = matchInfo.Status;
             var time = matchInfo.Time;
             var winnerId = matchInfo.WinnerId;
+            var currentTurnStartedAt = matchInfo.CurrentTurnStartedAt;
+            var createdAt = matchInfo.CreatedAt;
 
             Id = matchId;
             _fenInfo = new(fen);
@@ -49,9 +55,11 @@ namespace OpenChess.Domain
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
             _time = TimeSpan.FromMinutes((int)time);
+            _currentTurnStartedAt = currentTurnStartedAt;
             _currentPositionStatus = null;
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
+            CreatedAt = createdAt;
 
             if (winnerId is null) { _winner = null; return; }
             Player winner = GetPlayerById((Guid)winnerId) ?? throw new MatchException("Couldn't determine the winner");
