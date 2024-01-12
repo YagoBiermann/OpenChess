@@ -273,10 +273,10 @@ namespace OpenChess.Domain
             _chessboard.CastlingAvailability.UpdateAvailability(origin, CurrentPlayer!.Color);
         }
 
-        private void UpdateMatchStatus(CurrentPositionStatus currentPositionStatus)
+        private void UpdateMatchStatus(CurrentPositionStatus currentPositionStatus, Clock clock)
         {
             _currentPositionStatus = currentPositionStatus;
-            if (currentPositionStatus != Domain.CurrentPositionStatus.Draw && currentPositionStatus != Domain.CurrentPositionStatus.Checkmate) { SwitchTurns(); UpdateFenInfo(); return; }
+            if (currentPositionStatus != Domain.CurrentPositionStatus.Draw && currentPositionStatus != Domain.CurrentPositionStatus.Checkmate) { SwitchTurns(clock); UpdateFenInfo(); return; }
             if (currentPositionStatus == Domain.CurrentPositionStatus.Checkmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
             if (currentPositionStatus == Domain.CurrentPositionStatus.Draw) { UpdateFenInfo(); DeclareDrawAndFinish(); return; }
         }
