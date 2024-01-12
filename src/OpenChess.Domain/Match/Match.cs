@@ -69,6 +69,9 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             ValidateMove(move);
+            Clock clock = new(_currentTurnStartedAt!.Value, CurrentPlayer!.TimeRemaining.Ticks);
+            if (!clock.HasTimeEnough()) { DeclareTimeoutAndFinish(); return; }
+
             var moveHandlers = SetupMoveHandlerChain();
             IReadOnlyPiece piece = _chessboard.GetPiece(move.Origin) ?? throw new MatchException("Piece not found!");
             MovePlayed movePlayed = moveHandlers.Handle(piece, move.Destination, move.Promoting);
@@ -77,7 +80,7 @@ namespace OpenChess.Domain
             UpdateEnPassantAndCastlingAvailability(move.Origin, movePlayed.PieceMoved);
             CurrentPositionStatus currentPositionStatus = SetupPositionValidationChain().ValidatePosition();
             ConvertMoveToPGN(movePlayed, currentPositionStatus);
-            UpdateMatchStatus(currentPositionStatus);
+            UpdateMatchStatus(currentPositionStatus, clock);
             _movesCalculator.ClearCache();
         }
 
