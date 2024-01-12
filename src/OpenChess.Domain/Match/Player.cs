@@ -6,6 +6,7 @@ namespace OpenChess.Domain
         public Color Color { get; }
         public Guid? CurrentMatch { get; private set; }
         public bool IsCurrentPlayer { get; set; }
+        public TimeSpan TimeRemaining { get; set; }
 
         public Player(PlayerInfo info)
         {
@@ -13,6 +14,7 @@ namespace OpenChess.Domain
             Color = info.Color;
             CurrentMatch = info.CurrentMatch;
             IsCurrentPlayer = false;
+            TimeRemaining = info.TimeRemaining;
         }
 
         public void Join(Guid match)
@@ -28,7 +30,7 @@ namespace OpenChess.Domain
 
         public PlayerInfo Info
         {
-            get { return new(Id, Color, CurrentMatch); }
+            get { return new(Id, Color, TimeRemaining.Ticks, CurrentMatch); }
         }
 
         public override bool Equals(object? obj)
