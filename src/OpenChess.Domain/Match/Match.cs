@@ -226,6 +226,13 @@ namespace OpenChess.Domain
             _pgnMoveText.Push(convertedMove);
         }
 
+        private void DeclareTimeoutAndFinish()
+        {
+            _winner = OpponentPlayer;
+            _currentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            _matchStatus = MatchStatus.Finished;
+        }
+
         private void DeclareWinnerAndFinish()
         {
             _winner = CurrentPlayer;
