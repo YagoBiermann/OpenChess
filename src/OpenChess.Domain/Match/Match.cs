@@ -206,8 +206,16 @@ namespace OpenChess.Domain
             }
         }
 
-        private void SwitchTurns()
+
+        private void StartNewTurn()
         {
+            _currentTurnStartedAt = DateTime.UtcNow;
+        }
+
+        private void SwitchTurns(Clock clock)
+        {
+            UpdateTimeRemainingForCurrentPlayer(clock);
+            StartNewTurn();
             var currentPlayer = CurrentPlayer;
             var opponentPlayer = OpponentPlayer;
             currentPlayer!.IsCurrentPlayer = false;
