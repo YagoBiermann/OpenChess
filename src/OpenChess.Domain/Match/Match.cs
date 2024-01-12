@@ -286,6 +286,11 @@ namespace OpenChess.Domain
             if (CurrentPlayerColor == Color.Black) FullMove++;
         }
 
+        private void UpdateTimeRemainingForCurrentPlayer(Clock clock)
+        {
+            CurrentPlayer!.TimeRemaining = clock.CalculateTimeRemainingForCurrentPlayer();
+        }
+
         private IMoveHandler SetupMoveHandlerChain()
         {
             var enPassantHandler = new EnPassantHandler(this, _chessboard, _movesCalculator);
