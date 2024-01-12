@@ -25,17 +25,19 @@ namespace OpenChess.Tests
             Assert.IsNull(match.Winner);
             Assert.AreEqual(match.FenString, FenInfo.InitialPosition);
             Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.NotInCheck);
-            Assert.AreEqual(time, (int)match.Time);
+            Assert.AreEqual(time, (int)match.Duration);
         }
 
         [TestMethod]
         public void NewInstance_ShouldRestoreGameStateCorrectly()
         {
-            MatchInfo matchInfo = FakeMatch.RestoreMatch(_fen, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+            long timeRemaining = TimeSpan.FromMinutes(5).Ticks;
+            string currentTurnStartedAt = DateTime.UtcNow.ToString();
+            MatchInfo matchInfo = FakeMatch.RestoreMatch(_fen, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), timeRemaining, timeRemaining, currentTurnStartedAt);
             Match match = new(matchInfo);
 
             Assert.AreEqual(match.Id, matchInfo.MatchId);
-            Assert.AreEqual(match.Time, Time.Five);
+            Assert.AreEqual(match.Duration, Time.Five);
             Assert.AreEqual(match.Status, MatchStatus.InProgress);
             Assert.IsNull(match.CurrentPositionStatus);
             Assert.AreEqual(match.FenString, matchInfo.Fen);
@@ -50,19 +52,21 @@ namespace OpenChess.Tests
             string matchId = Guid.NewGuid().ToString();
             string player1 = Guid.NewGuid().ToString();
             string player2 = Guid.NewGuid().ToString();
-            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, 6));
-            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, 5, "imProges"));
-            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, "invalidId"));
-            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, "invalidId", player2));
-            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, "invalidId", player1, player2));
-            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, 5, "InProgress", "invalidId"));
+            long timeRemaining = TimeSpan.FromMinutes(5).Ticks;
+            string currentTurnStartedAt = DateTime.UtcNow.ToString();
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, timeRemaining, timeRemaining, currentTurnStartedAt, 6));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, timeRemaining, timeRemaining, currentTurnStartedAt, 5, "imProges"));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, "invalidId", timeRemaining, timeRemaining, currentTurnStartedAt));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, "invalidId", player2, timeRemaining, timeRemaining, currentTurnStartedAt));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, "invalidId", player1, player2, timeRemaining, timeRemaining, currentTurnStartedAt));
+            Assert.ThrowsException<MatchException>(() => FakeMatch.RestoreMatch(_fen, matchId, player1, player2, timeRemaining, timeRemaining, currentTurnStartedAt, 5, "InProgress", "invalidId"));
         }
 
         [TestMethod]
         public void Join_MatchNotFull_ShouldAssignPlayerToMatch()
         {
             Match match = new(Time.Ten);
-            PlayerInfo player = new(Color.White);
+            PlayerInfo player = match.CreateNewPlayer(Color.White);
 
             match.Join(player);
 
@@ -76,8 +80,8 @@ namespace OpenChess.Tests
         public void Join_WhenAllPlayersJoined_ShouldChangeStatusAndCurrentPlayer()
         {
             Match match = new(Time.Ten);
-            PlayerInfo whitePlayer = new(Color.White);
-            PlayerInfo blackPlayer = new(Color.Black);
+            PlayerInfo whitePlayer = match.CreateNewPlayer(Color.White);
+            PlayerInfo blackPlayer = match.CreateNewPlayer(Color.Black);
 
             match.Join(whitePlayer);
             match.Join(blackPlayer);
@@ -89,9 +93,10 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Join_AddingSamePlayerTwice_ShouldThrowException()
         {
+            TimeSpan timeRemaining = TimeSpan.FromMinutes(9);
             Match match = new(Time.Ten);
-            PlayerInfo player = new(Color.White);
-            PlayerInfo fakePlayer = new(player.Id, Color.Black);
+            PlayerInfo player = match.CreateNewPlayer(Color.White);
+            PlayerInfo fakePlayer = new(player.Id, Color.Black, timeRemaining.Ticks);
 
             match.Join(player);
 
@@ -103,7 +108,8 @@ namespace OpenChess.Tests
         public void Join_AddingPlayerThatIsAlreadyInAnotherMatch_ShouldThrowException()
         {
             Match match = new(Time.Ten);
-            PlayerInfo player = new(Guid.NewGuid(), Color.White, null);
+            TimeSpan timeRemaining = TimeSpan.FromMinutes(9);
+            PlayerInfo player = new(Guid.NewGuid(), Color.White, timeRemaining.Ticks, null);
             match.Join(player);
             Match match2 = new(Time.Ten);
 
@@ -114,10 +120,10 @@ namespace OpenChess.Tests
         public void Join_FullMatch_ShouldThrowException()
         {
             Match match = new(Time.Ten);
-            PlayerInfo whitePlayer = new(Color.White);
-            PlayerInfo blackPlayer = new(Color.Black);
+            PlayerInfo whitePlayer = match.CreateNewPlayer(Color.White);
+            PlayerInfo blackPlayer = match.CreateNewPlayer(Color.Black);
 
-            PlayerInfo otherPlayer = new(Color.White);
+            PlayerInfo otherPlayer = match.CreateNewPlayer(Color.White);
 
             match.Join(whitePlayer);
             match.Join(blackPlayer);
@@ -129,8 +135,8 @@ namespace OpenChess.Tests
         public void IsFull_ShouldReturnTrue()
         {
             Match match = new(Time.Ten);
-            PlayerInfo whitePlayer = new(Color.White);
-            PlayerInfo blackPlayer = new(Color.Black);
+            PlayerInfo whitePlayer = match.CreateNewPlayer(Color.White);
+            PlayerInfo blackPlayer = match.CreateNewPlayer(Color.Black);
 
             match.Join(whitePlayer);
             match.Join(blackPlayer);
@@ -142,7 +148,7 @@ namespace OpenChess.Tests
         public void IsFull_ShouldReturnFalse()
         {
             Match match = new(Time.Ten);
-            PlayerInfo whitePlayer = new(Color.White);
+            PlayerInfo whitePlayer = match.CreateNewPlayer(Color.White);
 
             match.Join(whitePlayer);
 
@@ -270,7 +276,7 @@ namespace OpenChess.Tests
         public void Play_MatchNotStarted_ShouldThrowException()
         {
             Match match = new(Time.Three);
-            PlayerInfo player = new(Color.White);
+            PlayerInfo player = match.CreateNewPlayer(Color.White);
             match.Join(player);
             Move move = new(player.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             Assert.ThrowsException<MatchException>(() => match.Play(move));
@@ -297,8 +303,8 @@ namespace OpenChess.Tests
         public void Play_EmptyOrigin_ShouldThrowException()
         {
             Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
+            PlayerInfo player1 = match.CreateNewPlayer(Color.White);
+            PlayerInfo player2 = match.CreateNewPlayer(Color.Black);
             match.Join(player1);
             match.Join(player2);
 
@@ -333,8 +339,8 @@ namespace OpenChess.Tests
         public void Play_ShouldAddPGNMove()
         {
             Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
+            PlayerInfo player1 = match.CreateNewPlayer(Color.White);
+            PlayerInfo player2 = match.CreateNewPlayer(Color.Black);
             match.Join(player1);
             match.Join(player2);
 

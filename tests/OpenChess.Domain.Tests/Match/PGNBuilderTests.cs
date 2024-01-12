@@ -150,8 +150,8 @@ namespace OpenChess.Tests
         public void Play_PgnMoveList_ShouldAddPGNInCorrectFormatAndSequence()
         {
             Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White);
-            PlayerInfo player2 = new(Color.Black);
+            PlayerInfo player1 = new(Color.White, Time.Ten);
+            PlayerInfo player2 = new(Color.Black, Time.Ten);
             match.Join(player1);
             match.Join(player2);
 
