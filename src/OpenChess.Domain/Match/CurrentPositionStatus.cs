@@ -7,5 +7,6 @@ namespace OpenChess.Domain
         DoubleCheck,
         Checkmate,
         Draw,
+        Timeout,
     }
 }
