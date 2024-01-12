@@ -11,8 +11,8 @@ namespace OpenChess.Domain
         private Stack<string> _pgnMoveText { get; set; }
         private MatchStatus _matchStatus { get; set; }
         private CurrentPositionStatus? _currentPositionStatus { get; set; }
-        private TimeSpan _time { get; }
         private DateTime? _currentTurnStartedAt { get; set; }
+        private Time _duration { get; }
         private Player? _winner { get; set; }
         private FenInfo _fenInfo { get; set; }
         private IMoveCalculator _movesCalculator;
@@ -24,7 +24,7 @@ namespace OpenChess.Domain
             _chessboard = new Chessboard(_fenInfo);
             _matchStatus = MatchStatus.NotStarted;
             _winner = null;
-            _time = TimeSpan.FromMinutes((int)time);
+            _duration = time;
             _currentTurnStartedAt = null;
             _pgnMoveText = new();
             _movesCalculator = new MovesCalculator(_chessboard);
@@ -54,7 +54,7 @@ namespace OpenChess.Domain
             _movesCalculator = new MovesCalculator(_chessboard);
             _pgnMoveText = pgnMoves;
             _matchStatus = status;
-            _time = TimeSpan.FromMinutes((int)time);
+            _duration = time;
             _currentTurnStartedAt = currentTurnStartedAt;
             _currentPositionStatus = null;
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
@@ -111,7 +111,7 @@ namespace OpenChess.Domain
         public PlayerInfo? OpponentPlayerInfo => OpponentPlayer?.Info;
         public Color? CurrentPlayerColor => CurrentPlayer?.Color;
         public Color? OpponentPlayerColor => OpponentPlayer?.Color;
-        public Time Time => (Time)_time.Minutes;
+        public Time Duration => _duration;
         public Guid? Winner => _winner?.Id;
         public Stack<string> Moves => new(_pgnMoveText.Reverse());
         public IReadOnlyChessboard Chessboard => _chessboard;
