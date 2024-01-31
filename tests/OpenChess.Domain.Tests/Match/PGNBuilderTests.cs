@@ -150,22 +150,20 @@ namespace OpenChess.Tests
         public void Play_PgnMoveList_ShouldAddPGNInCorrectFormatAndSequence()
         {
             Match match = new(Time.Ten);
-            PlayerInfo player1 = new(Color.White, Time.Ten);
-            PlayerInfo player2 = new(Color.Black, Time.Ten);
-            match.Join(player1);
-            match.Join(player2);
+            Guid player1Id = match.CurrentPlayerInfo!.Value.Id;
+            Guid player2Id = match.OpponentPlayerInfo!.Value.Id;
 
             List<Move> moves = new()
             {
-                new(player1.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
-                new(player2.Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("D5")),
-                new(player1.Id, Coordinate.GetInstance("E4"), Coordinate.GetInstance("D5")),
-                new(player2.Id, Coordinate.GetInstance("D8"), Coordinate.GetInstance("D5")),
-                new(player1.Id, Coordinate.GetInstance("F1"), Coordinate.GetInstance("C4")),
-                new(player2.Id, Coordinate.GetInstance("D5"), Coordinate.GetInstance("C4")),
-                new(player1.Id, Coordinate.GetInstance("D2"), Coordinate.GetInstance("D3")),
-                new(player2.Id, Coordinate.GetInstance("C4"), Coordinate.GetInstance("D3")),
-                new(player1.Id, Coordinate.GetInstance("C2"), Coordinate.GetInstance("D3")),
+                new(player1Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")),
+                new(player2Id, Coordinate.GetInstance("D7"), Coordinate.GetInstance("D5")),
+                new(player1Id, Coordinate.GetInstance("E4"), Coordinate.GetInstance("D5")),
+                new(player2Id, Coordinate.GetInstance("D8"), Coordinate.GetInstance("D5")),
+                new(player1Id, Coordinate.GetInstance("F1"), Coordinate.GetInstance("C4")),
+                new(player2Id, Coordinate.GetInstance("D5"), Coordinate.GetInstance("C4")),
+                new(player1Id, Coordinate.GetInstance("D2"), Coordinate.GetInstance("D3")),
+                new(player2Id, Coordinate.GetInstance("C4"), Coordinate.GetInstance("D3")),
+                new(player1Id, Coordinate.GetInstance("C2"), Coordinate.GetInstance("D3")),
             };
             foreach (Move move in moves)
             {

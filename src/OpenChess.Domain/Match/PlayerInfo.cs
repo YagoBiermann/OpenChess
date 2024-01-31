@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         public Guid Id { get; }
         public Color Color { get; }
-        public Guid? CurrentMatch { get; }
+        public Guid CurrentMatch { get; }
         public TimeSpan TimeRemaining { get; }
 
         public PlayerInfo(string id, char color, string currentMatch, long timeRemaining)
@@ -15,19 +15,12 @@ namespace OpenChess.Domain
             TimeRemaining = TimeSpan.FromTicks(timeRemaining);
         }
 
-        public PlayerInfo(Color color, Time durationOfTheMatch)
-        {
-            Id = Guid.NewGuid();
-            Color = color;
-            TimeRemaining = TimeSpan.FromMinutes((int)durationOfTheMatch);
-        }
-
-        public PlayerInfo(Guid id, Color color, long timeRemaining, Guid? currentMatch = null)
+        public PlayerInfo(Guid id, Color color, TimeSpan timeRemaining, Guid currentMatch)
         {
             Id = id;
             Color = color;
             CurrentMatch = currentMatch;
-            TimeRemaining = TimeSpan.FromTicks(timeRemaining);
+            TimeRemaining = TimeSpan.FromTicks(timeRemaining.Ticks);
         }
     }
 }

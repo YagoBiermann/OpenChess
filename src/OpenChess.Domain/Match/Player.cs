@@ -4,7 +4,7 @@ namespace OpenChess.Domain
     {
         public Guid Id { get; }
         public Color Color { get; }
-        public Guid? CurrentMatch { get; private set; }
+        public Guid CurrentMatch { get; private set; }
         public bool IsCurrentPlayer { get; set; }
         public TimeSpan TimeRemaining { get; set; }
 
@@ -17,20 +17,9 @@ namespace OpenChess.Domain
             TimeRemaining = info.TimeRemaining;
         }
 
-        public void Join(Guid match)
-        {
-            if (CurrentMatch is not null) throw new MatchException("Player is already assigned to a match!");
-            CurrentMatch = match;
-        }
-
-        public void LeaveMatch()
-        {
-            CurrentMatch = null;
-        }
-
         public PlayerInfo Info
         {
-            get { return new(Id, Color, TimeRemaining.Ticks, CurrentMatch); }
+            get { return new(Id, Color, TimeRemaining, CurrentMatch); }
         }
 
         public override bool Equals(object? obj)

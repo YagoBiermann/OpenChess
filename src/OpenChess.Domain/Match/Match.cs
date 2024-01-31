@@ -22,7 +22,6 @@ namespace OpenChess.Domain
             Id = Guid.NewGuid();
             _fenInfo = new(FenInfo.InitialPosition);
             _chessboard = new Chessboard(_fenInfo);
-            _matchStatus = MatchStatus.NotStarted;
             _winner = null;
             _duration = time;
             _currentTurnStartedAt = null;
@@ -32,6 +31,12 @@ namespace OpenChess.Domain
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
             CreatedAt = DateTime.UtcNow;
+
+            var whitePlayerInfo = new PlayerInfo(Guid.NewGuid(), Color.White, TimeSpan.FromMinutes((int)time), Id);
+            var blackPlayerInfo = new PlayerInfo(Guid.NewGuid(), Color.Black, TimeSpan.FromMinutes((int)time), Id);
+            CreatePlayer(whitePlayerInfo);
+            CreatePlayer(blackPlayerInfo);
+            StartMatch();
         }
 
         public Match(MatchInfo matchInfo)
@@ -48,7 +53,10 @@ namespace OpenChess.Domain
 
             Id = matchId;
             _fenInfo = new(fen);
-            RestorePlayers(players, matchId);
+            foreach (var player in players)
+            {
+                CreatePlayer(player);
+            }
             SetCurrentPlayer();
             _chessboard = new Chessboard(_fenInfo);
             _movesCalculator = new MovesCalculator(_chessboard);
@@ -84,38 +92,6 @@ namespace OpenChess.Domain
             _movesCalculator.ClearCache();
         }
 
-        public void Join(PlayerInfo playerInfo)
-        {
-            CanJoinMatch(playerInfo, Id);
-            AddPlayerToMatch(playerInfo);
-            if (IsFull()) { StartNewMatch(); };
-        }
-
-        public PlayerInfo CreateNewPlayer(Color color)
-        {
-            PlayerInfo player = new(color, _duration);
-            return player;
-        }
-
-        public PlayerInfo CreateNewPlayer()
-        {
-            int randomNumber = new Random().Next(2);
-            Color randomColor = (Color)randomNumber;
-            PlayerInfo player = new(randomColor, _duration);
-
-            return player;
-        }
-
-        public bool IsFull()
-        {
-            return _players.Count == _players.Capacity;
-        }
-
-        public bool HasPlayer()
-        {
-            return _players.Any();
-        }
-
         public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
         public bool HasFinished() => Status.Equals(MatchStatus.Finished);
         public string FenString => _fenInfo.Position;
@@ -147,11 +123,6 @@ namespace OpenChess.Domain
             return parsedId;
         }
 
-        protected static Player CreateNewPlayer(PlayerInfo info)
-        {
-            return new Player(info);
-        }
-
         private void ValidateMove(Move move)
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
@@ -165,18 +136,14 @@ namespace OpenChess.Domain
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-        private void RestorePlayers(List<PlayerInfo> playersInfo, Guid matchId)
+
+        private void CreatePlayer(PlayerInfo player)
         {
-            foreach (PlayerInfo playerInfo in playersInfo)
-            {
-                Player restoredPlayer = new(playerInfo);
-                if (playerInfo.CurrentMatch is null) throw new MatchException("Player is not in a match!");
-                CanJoinMatch(playerInfo, matchId);
-                _players.Add(restoredPlayer);
-            }
+            CanJoinMatch(player);
+            _players.Add(new(player));
         }
 
-        private void CanJoinMatch(PlayerInfo playerInfo, Guid matchId)
+        private void CanJoinMatch(PlayerInfo playerInfo)
         {
             if (_players.Count == 2) throw new MatchException("Match is full!");
 
@@ -185,8 +152,8 @@ namespace OpenChess.Domain
             if (sameColor) throw new MatchException($"Match already contains a player of same color!");
             if (sameId) throw new MatchException($"Player is already in the match!");
 
-            Guid? currentMatch = playerInfo.CurrentMatch;
-            if (currentMatch is not null && currentMatch != matchId) { throw new MatchException("Player already assigned to another match!"); }
+            Guid currentMatch = playerInfo.CurrentMatch;
+            if (currentMatch != Id) { throw new MatchException("Player already assigned to another match!"); }
         }
 
         private Player? GetPlayerByColor(Color color)
@@ -217,13 +184,6 @@ namespace OpenChess.Domain
             }
         }
 
-        private void AddPlayerToMatch(PlayerInfo playerInfo)
-        {
-            Player player = CreateNewPlayer(playerInfo);
-            player.Join(Id);
-            _players.Add(player);
-        }
-
         private void StartNewTurn()
         {
             _currentTurnStartedAt = DateTime.UtcNow;
@@ -239,7 +199,7 @@ namespace OpenChess.Domain
             opponentPlayer!.IsCurrentPlayer = true;
         }
 
-        private void StartNewMatch()
+        private void StartMatch()
         {
             SetCurrentPlayer();
             _matchStatus = MatchStatus.InProgress;
@@ -249,7 +209,7 @@ namespace OpenChess.Domain
         private void SetCurrentPlayer()
         {
             Color currentPlayer = FenInfo.ConvertTurn(_fenInfo.Turn);
-            if (IsFull()) { GetPlayerByColor(currentPlayer)!.IsCurrentPlayer = true; };
+            GetPlayerByColor(currentPlayer)!.IsCurrentPlayer = true;
         }
 
         private void ConvertMoveToPGN(MovePlayed movePlayed, CurrentPositionStatus checkState)
