@@ -10,8 +10,8 @@ namespace OpenChess.Domain
         private Chessboard _chessboard { get; set; }
         private Stack<string> _pgnMoveText { get; set; }
         private MatchStatus _matchStatus { get; set; }
-        private DateTime? _currentTurnStartedAt { get; set; }
         private CurrentPositionStatus _currentPositionStatus { get; set; }
+        private DateTime _currentTurnStartedAt { get; set; }
         private Time _duration { get; }
         private Player? _winner { get; set; }
         private FenInfo _fenInfo { get; set; }
@@ -24,7 +24,7 @@ namespace OpenChess.Domain
             _chessboard = new Chessboard(_fenInfo);
             _winner = null;
             _duration = time;
-            _currentTurnStartedAt = null;
+            _currentTurnStartedAt = DateTime.UtcNow;
             _pgnMoveText = new();
             _movesCalculator = new MovesCalculator(_chessboard);
             _currentPositionStatus = Domain.CurrentPositionStatus.NotInCheck;
@@ -77,7 +77,7 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             ValidateMove(move);
-            Clock clock = new(_currentTurnStartedAt!.Value, CurrentPlayer!.TimeRemaining.Ticks);
+            Clock clock = new(_currentTurnStartedAt, CurrentPlayer!.TimeRemaining.Ticks);
             if (!clock.HasTimeEnough()) { DeclareTimeoutAndFinish(); return; }
 
             var moveHandlers = SetupMoveHandlerChain();
