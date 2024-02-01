@@ -10,8 +10,8 @@ namespace OpenChess.Domain
         private Chessboard _chessboard { get; set; }
         private Stack<string> _pgnMoveText { get; set; }
         private MatchStatus _matchStatus { get; set; }
-        private CurrentPositionStatus? _currentPositionStatus { get; set; }
         private DateTime? _currentTurnStartedAt { get; set; }
+        private CurrentPositionStatus _currentPositionStatus { get; set; }
         private Time _duration { get; }
         private Player? _winner { get; set; }
         private FenInfo _fenInfo { get; set; }
@@ -64,7 +64,7 @@ namespace OpenChess.Domain
             _matchStatus = status;
             _duration = time;
             _currentTurnStartedAt = currentTurnStartedAt;
-            _currentPositionStatus = null;
+            _currentPositionStatus = Domain.CurrentPositionStatus.Undefined;
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
             CreatedAt = createdAt;

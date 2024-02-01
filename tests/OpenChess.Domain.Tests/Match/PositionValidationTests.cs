@@ -187,7 +187,7 @@ namespace OpenChess.Tests
         public void Play_TryingToSolveDoubleCheckByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Assert.IsNull(match.CurrentPositionStatus);
+            Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
@@ -198,7 +198,7 @@ namespace OpenChess.Tests
         public void Play_TryingToSolveDoubleCheckByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Assert.IsNull(match.CurrentPositionStatus);
+            Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
             Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
