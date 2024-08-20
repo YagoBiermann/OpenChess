@@ -1,6 +1,8 @@
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
+var environment = builder.Environment.EnvironmentName;
+builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
 //Enforce secure connections
 builder.Services.AddHttpsRedirection(options =>
 {
