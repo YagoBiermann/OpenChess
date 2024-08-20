@@ -8,6 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 var environment = builder.Environment.EnvironmentName;
 builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
 builder.Services.AddSignalR();
+builder.Services.AddLogging(opt =>
+   {
+       opt.AddConsole(c =>
+       {
+           c.TimestampFormat = "[HH:mm:ss] ";
+       });
+   });
+
 // Redis
 ConnectionMultiplexer redis;
 try
