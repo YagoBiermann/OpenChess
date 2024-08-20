@@ -73,7 +73,11 @@ namespace OpenChess.Domain
             Player winner = GetPlayerById((Guid)winnerId) ?? throw new MatchException("Couldn't determine the winner");
             _winner = winner;
         }
-
+        public static Time TryParseTime(int time)
+        {
+            if (!Enum.IsDefined(typeof(Time), time)) { throw new MatchException($"The given time {time} is not valid"); }
+            return (Time)time;
+        }
         public void Play(Move move)
         {
             ValidateMove(move);
