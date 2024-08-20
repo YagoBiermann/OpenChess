@@ -30,6 +30,11 @@ catch (System.Exception ex)
 }
 builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 builder.Services.AddTransient<IMatchRepository, MatchRepository>();
+//MediaTr
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
 //Enforce secure connections
 builder.Services.AddHttpsRedirection(options =>
