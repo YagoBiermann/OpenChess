@@ -1,0 +1,27 @@
+services:
+  redis:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    networks:
+      - database
+  chess_match:
+    build: ./src
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+      REDIS_CONNECTION_STRING: redis:6379
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CERT_PWD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /certificates/openchess_aspnetapp.pfx
+    volumes:
+      - .\certificates\openchess_aspnetapp.pfx:/certificates/openchess_aspnetapp.pfx
+    ports:
+      - "5001:80"
+      - "5002:443"
+    networks:
+      - database
+    depends_on:
+      - redis
+networks:
+  database:
