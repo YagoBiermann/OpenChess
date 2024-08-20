@@ -22,8 +22,7 @@ namespace OpenChess.Domain
             Status = result;
             Fen = fen;
 
-            if (!Enum.IsDefined(typeof(Time), time)) { throw new MatchException($"The given time {time} is not valid"); }
-            Time = (Time)time;
+            Time = Match.TryParseTime(time);
             CurrentTurnStartedAt = DateTime.Parse(currentTurnStartedAt);
             CreatedAt = DateTime.Parse(createdAt);
             if (winnerId is null) return;
