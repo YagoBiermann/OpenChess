@@ -55,6 +55,16 @@ builder.Services.AddHttpsRedirection(options =>
 builder.Services.AddControllers();
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    Console.WriteLine($"Running in development.");
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 app.UseRouting();
