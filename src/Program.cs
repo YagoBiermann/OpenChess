@@ -3,6 +3,7 @@ using System.Net;
 var builder = WebApplication.CreateBuilder(args);
 var environment = builder.Environment.EnvironmentName;
 builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
+builder.Services.AddSignalR();
 //Enforce secure connections
 builder.Services.AddHttpsRedirection(options =>
 {
@@ -22,10 +23,9 @@ builder.Services.AddHttpsRedirection(options =>
 builder.Services.AddControllers();
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
 
-app.Run();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.MapControllers();
+app.MapHub<ChessHub>("/Chess");
 app.Run();
