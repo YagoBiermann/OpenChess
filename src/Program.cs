@@ -1,9 +1,28 @@
 using System.Net;
+using OpenChess.Application;
+using OpenChess.Domain;
+using OpenChess.Infrastructure;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 var environment = builder.Environment.EnvironmentName;
 builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
 builder.Services.AddSignalR();
+// Redis
+ConnectionMultiplexer redis;
+try
+{
+    var redisConnectionString = builder.Configuration.GetValue<string>("REDIS_CONNECTION_STRING");
+    redis = ConnectionMultiplexer.Connect(redisConnectionString!);
+}
+catch (System.Exception ex)
+{
+    Console.WriteLine($"Failed to connect to Redis: {ex.Message}");
+    throw;
+}
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+builder.Services.AddTransient<IMatchRepository, MatchRepository>();
+
 //Enforce secure connections
 builder.Services.AddHttpsRedirection(options =>
 {
