@@ -43,6 +43,35 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
+        public void Play_WhiteFirstMoveTimedOut_ShouldEndMatch()
+        {
+            Match match = new(5);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
+
+            Thread.Sleep(35000);
+            match.Play(new(match.Players.First().Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")));
+
+            Assert.AreEqual(match.Status, MatchStatus.Finished);
+            Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
+        }
+
+        [TestMethod]
+        public void Play_BlackFirstMoveTimedOut_ShouldEndMatch()
+        {
+            Match match = new(5);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
+
+            match.Play(new(match.Players.First().Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")));
+            Thread.Sleep(35000);
+            match.Play(new(match.Players.Last().Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5")));
+
+            Assert.AreEqual(match.Status, MatchStatus.Finished);
+            Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
+        }
+
+        [TestMethod]
         public void Join_ShouldAddPlayerToMatch()
         {
             Match match = new(5);
