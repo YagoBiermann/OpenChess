@@ -86,6 +86,7 @@ namespace OpenChess.Domain
         public void Play(Move move)
         {
             ValidateMove(move);
+            if (IsFirstMove() && HasFirstMoveTimedOut()) { DeclareFirstMoveTimeoutAndFinish(); return; }
             Clock clock = new(_currentTurnStartedAt, CurrentPlayer!.TimeRemaining.Ticks);
             if (!clock.HasTimeEnough()) { DeclareTimeoutAndFinish(); return; }
 
@@ -200,6 +201,17 @@ namespace OpenChess.Domain
             }
         }
 
+        private bool IsFirstMove()
+        {
+            return FullMove == 1;
+        }
+
+        private bool HasFirstMoveTimedOut()
+        {
+            TimeSpan timeElapsed = DateTime.UtcNow - _currentTurnStartedAt;
+            return timeElapsed.TotalSeconds > 30;
+        }
+
         private void StartNewTurn()
         {
             _currentTurnStartedAt = DateTime.UtcNow;
@@ -233,7 +245,12 @@ namespace OpenChess.Domain
             string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
             _pgnMoveText.Push(convertedMove);
         }
-
+        private void DeclareFirstMoveTimeoutAndFinish()
+        {
+            _winner = null;
+            _currentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            _matchStatus = MatchStatus.Finished;
+        }
         private void DeclareTimeoutAndFinish()
         {
             _winner = OpponentPlayer;
