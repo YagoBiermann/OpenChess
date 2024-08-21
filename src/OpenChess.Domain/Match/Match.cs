@@ -17,26 +17,20 @@ namespace OpenChess.Domain
         private FenInfo _fenInfo { get; set; }
         private IMoveCalculator _movesCalculator;
 
-        public Match(Time time)
+        public Match(int time)
         {
             Id = Guid.NewGuid();
             _fenInfo = new(FenInfo.InitialPosition);
             _chessboard = new Chessboard(_fenInfo);
             _winner = null;
-            _duration = time;
-            _currentTurnStartedAt = DateTime.UtcNow;
+            _duration = TryParseTime(time);
+            _currentTurnStartedAt = DateTime.MinValue;
             _pgnMoveText = new();
             _movesCalculator = new MovesCalculator(_chessboard);
             _currentPositionStatus = Domain.CurrentPositionStatus.NotInCheck;
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
             CreatedAt = DateTime.UtcNow;
-
-            var whitePlayerInfo = new PlayerInfo(Guid.NewGuid(), Color.White, TimeSpan.FromMinutes((int)time), Id);
-            var blackPlayerInfo = new PlayerInfo(Guid.NewGuid(), Color.Black, TimeSpan.FromMinutes((int)time), Id);
-            CreatePlayer(whitePlayerInfo);
-            CreatePlayer(blackPlayerInfo);
-            StartMatch();
         }
 
         public Match(MatchInfo matchInfo)
@@ -78,6 +72,17 @@ namespace OpenChess.Domain
             if (!Enum.IsDefined(typeof(Time), time)) { throw new MatchException($"The given time {time} is not valid"); }
             return (Time)time;
         }
+        public void Join(string playerId, int color)
+        {
+            Color playerColor = ColorUtils.TryParseColor(color);
+            if (_players.Count != 0) { playerColor = ColorUtils.GetOppositeColor(_players.First().Color); }
+            var playerGuid = TryParseId(playerId);
+            var player = new PlayerInfo(playerGuid, playerColor, TimeSpan.FromMinutes((int)_duration), Id);
+            CreatePlayer(player);
+
+            if (_players.Count == 2) { StartMatch(); };
+        }
+
         public void Play(Move move)
         {
             ValidateMove(move);
@@ -102,6 +107,7 @@ namespace OpenChess.Domain
             return new MatchInfo(Id.ToString(), playerInfos, FenString, _pgnMoveText, _matchStatus.ToString(), (int)_duration, _currentTurnStartedAt!.ToString(), CreatedAt.ToString(), _winner?.ToString());
         }
 
+        public bool HasNotStarted() => Status.Equals(MatchStatus.NotStarted);
         public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
         public bool HasFinished() => Status.Equals(MatchStatus.Finished);
         public string FenString => _fenInfo.Position;
@@ -162,8 +168,8 @@ namespace OpenChess.Domain
             if (sameColor) throw new MatchException($"Match already contains a player of same color!");
             if (sameId) throw new MatchException($"Player is already in the match!");
 
-            Guid currentMatch = playerInfo.CurrentMatch;
-            if (currentMatch != Id) { throw new MatchException("Player already assigned to another match!"); }
+            Guid? currentMatch = playerInfo.CurrentMatch;
+            if (currentMatch != Id && currentMatch is not null) { throw new MatchException("Player already assigned to another match!"); }
         }
 
         private Player? GetPlayerByColor(Color color)
