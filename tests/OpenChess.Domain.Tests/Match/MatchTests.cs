@@ -16,20 +16,81 @@ namespace OpenChess.Tests
         [TestMethod]
         public void NewInstance_GivenTime_ShouldCreateNewMatch(int time)
         {
-            Time timeEnum = (Time)Enum.ToObject(typeof(Time), time);
-            Match match = new(timeEnum);
+            Match match = new(time);
 
             Assert.IsNotNull(match.Id);
-            Assert.IsNotNull(match.CurrentPlayerInfo);
-            Assert.AreEqual(2, match.Players.Count);
+            Assert.IsNull(match.CurrentPlayerInfo);
+            Assert.AreEqual(0, match.Players.Count);
             Assert.IsFalse(match.Moves.Any());
-            Assert.IsTrue(match.HasStarted());
+            Assert.IsFalse(match.HasStarted());
             Assert.AreEqual(0, match.HalfMove);
             Assert.AreEqual(1, match.FullMove);
             Assert.IsNull(match.Winner);
             Assert.AreEqual(match.FenString, FenInfo.InitialPosition);
             Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.NotInCheck);
             Assert.AreEqual(time, (int)match.Duration);
+        }
+
+        [TestMethod]
+        public void Play_OnePlayerInMatch_ShouldThrowException()
+        {
+            Match match = new(5);
+            match.Join(new Guid().ToString(), 1);
+            Assert.ThrowsException<MatchException>(() =>
+            {
+                match.Play(new(match.Players.First().Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")));
+            });
+        }
+
+        [TestMethod]
+        public void Join_ShouldAddPlayerToMatch()
+        {
+            Match match = new(5);
+            match.Join(new Guid().ToString(), 1);
+            Assert.AreEqual(match.Players.Count, 1);
+            Assert.IsFalse(match.HasStarted());
+        }
+
+        [TestMethod]
+        public void Join_OnePlayer_ShouldNotStartMatch()
+        {
+            Match match = new(5);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            Assert.IsFalse(match.HasStarted());
+        }
+
+        [TestMethod]
+        public void Join_ThirdPlayer_ShouldThrowException()
+        {
+            Match match = new(5);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
+
+            Assert.ThrowsException<MatchException>(() =>
+            {
+                match.Join(Guid.NewGuid().ToString(), 1);
+            });
+        }
+
+        [TestMethod]
+        public void Join_ShouldStartMatchWhenBothPlayersJoined()
+        {
+            Match match = new(5);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
+
+            Assert.IsTrue(match.HasStarted());
+        }
+
+        [TestMethod]
+        public void Join_TwoPlayersOfSameColor_ShouldAddOppositeColor()
+        {
+            Match match = new(5);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
+
+            Assert.AreEqual(match.Players.First().Color, Color.White);
+            Assert.AreEqual(match.Players.Last().Color, Color.Black);
         }
 
         [TestMethod]
@@ -53,7 +114,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void ToInfo_NewMatch_ShouldBeInTheCorrectFormat()
         {
-            Match match = new(Time.Five);
+            Match match = new(5);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
             MatchInfo matchInfo = match.ToInfo();
 
             Assert.AreEqual(match.CurrentPlayerInfo, matchInfo.Players[0]);
@@ -247,7 +310,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_EmptyOrigin_ShouldThrowException()
         {
-            Match match = new(Time.Ten);
+            Match match = new(10);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
             var playerId = match.CurrentPlayerInfo!.Value.Id;
             Move move = new(playerId, Coordinate.GetInstance("E4"), Coordinate.GetInstance("E6"));
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
@@ -279,7 +344,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldAddPGNMove()
         {
-            Match match = new(Time.Ten);
+            Match match = new(10);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
             var playerId = match.CurrentPlayerInfo!.Value.Id;
 
             Move move = new(playerId, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
@@ -413,7 +480,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TimeRemaining_ShouldNotBeGreaterThanBefore()
         {
-            Match match = new(Time.Ten);
+            Match match = new(10);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
             Guid player1Id = match.CurrentPlayerInfo!.Value.Id;
             Guid player2Id = match.OpponentPlayerInfo!.Value.Id;
 
