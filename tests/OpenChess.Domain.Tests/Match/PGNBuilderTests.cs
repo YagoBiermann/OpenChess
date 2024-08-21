@@ -149,7 +149,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_PgnMoveList_ShouldAddPGNInCorrectFormatAndSequence()
         {
-            Match match = new(Time.Ten);
+            Match match = new(10);
+            match.Join(Guid.NewGuid().ToString(), 1);
+            match.Join(Guid.NewGuid().ToString(), 2);
             Guid player1Id = match.CurrentPlayerInfo!.Value.Id;
             Guid player2Id = match.OpponentPlayerInfo!.Value.Id;
 
