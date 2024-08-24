@@ -71,6 +71,28 @@ namespace OpenChess.Application
         }
 
         [Authorize]
+        [HttpPost("api/matches/{id}/actions/play")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Play([FromRoute] string matchId, [FromBody] string origin, string destination, string? promoting = null)
+        {
+            try
+            {
+                await IsConnectedToMatch();
+                var playerId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                await _mediator.Send(new PlayMoveCommand(matchId, playerId, origin, destination, promoting));
+                MatchInfo match = await _mediator.Send(new GetMatchCommand(matchId));
+                await _hubContext.Clients.Group(matchId).SendAsync("GameState", match);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [Authorize]
         [EnableRateLimiting("Fixed")]
         [HttpPost("api/matches")]
         [Consumes(MediaTypeNames.Application.Json)]
