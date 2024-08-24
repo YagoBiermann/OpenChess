@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenChess", "src\OpenChess.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenChess.Test", "tests\OpenChess.Test.csproj", "{A5936C98-0DBA-4204-8210-164696D36CCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matchmaking", "Matchmaking\Matchmaking.csproj", "{316A9BA1-5275-4538-86A3-1B34B1772C01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A5936C98-0DBA-4204-8210-164696D36CCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5936C98-0DBA-4204-8210-164696D36CCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5936C98-0DBA-4204-8210-164696D36CCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{316A9BA1-5275-4538-86A3-1B34B1772C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{316A9BA1-5275-4538-86A3-1B34B1772C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{316A9BA1-5275-4538-86A3-1B34B1772C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{316A9BA1-5275-4538-86A3-1B34B1772C01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
