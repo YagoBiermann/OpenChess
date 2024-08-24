@@ -133,6 +133,19 @@ namespace OpenChess.Domain
             }
         }
 
+        public void FinishWithTimeout(string? playerId = null)
+        {
+            _matchStatus = MatchStatus.Finished;
+            _currentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            if (playerId is null)
+            {
+                _winner = null;
+                return;
+            }
+
+            _winner = GetOpponentPlayerOf(playerId);
+        }
+
         public static Guid TryParseId(string id)
         {
             bool parsedCorrectly = Guid.TryParse(id, out Guid parsedId);
