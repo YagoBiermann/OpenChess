@@ -14,7 +14,7 @@ services:
     networks:
       - database
   chess_server:
-    build: ./src
+    build: ./GameServer
     environment:
       INTERNAL_API_KEY: ${INTERNAL_API_KEY}
       JWT_KEY: ${JWT_KEY}
