@@ -3,6 +3,10 @@ using OpenChess.Application;
 using OpenChess.Domain;
 using OpenChess.Infrastructure;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 var environment = builder.Environment.EnvironmentName;
@@ -51,6 +55,22 @@ builder.Services.AddHttpsRedirection(options =>
     options.HttpsPort = int.Parse(builder.Configuration.GetConnectionString("https_port")!);
 });
 
+//Request rate limit
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress.ToString(),
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromSeconds(10),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 2,
+            }));
+
+    options.RejectionStatusCode = 429;
+});
 
 //JWT authentication
 builder.Services.AddAuthentication(options =>
