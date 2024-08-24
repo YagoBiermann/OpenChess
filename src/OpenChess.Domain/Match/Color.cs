@@ -30,7 +30,7 @@ namespace OpenChess.Domain
             if (color == 0) return GetRandomColor();
             if (color == 1) return Color.White;
             if (color == 2) return Color.Black;
-            else throw new MatchException($"Could not cast the value {color} to a color.");
+            else throw new MatchException($"Invalid Color!");
         }
     }
 }
