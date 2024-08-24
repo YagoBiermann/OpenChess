@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading.RateLimiting;
 using Redis.OM;
 using StackExchange.Redis;
 
@@ -13,6 +14,23 @@ builder.Services.AddHttpClient("HttpClient", client =>
     client.DefaultRequestHeaders.Add(header, value);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
     client.BaseAddress = new Uri(builder.Configuration["BaseUrl"] ?? throw new Exception("Base Url not set!"));
+});
+
+//Request rate limit
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress.ToString(),
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromSeconds(10),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 2,
+            }));
+
+    options.RejectionStatusCode = 429;
 });
 
 // Redis
