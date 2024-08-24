@@ -115,6 +115,30 @@ namespace OpenChess.Application
                 return BadRequest(e.Message);
             }
         }
+
+        [Authorize]
+        [HttpPost("api/matches/{id}/actions/timeout")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Timeout([FromRoute] string matchId)
+        {
+            try
+            {
+                await IsConnectedToMatch();
+                var playerId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                await _mediator.Send(new TimeoutMatchCommand(matchId, playerId));
+                var match = await _mediator.Send(new GetMatchCommand(matchId));
+                await _hubContext.Clients.Group(matchId).SendAsync("GameState", match);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [Authorize]
         [EnableRateLimiting("Fixed")]
         [HttpPost("api/matches")]
