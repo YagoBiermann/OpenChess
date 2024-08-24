@@ -12,14 +12,32 @@ namespace OpenChess.Infrastructure
         {
             _connection = connectionMultiplexer;
         }
-        public MatchInfo GetById(string id)
+
+        public async Task<MatchInfo?> GetById(string id)
         {
-            throw new NotImplementedException();
+            var loadedMatch = await _connection.GetDatabase().StringGetAsync(id);
+            if (!loadedMatch.HasValue) return null;
+            var restoredMatch = JsonConvert.DeserializeObject<MatchInfo>(loadedMatch!);
+            return restoredMatch;
         }
 
-        public async Task Save(MatchInfo matchInfo)
+        public async Task Create(MatchInfo matchInfo)
         {
-            throw new NotImplementedException();
+            var match = await _connection.GetDatabase().StringGetAsync(matchInfo.MatchId.ToString());
+            if (match.HasValue) throw new MatchException("Match already exists!");
+            await Update(matchInfo);
+        }
+
+        public async Task Update(MatchInfo matchInfo)
+        {
+            var converter = new StringEnumConverter();
+            string matchJSON = JsonConvert.SerializeObject(matchInfo, converter);
+            Console.WriteLine(matchJSON);
+            bool isSaved = await _connection.GetDatabase().StringSetAsync(matchInfo.MatchId.ToString(), matchJSON);
+            if (!isSaved)
+            {
+                throw new Exception("Failed to save match data.");
+            }
         }
     }
 }
