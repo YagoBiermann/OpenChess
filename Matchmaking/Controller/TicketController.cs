@@ -49,7 +49,25 @@ namespace MatchMaking.Controllers
             return Ok(ticket);
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status302Found, Type = typeof(Ticket))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetStatus()
+        {
+            ValidateCookies(Request);
+            string? ticketId = TryGetTicketIdFromCookies(Request);
+            Ticket? ticket = _tickets.FindById(ticketId!);
 
+            if (ticket is null) return NotFound("Ticket not found!");
+            if (ticket.HasTimedOut() && ticket.Status == Status.Searching)
+            {
+                Response.Cookies.Delete(ticketId!);
+                return Ok(ticket);
+            }
+
+            return Ok(ticket);
+        }
 
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
