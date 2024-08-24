@@ -51,6 +51,23 @@ namespace MatchMaking.Controllers
 
 
 
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult DeleteTicket()
+        {
+            ValidateCookies(Request);
+            string? ticketId = TryGetTicketIdFromCookies(Request);
+            Ticket? ticket = _tickets.FindById(ticketId!);
+            if (ticket is null) return NotFound("Ticket not found!");
+
+            _tickets.DeleteAsync(ticket);
+            Response.Cookies.Delete(ticketId!);
+
+            return Ok();
+        }
+
         private IActionResult? ValidateCookies(HttpRequest request)
         {
             try
