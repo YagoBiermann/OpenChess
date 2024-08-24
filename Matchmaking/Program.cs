@@ -44,6 +44,11 @@ builder.Services.AddSingleton(new RedisConnectionProvider(redis));
 builder.Services.AddHostedService<IndexCreationService>();
 builder.Services.AddHostedService<MatchMakingService>();
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.RedirectStatusCode = (int)HttpStatusCode.PermanentRedirect;
+    options.HttpsPort = 443;
+});
 
 builder.Services.AddControllers();
 var app = builder.Build();
