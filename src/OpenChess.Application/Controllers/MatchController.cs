@@ -1,0 +1,106 @@
+using System.Net.Mime;
+using Microsoft.AspNetCore.Mvc;
+using OpenChess.Domain;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using MediatR;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.RateLimiting;
+namespace OpenChess.Application
+{
+    [ApiController]
+    class MatchController(IMatchRepository matchRepository, IConfiguration configuration, IMediator mediator, IHubContext<ChessHub> hubContext, ConnectionTrackingService connectionTrackingService, MatchTrackingService matchTrackingService) : ControllerBase
+    {
+        private readonly IMatchRepository _matchRepository = matchRepository;
+        private readonly IConfiguration _configuration = configuration;
+        private readonly IMediator _mediator = mediator;
+        private readonly IHubContext<ChessHub> _hubContext = hubContext;
+        private readonly ConnectionTrackingService _connectionTrackingService = connectionTrackingService;
+        private readonly MatchTrackingService _matchTrackingService = matchTrackingService;
+
+        [HttpPost("api/players")]
+        [EnableRateLimiting("Fixed")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult CreatePlayer()
+        {
+            var existingToken = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            string playerId = Guid.NewGuid().ToString();
+
+            if (!string.IsNullOrEmpty(existingToken))
+            {
+                var principal = ValidateToken(existingToken);
+                if (principal is null) return BadRequest("Invalid token.");
+                var existingPlayerId = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+
+                if (!string.IsNullOrEmpty(existingPlayerId))
+                {
+                    playerId = existingPlayerId;
+                }
+            }
+            string token = GenerateToken(playerId);
+            Response.Headers.Append("Authorization", $"Bearer {token}");
+
+            return Ok(playerId);
+        }
+
+        private string GenerateToken(string playerId)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, playerId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(7),
+                signingCredentials: creds);
+
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwtToken;
+        }
+
+        private ClaimsPrincipal? ValidateToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, GetTokenValidationParameters(), out var securityToken);
+            return principal;
+        }
+
+        private TokenValidationParameters GetTokenValidationParameters()
+        {
+            return new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = _configuration["Jwt:Issuer"],
+                ValidAudience = _configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
+            };
+        }
+
+        private async Task<IActionResult?> IsConnectedToMatch()
+        {
+            var playerId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (string.IsNullOrEmpty(playerId)) { return Unauthorized(); }
+            var isConnected = await _connectionTrackingService.IsPlayerConnectedAsync(playerId);
+            var isInMatch = await _matchTrackingService.IsPlayerInMatchAsync(playerId);
+            if (!isConnected || !isInMatch) return Unauthorized();
+
+            return null;
+        }
+    }
+}
