@@ -198,9 +198,11 @@ namespace OpenChess.Domain
             return _players.Find(p => p.Color == color);
         }
 
-        private Player? GetPlayerById(Guid id)
+        private Player? GetPlayerById(string id)
         {
-            return _players.Find(p => p.Id == id);
+            return _players.Find(p => p.Id.ToString() == id);
+        }
+
         }
 
         private Player? CurrentPlayer
