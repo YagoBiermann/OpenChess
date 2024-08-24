@@ -106,6 +106,10 @@ else
     app.UseHsts();
 }
 
+app.UseWhen(context => context.Request.Path.StartsWithSegments("internal/"), appBuilder =>
+{
+    appBuilder.UseMiddleware<ApiKeyMiddleware>();
+});
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
