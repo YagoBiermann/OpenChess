@@ -21,17 +21,10 @@ builder.Services.AddLogging(opt =>
    });
 
 // Redis
-ConnectionMultiplexer redis;
-try
-{
-    var redisConnectionString = builder.Configuration.GetValue<string>("REDIS_CONNECTION_STRING");
-    redis = ConnectionMultiplexer.Connect(redisConnectionString!);
-}
-catch (System.Exception ex)
-{
-    Console.WriteLine($"Failed to connect to Redis: {ex.Message}");
-    throw;
-}
+
+var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
+ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString!);
+
 builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 builder.Services.AddTransient<IMatchRepository, MatchRepository>();
 //MediaTr
