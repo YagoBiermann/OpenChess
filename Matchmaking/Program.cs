@@ -1,5 +1,6 @@
 using System.Net;
 using System.Threading.RateLimiting;
+using MatchMaking.Services;
 using Redis.OM;
 using StackExchange.Redis;
 
@@ -40,12 +41,16 @@ ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionStrin
 builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton(new RedisConnectionProvider(redis));
+builder.Services.AddHostedService<IndexCreationService>();
+builder.Services.AddHostedService<MatchMakingService>();
+
 
 builder.Services.AddControllers();
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseAuthorization();
 app.UseRouting();
 app.MapControllers();
 
