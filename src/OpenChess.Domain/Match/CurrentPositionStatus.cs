@@ -9,5 +9,6 @@ namespace OpenChess.Domain
         Draw,
         Timeout,
         Undefined,
+        Resign
     }
 }
