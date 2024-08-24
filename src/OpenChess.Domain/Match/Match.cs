@@ -146,6 +146,13 @@ namespace OpenChess.Domain
             _winner = GetOpponentPlayerOf(playerId);
         }
 
+        public void FinishWithResign(string playerId)
+        {
+            _matchStatus = MatchStatus.Finished;
+            _currentPositionStatus = Domain.CurrentPositionStatus.Resign;
+            _winner = GetOpponentPlayerOf(playerId);
+        }
+
         public static Guid TryParseId(string id)
         {
             bool parsedCorrectly = Guid.TryParse(id, out Guid parsedId);
