@@ -21,6 +21,29 @@ namespace OpenChess.Application
         private readonly ConnectionTrackingService _connectionTrackingService = connectionTrackingService;
         private readonly MatchTrackingService _matchTrackingService = matchTrackingService;
 
+        // Endpoint used only by matchmaking service
+        [HttpPost("internal/api/matches")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateMatch([FromBody] int time)
+        {
+            try
+            {
+                MatchInfo match = await _mediator.Send(new CreateMatchCommand(time));
+                var locationUrl = Url.Action(
+                    action: nameof(CreateMatch),
+                    controller: "Matches",
+                    values: new { id = match.MatchId },
+                    protocol: Request.Scheme
+                );
+                return Created(locationUrl, new { matchId = match.MatchId });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         [HttpPost("api/players")]
         [EnableRateLimiting("Fixed")]
         [Consumes(MediaTypeNames.Application.Json)]
