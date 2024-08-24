@@ -203,6 +203,9 @@ namespace OpenChess.Domain
             return _players.Find(p => p.Id.ToString() == id);
         }
 
+        private Player? GetOpponentPlayerOf(string id)
+        {
+            return _players.Find(p => p.Id.ToString() != id);
         }
 
         private Player? CurrentPlayer
