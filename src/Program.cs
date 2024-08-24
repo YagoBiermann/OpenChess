@@ -27,6 +27,9 @@ ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionStrin
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 builder.Services.AddTransient<IMatchRepository, MatchRepository>();
+builder.Services.AddSingleton<MoveTrackingService>();
+builder.Services.AddSingleton<ConnectionTrackingService>();
+builder.Services.AddSingleton<MatchTrackingService>();
 //MediaTr
 builder.Services.AddMediatR(cfg =>
 {
