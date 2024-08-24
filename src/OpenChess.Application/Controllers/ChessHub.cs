@@ -18,6 +18,28 @@ namespace OpenChess.Application
             await base.OnConnectedAsync();
         }
 
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            var playerId = (Context.User?.FindFirst(JwtRegisteredClaimNames.Sub)?.Value) ?? throw new HubException("PlayerId not found!");
+            await _connectionTrackingService.RemoveConnectionAsync(playerId, Context.ConnectionId);
+            string? matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId);
+            await _matchTrackingService.RemovePlayerFromMatchAsync(matchId!, playerId, Context.ConnectionId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, matchId!);
+            _ = HandleTimeOutAsync(matchId, playerId);
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        private async Task HandleTimeOutAsync(string matchId, string playerId)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(30));
+
+            var isConnected = await _connectionTrackingService.IsPlayerConnectedAsync(playerId);
+
+            if (!isConnected)
+            {
+                _ = _mediator.Send(new TimeoutMatchCommand(matchId, playerId));
+            }
+        }
     }
 
 }
