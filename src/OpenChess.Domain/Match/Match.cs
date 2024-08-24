@@ -64,7 +64,7 @@ namespace OpenChess.Domain
             CreatedAt = createdAt;
 
             if (winnerId is null) { _winner = null; return; }
-            Player winner = GetPlayerById((Guid)winnerId) ?? throw new MatchException("Couldn't determine the winner");
+            Player winner = GetPlayerById(winnerId.Value.ToString()) ?? throw new MatchException("Couldn't determine the winner");
             _winner = winner;
         }
         public static Time TryParseTime(int time)
@@ -164,12 +164,12 @@ namespace OpenChess.Domain
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
             if (HasFinished()) { throw new MatchException("Match already finished"); }
-            Player? player = GetPlayerById(move.PlayerId) ?? throw new MatchException("You are not in this match");
+            Player? player = GetPlayerById(move.PlayerId.ToString()) ?? throw new MatchException("You are not in this match");
             if (!player.IsCurrentPlayer) throw new MatchException("Its not your turn!");
             if (_chessboard.GetPiece(move.Origin) is null) { throw new ChessboardException("There is no piece in this position"); };
 
             Color pieceColor = _chessboard.GetPiece(move.Origin)!.Color;
-            Color playerColor = GetPlayerById(move.PlayerId)!.Color;
+            Color playerColor = GetPlayerById(move.PlayerId.ToString())!.Color;
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
@@ -185,7 +185,7 @@ namespace OpenChess.Domain
             if (_players.Count == 2) throw new MatchException("Match is full!");
 
             bool sameColor = GetPlayerByColor(playerInfo.Color) is not null;
-            bool sameId = GetPlayerById(playerInfo.Id) is not null;
+            bool sameId = GetPlayerById(playerInfo.Id.ToString()) is not null;
             if (sameColor) throw new MatchException($"Match already contains a player of same color!");
             if (sameId) throw new MatchException($"Player is already in the match!");
 
