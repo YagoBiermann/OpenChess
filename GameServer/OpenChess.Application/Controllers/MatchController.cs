@@ -171,7 +171,9 @@ namespace OpenChess.Application
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CreatePlayer()
         {
-            var existingToken = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
+            if (authHeader is not null && !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)) return BadRequest("Invalid authorization header.");
+            var existingToken = Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
             string playerId = Guid.NewGuid().ToString();
 
             if (!string.IsNullOrEmpty(existingToken))
