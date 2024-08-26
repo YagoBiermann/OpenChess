@@ -46,7 +46,7 @@ namespace OpenChess.Application
         }
 
         [Authorize]
-        [HttpPost("api/matches/{id}/actions/join")]
+        [HttpPost("api/matches/{matchId}/actions/join")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MatchInfo))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -71,7 +71,7 @@ namespace OpenChess.Application
         }
 
         [Authorize]
-        [HttpPost("api/matches/{id}/actions/play")]
+        [HttpPost("api/matches/{matchId}/actions/play")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -94,7 +94,7 @@ namespace OpenChess.Application
         }
 
         [Authorize]
-        [HttpPost("api/matches/{id}/actions/resign")]
+        [HttpPost("api/matches/{matchId}/actions/resign")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -117,7 +117,7 @@ namespace OpenChess.Application
         }
 
         [Authorize]
-        [HttpPost("api/matches/{id}/actions/timeout")]
+        [HttpPost("api/matches/{matchId}/actions/timeout")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
