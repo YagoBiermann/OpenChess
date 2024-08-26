@@ -180,7 +180,7 @@ namespace OpenChess.Application
             {
                 var principal = ValidateToken(existingToken);
                 if (principal is null) return BadRequest("Invalid token.");
-                var existingPlayerId = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var existingPlayerId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (!string.IsNullOrEmpty(existingPlayerId))
                 {
