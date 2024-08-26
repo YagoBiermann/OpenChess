@@ -217,9 +217,16 @@ namespace OpenChess.Application
 
         private ClaimsPrincipal? ValidateToken(string token)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, GetTokenValidationParameters(), out var securityToken);
-            return principal;
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var principal = tokenHandler.ValidateToken(token, GetTokenValidationParameters(), out var securityToken);
+                return principal;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private TokenValidationParameters GetTokenValidationParameters()
