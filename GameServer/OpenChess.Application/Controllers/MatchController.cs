@@ -200,17 +200,17 @@ namespace OpenChess.Application
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY") ?? throw new Exception("JWT Key not set!")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
+                issuer: Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                audience: Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                 claims: claims,
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: creds);
 
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            var jwtToken = new JwtSecurityTokenHandler().CreateWriteToken(token);
 
             return jwtToken;
         }
@@ -230,9 +230,9 @@ namespace OpenChess.Application
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = _configuration["Jwt:Issuer"],
-                ValidAudience = _configuration["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
+                ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY") ?? throw new Exception("JWT Key not set!")))
             };
         }
 
