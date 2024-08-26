@@ -102,7 +102,7 @@ else
     app.UseHsts();
 }
 
-app.UseWhen(context => context.Request.Path.StartsWithSegments("internal/"), appBuilder =>
+app.UseWhen(context => context.Request.Path.StartsWithSegments("/internal"), appBuilder =>
 {
     appBuilder.UseMiddleware<ApiKeyMiddleware>();
 });
