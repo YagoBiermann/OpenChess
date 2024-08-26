@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenChess", "GameServer\OpenChess.csproj", "{77F16EE5-7CFA-4F39-8044-F886F1089C2E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServer", "GameServer\GameServer.csproj", "{77F16EE5-7CFA-4F39-8044-F886F1089C2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenChess.Test", "tests\OpenChess.Test.csproj", "{A5936C98-0DBA-4204-8210-164696D36CCF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServer.Test", "tests\GameServer.Test.csproj", "{A5936C98-0DBA-4204-8210-164696D36CCF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matchmaking", "Matchmaking\Matchmaking.csproj", "{316A9BA1-5275-4538-86A3-1B34B1772C01}"
 EndProject
