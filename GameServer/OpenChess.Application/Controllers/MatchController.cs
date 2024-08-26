@@ -210,7 +210,7 @@ namespace OpenChess.Application
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: creds);
 
-            var jwtToken = new JwtSecurityTokenHandler().CreateWriteToken(token);
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwtToken;
         }
