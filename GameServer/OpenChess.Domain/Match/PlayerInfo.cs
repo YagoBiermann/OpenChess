@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal readonly struct PlayerInfo
+    public readonly struct PlayerInfo
     {
         public Guid Id { get; }
         public Color Color { get; }

@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal interface IMatchRepository
+    public interface IMatchRepository
     {
         public Task<MatchInfo?> GetById(string id);
         public Task Create(MatchInfo matchInfo);

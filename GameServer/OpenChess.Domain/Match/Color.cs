@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal enum Color
+    public enum Color
     {
         Black = 'b',
         White = 'w'

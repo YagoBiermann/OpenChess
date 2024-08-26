@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace OpenChess.Application
 {
     [ApiController]
-    class MatchController(IMatchRepository matchRepository, IConfiguration configuration, IMediator mediator, IHubContext<ChessHub> hubContext, ConnectionTrackingService connectionTrackingService, MatchTrackingService matchTrackingService) : ControllerBase
+    public class MatchController(IMatchRepository matchRepository, IConfiguration configuration, IMediator mediator, IHubContext<ChessHub> hubContext, ConnectionTrackingService connectionTrackingService, MatchTrackingService matchTrackingService) : ControllerBase
     {
         private readonly IMatchRepository _matchRepository = matchRepository;
         private readonly IConfiguration _configuration = configuration;

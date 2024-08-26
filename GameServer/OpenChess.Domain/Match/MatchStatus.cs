@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal enum MatchStatus
+    public enum MatchStatus
     {
         NotStarted,
         InProgress,
