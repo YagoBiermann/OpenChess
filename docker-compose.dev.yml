@@ -1,0 +1,66 @@
+services:
+  redis_chess_server:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    networks:
+      - database
+  redis_matchmaking:
+    image: redis/redis-stack:latest
+    ports:
+      - "6380:6379"
+      - "8005:8001"
+    networks:
+      - database
+  game_server:
+    build:
+      context: ./GameServer
+      target: development
+    environment:
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CERT_PWD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /certificates/openchess_aspnetapp.pfx
+    volumes:
+      - .\certificates\openchess_aspnetapp.pfx:/certificates/openchess_aspnetapp.pfx
+      - ./GameServer:/GameServer
+      - /GameServer/bin
+      - /GameServer/obj
+    ports:
+      - "5001:80"
+      - "5002:443"
+    networks:
+      - database
+    depends_on:
+      - redis_chess_server
+  matchmaking:
+    build:
+      context: ./Matchmaking
+      target: development
+    environment:
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CERT_PWD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /certificates/openchess_aspnetapp.pfx
+    volumes:
+      - .\certificates\openchess_aspnetapp.pfx:/certificates/openchess_aspnetapp.pfx
+      - ./Matchmaking:/Matchmaking
+      - /Matchmaking/bin
+      - /Matchmaking/obj
+    ports:
+      - "5003:80"
+      - "5004:443"
+    networks:
+      - database
+    depends_on:
+      - redis_matchmaking
+  webclient:
+    build:
+      context: ./WebClient
+      target: development
+    environment:
+      - NODE_ENV=${ENVIRONMENT}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./WebClient:/WebClient
+      - /app/node_modules
+networks:
+  database:

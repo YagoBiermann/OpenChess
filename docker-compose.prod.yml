@@ -1,0 +1,27 @@
+services:
+  game_server:
+    build:
+      context: ./GameServer
+      target: production
+    ports:
+      - "5001:80"
+      - "5002:443"
+    networks:
+      - database
+  matchmaking:
+    build:
+      context: ./Matchmaking
+      target: production
+    ports:
+      - "5003:80"
+      - "5004:443"
+  webclient:
+    build:
+      context: ./WebClient
+      target: production
+    environment:
+      - NODE_ENV=${ENVIRONMENT}
+    ports:
+      - "3000:3000"
+networks:
+  database:
