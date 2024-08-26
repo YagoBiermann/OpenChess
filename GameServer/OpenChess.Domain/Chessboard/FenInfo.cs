@@ -1,7 +1,5 @@
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
-[assembly: InternalsVisibleTo("OpenChess.Test")]
 namespace OpenChess.Domain
 {
     internal record FenInfo
