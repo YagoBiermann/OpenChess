@@ -57,6 +57,7 @@ services:
       target: development
     environment:
       - NODE_ENV=${ENVIRONMENT}
+      - NEXT_WEBPACK_USEPOLLING=1
     ports:
       - "3000:3000"
     volumes:
