@@ -47,7 +47,6 @@ namespace OpenChess.Application
 
         [Authorize]
         [HttpPost("api/matches/{matchId}/actions/join")]
-        [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MatchInfo))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> JoinMatch(Guid matchId)
@@ -166,7 +165,7 @@ namespace OpenChess.Application
 
         [HttpPost("api/players")]
         [EnableRateLimiting("Fixed")]
-        [Consumes(MediaTypeNames.Application.Json)]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CreatePlayer()
