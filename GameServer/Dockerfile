@@ -6,6 +6,9 @@ FROM base AS development
 COPY *.csproj ./
 RUN dotnet restore --use-current-runtime
 COPY . ./
+RUN apt update && \
+    apt install unzip && \
+    curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l /remote_debugger
 RUN dotnet build -c Debug --no-restore
 ENTRYPOINT ["dotnet", "watch", "run", "--project", "GameServer.csproj"]
 
