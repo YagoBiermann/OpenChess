@@ -106,10 +106,10 @@ app.UseWhen(context => context.Request.Path.StartsWithSegments("/internal"), app
 {
     appBuilder.UseMiddleware<ApiKeyMiddleware>();
 });
-app.UseAuthentication();
-app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.MapHub<ChessHub>("/Chess");
 app.Run();
