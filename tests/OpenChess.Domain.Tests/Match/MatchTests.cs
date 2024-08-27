@@ -131,7 +131,7 @@ namespace OpenChess.Tests
             Match match = new(matchInfo);
 
             Assert.AreEqual(match.Id, matchInfo.MatchId);
-            Assert.AreEqual(match.Duration, Time.Five);
+            Assert.AreEqual(match.Duration, 5);
             Assert.AreEqual(match.Status, MatchStatus.InProgress);
             Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
             Assert.AreEqual(match.FenString, matchInfo.Fen);
