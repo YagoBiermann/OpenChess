@@ -22,7 +22,7 @@ namespace OpenChess.Domain
             Status = result;
             Fen = fen;
 
-            Time = Match.TryParseTime(time);
+            Time = new Time(time);
             CurrentTurnStartedAt = DateTime.Parse(currentTurnStartedAt);
             CreatedAt = DateTime.Parse(createdAt);
             if (winnerId is null) return;

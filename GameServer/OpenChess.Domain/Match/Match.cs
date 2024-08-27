@@ -23,7 +23,7 @@ namespace OpenChess.Domain
             _fenInfo = new(FenInfo.InitialPosition);
             _chessboard = new Chessboard(_fenInfo);
             _winner = null;
-            _duration = TryParseTime(time);
+            _duration = new Time(time);
             _currentTurnStartedAt = DateTime.MinValue;
             _pgnMoveText = new();
             _movesCalculator = new MovesCalculator(_chessboard);
@@ -67,11 +67,7 @@ namespace OpenChess.Domain
             Player winner = GetPlayerById(winnerId.Value.ToString()) ?? throw new MatchException("Couldn't determine the winner");
             _winner = winner;
         }
-        public static Time TryParseTime(int time)
-        {
-            if (!Enum.IsDefined(typeof(Time), time)) { throw new MatchException($"The given time {time} is not valid"); }
-            return (Time)time;
-        }
+
         public void Join(string playerId, int color)
         {
             Color playerColor = ColorUtils.TryParseColor(color);

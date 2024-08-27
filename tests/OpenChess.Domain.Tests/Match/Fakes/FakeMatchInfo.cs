@@ -27,7 +27,7 @@ namespace OpenChess.Tests
             string matchId = Guid.NewGuid().ToString();
             string player1Id = Guid.NewGuid().ToString();
             string player2Id = Guid.NewGuid().ToString();
-            long fiveMinutes = TimeSpan.FromMinutes((int)Time.Five).Ticks;
+            long fiveMinutes = TimeSpan.FromMinutes((int)new Time(5)).Ticks;
 
             PlayerInfo player1 = new(player1Id, 'w', matchId, fiveMinutes);
             PlayerInfo player2 = new(player2Id, 'b', matchId, fiveMinutes);
@@ -42,15 +42,15 @@ namespace OpenChess.Tests
             return match;
         }
 
-        public static Match RestoreAndPlay(string fen, string origin, string destination, string? promoting = null, Time time = Time.Five)
+        public static Match RestoreAndPlay(string fen, string origin, string destination, string? promoting = null, int time = 5)
         {
             string matchId = Guid.NewGuid().ToString();
-            long fiveMinutes = TimeSpan.FromMinutes((int)time).Ticks;
+            long fiveMinutes = TimeSpan.FromMinutes(new Time(time)).Ticks;
             PlayerInfo player1 = new(Guid.NewGuid().ToString(), 'w', matchId, fiveMinutes);
             PlayerInfo player2 = new(Guid.NewGuid().ToString(), 'b', matchId, fiveMinutes);
-            List<PlayerInfo> players = new() { player1, player2 };
+            List<PlayerInfo> players = [player1, player2];
             string currentTurnStartedAt = DateTime.UtcNow.ToString();
-            MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), (int)time, currentTurnStartedAt, DateTime.UtcNow.ToString());
+            MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), time, currentTurnStartedAt, DateTime.UtcNow.ToString());
             Match match = new(matchInfo);
             Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
             match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting));
