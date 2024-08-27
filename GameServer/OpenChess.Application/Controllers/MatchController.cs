@@ -188,7 +188,7 @@ namespace OpenChess.Application
             }
             string token = GenerateToken(playerId);
             Response.Headers.Append("Authorization", $"Bearer {token}");
-            return CreatedAtAction(nameof(CreatePlayer), new { playerId }, playerId);
+            return Ok(new { PlayerId = playerId });
         }
 
         private string GenerateToken(string playerId)
