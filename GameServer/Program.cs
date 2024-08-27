@@ -102,14 +102,11 @@ else
     app.UseHsts();
 }
 
-app.UseWhen(context => context.Request.Path.StartsWithSegments("/internal"), appBuilder =>
-{
-    appBuilder.UseMiddleware<ApiKeyMiddleware>();
-});
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<ChessHub>("/Chess");
+app.UseMiddleware<ApiKeyMiddleware>();
 app.Run();

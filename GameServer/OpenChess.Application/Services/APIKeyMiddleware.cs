@@ -16,16 +16,23 @@ public class ApiKeyMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey))
+        if (context.Request.Path.StartsWithSegments("/internal"))
         {
-            if (extractedApiKey == _apiKey)
+            if (context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey))
             {
-                await _next(context);
-                return;
+                if (extractedApiKey == _apiKey)
+                {
+                    await _next(context);
+                    return;
+                }
             }
-        }
 
-        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-        await context.Response.CompleteAsync();
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.CompleteAsync();
+        }
+        else
+        {
+            await _next(context);
+        }
     }
 }
