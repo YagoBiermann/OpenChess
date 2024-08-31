@@ -160,13 +160,6 @@ namespace OpenChess.Domain
             if (pieceColor != playerColor) { throw new ChessboardException("Cannot move opponent`s piece"); }
         }
 
-
-        private void CreatePlayer(PlayerInfo player)
-        {
-            CanJoinMatch(player);
-            _players.Add(new(player));
-        }
-
         private bool CanJoinMatch(PlayerInfo player)
         {
             if (_players.Count == 2) throw new MatchException("Match is full!");
