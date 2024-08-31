@@ -11,7 +11,6 @@ namespace OpenChess.Domain
         public string HalfMove;
         public string FullMove;
         public static string InitialPosition { get => "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; }
-        public string Position { get; }
 
         public FenInfo(string position)
         {
@@ -23,7 +22,11 @@ namespace OpenChess.Domain
             EnPassantAvailability = fields[3];
             HalfMove = fields[4];
             FullMove = fields[5];
-            Position = position;
+        }
+
+        public override string ToString()
+        {
+            return $"{Board} {Turn} {CastlingAvailability} {EnPassantAvailability} {HalfMove} {FullMove}";
         }
 
         public static bool IsValid(string position)
