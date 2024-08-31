@@ -12,7 +12,7 @@ namespace OpenChess.Domain
                 _time = time;
                 return;
             }
-            throw new MatchException($"Invalid time value: {time}. Allowed values are: {string.Join(", ", AllowedTimes)}.");
+            throw new MatchException($"Invalid time value, allowed values are: {string.Join(", ", AllowedTimes)}.");
         }
 
         public int Value
