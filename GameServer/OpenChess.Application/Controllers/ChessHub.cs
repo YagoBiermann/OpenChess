@@ -1,7 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+
 namespace OpenChess.Application
 {
     public class ChessHub(IMediator mediator, ConnectionTrackingService connectionTrackingService, MatchTrackingService matchTrackingService) : Hub<IPlayers>
@@ -13,7 +14,12 @@ namespace OpenChess.Application
         [Authorize]
         public override async Task OnConnectedAsync()
         {
-            var playerId = (Context.User?.FindFirst(JwtRegisteredClaimNames.Sub)?.Value) ?? throw new HubException("PlayerId not found!");
+            var playerId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(playerId))
+            {
+                Context.Abort();
+                return;
+            }
             await _connectionTrackingService.AddConnectionAsync(playerId, Context.ConnectionId);
             await base.OnConnectedAsync();
         }
@@ -32,9 +38,7 @@ namespace OpenChess.Application
         private async Task HandleTimeOutAsync(string matchId, string playerId)
         {
             await Task.Delay(TimeSpan.FromSeconds(30));
-
             var isConnected = await _connectionTrackingService.IsPlayerConnectedAsync(playerId);
-
             if (!isConnected)
             {
                 _ = _mediator.Send(new TimeoutMatchCommand(matchId, playerId));
