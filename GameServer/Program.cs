@@ -144,6 +144,9 @@ app.UseCors("AllowWebClient");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<ChessHub>("/Chess");
+app.MapHub<ChessHub>("/chessHub", options =>
+{
+    options.Transports = HttpTransportType.WebSockets;
+});
 app.UseMiddleware<ApiKeyMiddleware>();
 app.Run();
