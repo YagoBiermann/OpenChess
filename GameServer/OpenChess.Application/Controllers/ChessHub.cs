@@ -29,6 +29,7 @@ namespace OpenChess.Application
             var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("PlayerId not found!");
             await _connectionTrackingService.RemoveConnectionAsync(playerId, Context.ConnectionId);
             string? matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId);
+            if (matchId is null) return;
             await _matchTrackingService.RemovePlayerFromMatchAsync(matchId!, playerId, Context.ConnectionId);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, matchId!);
             _ = HandleTimeOutAsync(matchId, playerId);
