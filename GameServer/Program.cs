@@ -105,7 +105,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 builder.Services.AddAuthorization();
-builder.Services.AddControllers();
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
