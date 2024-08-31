@@ -114,6 +114,17 @@ builder.Services.AddSignalR(options =>
     options.KeepAliveInterval = TimeSpan.FromSeconds(10);
     options.HandshakeTimeout = TimeSpan.FromSeconds(5);
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowWebClient",
+        builder =>
+        {
+            builder.WithOrigins(Environment.GetEnvironmentVariable("WEB_CLIENT") ?? throw new Exception("WEB_CLIENT not set!")) // Your client URL
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+        });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -129,6 +140,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("AllowWebClient");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
