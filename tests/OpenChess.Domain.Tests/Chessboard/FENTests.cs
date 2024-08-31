@@ -143,7 +143,7 @@ namespace OpenChess.Tests
         public void BuildFenString_ShouldBeInCorrectFormat(string fen)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Assert.AreEqual(fen, match.FenString);
+            Assert.AreEqual(fen, match.Fen);
         }
     }
 }

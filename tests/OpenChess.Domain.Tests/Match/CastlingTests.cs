@@ -26,7 +26,7 @@ namespace OpenChess.Tests
         public void Play_CastlingToKingSide_ShouldBeHandledCorrectly(string fen, string origin, string destination, string expectedFen)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual(expectedFen, match.FenString);
+            Assert.AreEqual(expectedFen, match.Fen);
         }
 
         [DataRow("r2qkbnr/pp1nppp1/2p4p/5bB1/3PN2Q/8/PPP2PPP/R3KBNR w KQkq - 0 1", "E1", "C1", "r2qkbnr/pp1nppp1/2p4p/5bB1/3PN2Q/8/PPP2PPP/2KR1BNR b kq - 1 1")]
@@ -39,7 +39,7 @@ namespace OpenChess.Tests
         public void Play_CastlingToQueenSide_ShouldBeHandledCorrectly(string fen, string origin, string destination, string expectedFen)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual(expectedFen, match.FenString);
+            Assert.AreEqual(expectedFen, match.Fen);
         }
 
         [DataRow("r3k2r/pppppppp/2N3N1/8/8/2n3n1/PPPPPPPP/R3K2R w KQkq - 0 1", "E1", "G1", DisplayName = "King passing through check when castling")]
@@ -82,7 +82,7 @@ namespace OpenChess.Tests
         public void Play_MovingKingOrRook_ShouldLoseQueenSideCastling(string fen, string origin, string destination, string expectedFen)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual(expectedFen, match.FenString);
+            Assert.AreEqual(expectedFen, match.Fen);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace OpenChess.Tests
         public void Play_ShouldHandlePawnPromotion(string fen, string origin, string destination, string promotingPiece, string expectedFen)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination, string.IsNullOrEmpty(promotingPiece) ? null : promotingPiece);
-            Assert.AreEqual(expectedFen, match.FenString);
+            Assert.AreEqual(expectedFen, match.Fen);
         }
     }
 }

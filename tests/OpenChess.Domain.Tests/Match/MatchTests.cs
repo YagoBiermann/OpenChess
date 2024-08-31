@@ -21,12 +21,12 @@ namespace OpenChess.Tests
             Assert.IsNotNull(match.Id);
             Assert.IsNull(match.CurrentPlayerInfo);
             Assert.AreEqual(0, match.Players.Count);
-            Assert.IsFalse(match.Moves.Any());
+            Assert.IsFalse(match.PgnMoves.Any());
             Assert.IsFalse(match.HasStarted());
             Assert.AreEqual(0, match.HalfMove);
             Assert.AreEqual(1, match.FullMove);
             Assert.IsNull(match.Winner);
-            Assert.AreEqual(match.FenString, FenInfo.InitialPosition);
+            Assert.AreEqual(match.Fen, FenInfo.InitialPosition);
             Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.NotInCheck);
             Assert.AreEqual(time, (int)match.Duration);
         }
@@ -237,14 +237,14 @@ namespace OpenChess.Tests
         public void Play_ValidMove_ShouldBeHandled(string fen, string origin, string destination, string expectedFen)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             match.Play(move);
 
             Assert.AreNotEqual(match.CurrentPlayerInfo, move.PlayerId);
-            Assert.AreEqual(match.FenString, expectedFen);
-            Assert.IsTrue(match.Moves.Any());
+            Assert.AreEqual(match.Fen, expectedFen);
+            Assert.IsTrue(match.PgnMoves.Any());
         }
 
         [DataRow("6b1/7P/8/6K1/8/k7/1p6/3r4 w - - 0 1", "H7", "G8", "6Q1/8/8/6K1/8/k7/1p6/3r4 b - - 0 1", "Q", DisplayName = "Pawn promotion with capture")]
@@ -260,14 +260,14 @@ namespace OpenChess.Tests
         public void Play_PawnPromotion_ShouldBeHandledCorrectly(string fen, string origin, string destination, string expectedFen, string promoting)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting);
 
             match.Play(move);
 
             Assert.AreNotEqual(match.CurrentPlayerInfo, move.PlayerId);
-            Assert.AreEqual(match.FenString, expectedFen);
-            Assert.IsTrue(match.Moves.Any());
+            Assert.AreEqual(match.Fen, expectedFen);
+            Assert.IsTrue(match.PgnMoves.Any());
         }
 
         [DataRow("r3k2r/1pp1qpp1/p1n2n1p/1B1pp1B1/1b1PP1b1/P1N2N1P/1PP1QPP1/R3K2R w - - 0 1", "E1", "G1", DisplayName = "Castling when its not available")]
@@ -332,7 +332,7 @@ namespace OpenChess.Tests
         {
             Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
-            Move move = new(match.OpponentPlayerInfo!.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Move move = new(match.OpponentPlayerInfo!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             Assert.ThrowsException<MatchException>(() => match.Play(move));
         }
 
@@ -342,7 +342,7 @@ namespace OpenChess.Tests
             Match match = new(10);
             match.Join(Guid.NewGuid().ToString(), 1);
             match.Join(Guid.NewGuid().ToString(), 2);
-            var playerId = match.CurrentPlayerInfo!.Value.Id;
+            var playerId = match.CurrentPlayerInfo!.Id;
             Move move = new(playerId, Coordinate.GetInstance("E4"), Coordinate.GetInstance("E6"));
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -352,7 +352,7 @@ namespace OpenChess.Tests
         {
             Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5"));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5"));
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
 
@@ -363,11 +363,11 @@ namespace OpenChess.Tests
         public void Play_PlayerInSelfCheckAfterMove_ShouldThrowException(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
-            Assert.AreEqual(match.FenString, fen);
+            Assert.AreEqual(match.Fen, fen);
         }
 
         [TestMethod]
@@ -376,12 +376,12 @@ namespace OpenChess.Tests
             Match match = new(10);
             match.Join(Guid.NewGuid().ToString(), 1);
             match.Join(Guid.NewGuid().ToString(), 2);
-            var playerId = match.CurrentPlayerInfo!.Value.Id;
+            var playerId = match.CurrentPlayerInfo!.Id;
 
             Move move = new(playerId, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             match.Play(move);
 
-            Assert.IsTrue(match.Moves.Any());
+            Assert.IsTrue(match.PgnMoves.Any());
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
@@ -394,7 +394,7 @@ namespace OpenChess.Tests
         public void FenString_ShouldReturnCorrectFenString(string fen)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Assert.AreEqual(match.FenString, fen);
+            Assert.AreEqual(match.Fen, fen);
         }
 
         [TestMethod]
@@ -403,7 +403,7 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
             Assert.AreEqual(Color.White, match.CurrentPlayerColor);
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             match.Play(move);
             Assert.AreEqual(Color.Black, match.CurrentPlayerColor);
         }
@@ -416,11 +416,11 @@ namespace OpenChess.Tests
             Coordinate destination = Coordinate.GetInstance(dest);
             Match match = FakeMatch.RestoreMatch(position);
 
-            string currentPosition = match.FenString;
+            string currentPosition = match.Fen;
 
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, origin, destination);
+            Move move = new(match.CurrentPlayerInfo!.Id, origin, destination);
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
-            Assert.AreEqual(currentPosition, match.FenString);
+            Assert.AreEqual(currentPosition, match.Fen);
         }
 
         [TestMethod]
@@ -429,10 +429,10 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
             Assert.AreEqual(0, match.HalfMove);
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("G1"), Coordinate.GetInstance("F3"));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance("G1"), Coordinate.GetInstance("F3"));
             match.Play(move);
             Assert.AreEqual(1, match.HalfMove);
-            Move move2 = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance("B8"), Coordinate.GetInstance("C6"));
+            Move move2 = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance("B8"), Coordinate.GetInstance("C6"));
             match.Play(move2);
             Assert.AreEqual(2, match.HalfMove);
         }
@@ -469,13 +469,13 @@ namespace OpenChess.Tests
             MatchInfo matchInfo = FakeMatch.RestoreMatch(FenInfo.InitialPosition, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), TimeSpan.Zero.Ticks, TimeSpan.FromMinutes(4).Ticks, DateTime.UtcNow.ToString(), 5);
             Match match = new(matchInfo);
             Assert.IsFalse(match.HasFinished());
-            Assert.AreEqual(match.CurrentPlayerInfo.Value.Color, Color.White);
+            Assert.AreEqual(match.CurrentPlayerInfo?.Color, Color.White);
 
-            Move move = new(match.CurrentPlayerInfo.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             match.Play(move);
 
             Assert.IsTrue(match.HasFinished());
-            Assert.AreEqual(match.Winner.Value, match.Players.Where(p => p.Color == Color.Black).First().Id);
+            Assert.AreEqual(match.Winner!.Value, match.Players.Where(p => p.Color == Color.Black).First().Id);
             Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
         }
 
@@ -484,13 +484,13 @@ namespace OpenChess.Tests
         {
             Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
             TimeSpan expectedTime = TimeSpan.FromMinutes((int)match.Duration) - TimeSpan.FromMilliseconds(100);
-            Move move = new(match.CurrentPlayerInfo.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             Thread.Sleep(110);
 
             match.Play(move);
 
-            Assert.IsTrue(match.OpponentPlayerInfo.Value.TimeRemaining <= expectedTime);
-            Assert.AreEqual(TimeSpan.FromMinutes((int)match.Duration), match.CurrentPlayerInfo.Value.TimeRemaining);
+            Assert.IsTrue(match.OpponentPlayerInfo?.TimeRemaining <= expectedTime);
+            Assert.AreEqual(TimeSpan.FromMinutes((int)match.Duration), match.CurrentPlayerInfo.TimeRemaining);
         }
 
 
@@ -498,12 +498,12 @@ namespace OpenChess.Tests
         public void Play_ShouldNotDecreaseTheTimeOfOpponentPlayer()
         {
             Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
-            long opponentPlayerTime = match.OpponentPlayerInfo.Value.TimeRemaining.Ticks;
+            long opponentPlayerTime = match.OpponentPlayerInfo!.TimeRemaining.Ticks;
 
-            Move move = new(match.CurrentPlayerInfo.Value.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             match.Play(move);
 
-            Assert.AreEqual(opponentPlayerTime, match.CurrentPlayerInfo.Value.TimeRemaining.Ticks);
+            Assert.AreEqual(opponentPlayerTime, match.CurrentPlayerInfo.TimeRemaining.Ticks);
         }
 
         [TestMethod]
@@ -512,8 +512,8 @@ namespace OpenChess.Tests
             Match match = new(10);
             match.Join(Guid.NewGuid().ToString(), 1);
             match.Join(Guid.NewGuid().ToString(), 2);
-            Guid player1Id = match.CurrentPlayerInfo!.Value.Id;
-            Guid player2Id = match.OpponentPlayerInfo!.Value.Id;
+            Guid player1Id = match.CurrentPlayerInfo!.Id;
+            Guid player2Id = match.OpponentPlayerInfo!.Id;
 
             List<Move> moves = new()
             {
@@ -530,13 +530,13 @@ namespace OpenChess.Tests
 
             foreach (Move move in moves)
             {
-                var currentPlayerTimeRemainingBeforePlayingMove = match.CurrentPlayerInfo.Value.TimeRemaining;
-                var opponentPlayerTimeRemainingBeforePlayingMove = match.OpponentPlayerInfo.Value.TimeRemaining;
+                var currentPlayerTimeRemainingBeforePlayingMove = match.CurrentPlayerInfo.TimeRemaining;
+                var opponentPlayerTimeRemainingBeforePlayingMove = match.OpponentPlayerInfo.TimeRemaining;
                 Thread.Sleep(100);
                 match.Play(move);
                 Thread.Sleep(200);
-                var currentPlayerTimeRemainingAfterPlayingMove = match.CurrentPlayerInfo.Value.TimeRemaining;
-                var opponentPlayerTimeRemainingAfterPlayingMove = match.OpponentPlayerInfo.Value.TimeRemaining;
+                var currentPlayerTimeRemainingAfterPlayingMove = match.CurrentPlayerInfo.TimeRemaining;
+                var opponentPlayerTimeRemainingAfterPlayingMove = match.OpponentPlayerInfo.TimeRemaining;
 
                 Assert.IsTrue(opponentPlayerTimeRemainingAfterPlayingMove <= opponentPlayerTimeRemainingBeforePlayingMove);
                 Assert.IsTrue(currentPlayerTimeRemainingAfterPlayingMove <= currentPlayerTimeRemainingBeforePlayingMove);

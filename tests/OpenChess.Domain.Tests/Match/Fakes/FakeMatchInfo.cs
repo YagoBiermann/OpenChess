@@ -12,12 +12,11 @@ namespace OpenChess.Tests
 
             PlayerInfo player1 = new(player1Id, 'w', matchId, p1TimeRemaining);
             PlayerInfo player2 = new(player2Id, 'b', matchId, p2TimeRemaining);
-            List<PlayerInfo> players = new() { player1, player2 };
+            List<PlayerInfo> players = [player1, player2];
             var status = mstatus;
             var time = mtime;
-            List<string> pgnMoves = new() { "2. d5", "1. e4" };
-            var pgnStack = new Stack<string>(pgnMoves);
-            MatchInfo matchInfo = new(matchId, players, fen, pgnStack, status, time, currentTurnStartedAt, DateTime.UtcNow.ToString(), winner);
+            List<string> pgnMoves = ["2. d5", "1. e4"];
+            MatchInfo matchInfo = new(matchId, players, fen, pgnMoves, status, time, currentTurnStartedAt, DateTime.UtcNow.ToString(), winner);
 
             return matchInfo;
         }
@@ -34,9 +33,9 @@ namespace OpenChess.Tests
             List<PlayerInfo> players = new() { player1, player2 };
             var status = MatchStatus.InProgress.ToString();
             var time = 5;
-            var pgnStack = new Stack<string>();
+            var pgnMoves = new List<string>();
             string currentTurnStartedAt = DateTime.UtcNow.ToString();
-            MatchInfo matchInfo = new(matchId, players, fen, pgnStack, status, time, currentTurnStartedAt, DateTime.UtcNow.ToString());
+            MatchInfo matchInfo = new(matchId, players, fen, pgnMoves, status, time, currentTurnStartedAt, DateTime.UtcNow.ToString());
             Match match = new(matchInfo);
 
             return match;
@@ -52,7 +51,7 @@ namespace OpenChess.Tests
             string currentTurnStartedAt = DateTime.UtcNow.ToString();
             MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), time, currentTurnStartedAt, DateTime.UtcNow.ToString());
             Match match = new(matchInfo);
-            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Id;
             match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting));
 
             return match;

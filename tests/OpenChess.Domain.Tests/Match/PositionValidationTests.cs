@@ -148,7 +148,7 @@ namespace OpenChess.Tests
         public void Play_ShouldSolveCheckByMovingTheKing(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
@@ -161,7 +161,7 @@ namespace OpenChess.Tests
         public void Play_ShouldSolveDoubleCheckByCapturingAPieceWithTheKing(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
@@ -176,7 +176,7 @@ namespace OpenChess.Tests
         public void Play_ShouldSolveCheckByCapturingTheEnemyPiece(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
             Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
@@ -188,7 +188,7 @@ namespace OpenChess.Tests
         {
             Match match = FakeMatch.RestoreMatch(fen);
             Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -199,7 +199,7 @@ namespace OpenChess.Tests
         {
             Match match = FakeMatch.RestoreMatch(fen);
             Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -212,7 +212,7 @@ namespace OpenChess.Tests
         public void Play_TryingToSolveCheckByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Move move = new(match.CurrentPlayerInfo!.Value.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            Move move = new(match.CurrentPlayerInfo!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
@@ -232,7 +232,7 @@ namespace OpenChess.Tests
         public void Play_MoveResultingInCheckmate_ShouldEndTheMatchAndDeclareWinner(string fen, string origin, string destination)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Guid currentPlayer = match.CurrentPlayerInfo!.Value.Id;
+            Guid currentPlayer = match.CurrentPlayerInfo!.Id;
             Move move = new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 

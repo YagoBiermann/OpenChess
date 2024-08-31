@@ -17,7 +17,7 @@ namespace OpenChess.Tests
         public void Play_Promoting_ShouldAddPromotingSign(string fen, string origin, string destination, string promoting, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination, promoting);
-            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+            Assert.AreEqual(expectedPGNMove, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [DataRow("6n1/5P2/8/4k3/8/3Q4/1p2K3/R7 w - - 0 1", "F7", "G8", "Q", "1. fxg8=Q")]
@@ -32,7 +32,7 @@ namespace OpenChess.Tests
         public void Play_PromotingWithCapture_ShouldAddCaptureAndPromotionSign(string fen, string origin, string destination, string promoting, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination, promoting);
-            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+            Assert.AreEqual(expectedPGNMove, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [DataRow("rnbk1bnr/pp1Ppppp/1qp5/8/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", "D7", "C8", "R", "1. dxc8=R+")]
@@ -43,7 +43,7 @@ namespace OpenChess.Tests
         public void Play_PromotingPawnWithCaptureAndCheck_ShouldAddCapturePromotionAndCheckSign(string fen, string origin, string destination, string promoting, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination, promoting);
-            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+            Assert.AreEqual(expectedPGNMove, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [DataRow("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "E2", "E4", "1. e4", DisplayName = "Pawn move")]
@@ -63,7 +63,7 @@ namespace OpenChess.Tests
         public void Play_Default_ShouldAddPGNInCorrectFormat(string fen, string origin, string destination, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+            Assert.AreEqual(expectedPGNMove, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [DataRow("rnbqkbnr/1pp2pp1/p6p/8/8/P6P/1PP2PP1/RNBQKBNR w KQkq - 0 1", "D1", "E2", "1. Qe2+")]
@@ -76,7 +76,7 @@ namespace OpenChess.Tests
         public void Play_WithCheck_ShouldAddCheckSign(string fen, string origin, string destination, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+            Assert.AreEqual(expectedPGNMove, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [DataRow("rnbqkbnr/pppp1ppp/8/4p3/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 1", "D4", "E5", "1. dxe5", DisplayName = "Pawn move")]
@@ -92,7 +92,7 @@ namespace OpenChess.Tests
         public void Play_WithCapture_ShouldAddCaptureSign(string fen, string origin, string destination, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+            Assert.AreEqual(expectedPGNMove, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [DataRow("8/8/8/4k3/p4r2/1R4P1/2K5/8 w - - 0 1", "G3", "F4", "1. gxf4+", DisplayName = "Pawn move")]
@@ -111,7 +111,7 @@ namespace OpenChess.Tests
         public void Play_CaptureWithCheck_ShouldAddCaptureAndCheckSign(string fen, string origin, string destination, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+            Assert.AreEqual(expectedPGNMove, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [DataRow("k7/1R6/1P6/p7/4BB2/8/5K2/8 w - - 0 1", "B7", "B8", "1. Rb8#")]
@@ -130,7 +130,7 @@ namespace OpenChess.Tests
         public void Play_MoveResultingInCheckmate_ShouldAddCheckmateSign(string fen, string origin, string destination, string expectedPGNMove)
         {
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
-            Assert.AreEqual(expectedPGNMove, match.Moves.Peek());
+            Assert.AreEqual(expectedPGNMove, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [DataRow("r3k2r/pppq1ppp/2np1n2/1Bb1p1B1/4P1b1/2NP1N2/PPPQ1PPP/R3K2R b KQkq - 0 1", "E8", "G8")]
@@ -143,7 +143,7 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
             string castlingPgn = destination[0] == 'G' ? "O-O" : "O-O-O";
 
-            Assert.AreEqual(castlingPgn, match.Moves.Peek());
+            Assert.AreEqual(castlingPgn, match.PgnMoves[match.PgnMoves.Count - 1]);
         }
 
         [TestMethod]
@@ -152,8 +152,8 @@ namespace OpenChess.Tests
             Match match = new(10);
             match.Join(Guid.NewGuid().ToString(), 1);
             match.Join(Guid.NewGuid().ToString(), 2);
-            Guid player1Id = match.CurrentPlayerInfo!.Value.Id;
-            Guid player2Id = match.OpponentPlayerInfo!.Value.Id;
+            Guid player1Id = match.CurrentPlayerInfo!.Id;
+            Guid player2Id = match.OpponentPlayerInfo!.Id;
 
             List<Move> moves = new()
             {
@@ -184,8 +184,8 @@ namespace OpenChess.Tests
                 "2. d5",
                 "1. e4",
             };
-
-            CollectionAssert.AreEqual(expectedMoveList, match.Moves);
+            expectedMoveList.Reverse();
+            CollectionAssert.AreEqual(expectedMoveList, (System.Collections.ICollection)match.PgnMoves);
         }
     }
 }
