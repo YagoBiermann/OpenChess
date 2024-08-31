@@ -285,7 +285,7 @@ namespace OpenChess.Domain
 
         private void RestoreToLastChessboard()
         {
-            Chessboard previousChessboard = new(new FenInfo(_fenInfo.Position));
+            Chessboard previousChessboard = new(new FenInfo(_fenInfo.ToString()));
             _chessboard = previousChessboard;
         }
         private void UpdateEnPassantAndCastlingAvailability(Coordinate origin, IReadOnlyPiece pieceMoved)
