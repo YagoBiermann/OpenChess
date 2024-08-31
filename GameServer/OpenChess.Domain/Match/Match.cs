@@ -6,16 +6,29 @@ namespace OpenChess.Domain
         public DateTime CreatedAt { get; }
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
+        public IReadOnlyList<IReadOnlyPlayer> Players => _players.AsReadOnly();
+        public IReadOnlyList<string> PgnMoves { get => _pgnMoves.AsReadOnly(); }
+        public CurrentPositionStatus CurrentPositionStatus { get; private set; }
+        public DateTime CurrentTurnStartedAt { get; private set; }
+        public string Fen { get => _fenInfo.ToString(); }
+        public bool HasNotStarted() => Status.Equals(MatchStatus.NotStarted);
+        public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
+        public bool HasFinished() => Status.Equals(MatchStatus.Finished);
+        public MatchStatus Status => _matchStatus;
+        public IReadOnlyPlayer? CurrentPlayerInfo => CurrentPlayer?.AsReadOnly;
+        public IReadOnlyPlayer? OpponentPlayerInfo => OpponentPlayer?.AsReadOnly;
+        public Color? CurrentPlayerColor => CurrentPlayer?.Color;
+        public Color? OpponentPlayerColor => OpponentPlayer?.Color;
+        public Time Duration { get; private set; }
+        public Guid? Winner => _winner?.Id;
+        public IReadOnlyChessboard Chessboard => _chessboard;
         private List<Player> _players = new(2);
         private Chessboard _chessboard { get; set; }
-        private Stack<string> _pgnMoveText { get; set; }
         private MatchStatus _matchStatus { get; set; }
-        private CurrentPositionStatus _currentPositionStatus { get; set; }
-        private DateTime _currentTurnStartedAt { get; set; }
-        private Time _duration { get; }
         private Player? _winner { get; set; }
         private FenInfo _fenInfo { get; set; }
         private IMoveCalculator _movesCalculator;
+        private readonly List<string> _pgnMoves;
 
         public Match(int time)
         {
@@ -23,11 +36,11 @@ namespace OpenChess.Domain
             _fenInfo = new(FenInfo.InitialPosition);
             _chessboard = new Chessboard(_fenInfo);
             _winner = null;
-            _duration = new Time(time);
-            _currentTurnStartedAt = DateTime.MinValue;
-            _pgnMoveText = new();
+            Duration = new Time(time);
+            CurrentTurnStartedAt = DateTime.MinValue;
+            _pgnMoves = [];
             _movesCalculator = new MovesCalculator(_chessboard);
-            _currentPositionStatus = Domain.CurrentPositionStatus.NotInCheck;
+            CurrentPositionStatus = CurrentPositionStatus.NotInCheck;
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
             CreatedAt = DateTime.UtcNow;
@@ -49,16 +62,18 @@ namespace OpenChess.Domain
             _fenInfo = new(fen);
             foreach (var player in players)
             {
-                CreatePlayer(player);
+                if (!CanJoinMatch(player)) { throw new MatchException("Player already assigned to another match!"); }
+                _players.Add(new Player(player));
+
             }
             SetCurrentPlayer();
             _chessboard = new Chessboard(_fenInfo);
             _movesCalculator = new MovesCalculator(_chessboard);
-            _pgnMoveText = pgnMoves;
+            _pgnMoves = pgnMoves;
             _matchStatus = status;
-            _duration = time;
-            _currentTurnStartedAt = currentTurnStartedAt;
-            _currentPositionStatus = Domain.CurrentPositionStatus.Undefined;
+            Duration = time;
+            CurrentTurnStartedAt = currentTurnStartedAt;
+            CurrentPositionStatus = CurrentPositionStatus.Undefined;
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
             CreatedAt = createdAt;
@@ -73,8 +88,9 @@ namespace OpenChess.Domain
             Color playerColor = ColorUtils.TryParseColor(color);
             if (_players.Count != 0) { playerColor = ColorUtils.GetOppositeColor(_players.First().Color); }
             var playerGuid = TryParseId(playerId);
-            var player = new PlayerInfo(playerGuid, playerColor, TimeSpan.FromMinutes((int)_duration), Id);
-            CreatePlayer(player);
+            var player = new PlayerInfo(playerGuid, playerColor, TimeSpan.FromMinutes((int)Duration), Id);
+            if (!CanJoinMatch(player)) { throw new MatchException("Player already assigned to another match!"); }
+            _players.Add(new Player(player));
 
             if (_players.Count == 2) { StartMatch(); };
         }
@@ -83,7 +99,7 @@ namespace OpenChess.Domain
         {
             ValidateMove(move);
             if (IsFirstMove() && HasFirstMoveTimedOut()) { DeclareFirstMoveTimeoutAndFinish(); return; }
-            Clock clock = new(_currentTurnStartedAt, CurrentPlayer!.TimeRemaining.Ticks);
+            Clock clock = new(CurrentTurnStartedAt, CurrentPlayer!.TimeRemaining.Ticks);
             if (!clock.HasTimeEnough()) { DeclareTimeoutAndFinish(); return; }
 
             var moveHandlers = SetupMoveHandlerChain();
@@ -104,35 +120,10 @@ namespace OpenChess.Domain
             return new MatchInfo(Id.ToString(), playerInfos, FenString, _pgnMoveText, _matchStatus.ToString(), (int)_duration, _currentTurnStartedAt!.ToString(), CreatedAt.ToString(), _winner?.ToString());
         }
 
-        public bool HasNotStarted() => Status.Equals(MatchStatus.NotStarted);
-        public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
-        public bool HasFinished() => Status.Equals(MatchStatus.Finished);
-        public string FenString => _fenInfo.Position;
-        public CurrentPositionStatus? CurrentPositionStatus => _currentPositionStatus;
-        public MatchStatus Status => _matchStatus;
-        public PlayerInfo? CurrentPlayerInfo => CurrentPlayer?.Info;
-        public PlayerInfo? OpponentPlayerInfo => OpponentPlayer?.Info;
-        public Color? CurrentPlayerColor => CurrentPlayer?.Color;
-        public Color? OpponentPlayerColor => OpponentPlayer?.Color;
-        public Time Duration => _duration;
-        public Guid? Winner => _winner?.Id;
-        public Stack<string> Moves => new(_pgnMoveText.Reverse());
-        public IReadOnlyChessboard Chessboard => _chessboard;
-        public List<PlayerInfo> Players
-        {
-            get
-            {
-                List<PlayerInfo> players = new();
-                _players.ForEach(p => players.Add(p.Info));
-
-                return players;
-            }
-        }
-
         public void FinishWithTimeout(string? playerId = null)
         {
             _matchStatus = MatchStatus.Finished;
-            _currentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            CurrentPositionStatus = Domain.CurrentPositionStatus.Timeout;
             if (playerId is null)
             {
                 _winner = null;
@@ -145,7 +136,7 @@ namespace OpenChess.Domain
         public void FinishWithResign(string playerId)
         {
             _matchStatus = MatchStatus.Finished;
-            _currentPositionStatus = Domain.CurrentPositionStatus.Resign;
+            CurrentPositionStatus = CurrentPositionStatus.Resign;
             _winner = GetOpponentPlayerOf(playerId);
         }
 
@@ -176,17 +167,17 @@ namespace OpenChess.Domain
             _players.Add(new(player));
         }
 
-        private void CanJoinMatch(PlayerInfo playerInfo)
+        private bool CanJoinMatch(PlayerInfo player)
         {
             if (_players.Count == 2) throw new MatchException("Match is full!");
 
-            bool sameColor = GetPlayerByColor(playerInfo.Color) is not null;
-            bool sameId = GetPlayerById(playerInfo.Id.ToString()) is not null;
+            bool sameColor = GetPlayerByColor(player.Color) is not null;
+            bool sameId = GetPlayerById(player.Id.ToString()) is not null;
             if (sameColor) throw new MatchException($"Match already contains a player of same color!");
             if (sameId) throw new MatchException($"Player is already in the match!");
 
-            Guid? currentMatch = playerInfo.CurrentMatch;
-            if (currentMatch != Id && currentMatch is not null) { throw new MatchException("Player already assigned to another match!"); }
+            Guid? currentMatch = player.CurrentMatch;
+            return currentMatch == Id || currentMatch is null;
         }
 
         private Player? GetPlayerByColor(Color color)
@@ -229,13 +220,13 @@ namespace OpenChess.Domain
 
         private bool HasFirstMoveTimedOut()
         {
-            TimeSpan timeElapsed = DateTime.UtcNow - _currentTurnStartedAt;
+            TimeSpan timeElapsed = DateTime.UtcNow - CurrentTurnStartedAt;
             return timeElapsed.TotalSeconds > 30;
         }
 
         private void StartNewTurn()
         {
-            _currentTurnStartedAt = DateTime.UtcNow;
+            CurrentTurnStartedAt = DateTime.UtcNow;
         }
 
         private void SwitchTurns(Clock clock)
@@ -263,33 +254,33 @@ namespace OpenChess.Domain
 
         private void ConvertMoveToPGN(MovePlayed movePlayed, CurrentPositionStatus checkState)
         {
-            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoveText.Count, movePlayed, checkState);
-            _pgnMoveText.Push(convertedMove);
+            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoves.Count, movePlayed, checkState);
+            _pgnMoves.Add(convertedMove);
         }
         private void DeclareFirstMoveTimeoutAndFinish()
         {
             _winner = null;
-            _currentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            CurrentPositionStatus = Domain.CurrentPositionStatus.Timeout;
             _matchStatus = MatchStatus.Finished;
         }
         private void DeclareTimeoutAndFinish()
         {
             _winner = OpponentPlayer;
-            _currentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            CurrentPositionStatus = Domain.CurrentPositionStatus.Timeout;
             _matchStatus = MatchStatus.Finished;
         }
 
         private void DeclareWinnerAndFinish()
         {
             _winner = CurrentPlayer;
-            _currentPositionStatus = Domain.CurrentPositionStatus.Checkmate;
+            CurrentPositionStatus = Domain.CurrentPositionStatus.Checkmate;
             _matchStatus = MatchStatus.Finished;
         }
 
         private void DeclareDrawAndFinish()
         {
             _winner = null;
-            _currentPositionStatus = Domain.CurrentPositionStatus.Draw;
+            CurrentPositionStatus = Domain.CurrentPositionStatus.Draw;
             _matchStatus = MatchStatus.Finished;
         }
 
@@ -313,7 +304,7 @@ namespace OpenChess.Domain
 
         private void UpdateMatchStatus(CurrentPositionStatus currentPositionStatus, Clock clock)
         {
-            _currentPositionStatus = currentPositionStatus;
+            CurrentPositionStatus = currentPositionStatus;
             if (currentPositionStatus != Domain.CurrentPositionStatus.Draw && currentPositionStatus != Domain.CurrentPositionStatus.Checkmate) { SwitchTurns(clock); UpdateFenInfo(); return; }
             if (currentPositionStatus == Domain.CurrentPositionStatus.Checkmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
             if (currentPositionStatus == Domain.CurrentPositionStatus.Draw) { UpdateFenInfo(); DeclareDrawAndFinish(); return; }
