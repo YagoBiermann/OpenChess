@@ -26,7 +26,7 @@ namespace OpenChess.Application
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var playerId = (Context.User?.FindFirst(JwtRegisteredClaimNames.Sub)?.Value) ?? throw new HubException("PlayerId not found!");
+            var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("PlayerId not found!");
             await _connectionTrackingService.RemoveConnectionAsync(playerId, Context.ConnectionId);
             string? matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId);
             await _matchTrackingService.RemovePlayerFromMatchAsync(matchId!, playerId, Context.ConnectionId);
