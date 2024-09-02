@@ -16,11 +16,6 @@ namespace OpenChess.Domain
             TimeRemaining = playerInfo.TimeRemaining;
         }
 
-        public PlayerInfo Info
-        {
-            get { return new(Id, Color, TimeRemaining, CurrentMatch); }
-        }
-
         public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType())
