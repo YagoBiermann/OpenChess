@@ -5,16 +5,15 @@ namespace OpenChess.Domain
         public Guid Id { get; }
         public Color Color { get; }
         public Guid CurrentMatch { get; private set; }
-        public bool IsCurrentPlayer { get; set; }
+        public bool IsCurrentPlayer { get; set; } = false;
         public TimeSpan TimeRemaining { get; set; }
 
-        public Player(PlayerInfo info)
+        public Player(PlayerInfo playerInfo)
         {
-            Id = info.Id;
-            Color = info.Color;
-            CurrentMatch = info.CurrentMatch;
-            IsCurrentPlayer = false;
-            TimeRemaining = info.TimeRemaining;
+            Id = playerInfo.Id;
+            Color = playerInfo.Color;
+            CurrentMatch = playerInfo.CurrentMatch;
+            TimeRemaining = playerInfo.TimeRemaining;
         }
 
         public PlayerInfo Info
