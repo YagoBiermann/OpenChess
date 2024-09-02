@@ -20,12 +20,11 @@ namespace OpenChess.Domain
         public Color? CurrentPlayerColor => CurrentPlayer?.Color;
         public Color? OpponentPlayerColor => OpponentPlayer?.Color;
         public Time Duration { get; private set; }
-        public Guid? Winner => _winner?.Id;
+        public Color? Winner { get; private set; }
         public IReadOnlyChessboard Chessboard => _chessboard;
         private List<Player> _players = new(2);
         private Chessboard _chessboard { get; set; }
         private MatchStatus _matchStatus { get; set; }
-        private Player? _winner { get; set; }
         private FenInfo _fenInfo { get; set; }
         private IMoveCalculator _movesCalculator;
         private readonly List<string> _pgnMoves;
@@ -35,7 +34,7 @@ namespace OpenChess.Domain
             Id = Guid.NewGuid();
             _fenInfo = new(FenInfo.InitialPosition);
             _chessboard = new Chessboard(_fenInfo);
-            _winner = null;
+            Winner = null;
             Duration = new Time(time);
             CurrentTurnStartedAt = DateTime.MinValue;
             _pgnMoves = [];
@@ -54,7 +53,7 @@ namespace OpenChess.Domain
             var pgnMoves = matchInfo.PgnMoves;
             var status = matchInfo.Status;
             var time = matchInfo.Time;
-            var winnerId = matchInfo.WinnerId;
+            var winner = matchInfo.Winner;
             var currentTurnStartedAt = matchInfo.CurrentTurnStartedAt;
             var createdAt = matchInfo.CreatedAt;
 
@@ -78,9 +77,8 @@ namespace OpenChess.Domain
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
             CreatedAt = createdAt;
 
-            if (winnerId is null) { _winner = null; return; }
-            Player winner = GetPlayerById(winnerId.Value.ToString()) ?? throw new MatchException("Couldn't determine the winner");
-            _winner = winner;
+            if (winner is null) { Winner = null; return; }
+            Winner = winner;
         }
 
         public void Join(string playerId, int color)
@@ -123,18 +121,18 @@ namespace OpenChess.Domain
             CurrentPositionStatus = Domain.CurrentPositionStatus.Timeout;
             if (playerId is null)
             {
-                _winner = null;
+                Winner = null;
                 return;
             }
 
-            _winner = GetOpponentPlayerOf(playerId);
+            Winner = GetOpponentPlayerOf(playerId)?.Color;
         }
 
         public void FinishWithResign(string playerId)
         {
             _matchStatus = MatchStatus.Finished;
             CurrentPositionStatus = CurrentPositionStatus.Resign;
-            _winner = GetOpponentPlayerOf(playerId);
+            Winner = GetOpponentPlayerOf(playerId)?.Color;
         }
 
         public static Guid TryParseId(string id)
@@ -249,27 +247,27 @@ namespace OpenChess.Domain
         }
         private void DeclareFirstMoveTimeoutAndFinish()
         {
-            _winner = null;
-            CurrentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            Winner = null;
+            CurrentPositionStatus = CurrentPositionStatus.Timeout;
             _matchStatus = MatchStatus.Finished;
         }
         private void DeclareTimeoutAndFinish()
         {
-            _winner = OpponentPlayer;
-            CurrentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            Winner = OpponentPlayer?.Color;
+            CurrentPositionStatus = CurrentPositionStatus.Timeout;
             _matchStatus = MatchStatus.Finished;
         }
 
         private void DeclareWinnerAndFinish()
         {
-            _winner = CurrentPlayer;
-            CurrentPositionStatus = Domain.CurrentPositionStatus.Checkmate;
+            Winner = CurrentPlayer?.Color;
+            CurrentPositionStatus = CurrentPositionStatus.Checkmate;
             _matchStatus = MatchStatus.Finished;
         }
 
         private void DeclareDrawAndFinish()
         {
-            _winner = null;
+            Winner = null;
             CurrentPositionStatus = Domain.CurrentPositionStatus.Draw;
             _matchStatus = MatchStatus.Finished;
         }

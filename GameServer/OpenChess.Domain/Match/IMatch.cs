@@ -20,7 +20,7 @@ namespace OpenChess.Domain
         public Color? CurrentPlayerColor { get; }
         public Color? OpponentPlayerColor { get; }
         public Time Duration { get; }
-        public Guid? Winner { get; }
+        public Color? Winner { get; }
         public void FinishWithTimeout(string? playerId);
         public void FinishWithResign(string playerId);
         public void Play(Move move);

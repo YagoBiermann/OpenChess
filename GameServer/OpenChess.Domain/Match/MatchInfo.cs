@@ -8,11 +8,11 @@ namespace OpenChess.Domain
         public List<string> PgnMoves { get; }
         public MatchStatus Status { get; }
         public Time Time { get; }
-        public Guid? WinnerId { get; } = null;
+        public Color? Winner { get; } = null;
         public DateTime CurrentTurnStartedAt { get; }
         public DateTime CreatedAt { get; }
 
-        public MatchInfo(string matchId, List<PlayerInfo> players, string fen, List<string> pgnMoves, string status, int time, string currentTurnStartedAt, string createdAt, string? winnerId = null)
+        public MatchInfo(string matchId, List<PlayerInfo> players, string fen, List<string> pgnMoves, string status, int time, string currentTurnStartedAt, string createdAt, char? winner = null)
         {
             MatchId = Match.TryParseId(matchId);
             Players = players;
@@ -31,8 +31,8 @@ namespace OpenChess.Domain
             Time = new Time(time);
             CurrentTurnStartedAt = parsedCurrentTurnStartedAt;
             CreatedAt = parsedCreatedAt;
-            if (winnerId is null) return;
-            WinnerId = Match.TryParseId(winnerId);
+            if (winner is null) return;
+            Winner = ColorUtils.TryParseColor((char)winner);
         }
     }
 }
