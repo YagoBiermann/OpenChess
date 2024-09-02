@@ -111,7 +111,14 @@ namespace OpenChess.Domain
             _movesCalculator.ClearCache();
         }
 
+        public IReadOnlyPlayer? GetPlayerById(string id)
         {
+            return _players.Find(p => p.Id.ToString() == id);
+        }
+
+        public Dictionary<string, List<string>> CalculateMovesFromPlayer(char color)
+        {
+            throw new Exception("Not implemented yet");
         }
 
         public void FinishWithTimeout(string? playerId = null)
@@ -145,7 +152,7 @@ namespace OpenChess.Domain
         {
             if (!HasStarted()) { throw new MatchException("Match did not start yet"); }
             if (HasFinished()) { throw new MatchException("Match already finished"); }
-            Player? player = GetPlayerById(move.PlayerId.ToString()) ?? throw new MatchException("You are not in this match");
+            IReadOnlyPlayer? player = GetPlayerById(move.PlayerId.ToString()) ?? throw new MatchException("You are not in this match");
             if (!player.IsCurrentPlayer) throw new MatchException("Its not your turn!");
             if (_chessboard.GetPiece(move.Origin) is null) { throw new ChessboardException("There is no piece in this position"); };
 
@@ -170,11 +177,6 @@ namespace OpenChess.Domain
         private Player? GetPlayerByColor(Color color)
         {
             return _players.Find(p => p.Color == color);
-        }
-
-        private Player? GetPlayerById(string id)
-        {
-            return _players.Find(p => p.Id.ToString() == id);
         }
 
         private Player? GetOpponentPlayerOf(string id)

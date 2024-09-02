@@ -24,7 +24,8 @@ namespace OpenChess.Domain
         public void FinishWithTimeout(string? playerId);
         public void FinishWithResign(string playerId);
         public void Play(Move move);
-        public void Join(string playerId, int color);
+        public void Join(string playerId);
+        public IReadOnlyPlayer? GetPlayerById(string id);
         public IReadOnlyChessboard Chessboard { get; }
     }
 }
