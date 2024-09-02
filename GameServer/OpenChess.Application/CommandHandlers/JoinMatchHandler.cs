@@ -9,11 +9,9 @@ namespace OpenChess.Application
 
         public async Task<MatchInfo> Handle(JoinMatchCommand request, CancellationToken cancellationToken)
         {
-            MatchInfo matchInfo = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
-            Match match = new(matchInfo);
+            IMatch match = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
             match.Join(request.PlayerId, request.PlayerColor);
-            MatchInfo updatedMatchInfo = match.ToInfo();
-            await _matchRepository.Update(updatedMatchInfo);
+            await _matchRepository.Update(match);
 
             return updatedMatchInfo;
         }

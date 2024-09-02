@@ -2,8 +2,8 @@ namespace OpenChess.Domain
 {
     public interface IMatchRepository
     {
-        public Task<MatchInfo?> GetById(string id);
-        public Task Create(MatchInfo matchInfo);
-        public Task Update(MatchInfo matchInfo);
+        public Task<IMatch?> GetById(string id);
+        public Task Create(IMatch match);
+        public Task Update(IMatch match);
     }
 }

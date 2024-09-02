@@ -9,8 +9,7 @@ namespace OpenChess.Application
 
         public async Task Handle(TimeoutMatchCommand request, CancellationToken cancellationToken)
         {
-            MatchInfo matchInfo = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
-            Match match = new(matchInfo);
+            IMatch match = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
             match.FinishWithTimeout(request.PlayerId);
             MatchInfo updatedMatchInfo = match.ToInfo();
             await _matchRepository.Update(updatedMatchInfo);

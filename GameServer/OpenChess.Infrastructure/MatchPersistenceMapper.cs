@@ -4,7 +4,7 @@ namespace OpenChess.Infrastructure
 {
     internal static class MatchPersistenceMapper
     {
-        public static Match ToMatch(MatchPersistenceModel matchPM)
+        public static IMatch ToMatch(MatchPersistenceModel matchPM)
         {
             List<PlayerInfo> players = [];
             foreach (var playerPM in matchPM.Players)
@@ -14,11 +14,11 @@ namespace OpenChess.Infrastructure
             }
 
             MatchInfo matchInfo = new(matchPM.MatchId, players, matchPM.Fen, matchPM.PgnMoves, matchPM.Status, matchPM.Time, matchPM.CurrentTurnStartedAt, matchPM.CreatedAt, matchPM.WinnerId);
-            Match match = new(matchInfo);
+            IMatch match = new Match(matchInfo);
 
             return match;
         }
-        public static MatchPersistenceModel ToPersistenceModel(Match match)
+        public static MatchPersistenceModel ToPersistenceModel(IMatch match)
         {
             List<PlayerPersistenceModel> playerPersistenceModels = [];
             foreach (var player in match.Players)

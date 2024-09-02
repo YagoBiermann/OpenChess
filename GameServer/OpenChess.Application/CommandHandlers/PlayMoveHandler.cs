@@ -14,12 +14,11 @@ namespace OpenChess.Application
             string? storedMoveId = await _moveTrackingService.GetMoveAsync(request.MatchId, moveId.ToString());
             if (storedMoveId is not null) { return; };
 
-            MatchInfo matchInfo = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
-            Match match = new(matchInfo);
+            IMatch match = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
             _ = Guid.TryParse(request.PlayerId, out Guid playerId);
             Move move = new(playerId, Coordinate.GetInstance(request.Origin), Coordinate.GetInstance(request.Destination), request.Promoting);
             match.Play(move);
-            await _matchRepository.Update(match.ToInfo());
+            await _matchRepository.Update(match);
             await _moveTrackingService.AddMoveAsync(request.MatchId, moveId.ToString());
         }
 

@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal class Match
+    internal class Match : IMatch
     {
         public Guid Id { get; }
         public DateTime CreatedAt { get; }
