@@ -12,7 +12,7 @@ namespace OpenChess.Application
                 PlayerDTO playerDTO = new(player.Id.ToString(), (char)player.Color, player.TimeRemaining.ToString());
                 playersDTO.Add(playerDTO);
             }
-            MatchDTO matchDTO = new(match.Id.ToString(), playersDTO, match.Fen, match.CurrentPositionStatus.ToString(), match.Winner.ToString());
+            MatchDTO matchDTO = new(match.Id.ToString(), playersDTO, match.Fen, match.CurrentPositionStatus.ToString(), (char?)match.Winner);
 
             return matchDTO;
         }
