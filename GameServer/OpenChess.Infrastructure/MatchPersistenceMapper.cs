@@ -13,7 +13,7 @@ namespace OpenChess.Infrastructure
                 players.Add(player);
             }
 
-            MatchInfo matchInfo = new(matchPM.MatchId, players, matchPM.Fen, matchPM.PgnMoves, matchPM.Status, matchPM.Time, matchPM.CurrentTurnStartedAt, matchPM.CreatedAt, matchPM.WinnerId);
+            MatchInfo matchInfo = new(matchPM.MatchId, players, matchPM.Fen, matchPM.PgnMoves, matchPM.Status, matchPM.Time, matchPM.CurrentTurnStartedAt, matchPM.CreatedAt, matchPM.Winner);
             IMatch match = new Match(matchInfo);
 
             return match;
@@ -34,7 +34,7 @@ namespace OpenChess.Infrastructure
              (List<string>)match.PgnMoves,
              match.Status.ToString(),
              match.Duration,
-             match.Winner.ToString(),
+             (char?)match.Winner,
              match.CurrentTurnStartedAt.ToString(),
              match.CreatedAt.ToString()
             );
