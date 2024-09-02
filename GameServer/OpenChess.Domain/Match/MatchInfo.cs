@@ -12,21 +12,27 @@ namespace OpenChess.Domain
         public DateTime CurrentTurnStartedAt { get; }
         public DateTime CreatedAt { get; }
 
-        public MatchInfo(string matchId, List<PlayerInfo> players, string fen, Stack<string> pgnMoves, string status, int time, string currentTurnStartedAt, string createdAt, string? winnerId = null)
+        public MatchInfo(string matchId, List<PlayerInfo> players, string fen, List<string> pgnMoves, string status, int time, string currentTurnStartedAt, string createdAt, string? winnerId = null)
         {
             MatchId = Match.TryParseId(matchId);
             Players = players;
             PgnMoves = pgnMoves;
-            bool wasParsed = Enum.TryParse(status, out MatchStatus result);
-            if (!wasParsed) throw new MatchException($"The string: {status} is not a valid status");
-            Status = result;
+            bool isTurnParsed = DateTime.TryParse(currentTurnStartedAt, out DateTime parsedCurrentTurnStartedAt);
+            bool isCreatedAtParsed = DateTime.TryParse(createdAt, out DateTime parsedCreatedAt);
+            bool isStatusParsed = Enum.TryParse(status, out MatchStatus parsedMatchStatus);
+
+            if (!isTurnParsed) throw new MatchException($"The string '{currentTurnStartedAt}' is not a valid datetime.");
+            if (!isCreatedAtParsed) throw new MatchException($"The string '{CreatedAt}' is not a valid datetime.");
+            if (!isStatusParsed) throw new MatchException($"The string '{Status}' is not a valid status.");
+
+            Status = parsedMatchStatus;
             Fen = fen;
 
             Time = new Time(time);
-            CurrentTurnStartedAt = DateTime.Parse(currentTurnStartedAt);
-            CreatedAt = DateTime.Parse(createdAt);
+            CurrentTurnStartedAt = parsedCurrentTurnStartedAt;
+            CreatedAt = parsedCreatedAt;
             if (winnerId is null) return;
-            WinnerId = Match.TryParseId(winnerId!);
+            WinnerId = Match.TryParseId(winnerId);
         }
     }
 }
