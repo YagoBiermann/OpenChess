@@ -114,10 +114,7 @@ namespace OpenChess.Domain
             _movesCalculator.ClearCache();
         }
 
-        public MatchInfo ToInfo()
         {
-            List<PlayerInfo> playerInfos = _players.Select(p => p.Info).ToList();
-            return new MatchInfo(Id.ToString(), playerInfos, FenString, _pgnMoveText, _matchStatus.ToString(), (int)_duration, _currentTurnStartedAt!.ToString(), CreatedAt.ToString(), _winner?.ToString());
         }
 
         public void FinishWithTimeout(string? playerId = null)
