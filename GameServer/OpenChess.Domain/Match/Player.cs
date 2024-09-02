@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal class Player
+    internal class Player : IReadOnlyPlayer
     {
         public Guid Id { get; }
         public Color Color { get; }
