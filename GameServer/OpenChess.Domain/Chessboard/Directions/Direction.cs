@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal class Direction
+    public class Direction
     {
         private int _x { get; }
         private int _y { get; }

@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal interface IReadOnlySquare
+    public interface IReadOnlySquare
     {
         public IReadOnlyPiece? ReadOnlyPiece { get; }
         public Coordinate Coordinate { get; }

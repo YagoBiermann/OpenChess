@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal interface IEnPassantAvailability
+    public interface IEnPassantAvailability
     {
         Coordinate? EnPassantPosition { get; }
         public void ClearEnPassant();

@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal class Coordinate
+    public class Coordinate
     {
         static private HashSet<Coordinate> _cache = new();
         public char Row;

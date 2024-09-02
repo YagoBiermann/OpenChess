@@ -1,6 +1,6 @@
 namespace OpenChess.Domain
 {
-    internal interface IReadOnlyChessboard
+    public interface IReadOnlyChessboard
     {
         public ICastlingAvailability CastlingAvailability { get; }
         public IEnPassantAvailability EnPassantAvailability { get; }
