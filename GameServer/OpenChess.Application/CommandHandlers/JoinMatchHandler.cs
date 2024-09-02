@@ -13,7 +13,7 @@ namespace OpenChess.Application
             match.Join(request.PlayerId, request.PlayerColor);
             await _matchRepository.Update(match);
 
-            return updatedMatchInfo;
+            return MatchDTOMapper.ToDTO(match);
         }
     }
 }

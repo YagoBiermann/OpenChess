@@ -12,6 +12,8 @@ namespace OpenChess.Application
             IMatch match = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
             match.FinishWithResign(request.PlayerId);
             await _matchRepository.Update(match);
+
+            return MatchDTOMapper.ToDTO(match);
         }
     }
 }

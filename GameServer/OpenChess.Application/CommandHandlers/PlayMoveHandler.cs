@@ -11,7 +11,7 @@ namespace OpenChess.Application
         {
             Guid moveId = GenerateMoveId(request);
             string? storedMoveId = await _moveTrackingService.GetMoveAsync(request.MatchId, moveId.ToString());
-            if (storedMoveId is not null) { return; };
+            if (storedMoveId is not null) { return null; };
 
             IMatch match = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
             _ = Guid.TryParse(request.PlayerId, out Guid playerId);
@@ -19,6 +19,8 @@ namespace OpenChess.Application
             match.Play(move);
             await _matchRepository.Update(match);
             await _moveTrackingService.AddMoveAsync(request.MatchId, moveId.ToString());
+
+            return MatchDTOMapper.ToDTO(match);
         }
 
         private static Guid GenerateMoveId(PlayMoveCommand request)

@@ -10,10 +10,9 @@ namespace OpenChess.Application
         public async Task<MatchDTO> Handle(CreateMatchCommand request, CancellationToken cancellationToken)
         {
             Match match = new(request.Time);
-            MatchInfo matchInfo = match.ToInfo();
-            await _matchRepository.Create(matchInfo);
+            await _matchRepository.Create(match);
 
-            return matchInfo;
+            return MatchDTOMapper.ToDTO(match);
         }
     }
 }
