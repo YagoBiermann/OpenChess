@@ -19,6 +19,14 @@ namespace OpenChess.Domain
         {
             return color is Color.White ? Color.Black : Color.White;
         }
+
+        public static Color TryParseColor(string color)
+        {
+            bool isParsed = Enum.TryParse(color, out Color result);
+            if (!isParsed) throw new MatchException($"Could not parse the value: ${color} to a color!");
+            return result;
+        }
+
         public static Color TryParseColor(char color)
         {
             bool colorExists = Enum.IsDefined(typeof(Color), (int)color);
