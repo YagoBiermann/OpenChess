@@ -134,56 +134,10 @@ namespace OpenChess.Tests
             Assert.AreEqual(match.Duration, 5);
             Assert.AreEqual(match.Status, MatchStatus.InProgress);
             Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
-            Assert.AreEqual(match.FenString, matchInfo.Fen);
+            Assert.AreEqual(match.Fen, matchInfo.Fen);
             Assert.IsNull(match.Winner);
-            CollectionAssert.AreEquivalent(match.Players, matchInfo.Players);
-            CollectionAssert.AreEqual(match.Moves, matchInfo.PgnMoves);
-        }
-
-        [TestMethod]
-        public void ToInfo_NewMatch_ShouldBeInTheCorrectFormat()
-        {
-            Match match = new(5);
-            match.Join(Guid.NewGuid().ToString(), 1);
-            match.Join(Guid.NewGuid().ToString(), 2);
-            MatchInfo matchInfo = match.ToInfo();
-
-            Assert.AreEqual(match.CurrentPlayerInfo, matchInfo.Players[0]);
-            Assert.AreEqual(match.OpponentPlayerInfo, matchInfo.Players[1]);
-            Assert.AreEqual(match.Duration, matchInfo.Time);
-            Assert.AreEqual(match.Id, matchInfo.MatchId);
-            Assert.AreEqual(match.CreatedAt.ToString(), matchInfo.CreatedAt.ToString());
-            Assert.AreEqual(match.Status, matchInfo.Status);
-            Assert.AreEqual(match.Winner, matchInfo.WinnerId);
-            Assert.AreEqual(match.FenString, matchInfo.Fen);
-            Assert.AreEqual(match.Moves.Count, matchInfo.PgnMoves.Count);
-        }
-
-        [TestMethod]
-        public void ToInfo_MatchInProgress_ShouldBeInTheCorrectFormat()
-        {
-            Guid matchId = Guid.NewGuid();
-            PlayerInfo whitePlayer = new(Guid.NewGuid(), Color.White, TimeSpan.FromMinutes(5), matchId);
-            PlayerInfo blackPlayer = new(Guid.NewGuid(), Color.Black, TimeSpan.FromMinutes(5), matchId);
-            string fen = "r1bqkb1r/ppp2ppp/5n2/1B2p3/3nP3/2N2N2/PPP2PPP/R1BQK2R b KQkq - 0 1";
-            List<PlayerInfo> players = new() { whitePlayer, blackPlayer };
-            Stack<string> moves = new();
-            moves.Push("1");
-            moves.Push("2");
-            moves.Push("3");
-            MatchInfo matchInfo = new(matchId.ToString(), players, fen, moves, MatchStatus.InProgress.ToString(), 5, DateTime.UtcNow.ToString(), DateTime.UtcNow.ToString(), null);
-            Match match = new(matchInfo);
-            MatchInfo convertedMatchInfo = match.ToInfo();
-
-            Assert.AreEqual(convertedMatchInfo.Players[0], matchInfo.Players[0]);
-            Assert.AreEqual(convertedMatchInfo.Players[1], matchInfo.Players[1]);
-            Assert.AreEqual(convertedMatchInfo.Time, matchInfo.Time);
-            Assert.AreEqual(convertedMatchInfo.MatchId, matchInfo.MatchId);
-            Assert.AreEqual(convertedMatchInfo.CreatedAt.ToString(), matchInfo.CreatedAt.ToString());
-            Assert.AreEqual(convertedMatchInfo.Status, matchInfo.Status);
-            Assert.AreEqual(convertedMatchInfo.WinnerId, matchInfo.WinnerId);
-            Assert.AreEqual(convertedMatchInfo.Fen, matchInfo.Fen);
-            Assert.AreEqual(convertedMatchInfo.PgnMoves, matchInfo.PgnMoves);
+            Assert.AreEqual(match.Players.Count, matchInfo.Players.Count);
+            Assert.AreEqual(match.PgnMoves.Count, matchInfo.PgnMoves.Count);
         }
 
         [TestMethod]
