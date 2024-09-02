@@ -15,8 +15,6 @@ namespace OpenChess.Domain
         public bool HasStarted();
         public bool HasFinished();
         public MatchStatus Status { get; }
-        public IReadOnlyPlayer? CurrentPlayerInfo { get; }
-        public IReadOnlyPlayer? OpponentPlayerInfo { get; }
         public Color? CurrentPlayerColor { get; }
         public Color? OpponentPlayerColor { get; }
         public Time Duration { get; }
