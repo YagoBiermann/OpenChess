@@ -81,14 +81,13 @@ namespace OpenChess.Domain
             Winner = winner;
         }
 
-        public void Join(string playerId, int color)
+        public void Join(string playerId)
         {
-            Color playerColor = ColorUtils.TryParseColor(color);
+            Color playerColor = ColorUtils.GetRandomColor();
             if (_players.Count != 0) { playerColor = ColorUtils.GetOppositeColor(_players.First().Color); }
-            var playerGuid = TryParseId(playerId);
-            var player = new PlayerInfo(playerGuid, playerColor, TimeSpan.FromMinutes((int)Duration), Id);
-            if (!CanJoinMatch(player)) { throw new MatchException("Player already assigned to another match!"); }
-            _players.Add(new Player(player));
+            var playerInfo = new PlayerInfo(TryParseId(playerId), playerColor, TimeSpan.FromMinutes((int)Duration), Id);
+            if (!CanJoinMatch(playerInfo)) { throw new MatchException("Player already assigned to another match!"); }
+            _players.Add(new Player(playerInfo));
 
             if (_players.Count == 2) { StartMatch(); };
         }
