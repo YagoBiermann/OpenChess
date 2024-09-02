@@ -5,7 +5,7 @@ namespace OpenChess.Domain
         public Guid MatchId { get; }
         public List<PlayerInfo> Players { get; }
         public string Fen { get; }
-        public Stack<string> PgnMoves { get; }
+        public List<string> PgnMoves { get; }
         public MatchStatus Status { get; }
         public Time Time { get; }
         public Guid? WinnerId { get; } = null;
