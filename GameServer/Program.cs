@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Http.Connections;
+using Redis.OM;
 
 var builder = WebApplication.CreateBuilder(args);
 var environment = builder.Environment.EnvironmentName;
@@ -26,6 +27,7 @@ var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION
 ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString!);
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+builder.Services.AddSingleton(new RedisConnectionProvider(redis));
 builder.Services.AddTransient<IMatchRepository, MatchRepository>();
 builder.Services.AddSingleton<MoveTrackingService>();
 builder.Services.AddSingleton<ConnectionTrackingService>();
