@@ -1,43 +1,35 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using OpenChess.Domain;
-using StackExchange.Redis;
+using Redis.OM;
+using Redis.OM.Searching;
 
 namespace OpenChess.Infrastructure
 {
     internal class MatchRepository : IMatchRepository
     {
-        IConnectionMultiplexer _connection;
-        public MatchRepository(IConnectionMultiplexer connectionMultiplexer)
+        IRedisCollection<MatchPersistenceModel> _matchCollection;
+        public MatchRepository(RedisConnectionProvider provider)
         {
-            _connection = connectionMultiplexer;
+            _matchCollection = provider.RedisCollection<MatchPersistenceModel>();
         }
 
-        public async Task<MatchInfo?> GetById(string id)
+        public async Task Update(IMatch match)
         {
-            var loadedMatch = await _connection.GetDatabase().StringGetAsync(id);
-            if (!loadedMatch.HasValue) return null;
-            var restoredMatch = JsonConvert.DeserializeObject<MatchInfo>(loadedMatch!);
-            return restoredMatch;
+            MatchPersistenceModel matchPersistenceModel = MatchPersistenceMapper.ToPersistenceModel(match);
+            await _matchCollection.UpdateAsync(matchPersistenceModel);
+        }
+        public async Task Create(IMatch match)
+        {
+            MatchPersistenceModel matchPersistenceModel = MatchPersistenceMapper.ToPersistenceModel(match);
+            await _matchCollection.InsertAsync(matchPersistenceModel);
         }
 
-        public async Task Create(MatchInfo matchInfo)
+        public async Task<IMatch?> GetById(string id)
         {
-            var match = await _connection.GetDatabase().StringGetAsync(matchInfo.MatchId.ToString());
-            if (match.HasValue) throw new MatchException("Match already exists!");
-            await Update(matchInfo);
-        }
+            MatchPersistenceModel? matchRawData = await _matchCollection.FindByIdAsync(id);
+            if (matchRawData is null) return null;
+            IMatch match = MatchPersistenceMapper.ToMatch(matchRawData);
 
-        public async Task Update(MatchInfo matchInfo)
-        {
-            var converter = new StringEnumConverter();
-            string matchJSON = JsonConvert.SerializeObject(matchInfo, converter);
-            Console.WriteLine(matchJSON);
-            bool isSaved = await _connection.GetDatabase().StringSetAsync(matchInfo.MatchId.ToString(), matchJSON);
-            if (!isSaved)
-            {
-                throw new Exception("Failed to save match data.");
-            }
+            return match;
         }
     }
 }
