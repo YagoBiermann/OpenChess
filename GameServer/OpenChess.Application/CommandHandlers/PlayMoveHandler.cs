@@ -1,14 +1,13 @@
 using MediatR;
 using OpenChess.Domain;
-
 namespace OpenChess.Application
 {
-    internal class PlayMoveHandler(IMatchRepository matchRepository, MoveTrackingService moveTrackingService) : IRequestHandler<PlayMoveCommand>
+    internal class PlayMoveHandler(IMatchRepository matchRepository, MoveTrackingService moveTrackingService) : IRequestHandler<PlayMoveCommand, MatchDTO?>
     {
         private readonly IMatchRepository _matchRepository = matchRepository;
         private readonly MoveTrackingService _moveTrackingService = moveTrackingService;
 
-        public async Task Handle(PlayMoveCommand request, CancellationToken cancellationToken)
+        public async Task<MatchDTO?> Handle(PlayMoveCommand request, CancellationToken cancellationToken)
         {
             Guid moveId = GenerateMoveId(request);
             string? storedMoveId = await _moveTrackingService.GetMoveAsync(request.MatchId, moveId.ToString());

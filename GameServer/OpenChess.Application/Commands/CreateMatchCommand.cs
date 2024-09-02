@@ -3,5 +3,5 @@ using OpenChess.Domain;
 
 namespace OpenChess.Application
 {
-    public record struct CreateMatchCommand(int Time) : IRequest<MatchInfo>;
+    public record struct CreateMatchCommand(int Time) : IRequest<MatchDTO>;
 }
