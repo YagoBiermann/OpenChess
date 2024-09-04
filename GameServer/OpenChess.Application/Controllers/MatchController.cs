@@ -40,6 +40,7 @@ namespace OpenChess.Application
                 );
                 return Created(locationUrl, new { matchId = match.MatchId });
             }
+            catch (MatchException e)
             {
                 return BadRequest(e.Message);
             }
