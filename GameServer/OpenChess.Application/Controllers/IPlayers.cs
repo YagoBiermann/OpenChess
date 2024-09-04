@@ -5,7 +5,7 @@ namespace OpenChess.Application
         Task Play(string origin, string destination);
         Task CreateMatch();
         Task<JoinMatchDTO> JoinMatch(JoinMatchDTO matchDTO);
-        Task Resign(ResignDTO resignDTO);
+        Task Resign(EndGameDTO resignDTO);
         Task<string> ErrorMessage(string message);
     }
 }
