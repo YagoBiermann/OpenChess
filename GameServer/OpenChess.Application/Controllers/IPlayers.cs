@@ -6,5 +6,6 @@ namespace OpenChess.Application
         Task CreateMatch();
         Task JoinMatch();
         Task Resign();
+        Task<string> ErrorMessage(string message);
     }
 }
