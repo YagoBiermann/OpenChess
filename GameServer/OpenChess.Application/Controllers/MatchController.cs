@@ -26,11 +26,12 @@ namespace OpenChess.Application
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateMatch([FromBody] int time)
+        public async Task<IActionResult> CreateMatch([FromBody] JsonElement body)
         {
             try
             {
-                MatchInfo match = await _mediator.Send(new CreateMatchCommand(time));
+                if (!body.TryGetProperty("Time", out JsonElement timeElement) || !timeElement.TryGetInt32(out int time) || body.EnumerateObject().Count() != 1) { throw new InvalidDataException(); }
+                MatchDTO match = await _mediator.Send(new CreateMatchCommand(time));
                 var locationUrl = Url.Action(
                     action: nameof(CreateMatch),
                     controller: "Matches",
