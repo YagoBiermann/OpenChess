@@ -33,6 +33,15 @@ namespace OpenChess.Application
         }
 
         [Authorize]
+        public async Task Resign()
+        {
+            var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
+            string matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId) ?? throw new MatchException("Player is not in a match!");
+            var resignDTO = await _mediator.Send(new ResignCommand(matchId, playerId));
+            await Clients.Group(matchId).Resign(resignDTO);
+        }
+
+        [Authorize]
         public override async Task OnConnectedAsync()
         {
             var playerId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
