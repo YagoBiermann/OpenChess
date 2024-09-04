@@ -1,4 +1,4 @@
-namespace OpenChess.Domain
+namespace OpenChess.Application
 {
     public struct PlayerDTO(string id, char color, string timeRemaining)
     {

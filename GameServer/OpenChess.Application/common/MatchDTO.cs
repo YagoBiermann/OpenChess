@@ -1,4 +1,4 @@
-namespace OpenChess.Domain
+namespace OpenChess.Application
 {
     public readonly struct MatchDTO(string matchId, List<PlayerDTO> playerData, string fen, string status, char? winner)
     {
