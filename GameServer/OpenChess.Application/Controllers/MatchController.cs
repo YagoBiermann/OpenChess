@@ -56,43 +56,11 @@ namespace OpenChess.Application
         {
             try
             {
-                await IsConnectedToMatch();
-                var playerId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                await _mediator.Send(new PlayMoveCommand(matchId, playerId, origin, destination, promoting));
-                MatchInfo match = await _mediator.Send(new GetMatchCommand(matchId));
-                await _hubContext.Clients.Group(matchId).SendAsync("GameState", match);
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-                await _hubContext.Clients.Group(matchId).SendAsync("GameState", match);
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [Authorize]
-        [HttpPost("api/matches/{matchId}/actions/timeout")]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Timeout([FromRoute] string matchId)
-        {
-            try
-            {
-                await IsConnectedToMatch();
-                var playerId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                await _mediator.Send(new TimeoutMatchCommand(matchId, playerId));
-                var match = await _mediator.Send(new GetMatchCommand(matchId));
+                bool isConnected = await IsConnectedToHub(User) && await IsConnectedToMatch(User);
+                if (!isConnected) return BadRequest("Disconnected from the match");
+                var playerId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                MatchDTO? match = await _mediator.Send(new PlayMoveCommand(matchId, playerId, origin, destination, promoting));
+                if (match is null) return BadRequest();
                 await _hubContext.Clients.Group(matchId).SendAsync("GameState", match);
 
                 return Ok();
