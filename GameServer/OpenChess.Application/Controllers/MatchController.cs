@@ -40,33 +40,10 @@ namespace OpenChess.Application
                 );
                 return Created(locationUrl, new { matchId = match.MatchId });
             }
-            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-        }
-
-        [Authorize]
-        [HttpPost("api/matches/{matchId}/actions/join")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MatchInfo))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> JoinMatch(Guid matchId)
-        {
-            try
             {
-                await IsConnectedToMatch();
-                var playerId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                MatchInfo match = await _mediator.Send(new JoinMatchCommand(matchId.ToString(), playerId, 0));
-                List<string> connectionIds = await _connectionTrackingService.GetPlayerConnectionsAsync(playerId);
-                string playerConnectionId = connectionIds.First();
-                await _matchTrackingService.JoinMatchAsync(matchId.ToString(), playerId, playerConnectionId);
-                await _hubContext.Groups.AddToGroupAsync(playerConnectionId, matchId.ToString());
-
-                return Ok(new { match });
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
             }
         }
 

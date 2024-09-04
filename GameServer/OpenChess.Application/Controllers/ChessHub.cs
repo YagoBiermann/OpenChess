@@ -1,7 +1,9 @@
+using System.Reflection.Metadata;
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using OpenChess.Domain;
 
 namespace OpenChess.Application
 {
@@ -10,6 +12,25 @@ namespace OpenChess.Application
         private readonly IMediator _mediator = mediator;
         private readonly ConnectionTrackingService _connectionTrackingService = connectionTrackingService;
         private readonly MatchTrackingService _matchTrackingService = matchTrackingService;
+
+        [Authorize]
+        public async Task Join(string matchId)
+        {
+            try
+            {
+                var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
+                JoinMatchDTO matchDto = await _mediator.Send(new JoinMatchCommand(matchId, playerId));
+                List<string> connectionIds = await _connectionTrackingService.GetPlayerConnectionsAsync(playerId);
+                string playerConnectionId = connectionIds.First();
+                await _matchTrackingService.JoinMatchAsync(matchId.ToString(), playerId, playerConnectionId);
+                await Groups.AddToGroupAsync(playerConnectionId, matchId.ToString());
+                await Clients.Client(Context.ConnectionId).JoinMatch(matchDto);
+            }
+            catch (Exception e)
+            {
+                await Clients.Client(Context.ConnectionId).ErrorMessage(e.Message);
+            }
+        }
 
         [Authorize]
         public override async Task OnConnectedAsync()
