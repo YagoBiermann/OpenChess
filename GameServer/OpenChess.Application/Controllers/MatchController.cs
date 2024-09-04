@@ -72,30 +72,6 @@ namespace OpenChess.Application
             }
         }
 
-        [Authorize]
-        [EnableRateLimiting("Fixed")]
-        [HttpPost("api/matches")]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MatchInfo))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateCustomMatch([FromBody] int time, int playerColor)
-        {
-            try
-            {
-                ColorUtils.TryParseColor(playerColor);
-                var playerId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                if (string.IsNullOrEmpty(playerId)) { return BadRequest("Player ID claim not found."); }
-
-                MatchInfo match = await _mediator.Send(new CreateMatchCommand(time));
-                MatchInfo matchInfo = await _mediator.Send(new JoinMatchCommand(match.MatchId.ToString(), playerId, playerColor));
-
-                return CreatedAtAction(nameof(CreateMatch), new { id = match.MatchId }, new { match = matchInfo });
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
 
         [HttpPost("api/players")]
         [EnableRateLimiting("Fixed")]
