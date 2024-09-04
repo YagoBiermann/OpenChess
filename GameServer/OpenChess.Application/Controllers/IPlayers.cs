@@ -1,8 +1,10 @@
+using OpenChess.Domain;
+
 namespace OpenChess.Application
 {
     public interface IPlayers
     {
-        Task Play(string origin, string destination);
+        Task GameStatus(MatchDTO matchDTO);
         Task CreateMatch();
         Task<JoinMatchDTO> JoinMatch(JoinMatchDTO matchDTO);
         Task Resign(EndGameDTO resignDTO);
