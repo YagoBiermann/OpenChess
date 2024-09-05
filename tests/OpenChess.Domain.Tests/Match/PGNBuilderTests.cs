@@ -150,10 +150,10 @@ namespace OpenChess.Tests
         public void Play_PgnMoveList_ShouldAddPGNInCorrectFormatAndSequence()
         {
             Match match = new(10);
-            match.Join(Guid.NewGuid().ToString(), 1);
-            match.Join(Guid.NewGuid().ToString(), 2);
-            Guid player1Id = match.CurrentPlayerInfo!.Id;
-            Guid player2Id = match.OpponentPlayerInfo!.Id;
+            match.Join(Guid.NewGuid().ToString());
+            match.Join(Guid.NewGuid().ToString());
+            Guid player1Id = match.CurrentPlayer!.Id;
+            Guid player2Id = match.OpponentPlayer!.Id;
 
             List<Move> moves = new()
             {

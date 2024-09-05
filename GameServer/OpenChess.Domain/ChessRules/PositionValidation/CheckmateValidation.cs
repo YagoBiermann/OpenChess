@@ -5,12 +5,12 @@ namespace OpenChess.Domain
         public CheckmateValidation(Match match, IMoveCalculator movesCalculator) : base(match, movesCalculator)
         {
         }
-        
+
         public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
         {
             if (!(checkState == CurrentPositionStatus.Check || checkState == CurrentPositionStatus.DoubleCheck)) return base.ValidatePosition(checkState);
 
-            if (IsInCheckmate(_match.OpponentPlayerColor!.Value, checkState.Value)) return CurrentPositionStatus.Checkmate;
+            if (IsInCheckmate(_match.OpponentPlayer!.Color, checkState.Value)) return CurrentPositionStatus.Checkmate;
             else { return base.ValidatePosition(checkState); }
         }
 

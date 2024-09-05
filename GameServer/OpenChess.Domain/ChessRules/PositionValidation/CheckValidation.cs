@@ -7,7 +7,7 @@ namespace OpenChess.Domain
         }
         public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
         {
-            IsInCheck(_match.OpponentPlayerColor!.Value, out CurrentPositionStatus status);
+            IsInCheck(_match.OpponentPlayer!.Color, out CurrentPositionStatus status);
             return base.ValidatePosition(status);
         }
 

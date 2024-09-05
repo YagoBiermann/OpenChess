@@ -4,7 +4,7 @@ namespace OpenChess.Tests
 {
     internal static class FakeMatch
     {
-        public static MatchInfo RestoreMatch(string fen, string mId, string p1Id, string p2Id, long p1TimeRemaining, long p2TimeRemaining, string currentTurnStartedAt, int mtime = 5, string mstatus = "InProgress", string? winner = null)
+        public static MatchInfo RestoreMatch(string fen, string mId, string p1Id, string p2Id, long p1TimeRemaining, long p2TimeRemaining, string currentTurnStartedAt, int mtime = 5, string mstatus = "InProgress", char? winner = null)
         {
             string matchId = mId;
             string player1Id = p1Id;
@@ -51,7 +51,7 @@ namespace OpenChess.Tests
             string currentTurnStartedAt = DateTime.UtcNow.ToString();
             MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), time, currentTurnStartedAt, DateTime.UtcNow.ToString());
             Match match = new(matchInfo);
-            Guid currentPlayer = match.CurrentPlayerInfo!.Id;
+            Guid currentPlayer = match.CurrentPlayer!.Id;
             match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting));
 
             return match;

@@ -83,7 +83,7 @@ namespace OpenChess.Tests
         {
             Match match = FakeMatch.RestoreMatch(fen);
             IMoveCalculator movesCalculator = new MovesCalculator(match.Chessboard);
-            var kingMoves = movesCalculator.CalculateKingMoves(match.CurrentPlayerColor!.Value).SelectMany(m => m.RangeOfAttack).ToList();
+            var kingMoves = movesCalculator.CalculateKingMoves(match.CurrentPlayer!.Color).SelectMany(m => m.RangeOfAttack).ToList();
 
             CollectionAssert.AreEquivalent(GetExpectedKingMoves(testCase), kingMoves);
         }

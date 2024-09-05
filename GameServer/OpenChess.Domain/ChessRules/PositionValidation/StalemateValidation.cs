@@ -9,7 +9,7 @@ namespace OpenChess.Domain
         public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
         {
             if (checkState != CurrentPositionStatus.NotInCheck) return base.ValidatePosition(checkState);
-            Color opponentPlayer = _match.OpponentPlayerColor!.Value;
+            Color opponentPlayer = _match.OpponentPlayer!.Color;
             var opponentPieces = _match.Chessboard.GetPieces(opponentPlayer);
             List<Coordinate> moves = new();
 
