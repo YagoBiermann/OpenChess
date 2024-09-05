@@ -7,6 +7,8 @@ namespace OpenChess.Domain
         public int HalfMove { get; private set; }
         public int FullMove { get; private set; }
         public IReadOnlyList<IReadOnlyPlayer> Players => _players.AsReadOnly();
+        public IReadOnlyPlayer? CurrentPlayer { get => _currentPlayer; }
+        public IReadOnlyPlayer? OpponentPlayer { get => _opponentPlayer; }
         public IReadOnlyList<string> PgnMoves { get => _pgnMoves.AsReadOnly(); }
         public CurrentPositionStatus CurrentPositionStatus { get; private set; }
         public DateTime CurrentTurnStartedAt { get; private set; }
@@ -15,12 +17,12 @@ namespace OpenChess.Domain
         public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
         public bool HasFinished() => Status.Equals(MatchStatus.Finished);
         public MatchStatus Status => _matchStatus;
-        public Color? CurrentPlayerColor => CurrentPlayer?.Color;
-        public Color? OpponentPlayerColor => OpponentPlayer?.Color;
         public Time Duration { get; private set; }
         public Color? Winner { get; private set; }
         public IReadOnlyChessboard Chessboard => _chessboard;
         private List<Player> _players = new(2);
+        private Player? _currentPlayer { get { return (HasStarted() && !HasFinished()) ? _players.First(p => p.IsCurrentPlayer) : null; } }
+        private Player? _opponentPlayer { get { return (HasStarted() && !HasFinished()) ? _players.First(p => !p.IsCurrentPlayer) : null; } }
         private Chessboard _chessboard { get; set; }
         private MatchStatus _matchStatus { get; set; }
         private FenInfo _fenInfo { get; set; }
@@ -180,24 +182,6 @@ namespace OpenChess.Domain
         private Player? GetOpponentPlayerOf(string id)
         {
             return _players.Find(p => p.Id.ToString() != id);
-        }
-
-        private Player? CurrentPlayer
-        {
-            get
-            {
-                if (!HasStarted() || HasFinished()) return null;
-                return _players.Find(p => p.IsCurrentPlayer);
-            }
-        }
-
-        private Player? OpponentPlayer
-        {
-            get
-            {
-                if (!HasStarted() || HasFinished()) return null;
-                return _players.Find(p => !p.IsCurrentPlayer);
-            }
         }
 
         private bool IsFirstMove()
