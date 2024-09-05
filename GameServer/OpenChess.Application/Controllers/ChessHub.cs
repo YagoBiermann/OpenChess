@@ -34,12 +34,12 @@ namespace OpenChess.Application
             try
             {
                 var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
-                JoinMatchDTO matchDto = await _mediator.Send(new JoinMatchCommand(matchId, playerId));
+                JoinMatchDTO joinMatchDto = await _mediator.Send(new JoinMatchCommand(matchId, playerId));
                 List<string> connectionIds = await _connectionTrackingService.GetPlayerConnectionsAsync(playerId);
                 string playerConnectionId = connectionIds.First();
                 await _matchTrackingService.JoinMatchAsync(matchId.ToString(), playerId, playerConnectionId);
                 await Groups.AddToGroupAsync(playerConnectionId, matchId.ToString());
-                await Clients.Client(Context.ConnectionId).JoinMatch(matchDto);
+                await Clients.Client(Context.ConnectionId).JoinMatch(joinMatchDto);
             }
             catch (Exception e)
             {
@@ -55,7 +55,7 @@ namespace OpenChess.Application
                 var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
                 string matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId) ?? throw new MatchException("Player is not in a match!");
                 var resignDTO = await _mediator.Send(new ResignCommand(matchId, playerId));
-                await Clients.Group(matchId).Resign(resignDTO);
+                await Clients.Group(matchId).GameStatus(resignDTO);
             }
             catch (Exception e)
             {
@@ -71,7 +71,7 @@ namespace OpenChess.Application
                 var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
                 string matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId) ?? throw new MatchException("Player is not in a match!");
                 var matchDTO = await _mediator.Send(new TimeoutMatchCommand(matchId, playerId));
-                await Clients.Group(matchId).Timeout(matchDTO);
+                await Clients.Group(matchId).GameStatus(matchDTO);
             }
             catch (Exception e)
             {
