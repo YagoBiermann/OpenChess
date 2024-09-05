@@ -13,7 +13,7 @@ namespace OpenChess.Application
             match.Join(request.PlayerId);
             await _matchRepository.Update(match);
             char color = (char)match.GetPlayerById(request.PlayerId)!.Color;
-            var matchDto = new JoinMatchDTO(match.Id.ToString(), match.Fen, color, match.Duration);
+            var matchDto = new JoinMatchDTO(match.Fen, color, match.Duration);
 
             return matchDto;
         }
