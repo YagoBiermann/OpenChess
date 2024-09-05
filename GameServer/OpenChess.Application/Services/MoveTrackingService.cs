@@ -20,7 +20,7 @@ public class MoveTrackingService
         return moveId;
     }
 
-    public async Task AddMoveAsync(string matchId, string moveId)
+    public async Task OverwriteStoredMoveAsync(string matchId, string moveId)
     {
         var key = GetMovesKey(matchId);
         var tran = _database.CreateTransaction();

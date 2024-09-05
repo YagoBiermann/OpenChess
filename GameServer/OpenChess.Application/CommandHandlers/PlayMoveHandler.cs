@@ -18,7 +18,7 @@ namespace OpenChess.Application
             Move move = new(playerId, Coordinate.GetInstance(request.Origin), Coordinate.GetInstance(request.Destination), request.Promoting);
             match.Play(move);
             await _matchRepository.Update(match);
-            await _moveTrackingService.AddMoveAsync(request.MatchId, moveId.ToString());
+            await _moveTrackingService.OverwriteStoredMoveAsync(request.MatchId, moveId.ToString());
 
             return MatchDTOMapper.ToDTO(match);
         }
