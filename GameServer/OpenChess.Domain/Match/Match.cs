@@ -204,8 +204,10 @@ namespace OpenChess.Domain
         {
             UpdateTimeRemainingForCurrentPlayer(clock);
             StartNewTurn();
-            _currentPlayer!.IsCurrentPlayer = false;
-            _opponentPlayer!.IsCurrentPlayer = true;
+            var currentPlayer = _currentPlayer;
+            var opponentPlayer = _opponentPlayer;
+            currentPlayer!.IsCurrentPlayer = false;
+            opponentPlayer!.IsCurrentPlayer = true;
         }
 
         private void StartMatch()
