@@ -258,7 +258,7 @@ namespace OpenChess.Domain
         private void HandleIllegalPosition()
         {
             CheckValidation checkValidation = new(this, _movesCalculator);
-            if (checkValidation.IsInCheck(CurrentPlayer!.Color, out CurrentPositionStatus checkAmount)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
+            if (checkValidation.IsInCheck(CurrentPlayer!.Color)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
         }
 
         private void RestoreToLastChessboard()

@@ -62,7 +62,7 @@ namespace OpenChess.Tests
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
 
-            Assert.IsTrue(checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus));
+            Assert.IsTrue(checkValidation.IsInCheck(player));
         }
 
         [DataRow("r7/3R2k1/4P3/4K3/8/8/8/8 w - - 0 1", 'w')]
@@ -86,7 +86,7 @@ namespace OpenChess.Tests
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
 
-            Assert.IsFalse(checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus));
+            Assert.IsFalse(checkValidation.IsInCheck(player));
         }
 
         [DataRow("3b4/8/4n3/5PK1/8/k4r2/8/3r4 w - - 0 1", 'w')]
@@ -100,7 +100,7 @@ namespace OpenChess.Tests
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
-            checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus);
+            var checkStatus = checkValidation.GetCheckStatus(player);
 
             Assert.AreEqual(CurrentPositionStatus.DoubleCheck, checkStatus);
         }
@@ -116,7 +116,7 @@ namespace OpenChess.Tests
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
-            checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus);
+            var checkStatus = checkValidation.GetCheckStatus(player);
 
             Assert.AreEqual(CurrentPositionStatus.Check, checkStatus);
         }
@@ -135,7 +135,7 @@ namespace OpenChess.Tests
             Color player = Utils.ColorFromChar(color);
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
-            checkValidation.IsInCheck(player, out CurrentPositionStatus checkStatus);
+            var checkStatus = checkValidation.GetCheckStatus(player);
 
             Assert.AreEqual(CurrentPositionStatus.NotInCheck, checkStatus);
         }
