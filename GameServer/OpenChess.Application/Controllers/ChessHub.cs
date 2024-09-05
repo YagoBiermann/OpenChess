@@ -6,7 +6,7 @@ using OpenChess.Domain;
 
 namespace OpenChess.Application
 {
-    public class ChessHub(IMediator mediator, ConnectionTrackingService connectionTrackingService, MatchTrackingService matchTrackingService) : Hub<IPlayers>
+    public class ChessHub(IMediator mediator, ConnectionTrackingService connectionTrackingService, MatchTrackingService matchTrackingService) : Hub<IChessHub>
     {
         private readonly IMediator _mediator = mediator;
         private readonly ConnectionTrackingService _connectionTrackingService = connectionTrackingService;

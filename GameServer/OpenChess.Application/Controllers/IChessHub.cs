@@ -1,8 +1,6 @@
-using OpenChess.Domain;
-
 namespace OpenChess.Application
 {
-    public interface IPlayers
+    public interface IChessHub
     {
         Task GameStatus(MatchDTO matchDTO);
         Task CreateMatch();
