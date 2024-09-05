@@ -7,16 +7,22 @@ namespace OpenChess.Domain
         }
         public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
         {
-            IsInCheck(_match.OpponentPlayer!.Color, out CurrentPositionStatus status);
-            return base.ValidatePosition(status);
+            var checkStatus = GetCheckStatus(_match.OpponentPlayer!.Color);
+            return base.ValidatePosition(checkStatus);
         }
 
-        public bool IsInCheck(Color player, out CurrentPositionStatus checkState)
+        public bool IsInCheck(Color player)
+        {
+            var checkStatus = GetCheckStatus(player);
+            return checkStatus != CurrentPositionStatus.NotInCheck;
+        }
+
+        public CurrentPositionStatus GetCheckStatus(Color player)
         {
             int checkAmount = CalculateCheckAmount(player);
-            checkState = GetCheckState(checkAmount);
+            var checkStatus = GetCheckState(checkAmount);
 
-            return checkState != CurrentPositionStatus.NotInCheck;
+            return checkStatus;
         }
 
         private int CalculateCheckAmount(Color player)
