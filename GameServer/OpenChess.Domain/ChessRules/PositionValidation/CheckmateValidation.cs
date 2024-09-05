@@ -40,8 +40,7 @@ namespace OpenChess.Domain
             {
                 if (piece is King) continue;
                 if (_movesCalculator.IsPinned(piece, out bool canCaptureTheEnemyPiece)) continue;
-                List<PieceRangeOfAttack> moves = new();
-                moves.AddRange(_movesCalculator.CalculateLegalMoves(piece));
+                List<PieceRangeOfAttack> moves = [.. _movesCalculator.CalculateLegalMoves(piece)];
                 var rangeOfAttackFromAllyPiece = moves.SelectMany(m => m.RangeOfAttack).ToList();
                 if (rangeOfAttackFromAllyPiece.Intersect(positionsAvailableToSolveTheCheck).Any()) return true;
             }
