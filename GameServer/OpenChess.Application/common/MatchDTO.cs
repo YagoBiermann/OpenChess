@@ -7,7 +7,7 @@ namespace OpenChess.Application
         public string Fen { get; } = fen;
         public string Status { get; } = status;
         public char? Winner { get; } = winner;
-        public Dictionary<string, List<string>> Moves { get; }
+        public Dictionary<string, List<string>> AvailableMoves { get; }
         public string LastMove { get; }
     }
 }
