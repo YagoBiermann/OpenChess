@@ -14,6 +14,22 @@ namespace OpenChess.Application
         private readonly MatchTrackingService _matchTrackingService = matchTrackingService;
 
         [Authorize]
+        public async Task Play(string origin, string destination, string? promoting = null)
+        {
+            try
+            {
+                var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
+                string matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId) ?? throw new MatchException("Player is not in a match!");
+                MatchDTO match = await _mediator.Send(new PlayMoveCommand(matchId, playerId, origin, destination, promoting));
+                await Clients.Group(matchId).GameStatus(match);
+            }
+            catch (Exception e)
+            {
+                await Clients.Client(Context.ConnectionId).ErrorMessage(e.Message);
+            }
+        }
+
+        [Authorize]
         public async Task Join(string matchId)
         {
             try

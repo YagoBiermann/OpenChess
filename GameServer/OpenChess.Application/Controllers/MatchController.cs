@@ -44,34 +44,11 @@ namespace OpenChess.Application
             {
                 return BadRequest(e.Message);
             }
+            catch (Exception)
             {
+                return BadRequest("Invalid or missing 'time' value in the request body.");
             }
         }
-
-        [Authorize]
-        [HttpPost("api/matches/{matchId}/actions/play")]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Play([FromRoute] string matchId, [FromBody] string origin, string destination, string? promoting = null)
-        {
-            try
-            {
-                bool isConnected = await IsConnectedToHub(User) && await IsConnectedToMatch(User);
-                if (!isConnected) return BadRequest("Disconnected from the match");
-                var playerId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                MatchDTO? match = await _mediator.Send(new PlayMoveCommand(matchId, playerId, origin, destination, promoting));
-                if (match is null) return BadRequest();
-                await _hubContext.Clients.Group(matchId).SendAsync("GameState", match);
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
 
         [HttpPost("api/players")]
         [EnableRateLimiting("Fixed")]
@@ -150,17 +127,6 @@ namespace OpenChess.Application
                 ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY") ?? throw new Exception("JWT Key not set!")))
             };
-        }
-
-        private async Task<IActionResult?> IsConnectedToMatch()
-        {
-            var playerId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-            if (string.IsNullOrEmpty(playerId)) { return Unauthorized(); }
-            var isConnected = await _connectionTrackingService.IsPlayerConnectedAsync(playerId);
-            var isInMatch = await _matchTrackingService.IsPlayerInMatchAsync(playerId);
-            if (!isConnected || !isInMatch) return Unauthorized();
-
-            return null;
         }
     }
 }
