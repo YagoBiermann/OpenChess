@@ -1,9 +1,8 @@
 namespace OpenChess.Application
 {
-    public readonly struct MatchDTO(string matchId, List<PlayerDTO> playerData, string fen, string status, char? winner)
+    public readonly struct MatchDTO(string timeRemaining, string fen, string status, char? winner)
     {
-        public string MatchId { get; } = matchId;
-        public List<PlayerDTO> Players { get; } = playerData;
+        public string TimeRemaining { get; } = timeRemaining;
         public string Fen { get; } = fen;
         public string Status { get; } = status;
         public char? Winner { get; } = winner;
