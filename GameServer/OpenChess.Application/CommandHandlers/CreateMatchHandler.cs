@@ -3,16 +3,16 @@ using OpenChess.Domain;
 
 namespace OpenChess.Application
 {
-    internal class CreateMatchHandler : IRequestHandler<CreateMatchCommand, MatchDTO>
+    internal class CreateMatchHandler : IRequestHandler<CreateMatchCommand, string>
     {
         private readonly IMatchRepository _matchRepository;
         public CreateMatchHandler(IMatchRepository matchRepository) { _matchRepository = matchRepository; }
-        public async Task<MatchDTO> Handle(CreateMatchCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreateMatchCommand request, CancellationToken cancellationToken)
         {
             Match match = new(request.Time);
             await _matchRepository.Create(match);
 
-            return MatchDTOMapper.ToDTO(match);
+            return match.Id.ToString();
         }
     }
 }
