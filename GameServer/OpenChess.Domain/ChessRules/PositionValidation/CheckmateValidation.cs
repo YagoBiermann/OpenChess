@@ -16,8 +16,7 @@ namespace OpenChess.Domain
 
         private bool IsInCheckmate(Color player, CurrentPositionStatus checkState)
         {
-            if (CanCheckBeSolved(player, checkState)) return false;
-            return true;
+            return !CanCheckBeSolved(player, checkState);
         }
 
         private bool CanCheckBeSolved(Color player, CurrentPositionStatus checkState)
