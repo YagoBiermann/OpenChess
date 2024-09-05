@@ -2,16 +2,16 @@ using MediatR;
 using OpenChess.Domain;
 namespace OpenChess.Application
 {
-    internal class PlayMoveHandler(IMatchRepository matchRepository, MoveTrackingService moveTrackingService) : IRequestHandler<PlayMoveCommand, MatchDTO?>
+    internal class PlayMoveHandler(IMatchRepository matchRepository, MoveTrackingService moveTrackingService) : IRequestHandler<PlayMoveCommand, MatchDTO>
     {
         private readonly IMatchRepository _matchRepository = matchRepository;
         private readonly MoveTrackingService _moveTrackingService = moveTrackingService;
 
-        public async Task<MatchDTO?> Handle(PlayMoveCommand request, CancellationToken cancellationToken)
+        public async Task<MatchDTO> Handle(PlayMoveCommand request, CancellationToken cancellationToken)
         {
             Guid moveId = GenerateMoveId(request);
             string? storedMoveId = await _moveTrackingService.GetMoveAsync(request.MatchId, moveId.ToString());
-            if (storedMoveId is not null) { return null; };
+            if (storedMoveId is not null) { throw new MatchException("Move already processed"); };
 
             IMatch match = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
             _ = Guid.TryParse(request.PlayerId, out Guid playerId);
