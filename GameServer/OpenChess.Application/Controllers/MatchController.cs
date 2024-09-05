@@ -5,10 +5,11 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.RateLimiting;
+using System.Text.Json;
+
 namespace OpenChess.Application
 {
     [ApiController]
@@ -31,14 +32,14 @@ namespace OpenChess.Application
             try
             {
                 if (!body.TryGetProperty("Time", out JsonElement timeElement) || !timeElement.TryGetInt32(out int time) || body.EnumerateObject().Count() != 1) { throw new InvalidDataException(); }
-                MatchDTO match = await _mediator.Send(new CreateMatchCommand(time));
+                string matchId = await _mediator.Send(new CreateMatchCommand(time));
                 var locationUrl = Url.Action(
                     action: nameof(CreateMatch),
                     controller: "Matches",
-                    values: new { id = match.MatchId },
+                    values: new { id = matchId },
                     protocol: Request.Scheme
                 );
-                return Created(locationUrl, new { matchId = match.MatchId });
+                return Created(locationUrl, new { matchId });
             }
             catch (MatchException e)
             {
