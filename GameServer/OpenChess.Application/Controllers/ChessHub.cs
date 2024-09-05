@@ -1,4 +1,3 @@
-using System.Reflection.Metadata;
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -51,19 +50,33 @@ namespace OpenChess.Application
         [Authorize]
         public async Task Resign()
         {
-            var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
-            string matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId) ?? throw new MatchException("Player is not in a match!");
-            var resignDTO = await _mediator.Send(new ResignCommand(matchId, playerId));
-            await Clients.Group(matchId).Resign(resignDTO);
+            try
+            {
+                var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
+                string matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId) ?? throw new MatchException("Player is not in a match!");
+                var resignDTO = await _mediator.Send(new ResignCommand(matchId, playerId));
+                await Clients.Group(matchId).Resign(resignDTO);
+            }
+            catch (Exception e)
+            {
+                await Clients.Client(Context.ConnectionId).ErrorMessage(e.Message);
+            }
         }
 
         [Authorize]
         public async Task Timeout()
         {
-            var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
-            string matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId) ?? throw new MatchException("Player is not in a match!");
-            var matchDTO = await _mediator.Send(new TimeoutMatchCommand(matchId, playerId));
-            await Clients.Group(matchId).Timeout(matchDTO);
+            try
+            {
+                var playerId = (Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value) ?? throw new HubException("Player not authenticated.");
+                string matchId = await _matchTrackingService.GetMatchIdFromPlayerAsync(playerId) ?? throw new MatchException("Player is not in a match!");
+                var matchDTO = await _mediator.Send(new TimeoutMatchCommand(matchId, playerId));
+                await Clients.Group(matchId).Timeout(matchDTO);
+            }
+            catch (Exception e)
+            {
+                await Clients.Client(Context.ConnectionId).ErrorMessage(e.Message);
+            }
         }
 
         [Authorize]
