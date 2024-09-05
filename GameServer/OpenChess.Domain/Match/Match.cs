@@ -204,10 +204,8 @@ namespace OpenChess.Domain
         {
             UpdateTimeRemainingForCurrentPlayer(clock);
             StartNewTurn();
-            var currentPlayer = CurrentPlayer;
-            var opponentPlayer = OpponentPlayer;
-            currentPlayer!.IsCurrentPlayer = false;
-            opponentPlayer!.IsCurrentPlayer = true;
+            _currentPlayer!.IsCurrentPlayer = false;
+            _opponentPlayer!.IsCurrentPlayer = true;
         }
 
         private void StartMatch()
@@ -258,7 +256,7 @@ namespace OpenChess.Domain
         private void HandleIllegalPosition()
         {
             CheckValidation checkValidation = new(this, _movesCalculator);
-            if (checkValidation.IsInCheck(CurrentPlayerColor!.Value, out CurrentPositionStatus checkAmount)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
+            if (checkValidation.IsInCheck(CurrentPlayer!.Color, out CurrentPositionStatus checkAmount)) { RestoreToLastChessboard(); throw new ChessboardException("Invalid move!"); }
         }
 
         private void RestoreToLastChessboard()
@@ -283,7 +281,7 @@ namespace OpenChess.Domain
 
         private void UpdateFenInfo()
         {
-            string fenString = FenInfo.BuildFenString(this, CurrentPlayer!);
+            string fenString = FenInfo.BuildFenString(this, _currentPlayer!);
             _fenInfo = new(fenString);
         }
 
@@ -291,12 +289,12 @@ namespace OpenChess.Domain
         {
             bool noCaptureAndNoPawnMoved = lastMovePlayed.PieceCaptured is null && !lastMovePlayed.MoveType.Equals(MoveType.PawnMove);
             if (noCaptureAndNoPawnMoved) HalfMove++; else HalfMove = 0;
-            if (CurrentPlayerColor == Color.Black) FullMove++;
+            if (CurrentPlayer!.Color == Color.Black) FullMove++;
         }
 
         private void UpdateTimeRemainingForCurrentPlayer(Clock clock)
         {
-            CurrentPlayer!.TimeRemaining = clock.CalculateTimeRemainingForCurrentPlayer();
+            _currentPlayer!.TimeRemaining = clock.CalculateTimeRemainingForCurrentPlayer();
         }
 
         private IMoveHandler SetupMoveHandlerChain()
