@@ -32,7 +32,7 @@ namespace OpenChess.Infrastructure
              playerPersistenceModels,
              match.Fen,
              (List<string>)match.PgnMoves,
-             match.Status.ToString(),
+             match.GameStatus.ToString(),
              match.Duration,
              (char?)match.Winner,
              match.CurrentTurnStartedAt.ToString(),

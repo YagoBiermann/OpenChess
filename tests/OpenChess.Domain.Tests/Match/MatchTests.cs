@@ -52,7 +52,7 @@ namespace OpenChess.Tests
             Thread.Sleep(35000);
             match.Play(new(match.CurrentPlayer!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")));
 
-            Assert.AreEqual(match.Status, MatchStatus.Finished);
+            Assert.AreEqual(match.GameStatus, GameStatus.Finished);
             Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
         }
 
@@ -67,7 +67,7 @@ namespace OpenChess.Tests
             Thread.Sleep(35000);
             match.Play(new(match.CurrentPlayer.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5")));
 
-            Assert.AreEqual(match.Status, MatchStatus.Finished);
+            Assert.AreEqual(match.GameStatus, GameStatus.Finished);
             Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
         }
 
@@ -121,7 +121,7 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(match.Id, matchInfo.MatchId);
             Assert.AreEqual(match.Duration, 5);
-            Assert.AreEqual(match.Status, MatchStatus.InProgress);
+            Assert.AreEqual(match.GameStatus, GameStatus.InProgress);
             Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
             Assert.AreEqual(match.Fen, matchInfo.Fen);
             Assert.IsNull(match.Winner);

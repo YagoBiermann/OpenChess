@@ -31,7 +31,7 @@ namespace OpenChess.Tests
             PlayerInfo player1 = new(player1Id, 'w', matchId, fiveMinutes);
             PlayerInfo player2 = new(player2Id, 'b', matchId, fiveMinutes);
             List<PlayerInfo> players = new() { player1, player2 };
-            var status = MatchStatus.InProgress.ToString();
+            var status = GameStatus.InProgress.ToString();
             var time = 5;
             var pgnMoves = new List<string>();
             string currentTurnStartedAt = DateTime.UtcNow.ToString();
@@ -49,7 +49,7 @@ namespace OpenChess.Tests
             PlayerInfo player2 = new(Guid.NewGuid().ToString(), 'b', matchId, fiveMinutes);
             List<PlayerInfo> players = [player1, player2];
             string currentTurnStartedAt = DateTime.UtcNow.ToString();
-            MatchInfo matchInfo = new(matchId, players, fen, new(), MatchStatus.InProgress.ToString(), time, currentTurnStartedAt, DateTime.UtcNow.ToString());
+            MatchInfo matchInfo = new(matchId, players, fen, new(), GameStatus.InProgress.ToString(), time, currentTurnStartedAt, DateTime.UtcNow.ToString());
             Match match = new(matchInfo);
             Guid currentPlayer = match.CurrentPlayer!.Id;
             match.Play(new(currentPlayer, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination), promoting));

@@ -14,10 +14,10 @@ namespace OpenChess.Domain
         public GameResult GameResult { get; private set; }
         public DateTime CurrentTurnStartedAt { get; private set; }
         public string Fen { get => _fenInfo.ToString(); }
-        public bool HasNotStarted() => Status.Equals(MatchStatus.NotStarted);
-        public bool HasStarted() => Status.Equals(MatchStatus.InProgress);
-        public bool HasFinished() => Status.Equals(MatchStatus.Finished);
-        public MatchStatus Status => _matchStatus;
+        public bool HasNotStarted() => GameStatus.Equals(GameStatus.NotStarted);
+        public bool HasStarted() => GameStatus.Equals(GameStatus.InProgress);
+        public bool HasFinished() => GameStatus.Equals(GameStatus.Finished);
+        public GameStatus GameStatus => _gameStatus;
         public Time Duration { get; private set; }
         public Color? Winner { get; private set; }
         public IReadOnlyChessboard Chessboard => _chessboard;
@@ -25,7 +25,7 @@ namespace OpenChess.Domain
         private Player? _currentPlayer { get { return (HasStarted() && !HasFinished()) ? _players.First(p => p.IsCurrentPlayer) : null; } }
         private Player? _opponentPlayer { get { return (HasStarted() && !HasFinished()) ? _players.First(p => !p.IsCurrentPlayer) : null; } }
         private Chessboard _chessboard { get; set; }
-        private MatchStatus _matchStatus { get; set; }
+        private GameStatus _gameStatus { get; set; }
         private FenInfo _fenInfo { get; set; }
         private IMoveCalculator _movesCalculator;
         private readonly List<string> _pgnMoves;
@@ -52,7 +52,7 @@ namespace OpenChess.Domain
             var players = matchInfo.Players;
             var fen = matchInfo.Fen;
             var pgnMoves = matchInfo.PgnMoves;
-            var status = matchInfo.Status;
+            var status = matchInfo.GameStatus;
             var time = matchInfo.Time;
             var winner = matchInfo.Winner;
             var currentTurnStartedAt = matchInfo.CurrentTurnStartedAt;
@@ -70,7 +70,7 @@ namespace OpenChess.Domain
             _chessboard = new Chessboard(_fenInfo);
             _movesCalculator = new MovesCalculator(_chessboard);
             _pgnMoves = pgnMoves;
-            _matchStatus = status;
+            _gameStatus = status;
             Duration = time;
             CurrentTurnStartedAt = currentTurnStartedAt;
             CurrentPositionStatus = CurrentPositionStatus.Undefined;
@@ -124,7 +124,7 @@ namespace OpenChess.Domain
 
         public void FinishWithTimeout(string? playerId = null)
         {
-            _matchStatus = MatchStatus.Finished;
+            _gameStatus = GameStatus.Finished;
             CurrentPositionStatus = Domain.CurrentPositionStatus.Timeout;
             if (playerId is null)
             {
@@ -137,7 +137,7 @@ namespace OpenChess.Domain
 
         public void FinishWithResign(string playerId)
         {
-            _matchStatus = MatchStatus.Finished;
+            _gameStatus = GameStatus.Finished;
             CurrentPositionStatus = CurrentPositionStatus.Resign;
             Winner = GetOpponentPlayerOf(playerId)?.Color;
         }
@@ -214,7 +214,7 @@ namespace OpenChess.Domain
         private void StartMatch()
         {
             SetCurrentPlayer();
-            _matchStatus = MatchStatus.InProgress;
+            _gameStatus = GameStatus.InProgress;
             StartNewTurn();
         }
 
@@ -233,27 +233,27 @@ namespace OpenChess.Domain
         {
             Winner = null;
             CurrentPositionStatus = CurrentPositionStatus.Timeout;
-            _matchStatus = MatchStatus.Finished;
+            _gameStatus = GameStatus.Finished;
         }
         private void DeclareTimeoutAndFinish()
         {
             Winner = OpponentPlayer?.Color;
             CurrentPositionStatus = CurrentPositionStatus.Timeout;
-            _matchStatus = MatchStatus.Finished;
+            _gameStatus = GameStatus.Finished;
         }
 
         private void DeclareWinnerAndFinish()
         {
             Winner = CurrentPlayer?.Color;
             CurrentPositionStatus = CurrentPositionStatus.Checkmate;
-            _matchStatus = MatchStatus.Finished;
+            _gameStatus = GameStatus.Finished;
         }
 
         private void DeclareDrawAndFinish()
         {
             Winner = null;
             CurrentPositionStatus = Domain.CurrentPositionStatus.Draw;
-            _matchStatus = MatchStatus.Finished;
+            _gameStatus = GameStatus.Finished;
         }
 
         private void HandleIllegalPosition()
