@@ -316,13 +316,13 @@ namespace OpenChess.Domain
             _movesCalculator.CalculateAndCacheAllMoves();
             var moveCounterValidation = new MoveCounterValidation(this);
             var checkValidation = new CheckValidation(this, _movesCalculator);
-            var checkmateValidation = new CheckmateValidation(this, _movesCalculator);
+            var checkmateValidation = new CheckmateValidation(this, _movesCalculator, checkValidation);
             var stalemateValidation = new StalemateValidation(this, _movesCalculator);
             var deadPositionValidation = new DeadPositionValidation(this, _movesCalculator);
 
-            moveCounterValidation.SetNext(checkValidation);
-            checkValidation.SetNext(checkmateValidation);
-            checkmateValidation.SetNext(stalemateValidation);
+            moveCounterValidation.SetNext(checkmateValidation);
+            checkmateValidation.SetNext(checkValidation);
+            checkValidation.SetNext(stalemateValidation);
             stalemateValidation.SetNext(deadPositionValidation);
 
             return moveCounterValidation;
