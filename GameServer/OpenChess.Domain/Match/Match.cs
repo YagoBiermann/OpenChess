@@ -11,6 +11,7 @@ namespace OpenChess.Domain
         public IReadOnlyPlayer? OpponentPlayer { get => _opponentPlayer; }
         public IReadOnlyList<string> PgnMoves { get => _pgnMoves.AsReadOnly(); }
         public CurrentPositionStatus CurrentPositionStatus { get; private set; }
+        public GameStatus GameStatus { get; private set; }
         public DateTime CurrentTurnStartedAt { get; private set; }
         public string Fen { get => _fenInfo.ToString(); }
         public bool HasNotStarted() => Status.Equals(MatchStatus.NotStarted);
