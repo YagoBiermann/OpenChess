@@ -11,10 +11,10 @@ namespace OpenChess.Domain
         public bool IsInCheck(Color player)
         {
             var checkStatus = GetCheckStatus(player);
-            return checkStatus != CurrentPositionStatus.NotInCheck;
+            return checkStatus != CheckStatus.NotInCheck;
         }
 
-        public CurrentPositionStatus GetCheckStatus(Color player)
+        public CheckStatus GetCheckStatus(Color player)
         {
             int checkAmount = CalculateCheckAmount(player);
             var checkStatus = GetCheckState(checkAmount);
@@ -32,13 +32,13 @@ namespace OpenChess.Domain
             return checkAmount;
         }
 
-        private static CurrentPositionStatus GetCheckState(int checkAmount)
+        private static CheckStatus GetCheckState(int checkAmount)
         {
             return checkAmount switch
             {
-                0 => CurrentPositionStatus.NotInCheck,
-                1 => CurrentPositionStatus.Check,
-                2 => CurrentPositionStatus.DoubleCheck,
+                0 => CheckStatus.NotInCheck,
+                1 => CheckStatus.Check,
+                2 => CheckStatus.DoubleCheck,
                 _ => throw new MatchException("The game could not compute the current check state")
             };
         }

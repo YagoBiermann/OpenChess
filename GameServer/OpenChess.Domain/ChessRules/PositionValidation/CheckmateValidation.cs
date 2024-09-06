@@ -1,27 +1,25 @@
 namespace OpenChess.Domain
 {
-    internal class CheckmateValidation : PositionValidation
+    internal class CheckmateValidation(Match match, IMoveCalculator movesCalculator, CheckValidation checkValidation) : PositionValidation(match, movesCalculator)
     {
-        public CheckmateValidation(Match match, IMoveCalculator movesCalculator) : base(match, movesCalculator)
-        {
-        }
+        private CheckValidation _checkValidation = checkValidation;
 
         public override CurrentPositionStatus ValidatePosition()
         {
-            if (!(checkState == CurrentPositionStatus.Check || checkState == CurrentPositionStatus.DoubleCheck)) return base.ValidatePosition(checkState);
-
-            if (IsInCheckmate(_match.OpponentPlayer!.Color, checkState.Value)) return CurrentPositionStatus.Checkmate;
-            else { return base.ValidatePosition(checkState); }
+            CheckStatus checkStatus = _checkValidation.GetCheckStatus(_match.OpponentPlayer!.Color);
+            if (checkStatus == CheckStatus.NotInCheck) return base.ValidatePosition();
+            if (IsInCheckmate(_match.OpponentPlayer!.Color, checkStatus)) return CurrentPositionStatus.Checkmate;
+            else { return base.ValidatePosition(); }
         }
 
-        private bool IsInCheckmate(Color player, CurrentPositionStatus checkState)
+        private bool IsInCheckmate(Color player, CheckStatus checkStatus)
         {
-            return !CanCheckBeSolved(player, checkState);
+            return !CanCheckBeSolved(player, checkStatus);
         }
 
-        private bool CanCheckBeSolved(Color player, CurrentPositionStatus checkState)
+        private bool CanCheckBeSolved(Color player, CheckStatus checkStatus)
         {
-            if (checkState == CurrentPositionStatus.DoubleCheck) return CanSolveByMovingTheKing(player);
+            if (checkStatus == CheckStatus.DoubleCheck) return CanSolveByMovingTheKing(player);
             return CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(player) || CanSolveByMovingTheKing(player);
         }
 

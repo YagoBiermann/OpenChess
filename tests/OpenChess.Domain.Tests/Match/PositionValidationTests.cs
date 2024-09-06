@@ -102,7 +102,7 @@ namespace OpenChess.Tests
             CheckValidation checkValidation = new(match, moveCalculator);
             var checkStatus = checkValidation.GetCheckStatus(player);
 
-            Assert.AreEqual(CurrentPositionStatus.DoubleCheck, checkStatus);
+            Assert.AreEqual(CheckStatus.DoubleCheck, checkStatus);
         }
 
         [DataRow("rn1qkb1r/ppp2pp1/5n1p/1B1p2B1/3P2b1/4P1P1/PP3P1P/RN1QK1NR b KQkq - 0 1", 'b')]
@@ -118,7 +118,7 @@ namespace OpenChess.Tests
             CheckValidation checkValidation = new(match, moveCalculator);
             var checkStatus = checkValidation.GetCheckStatus(player);
 
-            Assert.AreEqual(CurrentPositionStatus.Check, checkStatus);
+            Assert.AreEqual(CheckStatus.Check, checkStatus);
         }
 
         [DataRow("3bk3/5P2/4P3/4K3/8/8/4B3/8 w - - 0 1", 'w')]
@@ -137,7 +137,7 @@ namespace OpenChess.Tests
             CheckValidation checkValidation = new(match, moveCalculator);
             var checkStatus = checkValidation.GetCheckStatus(player);
 
-            Assert.AreEqual(CurrentPositionStatus.NotInCheck, checkStatus);
+            Assert.AreEqual(CheckStatus.NotInCheck, checkStatus);
         }
 
         [DataRow("2N5/k7/8/2Q5/7p/8/8/4K3 b - - 0 1", "A7", "B7")]
