@@ -6,7 +6,7 @@ namespace OpenChess.Domain
         {
         }
 
-        public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
+        public override CurrentPositionStatus ValidatePosition()
         {
             if (!(checkState == CurrentPositionStatus.Check || checkState == CurrentPositionStatus.DoubleCheck)) return base.ValidatePosition(checkState);
 

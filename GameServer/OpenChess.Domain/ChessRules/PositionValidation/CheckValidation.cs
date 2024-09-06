@@ -1,14 +1,11 @@
 namespace OpenChess.Domain
 {
-    internal class CheckValidation : PositionValidation
+    internal class CheckValidation(Match match, IMoveCalculator movesCalculator) : PositionValidation(match, movesCalculator)
     {
-        public CheckValidation(Match match, IMoveCalculator movesCalculator) : base(match, movesCalculator)
+        public override CurrentPositionStatus ValidatePosition()
         {
-        }
-        public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
-        {
-            var checkStatus = GetCheckStatus(_match.OpponentPlayer!.Color);
-            return base.ValidatePosition(checkStatus);
+            if (IsInCheck(_match.OpponentPlayer!.Color)) return CurrentPositionStatus.Check;
+            else { return base.ValidatePosition(); }
         }
 
         public bool IsInCheck(Color player)

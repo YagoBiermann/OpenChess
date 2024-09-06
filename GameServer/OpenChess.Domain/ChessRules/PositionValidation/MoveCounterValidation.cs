@@ -15,7 +15,7 @@ namespace OpenChess.Domain
             return validation;
         }
 
-        public CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
+        public CurrentPositionStatus ValidatePosition()
         {
             bool halfMoveCounterHits100 = _match.HalfMove == 100;
             if (halfMoveCounterHits100) return CurrentPositionStatus.Draw;

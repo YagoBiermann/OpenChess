@@ -1,14 +1,9 @@
 namespace OpenChess.Domain
 {
-    internal class StalemateValidation : PositionValidation
+    internal class StalemateValidation(Match match, IMoveCalculator movesCalculator) : PositionValidation(match, movesCalculator)
     {
-        public StalemateValidation(Match match, IMoveCalculator movesCalculator) : base(match, movesCalculator)
+        public override CurrentPositionStatus ValidatePosition()
         {
-        }
-
-        public override CurrentPositionStatus ValidatePosition(CurrentPositionStatus? checkState = null)
-        {
-            if (checkState != CurrentPositionStatus.NotInCheck) return base.ValidatePosition(checkState);
             Color opponentPlayer = _match.OpponentPlayer!.Color;
             var opponentPieces = _match.Chessboard.GetPieces(opponentPlayer);
             List<Coordinate> moves = new();
@@ -25,7 +20,7 @@ namespace OpenChess.Domain
             }
 
             if (!moves.Any()) return CurrentPositionStatus.Draw;
-            else return base.ValidatePosition(checkState);
+            else return base.ValidatePosition();
         }
     }
 }
