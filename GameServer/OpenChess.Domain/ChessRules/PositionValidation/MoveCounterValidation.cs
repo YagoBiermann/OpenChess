@@ -15,10 +15,10 @@ namespace OpenChess.Domain
             return validation;
         }
 
-        public CurrentPositionStatus ValidatePosition()
+        public Status ValidatePosition()
         {
             bool halfMoveCounterHits100 = _match.HalfMove == 100;
-            if (halfMoveCounterHits100) return CurrentPositionStatus.Draw;
+            if (halfMoveCounterHits100) return new(GameStatus.Finished, GameResult.Draw, CheckStatus.NotInCheck);
             else return _next!.ValidatePosition();
         }
     }

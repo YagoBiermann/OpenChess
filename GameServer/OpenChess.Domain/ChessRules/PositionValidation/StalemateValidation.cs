@@ -2,11 +2,11 @@ namespace OpenChess.Domain
 {
     internal class StalemateValidation(Match match, IMoveCalculator movesCalculator) : PositionValidation(match, movesCalculator)
     {
-        public override CurrentPositionStatus ValidatePosition()
+        public override Status ValidatePosition()
         {
             Color opponentPlayer = _match.OpponentPlayer!.Color;
             var opponentPieces = _match.Chessboard.GetPieces(opponentPlayer);
-            List<Coordinate> moves = new();
+            List<Coordinate> moves = [];
 
             foreach (var piece in opponentPieces)
             {
@@ -19,7 +19,7 @@ namespace OpenChess.Domain
                 moves.AddRange(_movesCalculator.CalculateLegalMoves(piece).SelectMany(m => m.RangeOfAttack));
             }
 
-            if (!moves.Any()) return CurrentPositionStatus.Draw;
+            if (moves.Count == 0) return new(GameStatus.Finished, GameResult.Draw, CheckStatus.NotInCheck);
             else return base.ValidatePosition();
         }
     }

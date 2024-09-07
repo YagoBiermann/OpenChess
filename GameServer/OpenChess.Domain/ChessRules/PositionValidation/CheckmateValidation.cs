@@ -4,11 +4,11 @@ namespace OpenChess.Domain
     {
         private CheckValidation _checkValidation = checkValidation;
 
-        public override CurrentPositionStatus ValidatePosition()
+        public override Status ValidatePosition()
         {
             CheckStatus checkStatus = _checkValidation.GetCheckStatus(_match.OpponentPlayer!.Color);
             if (checkStatus == CheckStatus.NotInCheck) return base.ValidatePosition();
-            if (IsInCheckmate(_match.OpponentPlayer!.Color, checkStatus)) return CurrentPositionStatus.Checkmate;
+            if (IsInCheckmate(_match.OpponentPlayer!.Color, checkStatus)) return new(GameStatus.Finished, GameResult.Checkmate, checkStatus);
             else { return base.ValidatePosition(); }
         }
 

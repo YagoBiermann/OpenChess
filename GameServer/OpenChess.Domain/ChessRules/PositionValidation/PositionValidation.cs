@@ -12,9 +12,9 @@ namespace OpenChess.Domain
             return _next;
         }
 
-        public virtual CurrentPositionStatus ValidatePosition()
+        public virtual Status ValidatePosition()
         {
-            if (_next is null) { return CurrentPositionStatus.NotInCheck; }
+            if (_next is null) { return new(GameStatus.InProgress, GameResult.None, CheckStatus.NotInCheck); }
             else { return _next.ValidatePosition(); }
         }
     }

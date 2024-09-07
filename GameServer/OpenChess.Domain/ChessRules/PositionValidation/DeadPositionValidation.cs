@@ -6,10 +6,10 @@ namespace OpenChess.Domain
         {
         }
 
-        public override CurrentPositionStatus ValidatePosition()
+        public override Status ValidatePosition()
         {
             List<IReadOnlyPiece> allPieces = _match.Chessboard.GetAllPieces();
-            if (HasOnlyKings(allPieces) || HasOnlyBishopsInSameTile(allPieces, _match) || HasOnlyKnight(allPieces)) { return CurrentPositionStatus.Draw; }
+            if (HasOnlyKings(allPieces) || HasOnlyBishopsInSameTile(allPieces, _match) || HasOnlyKnight(allPieces)) { return new(GameStatus.Finished, GameResult.Draw, CheckStatus.NotInCheck); }
 
             return base.ValidatePosition();
         }

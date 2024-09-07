@@ -2,9 +2,11 @@ namespace OpenChess.Domain
 {
     internal class CheckValidation(Match match, IMoveCalculator movesCalculator) : PositionValidation(match, movesCalculator)
     {
-        public override CurrentPositionStatus ValidatePosition()
+        public override Status ValidatePosition()
         {
-            if (IsInCheck(_match.OpponentPlayer!.Color)) return CurrentPositionStatus.Check;
+            CheckStatus checkStatus = GetCheckStatus(_match.OpponentPlayer!.Color);
+            bool isInCheck = checkStatus != CheckStatus.NotInCheck;
+            if (isInCheck) return new(GameStatus.InProgress, GameResult.None, checkStatus);
             else { return base.ValidatePosition(); }
         }
 
@@ -17,7 +19,7 @@ namespace OpenChess.Domain
         public CheckStatus GetCheckStatus(Color player)
         {
             int checkAmount = CalculateCheckAmount(player);
-            var checkStatus = GetCheckState(checkAmount);
+            var checkStatus = ParseCheckAmountToCheckStatus(checkAmount);
 
             return checkStatus;
         }
@@ -32,7 +34,7 @@ namespace OpenChess.Domain
             return checkAmount;
         }
 
-        private static CheckStatus GetCheckState(int checkAmount)
+        private static CheckStatus ParseCheckAmountToCheckStatus(int checkAmount)
         {
             return checkAmount switch
             {

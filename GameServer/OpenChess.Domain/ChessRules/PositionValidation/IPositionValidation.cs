@@ -2,7 +2,7 @@ namespace OpenChess.Domain
 {
     internal interface IPositionValidation
     {
-        public CurrentPositionStatus ValidatePosition();
+        public Status ValidatePosition();
         public IPositionValidation SetNext(IPositionValidation validation);
     }
 }
