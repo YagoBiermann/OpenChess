@@ -23,8 +23,8 @@ namespace OpenChess.Domain
             bool hasOtherPieces = allPieces.FindAll(p => p is not Bishop && p is not King).Any();
             if (hasOtherPieces) { return false; }
 
-            var whiteSquaresHasOnlyBishops = match.Chessboard.GetReadOnlySquares().FindAll(s => s.Color == Color.White).FindAll(s => s.ReadOnlyPiece is Bishop).Any();
-            var blackSquaresHasOnlyBishops = match.Chessboard.GetReadOnlySquares().FindAll(s => s.Color == Color.Black).FindAll(s => s.ReadOnlyPiece is Bishop).Any();
+            var whiteSquaresHasOnlyBishops = match.Chessboard.GetReadOnlySquares().FindAll(s => s.Color.Value == Color.White).FindAll(s => s.ReadOnlyPiece is Bishop).Any();
+            var blackSquaresHasOnlyBishops = match.Chessboard.GetReadOnlySquares().FindAll(s => s.Color.Value == Color.Black).FindAll(s => s.ReadOnlyPiece is Bishop).Any();
 
             return whiteSquaresHasOnlyBishops ^ blackSquaresHasOnlyBishops;
         }

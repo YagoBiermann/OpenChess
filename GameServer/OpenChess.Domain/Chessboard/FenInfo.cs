@@ -62,7 +62,7 @@ namespace OpenChess.Domain
 
         public static Color ConvertTurn(string field)
         {
-            return char.Parse(field) == 'w' ? Color.White : Color.Black;
+            return char.Parse(field) == 'w' ? new(Color.White) : new(Color.Black);
         }
 
         public static CastlingAvailability ConvertCastling(string field)
@@ -117,7 +117,7 @@ namespace OpenChess.Domain
 
         private static string BuildTurnString(Player player)
         {
-            return player.Color == Color.Black ? "b" : "w";
+            return player.Color.Value == Color.Black ? "b" : "w";
         }
 
         private static string BuildChessboardString(IReadOnlyChessboard chessboard)

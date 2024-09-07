@@ -26,7 +26,7 @@ namespace OpenChess.Domain
 
         private int CalculateCheckAmount(Color player)
         {
-            List<IReadOnlyPiece> pieces = _match.Chessboard.GetPieces(ColorUtils.GetOppositeColor(player));
+            List<IReadOnlyPiece> pieces = _match.Chessboard.GetPieces(Color.GetOppositeColor(player));
             int checkAmount = 0;
 
             foreach (IReadOnlyPiece piece in pieces) { if (_movesCalculator.IsHittingTheEnemyKing(piece)) { checkAmount++; }; }

@@ -64,7 +64,7 @@ namespace OpenChess.Domain
 
             return readOnlySquares;
         }
-        
+
         public Square GetSquare(Coordinate coordinate)
         {
             return _board[coordinate.RowToInt][coordinate.ColumnToInt];
@@ -139,7 +139,7 @@ namespace OpenChess.Domain
 
         private static Piece CreatePiece(char type, Coordinate origin)
         {
-            Color color = char.IsUpper(type) ? Color.White : Color.Black;
+            Color color = char.IsUpper(type) ? new(Color.White) : new(Color.Black);
 
             return char.ToUpper(type) switch
             {
@@ -155,7 +155,7 @@ namespace OpenChess.Domain
 
         private static Piece CreatePiece(char type, Coordinate origin, Color player)
         {
-            char piece = player == Color.Black ? char.ToLower(type) : char.ToUpper(type);
+            char piece = player.Value == Color.Black ? char.ToLower(type) : char.ToUpper(type);
             return CreatePiece(piece, origin);
         }
 

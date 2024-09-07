@@ -31,7 +31,7 @@ namespace OpenChess.Domain
         private bool CanSolveCheckByCoveringTheKingOrCapturingTheEnemyPiece(Color player)
         {
             List<IReadOnlyPiece> allyPieces = _match.Chessboard.GetPieces(player);
-            var enemyMovesHittingTheKing = CalculateMovesHittingTheEnemyKing(ColorUtils.GetOppositeColor(player));
+            var enemyMovesHittingTheKing = CalculateMovesHittingTheEnemyKing(Color.GetOppositeColor(player));
             var positionsAvailableToSolveTheCheck = PositionsAvailableToSolveTheCheck(enemyMovesHittingTheKing.First());
 
             foreach (IReadOnlyPiece piece in allyPieces)

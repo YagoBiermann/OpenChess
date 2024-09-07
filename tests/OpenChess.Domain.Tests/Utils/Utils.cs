@@ -31,10 +31,5 @@ namespace OpenChess.Tests
             "LowerLeft" => new LowerLeft(),
             _ => throw new Exception($"{direction} is not a valid direction!")
         };
-
-        public static Color ColorFromChar(char color)
-        {
-            return color == 'b' ? Color.Black : Color.White;
-        }
     }
 }

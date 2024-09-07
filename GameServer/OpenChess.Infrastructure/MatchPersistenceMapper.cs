@@ -23,7 +23,7 @@ namespace OpenChess.Infrastructure
             List<PlayerPersistenceModel> playerPersistenceModels = [];
             foreach (var player in match.Players)
             {
-                PlayerPersistenceModel playerPersistenceModel = new(player.Id.ToString(), (char)player.Color, player.CurrentMatch.ToString(), player.TimeRemaining.Ticks);
+                PlayerPersistenceModel playerPersistenceModel = new(player.Id.ToString(), player.Color.Value, player.CurrentMatch.ToString(), player.TimeRemaining.Ticks);
                 playerPersistenceModels.Add(playerPersistenceModel);
             }
 
@@ -34,7 +34,7 @@ namespace OpenChess.Infrastructure
              (List<string>)match.PgnMoves,
              match.Status.ToString(),
              match.Duration,
-             (char?)match.Winner,
+             match.Winner?.Value,
              match.CurrentTurnStartedAt.ToString(),
              match.CreatedAt.ToString()
             );

@@ -80,7 +80,7 @@ namespace OpenChess.Tests
 
             CollectionAssert.AreEqual(expectedMove, leftMoves.AttackRange);
             Assert.IsNotNull(leftMoves.NearestPiece);
-            Assert.AreEqual(ColorUtils.GetOppositeColor(leftMoves.Piece.Color), leftMoves.NearestPiece.Color);
+            Assert.AreEqual(Color.GetOppositeColor(leftMoves.Piece.Color), leftMoves.NearestPiece.Color);
         }
 
         [TestMethod]

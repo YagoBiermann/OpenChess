@@ -12,7 +12,7 @@ namespace OpenChess.Application
             IMatch match = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
             match.Join(request.PlayerId);
             await _matchRepository.Update(match);
-            char color = (char)match.GetPlayerById(request.PlayerId)!.Color;
+            char color = match.GetPlayerById(request.PlayerId)!.Color.Value;
             var matchDto = new JoinMatchDTO(match.Fen, color, match.Duration);
 
             return matchDto;

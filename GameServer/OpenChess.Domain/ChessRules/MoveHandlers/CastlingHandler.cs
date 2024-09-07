@@ -20,8 +20,8 @@ namespace OpenChess.Domain
             if (isNotKingPosition) return false;
             IReadOnlyPiece? piece = _chessboard.GetPiece(origin);
             if (piece is not King) return false;
-            if (origin.Row == '1' && !GetCastlingDestinations(Color.White).Contains(destination)) return false;
-            if (origin.Row == '8' && !GetCastlingDestinations(Color.Black).Contains(destination)) return false;
+            if (origin.Row == '1' && !GetCastlingDestinations(new(Color.White)).Contains(destination)) return false;
+            if (origin.Row == '8' && !GetCastlingDestinations(new(Color.Black)).Contains(destination)) return false;
 
             return true;
         }
@@ -64,13 +64,13 @@ namespace OpenChess.Domain
 
         private bool IsKingSideCastlingAvailable(Color color)
         {
-            if (color == Color.Black) return _chessboard.CastlingAvailability.IsAvailableAt['k'];
+            if (color.Value == Color.Black) return _chessboard.CastlingAvailability.IsAvailableAt['k'];
             return _chessboard.CastlingAvailability.IsAvailableAt['K'];
         }
 
         private bool IsQueenSideCastlingAvailable(Color color)
         {
-            if (color == Color.Black) return _chessboard.CastlingAvailability.IsAvailableAt['q'];
+            if (color.Value == Color.Black) return _chessboard.CastlingAvailability.IsAvailableAt['q'];
             return _chessboard.CastlingAvailability.IsAvailableAt['Q'];
         }
 
@@ -177,7 +177,7 @@ namespace OpenChess.Domain
 
         private static List<Coordinate> GetQueenSidePositions(Color player)
         {
-            string row = player == Color.Black ? "8" : "1";
+            string row = player.Value == Color.Black ? "8" : "1";
 
 
             List<Coordinate> positions = new()
@@ -194,7 +194,7 @@ namespace OpenChess.Domain
 
         private static List<Coordinate> GetKingSidePositions(Color player)
         {
-            string row = player == Color.Black ? "8" : "1";
+            string row = player.Value == Color.Black ? "8" : "1";
 
 
             List<Coordinate> positions = new()

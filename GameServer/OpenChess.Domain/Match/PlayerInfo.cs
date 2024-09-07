@@ -11,7 +11,7 @@ namespace OpenChess.Domain
         {
             Id = Match.TryParseId(id);
             CurrentMatch = Match.TryParseId(currentMatch);
-            Color = ColorUtils.TryParseColor(color);
+            Color = (Color)color;
             TimeRemaining = TimeSpan.FromTicks(timeRemaining);
         }
 

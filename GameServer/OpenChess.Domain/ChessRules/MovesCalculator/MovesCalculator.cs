@@ -29,7 +29,7 @@ namespace OpenChess.Domain
         {
             canMove = false;
             if (piece is King) return false;
-            var allEnemyMovesPinningAPiece = CalculatePinMovesFromPlayer(ColorUtils.GetOppositeColor(piece.Color));
+            var allEnemyMovesPinningAPiece = CalculatePinMovesFromPlayer(Color.GetOppositeColor(piece.Color));
             if (!allEnemyMovesPinningAPiece.Any()) return false;
             var enemyMovePinningCurrentPiece = allEnemyMovesPinningAPiece.Where(m => m.PiecesInLineOfSight.First().Piece.Equals(piece)).ToList();
             bool isPinned = enemyMovePinningCurrentPiece.Any();
@@ -59,8 +59,8 @@ namespace OpenChess.Domain
             _preCalculatedRangeOfAttack.AddRange(allRangeOfAttack);
             _preCalculatedLineOfSight.AddRange(allLineOfSight);
 
-            allPinMoves.AddRange(CalculatePinMovesFromPlayer(Color.White));
-            allPinMoves.AddRange(CalculatePinMovesFromPlayer(Color.Black));
+            allPinMoves.AddRange(CalculatePinMovesFromPlayer(new(Color.White)));
+            allPinMoves.AddRange(CalculatePinMovesFromPlayer(new(Color.Black)));
             _preCalculatedPinMoves.AddRange(allPinMoves);
         }
 
@@ -116,7 +116,7 @@ namespace OpenChess.Domain
 
         public List<PieceAttackRange> CalculateKingMoves(Color player)
         {
-            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(ColorUtils.GetOppositeColor(player));
+            List<IReadOnlyPiece> pieces = _chessboard.GetPieces(Color.GetOppositeColor(player));
             List<Coordinate> positionsNotAllowedForTheKing = CalculatePositionsNotAllowedForTheKing(pieces);
 
             IReadOnlyPiece king = _chessboard.GetPieces(player).Find(p => p is King)!;
@@ -235,7 +235,7 @@ namespace OpenChess.Domain
 
         private List<PieceLineOfSight> CalculatePinMovesFromPlayer(Color player)
         {
-            if (_preCalculatedPinMoves.Any()) return _preCalculatedPinMoves.Where(m => m.Piece.Color == player).ToList();
+            if (_preCalculatedPinMoves.Any()) return _preCalculatedPinMoves.Where(m => m.Piece.Color.Value == player.Value).ToList();
 
             List<PieceLineOfSight> movesPinningAPiece = new();
             List<IReadOnlyPiece> longRangePieces = _chessboard.GetPieces(player).FindAll(p => p.IsLongRange);

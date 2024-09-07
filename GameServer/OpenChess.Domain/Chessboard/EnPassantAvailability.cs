@@ -30,8 +30,8 @@ namespace OpenChess.Domain
 
         private static bool IsVulnerableToEnPassant(Pawn pawn, Coordinate previousOrigin)
         {
-            bool isBlackVulnerable = pawn.Color == Color.Black && previousOrigin.Row == '7' && pawn.Origin.Row == '5';
-            bool isWhiteVulnerable = pawn.Color == Color.White && previousOrigin.Row == '2' && pawn.Origin.Row == '4';
+            bool isBlackVulnerable = pawn.Color.Value == Color.Black && previousOrigin.Row == '7' && pawn.Origin.Row == '5';
+            bool isWhiteVulnerable = pawn.Color.Value == Color.White && previousOrigin.Row == '2' && pawn.Origin.Row == '4';
 
             return isBlackVulnerable ^ isWhiteVulnerable;
         }

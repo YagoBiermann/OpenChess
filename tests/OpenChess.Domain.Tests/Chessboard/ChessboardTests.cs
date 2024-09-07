@@ -25,7 +25,7 @@ namespace OpenChess.Tests
 
             Coordinate coordinate = Coordinate.GetInstance(position);
             Type? pieceType = Utils.GetPieceType(name);
-            Color pieceColor = Utils.ColorFromChar(color);
+            Color pieceColor = (Color)color;
             IReadOnlyPiece? piece = chessboard.GetPiece(coordinate);
 
             Assert.IsInstanceOfType(piece, pieceType);
@@ -106,7 +106,7 @@ namespace OpenChess.Tests
             Coordinate origin = Coordinate.GetInstance(coordinate);
             IReadOnlyPiece? piece = chessboard.GetPiece(origin);
             Type? pieceType = Utils.GetPieceType(type);
-            Color color = Utils.ColorFromChar(c);
+            Color color = (Color)c;
 
             Assert.IsNotNull(piece);
             Assert.IsInstanceOfType(piece, pieceType);

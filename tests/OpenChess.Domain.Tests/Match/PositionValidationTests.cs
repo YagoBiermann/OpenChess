@@ -60,7 +60,7 @@ namespace OpenChess.Tests
         public void IsInCheck_PlayerInCheck_ShouldReturnTrue(string fen, char color)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Color player = Utils.ColorFromChar(color);
+            Color player = (Color)color;
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
 
@@ -84,7 +84,7 @@ namespace OpenChess.Tests
         public void IsInCheck_PlayerNotInCheck_ShouldReturnFalse(string fen, char color)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Color player = Utils.ColorFromChar(color);
+            Color player = (Color)color;
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
 
@@ -99,7 +99,7 @@ namespace OpenChess.Tests
         public void CheckStatus_DoubleCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Color player = Utils.ColorFromChar(color);
+            Color player = (Color)color;
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
             var checkStatus = checkValidation.GetCheckStatus(player);
@@ -115,7 +115,7 @@ namespace OpenChess.Tests
         public void CheckStatus_Check_ShouldReturnCorrectEnum(string fen, char color)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Color player = Utils.ColorFromChar(color);
+            Color player = (Color)color;
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
             var checkStatus = checkValidation.GetCheckStatus(player);
@@ -134,7 +134,7 @@ namespace OpenChess.Tests
         public void CheckStatus_NotInCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
             Match match = FakeMatch.RestoreMatch(fen);
-            Color player = Utils.ColorFromChar(color);
+            Color player = (Color)color;
             IMoveCalculator moveCalculator = new MovesCalculator(match.Chessboard);
             CheckValidation checkValidation = new(match, moveCalculator);
             var checkStatus = checkValidation.GetCheckStatus(player);
@@ -242,7 +242,7 @@ namespace OpenChess.Tests
             Move move = new(currentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
             Assert.AreEqual((Status)"211", match.Status);
-            Assert.AreEqual(match.Winner.Value, currentPlayer.Color);
+            Assert.AreEqual(match.Winner, currentPlayer.Color);
         }
 
         [DataRow("k7/1R6/1P6/p7/4BB2/8/5K2/8 w - - 0 1", "B7", "B8", "212")]
@@ -256,7 +256,7 @@ namespace OpenChess.Tests
             Move move = new(currentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
             Assert.AreEqual((Status)status, match.Status);
-            Assert.AreEqual(match.Winner.Value, currentPlayer.Color);
+            Assert.AreEqual(match.Winner, currentPlayer.Color);
         }
 
         [DataRow("8/8/2k1P3/8/8/1Q2K3/7p/8 w - - 0 1", "B3", "C3")]

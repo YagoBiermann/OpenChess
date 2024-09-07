@@ -78,8 +78,8 @@ namespace OpenChess.Domain
 
         public void Join(string playerId)
         {
-            Color playerColor = ColorUtils.GetRandomColor();
-            if (_players.Count != 0) { playerColor = ColorUtils.GetOppositeColor(_players.First().Color); }
+            Color playerColor = Color.GetRandomColor();
+            if (_players.Count != 0) { playerColor = Color.GetOppositeColor(_players.First().Color); }
             var playerInfo = new PlayerInfo(TryParseId(playerId), playerColor, TimeSpan.FromMinutes((int)Duration), Id);
             if (!CanJoinMatch(playerInfo)) { throw new MatchException("Player already assigned to another match!"); }
             _players.Add(new Player(playerInfo));
@@ -171,7 +171,7 @@ namespace OpenChess.Domain
 
         private Player? GetPlayerByColor(Color color)
         {
-            return _players.Find(p => p.Color == color);
+            return _players.Find(p => p.Color.Equals(color));
         }
 
         private Player? GetOpponentPlayerOf(string id)
@@ -286,7 +286,7 @@ namespace OpenChess.Domain
         {
             bool noCaptureAndNoPawnMoved = lastMovePlayed.PieceCaptured is null && !lastMovePlayed.MoveType.Equals(MoveType.PawnMove);
             if (noCaptureAndNoPawnMoved) HalfMove++; else HalfMove = 0;
-            if (CurrentPlayer!.Color == Color.Black) FullMove++;
+            if (CurrentPlayer!.Color.Value == Color.Black) FullMove++;
         }
 
         private void UpdateTimeRemainingForCurrentPlayer(Clock clock)

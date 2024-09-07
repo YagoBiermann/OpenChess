@@ -12,7 +12,7 @@ namespace OpenChess.Application
             IMatch match = await _matchRepository.GetById(request.MatchId) ?? throw new MatchException("Match not found!");
             match.FinishWithResign(request.PlayerId);
             await _matchRepository.Update(match);
-            MatchDTO matchDTO = new(match.CurrentPlayer!.TimeRemaining.ToString(), match.Fen, match.Status.ToString(), (char?)match.Winner);
+            MatchDTO matchDTO = new(match.CurrentPlayer!.TimeRemaining.ToString(), match.Fen, match.Status.ToString(), match.Winner?.Value);
             return matchDTO;
         }
     }

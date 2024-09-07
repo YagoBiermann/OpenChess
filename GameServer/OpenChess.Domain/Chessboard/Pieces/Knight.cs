@@ -7,7 +7,7 @@ namespace OpenChess.Domain
         {
         }
 
-        public override char Name => Color == Color.Black ? 'n' : 'N';
+        public override char Name => Color.Value == Color.Black ? 'n' : 'N';
         public override bool IsLongRange => false;
 
         public override List<Direction> Directions

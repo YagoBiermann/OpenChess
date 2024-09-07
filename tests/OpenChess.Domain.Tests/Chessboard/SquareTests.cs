@@ -68,7 +68,7 @@ namespace OpenChess.Tests
             Coordinate coordinate = Coordinate.GetInstance("E7");
             IReadOnlySquare square = chessboard.GetSquare(coordinate);
 
-            Assert.IsTrue(square.HasEnemyPiece(Color.White));
+            Assert.IsTrue(square.HasEnemyPiece(new(Color.White)));
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace OpenChess.Tests
             Coordinate coordinate = Coordinate.GetInstance("E7");
             IReadOnlySquare square = chessboard.GetSquare(coordinate);
 
-            Assert.IsFalse(square.HasEnemyPiece(Color.Black));
+            Assert.IsFalse(square.HasEnemyPiece(new(Color.Black)));
         }
 
         [DataRow("A1", 'b')]
@@ -93,7 +93,7 @@ namespace OpenChess.Tests
         {
             Chessboard chessboard = new(new FenInfo(FenInfo.InitialPosition));
             Coordinate coordinate = Coordinate.GetInstance(position);
-            Color expectedColor = Utils.ColorFromChar(color);
+            Color expectedColor = (Color)color;
             IReadOnlySquare square = chessboard.GetSquare(coordinate);
 
             Assert.AreEqual(expectedColor, square.Color);

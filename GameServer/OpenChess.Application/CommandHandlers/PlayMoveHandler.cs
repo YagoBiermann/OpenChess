@@ -19,8 +19,8 @@ namespace OpenChess.Application
             match.Play(move);
             await _matchRepository.Update(match);
             await _moveTrackingService.OverwriteStoredMoveAsync(request.MatchId, moveId.ToString());
-            MatchDTO matchDTO = new(match.OpponentPlayer!.TimeRemaining.ToString(), match.Fen, match.Status.ToString(), (char?)match.Winner);
-            
+            MatchDTO matchDTO = new(match.OpponentPlayer!.TimeRemaining.ToString(), match.Fen, match.Status.ToString(), match.Winner?.Value);
+
             return matchDTO;
         }
 

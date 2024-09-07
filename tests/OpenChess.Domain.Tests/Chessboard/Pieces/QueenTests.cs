@@ -92,9 +92,9 @@ namespace OpenChess.Tests
             Assert.IsNotNull(rightMoves.NearestPiece);
             Assert.IsNotNull(upperLeftMoves.NearestPiece);
             Assert.IsNotNull(lowerRightMoves.NearestPiece);
-            Assert.AreEqual(ColorUtils.GetOppositeColor(rightMoves.Piece.Color), rightMoves.NearestPiece.Color);
-            Assert.AreEqual(ColorUtils.GetOppositeColor(rightMoves.Piece.Color), upperLeftMoves.NearestPiece.Color);
-            Assert.AreEqual(ColorUtils.GetOppositeColor(rightMoves.Piece.Color), lowerRightMoves.NearestPiece.Color);
+            Assert.AreEqual(Color.GetOppositeColor(rightMoves.Piece.Color), rightMoves.NearestPiece.Color);
+            Assert.AreEqual(Color.GetOppositeColor(rightMoves.Piece.Color), upperLeftMoves.NearestPiece.Color);
+            Assert.AreEqual(Color.GetOppositeColor(rightMoves.Piece.Color), lowerRightMoves.NearestPiece.Color);
         }
 
         [TestMethod]

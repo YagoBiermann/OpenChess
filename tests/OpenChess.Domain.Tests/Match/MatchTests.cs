@@ -348,10 +348,10 @@ namespace OpenChess.Tests
         {
             Match match = FakeMatch.RestoreMatch(FenInfo.InitialPosition);
 
-            Assert.AreEqual(Color.White, match.CurrentPlayer!.Color);
+            Assert.AreEqual(Color.White, match.CurrentPlayer!.Color.Value);
             Move move = new(match.CurrentPlayer!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             match.Play(move);
-            Assert.AreEqual(Color.Black, match.CurrentPlayer.Color);
+            Assert.AreEqual(Color.Black, match.CurrentPlayer.Color.Value);
         }
 
         [DataRow("r3k2r/ppp2pbp/2nqpnp1/3p1b2/3P1B2/2NQPNP1/PPP2PBP/R3K2R w KQkq - 0 1", "D6", "B6")]
@@ -415,13 +415,13 @@ namespace OpenChess.Tests
             MatchInfo matchInfo = FakeMatch.RestoreMatch(FenInfo.InitialPosition, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), TimeSpan.Zero.Ticks, TimeSpan.FromMinutes(4).Ticks, DateTime.UtcNow.ToString(), 5);
             Match match = new(matchInfo);
             Assert.IsFalse(match.HasFinished());
-            Assert.AreEqual(match.CurrentPlayer?.Color, Color.White);
+            Assert.AreEqual(match.CurrentPlayer?.Color.Value, Color.White);
 
             Move move = new(match.CurrentPlayer!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4"));
             match.Play(move);
-
+            Color blackPlayer = match.Players.Where(p => p.Color.Value == Color.Black).First().Color;
             Assert.IsTrue(match.HasFinished());
-            Assert.AreEqual(match.Winner!.Value, match.Players.Where(p => p.Color == Color.Black).First().Color);
+            Assert.AreEqual(match.Winner, blackPlayer);
             Assert.AreEqual(match.Status.GameResult, GameResult.Timeout);
             Assert.AreEqual(match.Status.CheckStatus, CheckStatus.NotInCheck);
         }

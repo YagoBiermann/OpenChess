@@ -23,7 +23,7 @@ namespace OpenChess.Domain
                 return false;
             }
             Player player = (Player)obj;
-            bool areEqual = player.Color == Color && player.Id == Id && player.CurrentMatch == CurrentMatch && IsCurrentPlayer == player.IsCurrentPlayer;
+            bool areEqual = player.Color.Value == Color.Value && player.Id == Id && player.CurrentMatch == CurrentMatch && IsCurrentPlayer == player.IsCurrentPlayer;
 
             return areEqual;
         }

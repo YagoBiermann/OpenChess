@@ -11,8 +11,8 @@ namespace OpenChess.Domain
         {
             get
             {
-                bool isBlackFirstMove = Color == Color.Black && Origin.Row == '7';
-                bool isWhiteFirstMove = Color == Color.White && Origin.Row == '2';
+                bool isBlackFirstMove = Color.Value == Color.Black && Origin.Row == '7';
+                bool isWhiteFirstMove = Color.Value == Color.White && Origin.Row == '2';
                 return isBlackFirstMove || isWhiteFirstMove;
             }
         }
@@ -27,12 +27,12 @@ namespace OpenChess.Domain
 
         public Direction ForwardDirection
         {
-            get { return Color == Color.White ? new Up() : new Down(); }
+            get { return Color.Value == Color.White ? new Up() : new Down(); }
         }
 
-        public override char Name => Color == Color.Black ? 'p' : 'P';
+        public override char Name => Color.Value == Color.Black ? 'p' : 'P';
 
-        public override List<Direction> Directions => Color == Color.Black ? BlackDirections() : WhiteDirections();
+        public override List<Direction> Directions => Color.Value == Color.Black ? BlackDirections() : WhiteDirections();
 
         public override bool IsLongRange => false;
 

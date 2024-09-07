@@ -24,12 +24,11 @@ namespace OpenChess.Domain
             if (!isCreatedAtParsed) throw new MatchException($"The string '{CreatedAt}' is not a valid datetime.");
             Status = (Status)status;
             Fen = fen;
-
             Time = new Time(time);
             CurrentTurnStartedAt = parsedCurrentTurnStartedAt;
             CreatedAt = parsedCreatedAt;
             if (winner is null) return;
-            Winner = ColorUtils.TryParseColor((char)winner);
+            Winner = (Color)winner;
         }
     }
 }
