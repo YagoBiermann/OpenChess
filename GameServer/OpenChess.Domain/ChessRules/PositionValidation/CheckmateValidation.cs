@@ -38,17 +38,17 @@ namespace OpenChess.Domain
             {
                 if (piece is King) continue;
                 if (_movesCalculator.IsPinned(piece, out bool canCaptureTheEnemyPiece)) continue;
-                List<PieceRangeOfAttack> moves = [.. _movesCalculator.CalculateLegalMoves(piece)];
-                var rangeOfAttackFromAllyPiece = moves.SelectMany(m => m.RangeOfAttack).ToList();
+                List<PieceAttackRange> moves = [.. _movesCalculator.CalculateLegalMoves(piece)];
+                var rangeOfAttackFromAllyPiece = moves.SelectMany(m => m.AttackRange).ToList();
                 if (rangeOfAttackFromAllyPiece.Intersect(positionsAvailableToSolveTheCheck).Any()) return true;
             }
 
             return false;
         }
 
-        private static List<Coordinate> PositionsAvailableToSolveTheCheck(PieceRangeOfAttack rangeOfAttackFromEnemyPieceHittingTheKing)
+        private static List<Coordinate> PositionsAvailableToSolveTheCheck(PieceAttackRange rangeOfAttackFromEnemyPieceHittingTheKing)
         {
-            List<Coordinate> positionsAvailable = new(rangeOfAttackFromEnemyPieceHittingTheKing.RangeOfAttack);
+            List<Coordinate> positionsAvailable = new(rangeOfAttackFromEnemyPieceHittingTheKing.AttackRange);
             IReadOnlyPiece enemyPiece = rangeOfAttackFromEnemyPieceHittingTheKing.Piece;
             IReadOnlyPiece allyKing = rangeOfAttackFromEnemyPieceHittingTheKing.NearestPiece!;
 
@@ -58,7 +58,7 @@ namespace OpenChess.Domain
             return positionsAvailable;
         }
 
-        private List<PieceRangeOfAttack> CalculateMovesHittingTheEnemyKing(Color player)
+        private List<PieceAttackRange> CalculateMovesHittingTheEnemyKing(Color player)
         {
             return _movesCalculator.CalculateAllMoves().Where(m => m.IsHittingTheEnemyKing && m.Piece.Color == player).ToList();
         }

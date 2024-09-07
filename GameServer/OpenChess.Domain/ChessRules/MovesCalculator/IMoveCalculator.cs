@@ -7,11 +7,11 @@ namespace OpenChess.Domain
         public bool IsPinned(IReadOnlyPiece piece, out bool canMove);
         public void CalculateAndCacheAllMoves();
         public void ClearCache();
-        public List<PieceRangeOfAttack> CalculateRangeOfAttack(IReadOnlyPiece piece);
+        public List<PieceAttackRange> CalculateRangeOfAttack(IReadOnlyPiece piece);
         public List<PieceLineOfSight> CalculateLineOfSight(IReadOnlyPiece piece);
-        public List<PieceRangeOfAttack> CalculateKingMoves(Color player);
-        public List<PieceRangeOfAttack> CalculatePawnMoves(Pawn pawn);
-        public List<PieceRangeOfAttack> CalculateLegalMoves(IReadOnlyPiece piece);
-        public List<PieceRangeOfAttack> CalculateAllMoves();
+        public List<PieceAttackRange> CalculateKingMoves(Color player);
+        public List<PieceAttackRange> CalculatePawnMoves(Pawn pawn);
+        public List<PieceAttackRange> CalculateLegalMoves(IReadOnlyPiece piece);
+        public List<PieceAttackRange> CalculateAllMoves();
     }
 }

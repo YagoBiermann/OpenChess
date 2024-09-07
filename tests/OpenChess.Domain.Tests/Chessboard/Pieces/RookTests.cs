@@ -63,7 +63,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
+        public void CalculateAttackRange_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new(new FenInfo("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1"));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("F4").ReadOnlyPiece!;
@@ -75,16 +75,16 @@ namespace OpenChess.Tests
             };
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(rook);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(rook);
             var leftMoves = moves.Find(m => m.Direction is Left);
 
-            CollectionAssert.AreEqual(expectedMove, leftMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedMove, leftMoves.AttackRange);
             Assert.IsNotNull(leftMoves.NearestPiece);
             Assert.AreEqual(ColorUtils.GetOppositeColor(leftMoves.Piece.Color), leftMoves.NearestPiece.Color);
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
+        public void CalculateAttackRange_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new(new FenInfo("8/8/5K2/8/1RR2r1p/8/5k2/8 b - - 0 1"));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("F4").ReadOnlyPiece!;
@@ -95,15 +95,15 @@ namespace OpenChess.Tests
             };
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(rook);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(rook);
             var rightMoves = moves.Find(m => m.Direction is Right);
 
-            CollectionAssert.AreEqual(expectedMove, rightMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedMove, rightMoves.AttackRange);
             Assert.IsNotNull(rightMoves.NearestPiece);
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
+        public void CalculateAttackRange_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new(new FenInfo("8/8/4K3/8/1RR1r3/8/4k3/8 b - - 0 1"));
             Rook rook = (Rook)chessboard.GetReadOnlySquare("E4").ReadOnlyPiece!;
@@ -115,10 +115,10 @@ namespace OpenChess.Tests
             };
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(rook);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(rook);
             var rightMoves = moves.Find(m => m.Direction is Right);
 
-            CollectionAssert.AreEqual(expectedMove, rightMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedMove, rightMoves.AttackRange);
         }
     }
 }

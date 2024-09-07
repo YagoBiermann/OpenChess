@@ -1,18 +1,18 @@
 namespace OpenChess.Domain
 {
-    internal readonly record struct PieceRangeOfAttack
+    internal readonly record struct PieceAttackRange
     {
         public IReadOnlyPiece Piece { get; }
         public Direction Direction { get; }
-        public List<Coordinate> RangeOfAttack { get; }
+        public List<Coordinate> AttackRange { get; }
         public IReadOnlyPiece? NearestPiece { get; }
         public bool IsHittingTheEnemyKing { get => NearestPiece is King && NearestPiece.Color != Piece.Color; }
 
-        public PieceRangeOfAttack(IReadOnlyPiece piece, Direction direction, List<Coordinate> rangeOfAttack, IReadOnlyPiece? nearestPiece = null)
+        public PieceAttackRange(IReadOnlyPiece piece, Direction direction, List<Coordinate> attackRange, IReadOnlyPiece? nearestPiece = null)
         {
             Piece = piece;
             Direction = direction;
-            RangeOfAttack = rangeOfAttack;
+            AttackRange = attackRange;
             NearestPiece = nearestPiece;
         }
     }

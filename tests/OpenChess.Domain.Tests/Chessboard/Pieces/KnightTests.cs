@@ -71,15 +71,15 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
+        public void CalculateAttackRange_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new(new FenInfo("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1"));
             Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(knight);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(knight);
 
-            List<Coordinate> upperLeftMoves = moves.Find(m => m.Direction.Equals(new Direction(-1, 2))).RangeOfAttack;
-            List<Coordinate> upperLeftMoves2 = moves.Find(m => m.Direction.Equals(new Direction(-2, 1))).RangeOfAttack;
+            List<Coordinate> upperLeftMoves = moves.Find(m => m.Direction.Equals(new Direction(-1, 2))).AttackRange;
+            List<Coordinate> upperLeftMoves2 = moves.Find(m => m.Direction.Equals(new Direction(-2, 1))).AttackRange;
 
             List<Coordinate> expectedUpperLeftMove1 = new() { Coordinate.GetInstance("F6") };
             List<Coordinate> expectedUpperLeftMove2 = new() { Coordinate.GetInstance("E5") };
@@ -89,41 +89,41 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
+        public void CalculateAttackRange_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new(new FenInfo("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1"));
             Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(knight);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(knight);
             var lowerRightMove = moves.Find(m => m.Direction.Equals(new Direction(1, -2)));
 
-            Assert.IsTrue(lowerRightMove.RangeOfAttack.Any());
+            Assert.IsTrue(lowerRightMove.AttackRange.Any());
             Assert.IsNotNull(lowerRightMove.NearestPiece);
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
+        public void CalculateAttackRange_NoPiecesFound_ShouldReturnAllCoordinatesFromCurrentDirection()
         {
             Chessboard chessboard = new(new FenInfo("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1"));
             Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(knight);
-            List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new Direction(-1, -2))).RangeOfAttack;
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(knight);
+            List<Coordinate> lowerLeftMove = moves.Find(m => m.Direction.Equals(new Direction(-1, -2))).AttackRange;
             List<Coordinate> expectedLowerLeftMove = new() { Coordinate.GetInstance("F2") };
 
             CollectionAssert.AreEqual(lowerLeftMove, expectedLowerLeftMove);
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_PositionOutOfChessboard_ShouldReturnEmptyList()
+        public void CalculateAttackRange_PositionOutOfChessboard_ShouldReturnEmptyList()
         {
             Chessboard chessboard = new(new FenInfo("8/8/5p1K/4r3/6N1/4k3/7P/8 w - - 0 1"));
             Knight knight = (Knight)chessboard.GetReadOnlySquare("G4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(knight);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(knight);
 
-            Assert.IsFalse(moves.Find(m => m.Direction.Equals(new Direction(2, 1))).RangeOfAttack.Any());
-            Assert.IsFalse(moves.Find(m => m.Direction.Equals(new Direction(2, -1))).RangeOfAttack.Any());
+            Assert.IsFalse(moves.Find(m => m.Direction.Equals(new Direction(2, 1))).AttackRange.Any());
+            Assert.IsFalse(moves.Find(m => m.Direction.Equals(new Direction(2, -1))).AttackRange.Any());
         }
     }
 }

@@ -12,11 +12,11 @@ namespace OpenChess.Domain
             {
                 if (piece is King)
                 {
-                    moves.AddRange(_movesCalculator.CalculateKingMoves(piece.Color).SelectMany(m => m.RangeOfAttack));
+                    moves.AddRange(_movesCalculator.CalculateKingMoves(piece.Color).SelectMany(m => m.AttackRange));
                     continue;
                 }
                 if (_movesCalculator.IsPinned(piece, out bool canCaptureTheEnemyPiece) && !canCaptureTheEnemyPiece) continue;
-                moves.AddRange(_movesCalculator.CalculateLegalMoves(piece).SelectMany(m => m.RangeOfAttack));
+                moves.AddRange(_movesCalculator.CalculateLegalMoves(piece).SelectMany(m => m.AttackRange));
             }
 
             if (moves.Count == 0) return new(GameStatus.Finished, GameResult.Draw, CheckStatus.NotInCheck);

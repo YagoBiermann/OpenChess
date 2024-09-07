@@ -70,7 +70,7 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
+        public void CalculateAttackRange_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new(new FenInfo("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
@@ -80,36 +80,36 @@ namespace OpenChess.Tests
 
             List<Coordinate> expectedMove = new() { Coordinate.GetInstance("F2") };
 
-            CollectionAssert.AreEqual(expectedMove, moves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedMove, moves.AttackRange);
             Assert.IsNotNull(moves.NearestPiece);
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
+        public void CalculateAttackRange_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new(new FenInfo("8/4R3/5KB1/4p3/8/8/3r1P2/2q1k3 b - - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            PieceRangeOfAttack move = moveCalculator.CalculateRangeOfAttack(king).Find(m => m.Direction is UpperLeft);
+            PieceAttackRange move = moveCalculator.CalculateRangeOfAttack(king).Find(m => m.Direction is UpperLeft);
 
-            Assert.IsTrue(move.RangeOfAttack.Any());
+            Assert.IsTrue(move.AttackRange.Any());
             Assert.IsNotNull(move.NearestPiece);
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_NoPiecesFound_ShouldReturnAllPositionsFromCurrentDirection()
+        public void CalculateAttackRange_NoPiecesFound_ShouldReturnAllPositionsFromCurrentDirection()
         {
             Chessboard chessboard = new(new FenInfo("8/4R3/5KB1/4p3/8/8/8/4k3 b - - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("E1").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(king);
-            List<Coordinate> up = moves.Find(m => m.Direction is Up).RangeOfAttack;
-            List<Coordinate> left = moves.Find(m => m.Direction is Left).RangeOfAttack;
-            List<Coordinate> right = moves.Find(m => m.Direction is Right).RangeOfAttack;
-            List<Coordinate> upperLeft = moves.Find(m => m.Direction is UpperLeft).RangeOfAttack;
-            List<Coordinate> upperRight = moves.Find(m => m.Direction is UpperRight).RangeOfAttack;
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(king);
+            List<Coordinate> up = moves.Find(m => m.Direction is Up).AttackRange;
+            List<Coordinate> left = moves.Find(m => m.Direction is Left).AttackRange;
+            List<Coordinate> right = moves.Find(m => m.Direction is Right).AttackRange;
+            List<Coordinate> upperLeft = moves.Find(m => m.Direction is UpperLeft).AttackRange;
+            List<Coordinate> upperRight = moves.Find(m => m.Direction is UpperRight).AttackRange;
 
             List<Coordinate> expectedUpMove = new() { Coordinate.GetInstance("E2") };
             List<Coordinate> expectedLeftMove = new() { Coordinate.GetInstance("D1") };
@@ -125,19 +125,19 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_PositionOutOfChessboard_ShouldReturnEmptyList()
+        public void CalculateAttackRange_PositionOutOfChessboard_ShouldReturnEmptyList()
         {
             Chessboard chessboard = new(new FenInfo("8/4R3/5KB1/4p3/8/8/8/k7 b - - 0 1"));
             King king = (King)chessboard.GetReadOnlySquare("A1").ReadOnlyPiece!;
 
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(king);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(king);
 
-            Assert.IsFalse(moves.Find(m => m.Direction is UpperLeft).RangeOfAttack.Any());
-            Assert.IsFalse(moves.Find(m => m.Direction is Left).RangeOfAttack.Any());
-            Assert.IsFalse(moves.Find(m => m.Direction is LowerLeft).RangeOfAttack.Any());
-            Assert.IsFalse(moves.Find(m => m.Direction is LowerRight).RangeOfAttack.Any());
-            Assert.IsFalse(moves.Find(m => m.Direction is Down).RangeOfAttack.Any());
+            Assert.IsFalse(moves.Find(m => m.Direction is UpperLeft).AttackRange.Any());
+            Assert.IsFalse(moves.Find(m => m.Direction is Left).AttackRange.Any());
+            Assert.IsFalse(moves.Find(m => m.Direction is LowerLeft).AttackRange.Any());
+            Assert.IsFalse(moves.Find(m => m.Direction is LowerRight).AttackRange.Any());
+            Assert.IsFalse(moves.Find(m => m.Direction is Down).AttackRange.Any());
         }
     }
 }

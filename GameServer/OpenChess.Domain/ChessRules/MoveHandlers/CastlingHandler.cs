@@ -97,7 +97,7 @@ namespace OpenChess.Domain
             foreach (IReadOnlyPiece piece in pieces)
             {
                 var moves = _movesCalculator.CalculateRangeOfAttack(piece);
-                bool enemyPieceIsHittingCastlingPositions = moves.SelectMany(m => m.RangeOfAttack).ToList().Intersect(castlingPositions).Any();
+                bool enemyPieceIsHittingCastlingPositions = moves.SelectMany(m => m.AttackRange).ToList().Intersect(castlingPositions).Any();
                 if (enemyPieceIsHittingCastlingPositions) return true;
 
             }

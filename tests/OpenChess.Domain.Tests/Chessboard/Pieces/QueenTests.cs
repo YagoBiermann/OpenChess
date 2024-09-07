@@ -70,12 +70,12 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldIncludeEnemyPieces()
+        public void CalculateAttackRange_ShouldIncludeEnemyPieces()
         {
             Chessboard chessboard = new(new FenInfo("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1"));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(queen);
 
             var rightMoves = moves.Find(m => m.Direction is Right);
             var upperLeftMoves = moves.Find(m => m.Direction is UpperLeft);
@@ -85,9 +85,9 @@ namespace OpenChess.Tests
             List<Coordinate> expectedUpperLeftMoves = new() { Coordinate.GetInstance("C5"), Coordinate.GetInstance("B6"), };
             List<Coordinate> expectedLowerRightMoves = new() { Coordinate.GetInstance("E3"), };
 
-            CollectionAssert.AreEqual(expectedRightMoves, rightMoves.RangeOfAttack);
-            CollectionAssert.AreEqual(expectedUpperLeftMoves, upperLeftMoves.RangeOfAttack);
-            CollectionAssert.AreEqual(expectedLowerRightMoves, lowerRightMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedRightMoves, rightMoves.AttackRange);
+            CollectionAssert.AreEqual(expectedUpperLeftMoves, upperLeftMoves.AttackRange);
+            CollectionAssert.AreEqual(expectedLowerRightMoves, lowerRightMoves.AttackRange);
 
             Assert.IsNotNull(rightMoves.NearestPiece);
             Assert.IsNotNull(upperLeftMoves.NearestPiece);
@@ -98,12 +98,12 @@ namespace OpenChess.Tests
         }
 
         [TestMethod]
-        public void CalculateRangeOfAttack_ShouldIncludeAllyPieces()
+        public void CalculateAttackRange_ShouldIncludeAllyPieces()
         {
             Chessboard chessboard = new(new FenInfo("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1"));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(queen);
 
             var leftMoves = moves.Find(m => m.Direction is Left);
             var upperRightMoves = moves.Find(m => m.Direction is UpperRight);
@@ -111,8 +111,8 @@ namespace OpenChess.Tests
             List<Coordinate> expectedLeftMovesMoves = new() { Coordinate.GetInstance("C4"), Coordinate.GetInstance("B4") };
             List<Coordinate> expectedUpperRightMoves = new() { Coordinate.GetInstance("E5"), Coordinate.GetInstance("F6") };
 
-            CollectionAssert.AreEqual(expectedLeftMovesMoves, leftMoves.RangeOfAttack);
-            CollectionAssert.AreEqual(expectedUpperRightMoves, upperRightMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedLeftMovesMoves, leftMoves.AttackRange);
+            CollectionAssert.AreEqual(expectedUpperRightMoves, upperRightMoves.AttackRange);
             Assert.IsNotNull(leftMoves.NearestPiece);
             Assert.IsNotNull(upperRightMoves.NearestPiece);
         }
@@ -123,11 +123,11 @@ namespace OpenChess.Tests
             Chessboard chessboard = new(new FenInfo("8/8/1Q1K1b2/8/1r1q2R1/4P3/1k6/8 w - - 0 1"));
             Queen queen = (Queen)chessboard.GetReadOnlySquare("D4").ReadOnlyPiece!;
             IMoveCalculator moveCalculator = new MovesCalculator(chessboard);
-            List<PieceRangeOfAttack> moves = moveCalculator.CalculateRangeOfAttack(queen);
+            List<PieceAttackRange> moves = moveCalculator.CalculateRangeOfAttack(queen);
             var downMoves = moves.Find(m => m.Direction is Down);
             List<Coordinate> expectedDownMoves = new() { Coordinate.GetInstance("D3"), Coordinate.GetInstance("D2"), Coordinate.GetInstance("D1"), };
 
-            CollectionAssert.AreEqual(expectedDownMoves, downMoves.RangeOfAttack);
+            CollectionAssert.AreEqual(expectedDownMoves, downMoves.AttackRange);
             Assert.IsNull(downMoves.NearestPiece);
         }
     }
