@@ -28,7 +28,9 @@ namespace OpenChess.Tests
             Match match = FakeMatch.RestoreAndPlay(fen, origin, destination);
 
             Assert.IsNull(match.Winner);
-            Assert.AreEqual(CurrentPositionStatus.Draw, match.CurrentPositionStatus);
+            Assert.AreEqual(GameResult.Draw, match.Status.GameResult);
+            Assert.AreEqual(GameStatus.Finished, match.Status.GameStatus);
+            Assert.AreEqual(CheckStatus.NotInCheck, match.Status.CheckStatus);
             Assert.IsTrue(match.HasFinished());
         }
 
@@ -94,7 +96,7 @@ namespace OpenChess.Tests
         [DataRow("3b4/4n3/8/5PK1/2N5/k4R2/8/3r4 w - - 0 1", 'b')]
         [DataRow("r1bqkbnr/1pp2ppp/p1Bp1N2/4p3/4P3/8/PPPP1PPP/RNBQK2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void CheckState_DoubleCheck_ShouldReturnCorrectEnum(string fen, char color)
+        public void CheckStatus_DoubleCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
             Match match = FakeMatch.RestoreMatch(fen);
             Color player = Utils.ColorFromChar(color);
@@ -110,7 +112,7 @@ namespace OpenChess.Tests
         [DataRow("rn1qkb1r/pp1n2p1/2p2p1p/1B1p2BQ/3P4/4P1P1/PP3P1P/RN2K1NR b KQkq - 0 1", 'b')]
         [DataRow("3bk3/5P2/4P3/4K3/8/8/4B3/8 w - - 0 1", 'b')]
         [TestMethod]
-        public void CheckState_Check_ShouldReturnCorrectEnum(string fen, char color)
+        public void CheckStatus_Check_ShouldReturnCorrectEnum(string fen, char color)
         {
             Match match = FakeMatch.RestoreMatch(fen);
             Color player = Utils.ColorFromChar(color);
@@ -129,7 +131,7 @@ namespace OpenChess.Tests
         [DataRow("rnb1kbnr/pppp1ppp/8/8/2B1Pp1q/8/PPPP2PP/RNBQK1NR b KQkq - 0 1", 'b')]
         [DataRow("rnb1k1nr/ppp1qppp/8/8/3N4/1B6/PPP3PP/RNBQK2R b KQkq - 0 1", 'b')]
         [TestMethod]
-        public void CheckState_NotInCheck_ShouldReturnCorrectEnum(string fen, char color)
+        public void CheckStatus_NotInCheck_ShouldReturnCorrectEnum(string fen, char color)
         {
             Match match = FakeMatch.RestoreMatch(fen);
             Color player = Utils.ColorFromChar(color);
@@ -147,12 +149,12 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldSolveCheckByMovingTheKing(string fen, string origin, string destination)
         {
-            Match match = FakeMatch.RestoreMatch(fen);
+            Match match = FakeMatch.RestoreMatch(fen, "101");
             var playerId = match.Players.Where(p => p.IsCurrentPlayer).First().Id;
             Move move = new(playerId, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
+            Assert.AreEqual(CheckStatus.NotInCheck, match.Status.CheckStatus);
         }
 
         [DataRow("8/kR6/8/8/3B3p/8/8/4K3 b - - 0 1", "A7", "B7")]
@@ -161,11 +163,11 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_ShouldSolveDoubleCheckByCapturingAPieceWithTheKing(string fen, string origin, string destination)
         {
-            Match match = FakeMatch.RestoreMatch(fen);
+            Match match = FakeMatch.RestoreMatch(fen, "102");
             Move move = new(match.CurrentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
+            Assert.AreEqual(CheckStatus.NotInCheck, match.Status.CheckStatus);
         }
 
         [DataRow("8/8/2k1P3/8/q7/8/2Q4p/4K3 b - - 0 1", "A4", "C2")]
@@ -180,15 +182,16 @@ namespace OpenChess.Tests
             Move move = new(match.CurrentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
 
-            Assert.AreEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
+            Assert.AreEqual(CheckStatus.NotInCheck, match.Status.CheckStatus);
         }
 
         [DataRow("8/1r6/k1R5/8/8/3BK3/8/8 b - - 0 1", "B7", "B6")]
         [TestMethod]
         public void Play_TryingToSolveDoubleCheckByCoveringTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
-            Match match = FakeMatch.RestoreMatch(fen);
-            Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
+            Match match = FakeMatch.RestoreMatch(fen, "102");
+            Assert.AreEqual(GameResult.None, match.Status.GameResult);
+            Assert.AreEqual(CheckStatus.DoubleCheck, match.Status.CheckStatus);
             Move move = new(match.CurrentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
@@ -198,8 +201,9 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveDoubleCheckByCapturingAProtectedPieceWithTheKing_ShouldThrowException(string fen, string origin, string destination)
         {
-            Match match = FakeMatch.RestoreMatch(fen);
-            Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
+            Match match = FakeMatch.RestoreMatch(fen, "102");
+            Assert.AreEqual(GameResult.None, match.Status.GameResult);
+            Assert.AreEqual(CheckStatus.DoubleCheck, match.Status.CheckStatus);
             Move move = new(match.CurrentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
@@ -212,13 +216,14 @@ namespace OpenChess.Tests
         [TestMethod]
         public void Play_TryingToSolveCheckByMovingTheKingToAttackRangeOfEnemyPiece_ShouldThrowException(string fen, string origin, string destination)
         {
-            Match match = FakeMatch.RestoreMatch(fen);
+            Match match = FakeMatch.RestoreMatch(fen, "101");
+            Assert.AreEqual(GameResult.None, match.Status.GameResult);
+            Assert.AreEqual(CheckStatus.Check, match.Status.CheckStatus);
             Move move = new(match.CurrentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
 
             Assert.ThrowsException<ChessboardException>(() => match.Play(move));
         }
 
-        [DataRow("k7/1R6/1P6/p7/4BB2/8/5K2/8 w - - 0 1", "B7", "B8")]
         [DataRow("6k1/6Pp/8/5N2/8/rnB5/P7/4KR2 w - - 0 1", "F5", "H6")]
         [DataRow("7k/6pp/8/8/8/rnB5/P7/4KR2 w - - 0 1", "F1", "F8")]
         [DataRow("7k/6pp/8/8/8/rnB5/P7/4KR2 w - - 0 1", "F1", "F8")]
@@ -236,9 +241,22 @@ namespace OpenChess.Tests
             var currentPlayer = match.CurrentPlayer;
             Move move = new(currentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
             match.Play(move);
+            Assert.AreEqual((Status)"211", match.Status);
+            Assert.AreEqual(match.Winner.Value, currentPlayer.Color);
+        }
 
-            Assert.IsTrue(match.HasFinished());
-            Assert.AreEqual(match.Winner.GetValueOrDefault(), currentPlayer.Color);
+        [DataRow("k7/1R6/1P6/p7/4BB2/8/5K2/8 w - - 0 1", "B7", "B8", "212")]
+        [DataRow("7k/4N1R1/1P3BB1/p3b1K1/8/8/8/8 w - - 0 1", "G7", "G8", "212")]
+        [DataRow("k7/1N6/1P6/p7/4BB2/8/5K2/8 w - - 0 1", "B7", "D8", "211")]
+        [TestMethod]
+        public void Play_MoveResultingInDiscoveredCheckmate_ShouldEndTheMatchAndDeclareWinner(string fen, string origin, string destination, string status)
+        {
+            Match match = FakeMatch.RestoreMatch(fen);
+            var currentPlayer = match.CurrentPlayer;
+            Move move = new(currentPlayer!.Id, Coordinate.GetInstance(origin), Coordinate.GetInstance(destination));
+            match.Play(move);
+            Assert.AreEqual((Status)status, match.Status);
+            Assert.AreEqual(match.Winner.Value, currentPlayer.Color);
         }
 
         [DataRow("8/8/2k1P3/8/8/1Q2K3/7p/8 w - - 0 1", "B3", "C3")]
@@ -257,8 +275,8 @@ namespace OpenChess.Tests
 
             Assert.IsFalse(match.HasFinished());
             Assert.IsNull(match.Winner);
-            Assert.AreNotEqual(CurrentPositionStatus.NotInCheck, match.CurrentPositionStatus);
-            Assert.AreNotEqual(CurrentPositionStatus.Checkmate, match.CurrentPositionStatus);
+            Assert.AreNotEqual(CheckStatus.NotInCheck, match.Status.CheckStatus);
+            Assert.AreNotEqual(GameResult.Checkmate, match.Status.GameResult);
         }
 
         [DataRow("4k3/8/8/8/7b/2q3R1/8/4K3 w - - 0 1", "G3", "C3")]

@@ -30,43 +30,43 @@ namespace OpenChess.Domain
         }
         public abstract PGNBuilder Build();
 
-        public static string ConvertMoveToPGN(int moveCount, MovePlayed movePlayed, CurrentPositionStatus checkState)
+        public static string ConvertMoveToPGN(int moveCount, MovePlayed movePlayed, Status status)
         {
             int count = moveCount + 1;
             string moveConvertedToPgn;
             bool isPawnMove = movePlayed.MoveType == MoveType.PawnMove;
-            if (isPawnMove) moveConvertedToPgn = BuildPawnPGN(count, movePlayed, checkState);
+            if (isPawnMove) moveConvertedToPgn = BuildPawnPGN(count, movePlayed, status);
             else if (movePlayed.MoveType == MoveType.QueenSideCastlingMove) moveConvertedToPgn = BuildQueenSideCastlingString();
             else if (movePlayed.MoveType == MoveType.KingSideCastlingMove) moveConvertedToPgn = BuildKingSideCastlingString();
-            else moveConvertedToPgn = BuildDefaultPGN(count, movePlayed, checkState);
+            else moveConvertedToPgn = BuildDefaultPGN(count, movePlayed, status);
 
             return moveConvertedToPgn;
         }
 
-        private static string BuildPawnPGN(int count, MovePlayed move, CurrentPositionStatus checkState)
+        private static string BuildPawnPGN(int count, MovePlayed move, Status status)
         {
             int moveCount = count;
             var builder = new PawnTextMoveBuilder(moveCount, move);
-            SetBuilderSign(builder, move, checkState);
+            SetBuilderSign(builder, move, status);
 
             return builder.Build().Result;
         }
 
-        private static string BuildDefaultPGN(int count, MovePlayed move, CurrentPositionStatus checkState)
+        private static string BuildDefaultPGN(int count, MovePlayed move, Status status)
         {
             int moveCount = count;
             var builder = new DefaultTextMoveBuilder(moveCount, move);
-            SetBuilderSign(builder, move, checkState);
+            SetBuilderSign(builder, move, status);
 
             return builder.Build().Result;
         }
 
-        private static void SetBuilderSign(PGNBuilder builder, MovePlayed move, CurrentPositionStatus checkState)
+        private static void SetBuilderSign(PGNBuilder builder, MovePlayed move, Status status)
         {
             if (move.PieceCaptured is not null) builder.AppendCaptureSign = true;
-            bool IsInCheck = checkState == CurrentPositionStatus.Check || checkState == CurrentPositionStatus.DoubleCheck;
-            if (IsInCheck) builder.AppendCheckSign = true;
-            else if (checkState == CurrentPositionStatus.Checkmate) builder.AppendCheckMateSign = true;
+            bool IsInCheck = status.CheckStatus == CheckStatus.Check || status.CheckStatus == CheckStatus.DoubleCheck;
+            if (status.GameResult == GameResult.Checkmate) builder.AppendCheckMateSign = true;
+            else if (IsInCheck) builder.AppendCheckSign = true;
         }
     }
 }

@@ -27,7 +27,9 @@ namespace OpenChess.Tests
             Assert.AreEqual(1, match.FullMove);
             Assert.IsNull(match.Winner);
             Assert.AreEqual(match.Fen, FenInfo.InitialPosition);
-            Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.NotInCheck);
+            Assert.AreEqual(match.Status.CheckStatus, CheckStatus.NotInCheck);
+            Assert.AreEqual(match.Status.GameResult, GameResult.None);
+            Assert.AreEqual(match.Status.GameStatus, GameStatus.NotStarted);
             Assert.AreEqual(time, (int)match.Duration);
         }
 
@@ -52,8 +54,8 @@ namespace OpenChess.Tests
             Thread.Sleep(35000);
             match.Play(new(match.CurrentPlayer!.Id, Coordinate.GetInstance("E2"), Coordinate.GetInstance("E4")));
 
-            Assert.AreEqual(match.GameStatus, GameStatus.Finished);
-            Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
+            Assert.AreEqual(match.Status.GameStatus, GameStatus.Finished);
+            Assert.AreEqual(match.Status.GameResult, GameResult.Timeout);
         }
 
         [TestMethod]
@@ -67,8 +69,8 @@ namespace OpenChess.Tests
             Thread.Sleep(35000);
             match.Play(new(match.CurrentPlayer.Id, Coordinate.GetInstance("E7"), Coordinate.GetInstance("E5")));
 
-            Assert.AreEqual(match.GameStatus, GameStatus.Finished);
-            Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
+            Assert.AreEqual(match.Status.GameStatus, GameStatus.Finished);
+            Assert.AreEqual(match.Status.GameResult, GameResult.Timeout);
         }
 
         [TestMethod]
@@ -121,8 +123,9 @@ namespace OpenChess.Tests
 
             Assert.AreEqual(match.Id, matchInfo.MatchId);
             Assert.AreEqual(match.Duration, 5);
-            Assert.AreEqual(match.GameStatus, GameStatus.InProgress);
-            Assert.AreEqual(CurrentPositionStatus.Undefined, match.CurrentPositionStatus);
+            Assert.AreEqual(match.Status.GameStatus, GameStatus.InProgress);
+            Assert.AreEqual(match.Status.GameResult, GameResult.None);
+            Assert.AreEqual(match.Status.CheckStatus, CheckStatus.NotInCheck);
             Assert.AreEqual(match.Fen, matchInfo.Fen);
             Assert.IsNull(match.Winner);
             Assert.AreEqual(match.Players.Count, matchInfo.Players.Count);
@@ -419,7 +422,8 @@ namespace OpenChess.Tests
 
             Assert.IsTrue(match.HasFinished());
             Assert.AreEqual(match.Winner!.Value, match.Players.Where(p => p.Color == Color.Black).First().Color);
-            Assert.AreEqual(match.CurrentPositionStatus, CurrentPositionStatus.Timeout);
+            Assert.AreEqual(match.Status.GameResult, GameResult.Timeout);
+            Assert.AreEqual(match.Status.CheckStatus, CheckStatus.NotInCheck);
         }
 
         [TestMethod]
