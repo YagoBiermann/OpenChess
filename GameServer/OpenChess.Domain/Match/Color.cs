@@ -1,44 +1,76 @@
 namespace OpenChess.Domain
 {
-    public enum Color
+    public class Color
     {
-        Black = 'b',
-        White = 'w'
-    }
+        public static char Black { get; } = 'b';
+        public static char White { get; } = 'w';
+        public char Value { get; }
 
-    internal static class ColorUtils
-    {
+        public Color(char color)
+        {
+            if (!(color == Black || color == White)) throw new ChessboardException("Invalid Color!");
+            Value = color;
+        }
+
         public static Color GetRandomColor()
         {
-            Array values = Enum.GetValues(typeof(Color));
+            List<char> values = [Black, White];
             Random random = new();
-            return (Color)values.GetValue(random.Next(values.Length))!;
+            return (Color)values[random.Next(values.Count)];
         }
 
+        public static explicit operator Color(char value)
+        {
+            return new Color(value);
+        }
+
+        public static explicit operator Color(string value)
+        {
+            if (value.ToLower() == "white" || value.ToLower() == "w") return new Color(White);
+            if (value.ToLower() == "black" || value.ToLower() == "b") return new Color(Black);
+            throw new ChessboardException($"Could not cast the value {value} to color.");
+        }
+
+        public static explicit operator Color(int value)
+        {
+            if (value == 0) return new Color(White);
+            if (value == 1) return new Color(Black);
+            throw new ChessboardException($"Could not cast the value {value} to color.");
+        }
         public static Color GetOppositeColor(Color color)
         {
-            return color is Color.White ? Color.Black : Color.White;
+            return color.Value == White ? new Color(Black) : new Color(White);
         }
 
-        public static Color TryParseColor(string color)
+
+        public override bool Equals(object? obj)
         {
-            bool isParsed = Enum.TryParse(color, out Color result);
-            if (!isParsed) throw new MatchException($"Could not parse the value: ${color} to a color!");
-            return result;
+            if (obj is null) return false;
+            if (obj is Color other)
+            {
+                return Value == other.Value;
+            }
+            return false;
         }
 
-        public static Color TryParseColor(char color)
+        public override int GetHashCode()
         {
-            bool colorExists = Enum.IsDefined(typeof(Color), (int)color);
-            if (!colorExists) throw new MatchException($"Could not cast the value {color} to a color.");
-            return (Color)color;
+            return Value.GetHashCode();
         }
-        public static Color TryParseColor(int color)
+
+        public static bool operator ==(Color c1, Color c2)
         {
-            if (color == 0) return GetRandomColor();
-            if (color == 1) return Color.White;
-            if (color == 2) return Color.Black;
-            else throw new MatchException($"Invalid Color!");
+            if (c1 is null && c2 is null)
+                return true;
+            if (c1 is null || c2 is null)
+                return false;
+
+            return c1.Value == c2.Value;
+        }
+
+        public static bool operator !=(Color c1, Color c2)
+        {
+            return !(c1 == c2);
         }
     }
 }
