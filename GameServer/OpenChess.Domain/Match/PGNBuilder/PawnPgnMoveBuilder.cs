@@ -1,12 +1,12 @@
 namespace OpenChess.Domain
 {
-    internal class PawnTextMoveBuilder : PGNBuilder
+    internal class PawnPgnMoveBuilder : PGNBuilder
     {
         private Coordinate _origin;
         private Coordinate _destination;
         private bool _appendPromotingSign = false;
         private char? _promotingPiece = null;
-        public PawnTextMoveBuilder(int count, MovePlayed move) : base(count)
+        public PawnPgnMoveBuilder(int count, MovePlayed move) : base(count)
         {
             _origin = move.Origin;
             _destination = move.Destination;
@@ -31,6 +31,6 @@ namespace OpenChess.Domain
             Result = Result.Insert(index + 1, $"{_origin.Column.ToString().ToLower()}x");
             return this;
         }
-        private PawnTextMoveBuilder BuildPromotionSign() { Result += $"={char.ToUpper((char)_promotingPiece!)}"; return this; }
+        private PawnPgnMoveBuilder BuildPromotionSign() { Result += $"={char.ToUpper((char)_promotingPiece!)}"; return this; }
     }
 }

@@ -46,7 +46,7 @@ namespace OpenChess.Domain
         private static string BuildPawnPGN(int count, MovePlayed move, Status status)
         {
             int moveCount = count;
-            var builder = new PawnTextMoveBuilder(moveCount, move);
+            var builder = new PawnPgnMoveBuilder(moveCount, move);
             SetBuilderSign(builder, move, status);
 
             return builder.Build().Result;
@@ -55,7 +55,7 @@ namespace OpenChess.Domain
         private static string BuildDefaultPGN(int count, MovePlayed move, Status status)
         {
             int moveCount = count;
-            var builder = new DefaultTextMoveBuilder(moveCount, move);
+            var builder = new DefaultPgnMoveBuilder(moveCount, move);
             SetBuilderSign(builder, move, status);
 
             return builder.Build().Result;

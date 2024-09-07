@@ -1,10 +1,10 @@
 namespace OpenChess.Domain
 {
-    internal class DefaultTextMoveBuilder : PGNBuilder
+    internal class DefaultPgnMoveBuilder : PGNBuilder
     {
         private IReadOnlyPiece _movedPiece;
         private Coordinate _destination;
-        public DefaultTextMoveBuilder(int count, MovePlayed move) : base(count)
+        public DefaultPgnMoveBuilder(int count, MovePlayed move) : base(count)
         {
             _movedPiece = move.PieceMoved;
             _destination = move.Destination;
