@@ -10,19 +10,19 @@ namespace OpenChess.Domain
             Piece = piece;
         }
 
-        public static int CalculateDistance(Coordinate origin, Coordinate position)
+        public static int CalculateDistanceBetweenCoordinates(Coordinate origin, Coordinate position)
         {
             int rowDifference = Math.Abs(origin.RowToInt - position.RowToInt);
             int colDifference = Math.Abs(origin.ColumnToInt - position.ColumnToInt);
             return Math.Max(rowDifference, colDifference);
         }
 
-        public static List<PieceDistances> CalculateDistance(IReadOnlyPiece pieceOfReference, List<IReadOnlyPiece> pieces)
+        public static List<PieceDistances> CalculateDistanceBetweenPieces(IReadOnlyPiece pieceOfReference, List<IReadOnlyPiece> pieces)
         {
             List<PieceDistances> distances = new();
             foreach (IReadOnlyPiece piece in pieces)
             {
-                int distance = CalculateDistance(pieceOfReference.Origin, piece.Origin);
+                int distance = CalculateDistanceBetweenCoordinates(pieceOfReference.Origin, piece.Origin);
                 distances.Add(new(distance, piece));
             }
             distances.Sort((d1, d2) => d1.DistanceFromOrigin.CompareTo(d2.DistanceFromOrigin));

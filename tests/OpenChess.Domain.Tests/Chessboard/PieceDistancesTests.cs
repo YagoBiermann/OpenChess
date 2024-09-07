@@ -27,7 +27,7 @@ namespace OpenChess.Tests
             Coordinate c1 = Coordinate.GetInstance(origin);
             Coordinate c2 = Coordinate.GetInstance(destination);
 
-            Assert.AreEqual(PieceDistances.CalculateDistance(c1, c2), expectedDistance);
+            Assert.AreEqual(PieceDistances.CalculateDistanceBetweenCoordinates(c1, c2), expectedDistance);
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace OpenChess.Tests
                 pieceAtD8,
             };
             List<PieceDistances> expectedDistances = new() { new(3, pieceAtD4), new(4, pieceAtD5), new(7, pieceAtD8), };
-            List<PieceDistances> distances = PieceDistances.CalculateDistance(pieceOfReference, pieces);
+            List<PieceDistances> distances = PieceDistances.CalculateDistanceBetweenPieces(pieceOfReference, pieces);
 
             CollectionAssert.AreEqual(expectedDistances, distances);
         }
@@ -69,7 +69,7 @@ namespace OpenChess.Tests
                 pieceAtD5,
             };
             List<PieceDistances> expectedDistances = new() { new(3, pieceAtD4), new(4, pieceAtD5), new(7, pieceAtD8) };
-            List<PieceDistances> distances = PieceDistances.CalculateDistance(pieceOfReference, pieces);
+            List<PieceDistances> distances = PieceDistances.CalculateDistanceBetweenPieces(pieceOfReference, pieces);
 
             CollectionAssert.AreEqual(expectedDistances, distances);
         }

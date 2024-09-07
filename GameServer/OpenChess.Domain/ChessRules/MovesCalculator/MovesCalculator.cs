@@ -170,7 +170,7 @@ namespace OpenChess.Domain
                     moveAmount = pawn.ForwardMoveAmount;
                 }
                 List<Coordinate> positions = Coordinate.CalculateSequence(piece.Origin, direction, moveAmount);
-                List<PieceDistances> piecesInLineOfSight = PieceDistances.CalculateDistance(piece, _chessboard.GetPieces(positions));
+                List<PieceDistances> piecesInLineOfSight = PieceDistances.CalculateDistanceBetweenPieces(piece, _chessboard.GetPieces(positions));
 
                 lineOfSight.Add(new(piece, direction, positions, piecesInLineOfSight));
             }
@@ -181,7 +181,7 @@ namespace OpenChess.Domain
         private static List<Coordinate> CalculatePositionsUntilTheNearestPiece(IReadOnlyPiece piece, List<IReadOnlyPiece> piecesPosition, PieceLineOfSight move)
         {
             if (!piecesPosition.Any()) return new(move.LineOfSight);
-            List<PieceDistances> distances = PieceDistances.CalculateDistance(piece, piecesPosition);
+            List<PieceDistances> distances = PieceDistances.CalculateDistanceBetweenPieces(piece, piecesPosition);
             PieceDistances nearestPiece = distances.FirstOrDefault();
             List<Coordinate> rangeOfAttack = move.LineOfSight.Take(nearestPiece.DistanceFromOrigin).ToList();
 
