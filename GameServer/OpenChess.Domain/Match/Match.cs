@@ -10,20 +10,18 @@ namespace OpenChess.Domain
         public IReadOnlyPlayer? CurrentPlayer { get => _currentPlayer; }
         public IReadOnlyPlayer? OpponentPlayer { get => _opponentPlayer; }
         public IReadOnlyList<string> PgnMoves { get => _pgnMoves.AsReadOnly(); }
-        public CurrentPositionStatus CurrentPositionStatus { get; private set; }
-        public GameResult GameResult { get; private set; }
+        public Status Status { get; private set; }
         public DateTime CurrentTurnStartedAt { get; private set; }
         public string Fen { get => _fenInfo.ToString(); }
-        public bool HasNotStarted() => GameStatus.Equals(GameStatus.NotStarted);
-        public bool HasStarted() => GameStatus.Equals(GameStatus.InProgress);
-        public bool HasFinished() => GameStatus.Equals(GameStatus.Finished);
-        public GameStatus GameStatus { get; private set; }
+        public bool HasNotStarted() => Status.GameStatus.Equals(GameStatus.NotStarted);
+        public bool HasStarted() => Status.GameStatus.Equals(GameStatus.InProgress);
+        public bool HasFinished() => Status.GameStatus.Equals(GameStatus.Finished);
         public Time Duration { get; private set; }
         public Color? Winner { get; private set; }
         public IReadOnlyChessboard Chessboard => _chessboard;
         private List<Player> _players = new(2);
-        private Player? _currentPlayer { get { return (HasStarted() && !HasFinished()) ? _players.First(p => p.IsCurrentPlayer) : null; } }
-        private Player? _opponentPlayer { get { return (HasStarted() && !HasFinished()) ? _players.First(p => !p.IsCurrentPlayer) : null; } }
+        private Player? _currentPlayer { get { return _players.FirstOrDefault(p => p.IsCurrentPlayer); } }
+        private Player? _opponentPlayer { get { return _players.FirstOrDefault(p => !p.IsCurrentPlayer); } }
         private Chessboard _chessboard { get; set; }
         private FenInfo _fenInfo { get; set; }
         private IMoveCalculator _movesCalculator;
@@ -39,7 +37,7 @@ namespace OpenChess.Domain
             CurrentTurnStartedAt = DateTime.MinValue;
             _pgnMoves = [];
             _movesCalculator = new MovesCalculator(_chessboard);
-            CurrentPositionStatus = CurrentPositionStatus.NotInCheck;
+            Status = new(GameStatus.NotStarted, GameResult.None, CheckStatus.NotInCheck);
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
             CreatedAt = DateTime.UtcNow;
@@ -51,12 +49,10 @@ namespace OpenChess.Domain
             var players = matchInfo.Players;
             var fen = matchInfo.Fen;
             var pgnMoves = matchInfo.PgnMoves;
-            var gameStatus = matchInfo.GameStatus;
             var time = matchInfo.Time;
             var winner = matchInfo.Winner;
             var currentTurnStartedAt = matchInfo.CurrentTurnStartedAt;
             var createdAt = matchInfo.CreatedAt;
-
             Id = matchId;
             _fenInfo = new(fen);
             foreach (var player in players)
@@ -69,10 +65,9 @@ namespace OpenChess.Domain
             _chessboard = new Chessboard(_fenInfo);
             _movesCalculator = new MovesCalculator(_chessboard);
             _pgnMoves = pgnMoves;
-            GameStatus = gameStatus;
+            Status = matchInfo.Status;
             Duration = time;
             CurrentTurnStartedAt = currentTurnStartedAt;
-            CurrentPositionStatus = CurrentPositionStatus.Undefined;
             HalfMove = FenInfo.ConvertMoveAmount(_fenInfo.HalfMove);
             FullMove = FenInfo.ConvertMoveAmount(_fenInfo.FullMove);
             CreatedAt = createdAt;
@@ -105,9 +100,9 @@ namespace OpenChess.Domain
             HandleIllegalPosition();
             UpdateMoveCounter(movePlayed);
             UpdateEnPassantAndCastlingAvailability(move.Origin, movePlayed.PieceMoved);
-            CurrentPositionStatus currentPositionStatus = SetupPositionValidationChain().ValidatePosition();
-            ConvertMoveToPGN(movePlayed, currentPositionStatus);
-            UpdateMatchStatus(currentPositionStatus, clock);
+            Status status = SetupPositionValidationChain().ValidatePosition();
+            ConvertMoveToPGN(movePlayed, status);
+            UpdateMatchStatus(status, clock);
             _movesCalculator.ClearCache();
         }
 
@@ -123,8 +118,8 @@ namespace OpenChess.Domain
 
         public void FinishWithTimeout(string? playerId = null)
         {
-            GameStatus = GameStatus.Finished;
-            CurrentPositionStatus = Domain.CurrentPositionStatus.Timeout;
+            Status.GameStatus = GameStatus.Finished;
+            Status.GameResult = GameResult.Timeout;
             if (playerId is null)
             {
                 Winner = null;
@@ -136,8 +131,8 @@ namespace OpenChess.Domain
 
         public void FinishWithResign(string playerId)
         {
-            GameStatus = GameStatus.Finished;
-            CurrentPositionStatus = CurrentPositionStatus.Resign;
+            Status.GameStatus = GameStatus.Finished;
+            Status.GameResult = GameResult.Resignation;
             Winner = GetOpponentPlayerOf(playerId)?.Color;
         }
 
@@ -213,7 +208,7 @@ namespace OpenChess.Domain
         private void StartMatch()
         {
             SetCurrentPlayer();
-            GameStatus = GameStatus.InProgress;
+            Status.GameStatus = GameStatus.InProgress;
             StartNewTurn();
         }
 
@@ -223,36 +218,36 @@ namespace OpenChess.Domain
             GetPlayerByColor(currentPlayer)!.IsCurrentPlayer = true;
         }
 
-        private void ConvertMoveToPGN(MovePlayed movePlayed, CurrentPositionStatus checkState)
+        private void ConvertMoveToPGN(MovePlayed movePlayed, Status status)
         {
-            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoves.Count, movePlayed, checkState);
+            string convertedMove = PGNBuilder.ConvertMoveToPGN(_pgnMoves.Count, movePlayed, status);
             _pgnMoves.Add(convertedMove);
         }
         private void DeclareFirstMoveTimeoutAndFinish()
         {
             Winner = null;
-            CurrentPositionStatus = CurrentPositionStatus.Timeout;
-            GameStatus = GameStatus.Finished;
+            Status.GameResult = GameResult.Timeout;
+            Status.GameStatus = GameStatus.Finished;
         }
         private void DeclareTimeoutAndFinish()
         {
             Winner = OpponentPlayer?.Color;
-            CurrentPositionStatus = CurrentPositionStatus.Timeout;
-            GameStatus = GameStatus.Finished;
+            Status.GameResult = GameResult.Timeout;
+            Status.GameStatus = GameStatus.Finished;
         }
 
         private void DeclareWinnerAndFinish()
         {
             Winner = CurrentPlayer?.Color;
-            CurrentPositionStatus = CurrentPositionStatus.Checkmate;
-            GameStatus = GameStatus.Finished;
+            Status.GameResult = GameResult.Checkmate;
+            Status.GameStatus = GameStatus.Finished;
         }
 
         private void DeclareDrawAndFinish()
         {
             Winner = null;
-            CurrentPositionStatus = Domain.CurrentPositionStatus.Draw;
-            GameStatus = GameStatus.Finished;
+            Status.GameResult = GameResult.Draw;
+            Status.GameStatus = GameStatus.Finished;
         }
 
         private void HandleIllegalPosition()
@@ -273,12 +268,12 @@ namespace OpenChess.Domain
             _chessboard.CastlingAvailability.UpdateAvailability(origin, CurrentPlayer!.Color);
         }
 
-        private void UpdateMatchStatus(CurrentPositionStatus currentPositionStatus, Clock clock)
+        private void UpdateMatchStatus(Status status, Clock clock)
         {
-            CurrentPositionStatus = currentPositionStatus;
-            if (currentPositionStatus != Domain.CurrentPositionStatus.Draw && currentPositionStatus != Domain.CurrentPositionStatus.Checkmate) { SwitchTurns(clock); UpdateFenInfo(); return; }
-            if (currentPositionStatus == Domain.CurrentPositionStatus.Checkmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
-            if (currentPositionStatus == Domain.CurrentPositionStatus.Draw) { UpdateFenInfo(); DeclareDrawAndFinish(); return; }
+            Status = status;
+            if (Status.GameResult != GameResult.Draw && Status.GameResult != GameResult.Checkmate) { SwitchTurns(clock); UpdateFenInfo(); return; }
+            if (Status.GameResult == GameResult.Checkmate) { UpdateFenInfo(); DeclareWinnerAndFinish(); return; }
+            if (Status.GameResult == GameResult.Draw) { UpdateFenInfo(); DeclareDrawAndFinish(); return; }
         }
 
         private void UpdateFenInfo()

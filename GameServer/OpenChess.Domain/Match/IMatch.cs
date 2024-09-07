@@ -8,13 +8,12 @@ namespace OpenChess.Domain
         public int FullMove { get; }
         public IReadOnlyList<IReadOnlyPlayer> Players { get; }
         public IReadOnlyList<string> PgnMoves { get; }
-        public CurrentPositionStatus CurrentPositionStatus { get; }
         public DateTime CurrentTurnStartedAt { get; }
         public string Fen { get; }
         public bool HasNotStarted();
         public bool HasStarted();
         public bool HasFinished();
-        public GameStatus GameStatus { get; }
+        public Status Status { get; }
         public IReadOnlyPlayer? CurrentPlayer { get; }
         public IReadOnlyPlayer? OpponentPlayer { get; }
         public Time Duration { get; }
